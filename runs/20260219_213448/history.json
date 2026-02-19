@@ -1,0 +1,283 @@
+{
+  "timestamp": "2026-02-19T21:34:48.559165Z",
+  "config": {
+    "iterations": 6,
+    "seed": 7,
+    "dataset_size": 1000,
+    "train_size": 600,
+    "val_size": 200,
+    "test_size": 200,
+    "max_accept_per_iteration": 3
+  },
+  "final_language": {
+    "base_token_count": 21,
+    "macro_count": 11,
+    "total_token_count": 32,
+    "macros": {
+      "M001": [
+        "TASK_WINOGRAD",
+        "BIND_E1",
+        "BIND_E2",
+        "LINK_CAUSAL"
+      ],
+      "M010": [
+        "TASK_KNIGHTS",
+        "BIND_A",
+        "BIND_B",
+        "BIND_C"
+      ],
+      "M011": [
+        "CLAIM_GRAPH",
+        "ASSUME_BRANCH",
+        "CONSISTENCY_CHECK"
+      ],
+      "M014": [
+        "VERIFY_ID",
+        "ANS_ROLE_MAP"
+      ],
+      "M015": [
+        "TASK_MULTI_AGENT",
+        "BIND_AGENT_E1",
+        "BIND_AGENT_E2",
+        "BIND_OBJ_O1"
+      ],
+      "M021": [
+        "STATE_OBJ_LOC1",
+        "EVENT_MOVE_LOC2"
+      ],
+      "M022": [
+        "STATE_OBJ_LOC1",
+        "EVENT_MOVE_LOC2",
+        "OBS_ABSENT",
+        "MENTAL_STATE_E1_LOC1"
+      ],
+      "M031": [
+        "VERIFY_ID",
+        "ANS_LOC1"
+      ],
+      "M032": [
+        "PRONOUN_REF",
+        "RESOLVE_PRON_E1",
+        "VERIFY_ID",
+        "ANS_E1"
+      ],
+      "M038": [
+        "PRONOUN_REF",
+        "RESOLVE_PRON_E2",
+        "VERIFY_ID",
+        "ANS_E2"
+      ],
+      "M041": [
+        "OBS_PRESENT",
+        "MENTAL_STATE_E1_LOC2",
+        "VERIFY_ID",
+        "ANS_LOC2"
+      ]
+    }
+  },
+  "history": [
+    {
+      "iteration": 0,
+      "before": {
+        "accuracy": 1.0,
+        "avg_tokens": 9.41,
+        "parse_success_rate": 1.0
+      },
+      "after": {
+        "accuracy": 1.0,
+        "avg_tokens": 7.565,
+        "parse_success_rate": 1.0
+      },
+      "accepted": [
+        {
+          "macro_name": "M001",
+          "pattern": [
+            "TASK_WINOGRAD",
+            "BIND_E1",
+            "BIND_E2",
+            "LINK_CAUSAL"
+          ],
+          "support": 213
+        },
+        {
+          "macro_name": "M010",
+          "pattern": [
+            "TASK_KNIGHTS",
+            "BIND_A",
+            "BIND_B",
+            "BIND_C"
+          ],
+          "support": 201
+        }
+      ],
+      "language_size": 23
+    },
+    {
+      "iteration": 1,
+      "before": {
+        "accuracy": 1.0,
+        "avg_tokens": 7.565,
+        "parse_success_rate": 1.0
+      },
+      "after": {
+        "accuracy": 1.0,
+        "avg_tokens": 5.45,
+        "parse_success_rate": 1.0
+      },
+      "accepted": [
+        {
+          "macro_name": "M011",
+          "pattern": [
+            "CLAIM_GRAPH",
+            "ASSUME_BRANCH",
+            "CONSISTENCY_CHECK"
+          ],
+          "support": 201
+        },
+        {
+          "macro_name": "M014",
+          "pattern": [
+            "VERIFY_ID",
+            "ANS_ROLE_MAP"
+          ],
+          "support": 201
+        },
+        {
+          "macro_name": "M015",
+          "pattern": [
+            "TASK_MULTI_AGENT",
+            "BIND_AGENT_E1",
+            "BIND_AGENT_E2",
+            "BIND_OBJ_O1"
+          ],
+          "support": 186
+        }
+      ],
+      "language_size": 26
+    },
+    {
+      "iteration": 2,
+      "before": {
+        "accuracy": 1.0,
+        "avg_tokens": 5.45,
+        "parse_success_rate": 1.0
+      },
+      "after": {
+        "accuracy": 1.0,
+        "avg_tokens": 4.515,
+        "parse_success_rate": 1.0
+      },
+      "accepted": [
+        {
+          "macro_name": "M021",
+          "pattern": [
+            "STATE_OBJ_LOC1",
+            "EVENT_MOVE_LOC2"
+          ],
+          "support": 186
+        },
+        {
+          "macro_name": "M022",
+          "pattern": [
+            "STATE_OBJ_LOC1",
+            "EVENT_MOVE_LOC2",
+            "OBS_ABSENT",
+            "MENTAL_STATE_E1_LOC1"
+          ],
+          "support": 117
+        }
+      ],
+      "language_size": 28
+    },
+    {
+      "iteration": 3,
+      "before": {
+        "accuracy": 1.0,
+        "avg_tokens": 4.515,
+        "parse_success_rate": 1.0
+      },
+      "after": {
+        "accuracy": 1.0,
+        "avg_tokens": 3.355,
+        "parse_success_rate": 1.0
+      },
+      "accepted": [
+        {
+          "macro_name": "M031",
+          "pattern": [
+            "VERIFY_ID",
+            "ANS_LOC1"
+          ],
+          "support": 117
+        },
+        {
+          "macro_name": "M032",
+          "pattern": [
+            "PRONOUN_REF",
+            "RESOLVE_PRON_E1",
+            "VERIFY_ID",
+            "ANS_E1"
+          ],
+          "support": 114
+        },
+        {
+          "macro_name": "M038",
+          "pattern": [
+            "PRONOUN_REF",
+            "RESOLVE_PRON_E2",
+            "VERIFY_ID",
+            "ANS_E2"
+          ],
+          "support": 99
+        }
+      ],
+      "language_size": 31
+    },
+    {
+      "iteration": 4,
+      "before": {
+        "accuracy": 1.0,
+        "avg_tokens": 3.355,
+        "parse_success_rate": 1.0
+      },
+      "after": {
+        "accuracy": 1.0,
+        "avg_tokens": 3.025,
+        "parse_success_rate": 1.0
+      },
+      "accepted": [
+        {
+          "macro_name": "M041",
+          "pattern": [
+            "OBS_PRESENT",
+            "MENTAL_STATE_E1_LOC2",
+            "VERIFY_ID",
+            "ANS_LOC2"
+          ],
+          "support": 69
+        }
+      ],
+      "language_size": 32
+    },
+    {
+      "iteration": 5,
+      "before": {
+        "accuracy": 1.0,
+        "avg_tokens": 3.025,
+        "parse_success_rate": 1.0
+      },
+      "after": {
+        "accuracy": 1.0,
+        "avg_tokens": 3.025,
+        "parse_success_rate": 1.0
+      },
+      "accepted": [],
+      "language_size": 32
+    }
+  ],
+  "test_metrics": {
+    "accuracy": 1.0,
+    "avg_tokens": 2.985,
+    "parse_success_rate": 1.0
+  }
+}
