@@ -1,3 +1,25 @@
 __pycache__/
 *.pyc
 .venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local secret/config material
+.env
+config/
+!config/*.example
+
+# Experiment and model artifacts
+artifacts/
+runs/
+src/runs/
+*.safetensors
+*.pt
+*.bin
+*.ckpt
+*.gguf
+
+# Local scratch dirs created by pytest on this machine
+pytest-cache-files-*/
+src/pytest-cache-files-*/

@@ -79,7 +79,11 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--h3-bridge", type=Path, default=None)
     p.add_argument("--h3-layer-index", type=int, default=12)
     p.add_argument("--h3-layer-scale", type=float, default=1.0)
-    p.add_argument("--only-runs", type=str, nargs="+", default=None, help="Subset of runs: H1 H2 H3")
+    p.add_argument("--h4-bridge", type=Path, default=None)
+    p.add_argument("--h4-layer-index", type=int, default=12)
+    p.add_argument("--h4-layer-scale", type=float, default=1.0)
+    p.add_argument("--h4-contrastive-alpha", type=float, default=1.0)
+    p.add_argument("--only-runs", type=str, nargs="+", default=None, help="Subset of runs: H1 H2 H3 H4")
     p.add_argument("--output-root", type=Path, default=Path("runs/true_coconut_h_series"))
     p.add_argument("--local-files-only", action="store_true")
     p.add_argument("--execute", action="store_true")
@@ -127,7 +131,7 @@ def main() -> None:
             cmd.extend(extra)
         return cmd
 
-    wanted = {r.upper() for r in (args.only_runs or ["H1", "H2", "H3"])}
+    wanted = {r.upper() for r in (args.only_runs or ["H1", "H2", "H3", "H4"])}
     for run_id, name, mode, window, adapter, extra in [
         ("H1", "Multi-Vector Injection (Bandwidth)", "input", args.h1_window, args.adapter, None),
         (
@@ -153,13 +157,35 @@ def main() -> None:
                 str(args.h3_bridge) if args.h3_bridge is not None else "",
             ],
         ),
+        (
+            "H4",
+            "Persistent SwiGLU Injection (Continuous Anchor)",
+            "midlayer_persistent",
+            1,
+            args.h3_adapter if args.h3_adapter is not None else args.adapter,
+            [
+                "--mid-layer-index",
+                str(args.h4_layer_index),
+                "--mid-layer-scale",
+                str(args.h4_layer_scale),
+                "--swiglu-bridge",
+                str(args.h4_bridge) if args.h4_bridge is not None else "",
+                "--contrastive-alpha",
+                str(args.h4_contrastive_alpha),
+            ],
+        ),
     ]:
         if run_id not in wanted:
             continue
         if run_id == "H3" and (args.h3_adapter is None or args.h3_bridge is None):
             runs.append(HRun(run_id, name, "skipped", None, None, None, []))
             continue
+        if run_id == "H4" and (args.h3_adapter is None or args.h4_bridge is None):
+            runs.append(HRun(run_id, name, "skipped", None, None, None, []))
+            continue
         if run_id == "H3":
+            extra = [x for x in (extra or []) if x != ""]
+        if run_id == "H4":
             extra = [x for x in (extra or []) if x != ""]
         seed_metrics: List[Dict[str, float]] = []
         status = "ok" if args.execute else "planned"

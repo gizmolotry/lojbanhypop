@@ -125,6 +125,7 @@ def _write_summary_md(path: Path, records: List[RunRecord]) -> None:
     h1 = by_id.get("H1")
     h2 = by_id.get("H2")
     h3 = by_id.get("H3")
+    h4 = by_id.get("H4")
     lines.append(
         f"| `H1` | `Multi-Vector Injection (Bandwidth)` | "
         f"`{h1.status if h1 is not None else 'pending'}` | {_h_metric(h1)} |"
@@ -136,6 +137,10 @@ def _write_summary_md(path: Path, records: List[RunRecord]) -> None:
     lines.append(
         f"| `H3` | `SwiGLU Mid-Layer Bridge (Non-Linear Alignment)` | "
         f"`{h3.status if h3 is not None else 'pending'}` | {_h_metric(h3)} |"
+    )
+    lines.append(
+        f"| `H4` | `Persistent SwiGLU Injection (Continuous Anchor)` | "
+        f"`{h4.status if h4 is not None else 'pending'}` | {_h_metric(h4)} |"
     )
     lines.append("")
     lines.append("- `Shock Tracking`: log per-step cosine for injected states (`step_cosine`) to observe persistence vs evaporation.")

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime
+import hashlib
 import json
 import random
 from pathlib import Path
@@ -409,9 +410,25 @@ def run_experiment(
 
     run_dir = output_root / datetime.utcnow().strftime("%Y%m%d_%H%M%S")
     run_dir.mkdir(parents=True, exist_ok=True)
+    payload["run_dir"] = str(run_dir)
+    payload["dataset_fingerprint"] = _dataset_fingerprint(problems)
     (run_dir / "history.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
     _write_summary(run_dir / "summary.md", payload)
     return payload
+
+
+def _dataset_fingerprint(problems: Sequence[Problem]) -> str:
+    h = hashlib.sha256()
+    for p in problems:
+        row = {
+            "problem_id": p.problem_id,
+            "prompt": p.prompt,
+            "answer": p.answer,
+            "trace": list(p.trace),
+        }
+        h.update(json.dumps(row, sort_keys=True, ensure_ascii=True).encode("utf-8"))
+        h.update(b"\n")
+    return h.hexdigest()
 
 
 def _write_summary(path: Path, payload: dict) -> None:

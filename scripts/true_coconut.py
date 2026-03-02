@@ -276,7 +276,7 @@ def _load_swiglu_bridge(path: Optional[Path], hidden_size: int, device: torch.de
 
 
 @contextmanager
-def mid_layer_injector(model, layer_index: int, inject_state: torch.Tensor, scale: float):
+def mid_layer_injector(model, layer_index: int, inject_state: torch.Tensor, scale: float, persistent: bool = False):
     layers = _resolve_decoder_layers(model)
     if layers is None:
         raise RuntimeError("Unable to locate decoder layers for mid-layer injection.")
@@ -292,14 +292,20 @@ def mid_layer_injector(model, layer_index: int, inject_state: torch.Tensor, scal
             if add.dim() == 2:
                 add = add.unsqueeze(1)
             hidden = hidden.clone()
-            hidden[:, -1:, :] = hidden[:, -1:, :] + (float(scale) * add[:, -1:, :])
+            if persistent:
+                hidden = hidden + (float(scale) * add)
+            else:
+                hidden[:, -1:, :] = hidden[:, -1:, :] + (float(scale) * add[:, -1:, :])
             return (hidden, *rest)
         hidden = output
         add = inject_state.to(device=hidden.device, dtype=hidden.dtype)
         if add.dim() == 2:
             add = add.unsqueeze(1)
         hidden = hidden.clone()
-        hidden[:, -1:, :] = hidden[:, -1:, :] + (float(scale) * add[:, -1:, :])
+        if persistent:
+            hidden = hidden + (float(scale) * add)
+        else:
+            hidden[:, -1:, :] = hidden[:, -1:, :] + (float(scale) * add[:, -1:, :])
         return hidden
 
     handle = layers[layer_index].register_forward_hook(_hook)
@@ -396,6 +402,105 @@ def _generate_from_embeds_with_step_cosine(
     return extract_answer(text), trace
 
 
+def _contrastive_decode_from_embeds(
+    model,
+    inputs_embeds: torch.Tensor,
+    attention_mask: torch.Tensor,
+    max_new_tokens: int,
+    tokenizer,
+    alpha: float,
+    inject_factory,
+    reference_states: Optional[torch.Tensor] = None,
+) -> Tuple[str, List[Dict[str, float]]]:
+    # Pass A: baseline (no injection); Pass B: logic-injected branch.
+    trace: List[Dict[str, float]] = []
+    cur_len = int(inputs_embeds.shape[1])
+    ref = reference_states
+    if ref is not None and ref.dim() == 2:
+        ref = ref.unsqueeze(1)
+
+    def _step_trace(step_idx: int, hidden: torch.Tensor) -> None:
+        if ref is None:
+            return
+        h = hidden.expand(-1, ref.shape[1], -1)
+        cos = F.cosine_similarity(h.float(), ref.float(), dim=-1)[0]
+        trace.append(
+            {
+                "step": float(step_idx),
+                "cos_mean": float(cos.mean().item()),
+                "cos_max": float(cos.max().item()),
+                "cos_min": float(cos.min().item()),
+            }
+        )
+
+    with torch.no_grad():
+        out_a = model(
+            inputs_embeds=inputs_embeds,
+            attention_mask=attention_mask,
+            use_cache=True,
+            return_dict=True,
+        )
+        with inject_factory():
+            out_b = model(
+                inputs_embeds=inputs_embeds,
+                attention_mask=attention_mask,
+                use_cache=True,
+                return_dict=True,
+                output_hidden_states=(ref is not None),
+            )
+
+    probs_a = torch.softmax(out_a.logits[:, -1, :], dim=-1)
+    probs_b = torch.softmax(out_b.logits[:, -1, :], dim=-1)
+    probs = torch.clamp(probs_b + (float(alpha) * (probs_b - probs_a)), min=0.0)
+    probs = probs / probs.sum(dim=-1, keepdim=True).clamp_min(1e-8)
+    tok = torch.argmax(probs, dim=-1, keepdim=True)
+    generated: List[torch.Tensor] = [tok]
+    past_a = out_a.past_key_values
+    past_b = out_b.past_key_values
+    if ref is not None and getattr(out_b, "hidden_states", None) is not None:
+        _step_trace(0, out_b.hidden_states[-1][:, -1:, :])
+    if tokenizer.eos_token_id is not None and int(tok.item()) == int(tokenizer.eos_token_id):
+        text = tokenizer.decode(torch.cat(generated, dim=1)[0], skip_special_tokens=True)
+        return extract_answer(text), trace
+    cur_len += 1
+
+    for i in range(max_new_tokens - 1):
+        am = torch.ones((1, cur_len + 1), dtype=torch.long, device=inputs_embeds.device)
+        with torch.no_grad():
+            out_a = model(
+                input_ids=tok,
+                attention_mask=am,
+                past_key_values=past_a,
+                use_cache=True,
+                return_dict=True,
+            )
+            with inject_factory():
+                out_b = model(
+                    input_ids=tok,
+                    attention_mask=am,
+                    past_key_values=past_b,
+                    use_cache=True,
+                    return_dict=True,
+                    output_hidden_states=(ref is not None),
+                )
+        past_a = out_a.past_key_values
+        past_b = out_b.past_key_values
+        probs_a = torch.softmax(out_a.logits[:, -1, :], dim=-1)
+        probs_b = torch.softmax(out_b.logits[:, -1, :], dim=-1)
+        probs = torch.clamp(probs_b + (float(alpha) * (probs_b - probs_a)), min=0.0)
+        probs = probs / probs.sum(dim=-1, keepdim=True).clamp_min(1e-8)
+        tok = torch.argmax(probs, dim=-1, keepdim=True)
+        generated.append(tok)
+        if ref is not None and getattr(out_b, "hidden_states", None) is not None:
+            _step_trace(i + 1, out_b.hidden_states[-1][:, -1:, :])
+        cur_len += 1
+        if tokenizer.eos_token_id is not None and int(tok.item()) == int(tokenizer.eos_token_id):
+            break
+
+    text = tokenizer.decode(torch.cat(generated, dim=1)[0], skip_special_tokens=True)
+    return extract_answer(text), trace
+
+
 def baseline_generate(model, tokenizer, question: str, max_new_tokens: int) -> str:
     prompt = build_final_prompt_prefix(question) + "\nFinal answer:"
     ids = tokenizer(prompt, return_tensors="pt").input_ids.to(model.device)
@@ -418,6 +523,7 @@ def true_coconut_generate(
     mid_layer_scale: float = 1.0,
     log_step_cosine: bool = False,
     swiglu_bridge: Optional[torch.nn.Module] = None,
+    contrastive_alpha: float = 0.0,
 ) -> Dict[str, str]:
     # Step 1: system-1 logic pass and extract final hidden state window.
     logic_prompt = build_logic_prompt(question)
@@ -447,38 +553,61 @@ def true_coconut_generate(
 
         if injection_mode == "input":
             concat_emb = torch.cat([prefix_emb, virtual, suffix_emb], dim=1)
-            inject_ctx = nullcontext()
+            inject_factory = lambda: nullcontext()
         elif injection_mode == "midlayer":
             # Mid-brain bypass: let EN prompt flow, inject final logic vector at target layer.
             concat_emb = torch.cat([prefix_emb, suffix_emb], dim=1)
-            inject_ctx = mid_layer_injector(
+            inject_factory = lambda: mid_layer_injector(
                 model=model,
                 layer_index=mid_layer_index,
                 inject_state=virtual[:, -1:, :],
                 scale=mid_layer_scale,
+                persistent=False,
+            )
+        elif injection_mode == "midlayer_persistent":
+            # H4: continuously anchor residual stream across prefill+decode.
+            concat_emb = torch.cat([prefix_emb, suffix_emb], dim=1)
+            inject_factory = lambda: mid_layer_injector(
+                model=model,
+                layer_index=mid_layer_index,
+                inject_state=virtual[:, -1:, :],
+                scale=mid_layer_scale,
+                persistent=True,
             )
         else:
             raise ValueError(f"Unsupported injection_mode: {injection_mode}")
 
         am = torch.ones((1, concat_emb.shape[1]), dtype=torch.long, device=concat_emb.device)
-        with inject_ctx:
-            if log_step_cosine:
-                final_answer, step_cosine = _generate_from_embeds_with_step_cosine(
-                    model=model,
-                    inputs_embeds=concat_emb,
-                    attention_mask=am,
-                    max_new_tokens=max_final_new_tokens,
-                    tokenizer=tokenizer,
-                    reference_states=virtual,
-                )
-            else:
-                final_answer = _generate_from_embeds(
-                    model=model,
-                    inputs_embeds=concat_emb,
-                    attention_mask=am,
-                    max_new_tokens=max_final_new_tokens,
-                    tokenizer=tokenizer,
-                )
+        if contrastive_alpha > 0.0:
+            final_answer, step_cosine = _contrastive_decode_from_embeds(
+                model=model,
+                inputs_embeds=concat_emb,
+                attention_mask=am,
+                max_new_tokens=max_final_new_tokens,
+                tokenizer=tokenizer,
+                alpha=contrastive_alpha,
+                inject_factory=inject_factory,
+                reference_states=virtual if log_step_cosine else None,
+            )
+        else:
+            with inject_factory():
+                if log_step_cosine:
+                    final_answer, step_cosine = _generate_from_embeds_with_step_cosine(
+                        model=model,
+                        inputs_embeds=concat_emb,
+                        attention_mask=am,
+                        max_new_tokens=max_final_new_tokens,
+                        tokenizer=tokenizer,
+                        reference_states=virtual,
+                    )
+                else:
+                    final_answer = _generate_from_embeds(
+                        model=model,
+                        inputs_embeds=concat_emb,
+                        attention_mask=am,
+                        max_new_tokens=max_final_new_tokens,
+                        tokenizer=tokenizer,
+                    )
     return {
         "logic_trace": logic_trace,
         "final_answer": final_answer,
@@ -500,10 +629,11 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--max-final-new-tokens", type=int, default=48)
     p.add_argument("--handoff-suffix", type=str, default="\nTherefore, the final answer is ")
     p.add_argument("--virtual-token-window", type=int, default=1)
-    p.add_argument("--injection-mode", type=str, choices=["input", "midlayer"], default="input")
+    p.add_argument("--injection-mode", type=str, choices=["input", "midlayer", "midlayer_persistent"], default="input")
     p.add_argument("--mid-layer-index", type=int, default=12)
     p.add_argument("--mid-layer-scale", type=float, default=1.0)
     p.add_argument("--swiglu-bridge", type=Path, default=None)
+    p.add_argument("--contrastive-alpha", type=float, default=0.0)
     p.add_argument("--log-step-cosine", action="store_true")
     p.add_argument("--output", type=Path, default=Path("runs/true_coconut_eval.json"))
     p.add_argument("--local-files-only", action="store_true")
@@ -560,6 +690,7 @@ def main() -> None:
                 mid_layer_scale=args.mid_layer_scale,
                 log_step_cosine=args.log_step_cosine,
                 swiglu_bridge=bridge,
+                contrastive_alpha=args.contrastive_alpha,
             )
             coconut_pred = coco["final_answer"]
             logic_trace = coco["logic_trace"]
@@ -600,8 +731,9 @@ def main() -> None:
         "virtual_token_window": args.virtual_token_window,
         "injection_mode": args.injection_mode,
         "mid_layer_index": args.mid_layer_index if args.injection_mode == "midlayer" else None,
-        "mid_layer_scale": args.mid_layer_scale if args.injection_mode == "midlayer" else None,
+        "mid_layer_scale": args.mid_layer_scale if args.injection_mode in {"midlayer", "midlayer_persistent"} else None,
         "swiglu_bridge": str(args.swiglu_bridge) if args.swiglu_bridge is not None else None,
+        "contrastive_alpha": args.contrastive_alpha,
         "log_step_cosine": bool(args.log_step_cosine),
         "summary": {
             "total": total,
