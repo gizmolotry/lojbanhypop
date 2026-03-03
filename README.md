@@ -27,6 +27,17 @@ One-command task entrypoint:
 powershell -ExecutionPolicy Bypass -File scripts\tasks.ps1 -Task run
 ```
 
+## Airflow Orchestration
+
+Airflow DAG wrappers are available for the main experiment scripts:
+
+- `airflow/dags/lojban_experiment_dag.py` (`scripts/run_experiment.py`)
+- `airflow/dags/lojban_phase_ablation_dag.py` (`scripts/run_phase_ablation.py`)
+
+Setup and runtime configuration are documented in:
+
+- `docs/AIRFLOW_ORCHESTRATION.md`
+
 ## Phase 4: LoRA Weight Mutation
 
 Build an SFT dataset from Phase 3 successful runs:

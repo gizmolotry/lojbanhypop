@@ -23,6 +23,9 @@ quant = [
 dev = [
   "pytest>=8.0",
 ]
+orchestration = [
+  "apache-airflow>=2.10,<3.0",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}

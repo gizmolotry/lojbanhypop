@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from .experiment import Problem
+from .storage import StoragePath, write_json
 
 
 def utc_now_iso() -> str:
@@ -43,7 +44,7 @@ def dataset_fingerprint(problems: Sequence[Problem]) -> str:
     return h.hexdigest()
 
 
-def write_run_manifest(path: Path, payload: Mapping[str, Any]) -> None:
+def write_run_manifest(path: StoragePath, payload: Mapping[str, Any]) -> None:
     base = {
         "schema_version": "1.0",
         "generated_utc": utc_now_iso(),
@@ -52,5 +53,4 @@ def write_run_manifest(path: Path, payload: Mapping[str, Any]) -> None:
     }
     out = dict(base)
     out.update(payload)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    write_json(path, out, indent=2)

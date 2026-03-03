@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 import hashlib
 import json
 import random
-from pathlib import Path
 from typing import Dict, Iterable, List, Sequence, Tuple
+
+from .storage import StoragePath, join_path, make_dirs, write_text
 
 
 SEED_LANGUAGE = {
@@ -346,7 +347,7 @@ def is_pareto_improvement(new: Metrics, baseline: Metrics, tolerance: float = 1e
 
 
 def run_experiment(
-    output_root: Path,
+    output_root: StoragePath,
     iterations: int = 6,
     seed: int = 7,
     dataset_size: int = 1000,
@@ -388,7 +389,7 @@ def run_experiment(
 
     test_metrics = evaluate(test, language)
     payload = {
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "config": {
             "iterations": iterations,
             "seed": seed,
@@ -408,12 +409,12 @@ def run_experiment(
         "test_metrics": test_metrics.to_dict(),
     }
 
-    run_dir = output_root / datetime.utcnow().strftime("%Y%m%d_%H%M%S")
-    run_dir.mkdir(parents=True, exist_ok=True)
+    run_dir = join_path(output_root, datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S"))
+    make_dirs(run_dir, parents=True, exist_ok=True)
     payload["run_dir"] = str(run_dir)
     payload["dataset_fingerprint"] = _dataset_fingerprint(problems)
-    (run_dir / "history.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    _write_summary(run_dir / "summary.md", payload)
+    write_text(join_path(run_dir, "history.json"), json.dumps(payload, indent=2), encoding="utf-8")
+    _write_summary(join_path(run_dir, "summary.md"), payload)
     return payload
 
 
@@ -431,7 +432,7 @@ def _dataset_fingerprint(problems: Sequence[Problem]) -> str:
     return h.hexdigest()
 
 
-def _write_summary(path: Path, payload: dict) -> None:
+def _write_summary(path: StoragePath, payload: dict) -> None:
     config = payload["config"]
     final_language = payload["final_language"]
     test = payload["test_metrics"]
@@ -465,4 +466,4 @@ def _write_summary(path: Path, payload: dict) -> None:
     else:
         lines.append("- None")
 
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    write_text(path, "\n".join(lines) + "\n", encoding="utf-8")

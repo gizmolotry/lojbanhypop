@@ -9,6 +9,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from lojban_evolution.storage import StoragePath, is_s3_uri, join_path, make_dirs, write_bytes, write_json, write_text
+
 
 @dataclass
 class RunRecord:
@@ -36,6 +38,14 @@ def _run(cmd: List[str], execute: bool) -> tuple[str, Optional[int]]:
         return "planned", None
     rc = int(subprocess.call(cmd))
     return ("ok", rc) if rc == 0 else ("failed", rc)
+
+
+def _copy_to_output_if_s3(local_file: Path, output_root: StoragePath) -> str:
+    if is_s3_uri(output_root):
+        remote = join_path(output_root, local_file.name)
+        write_bytes(remote, local_file.read_bytes())
+        return str(remote)
+    return str(local_file)
 
 
 def _safe_mean(xs: List[float]) -> float:
@@ -80,7 +90,7 @@ def _metrics_from_coconut_nope(paths: List[Path]) -> Dict[str, object]:
     }
 
 
-def _write_summary_md(path: Path, records: List[RunRecord]) -> None:
+def _write_summary_md(path: StoragePath, records: List[RunRecord]) -> None:
     by_id = {r.run_id: r for r in records}
 
     def _h_metric(r: Optional[RunRecord]) -> str:
@@ -144,7 +154,7 @@ def _write_summary_md(path: Path, records: List[RunRecord]) -> None:
     )
     lines.append("")
     lines.append("- `Shock Tracking`: log per-step cosine for injected states (`step_cosine`) to observe persistence vs evaporation.")
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    write_text(path, "\n".join(lines) + "\n", encoding="utf-8")
 
 
 def parse_args() -> argparse.Namespace:
@@ -157,7 +167,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--seeds", type=int, nargs="+", default=[7, 11])
     p.add_argument("--dataset-size", type=int, default=1000)
     p.add_argument("--max-new-tokens", type=int, default=48)
-    p.add_argument("--output-root", type=Path, default=Path("runs/coconut_ablation_matrix"))
+    p.add_argument("--output-root", type=str, default="runs/coconut_ablation_matrix")
     p.add_argument("--local-files-only", action="store_true")
     p.add_argument("--execute", action="store_true")
     return p.parse_args()
@@ -166,8 +176,10 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-    out_dir = args.output_root / ts
-    out_dir.mkdir(parents=True, exist_ok=True)
+    out_dir = join_path(args.output_root, ts)
+    s3_output = is_s3_uri(out_dir)
+    local_out_dir = Path(out_dir) if not s3_output else Path("runs/_staging_coconut_ablation_matrix") / ts
+    make_dirs(local_out_dir, parents=True, exist_ok=True)
 
     eval_handoff = Path(__file__).resolve().parent / "eval_hf_dual_mode_handoff.py"
     eval_nope = Path(__file__).resolve().parent / "coconut_handoff.py"
@@ -175,7 +187,7 @@ def main() -> None:
     records: List[RunRecord] = []
 
     # A/B/C from one comparable run.
-    abc_json = out_dir / "run_abc_dual_handoff.json"
+    abc_json = local_out_dir / "run_abc_dual_handoff.json"
     abc_cmd = [
         sys.executable,
         str(eval_handoff),
@@ -197,6 +209,7 @@ def main() -> None:
     if args.local_files_only:
         abc_cmd.append("--local-files-only")
     abc_status, abc_rc = _run(abc_cmd, args.execute)
+    abc_output = _copy_to_output_if_s3(abc_json, out_dir) if args.execute and abc_status == "ok" else str(abc_json)
     abc_metrics = _metrics_from_dual_handoff(abc_json) if abc_status == "ok" else None
     for rid, name, note in [
         ("A", "Control (English CoT -> English)", "Derived from base_acc in dual-handoff run."),
@@ -210,7 +223,7 @@ def main() -> None:
                 status=abc_status,
                 return_code=abc_rc,
                 command=abc_cmd,
-                output=str(abc_json),
+                output=abc_output,
                 metrics=abc_metrics,
                 notes=note,
             )
@@ -224,7 +237,7 @@ def main() -> None:
     if args.execute:
         d_status = "ok"
         for seed in args.seeds:
-            out = out_dir / f"run_d_nope_seed{seed}.json"
+            out = local_out_dir / f"run_d_nope_seed{seed}.json"
             d_outputs.append(out)
             cmd = [
                 sys.executable,
@@ -253,7 +266,12 @@ def main() -> None:
             if rc != 0:
                 d_status = "failed"
                 break
+            if s3_output:
+                _copy_to_output_if_s3(out, out_dir)
     d_metrics = _metrics_from_coconut_nope(d_outputs) if d_status == "ok" else None
+    d_output = (
+        str(join_path(out_dir, "run_d_nope_seed*.json")) if s3_output else str(local_out_dir / "run_d_nope_seed*.json")
+    )
     records.append(
         RunRecord(
             run_id="D",
@@ -272,14 +290,14 @@ def main() -> None:
                 "--seed",
                 "<each seed>",
             ],
-            output=str(out_dir / "run_d_nope_seed*.json"),
+            output=d_output,
             metrics=d_metrics,
             notes="Uses coconut_handoff.py (NoPE patch active).",
         )
     )
 
     # E: Babel Bridge (projection).
-    e_json = out_dir / "run_e_babel_projection.json"
+    e_json = local_out_dir / "run_e_babel_projection.json"
     if args.handoff_projection is None:
         e_status, e_rc, e_metrics = "skipped", None, None
         e_cmd = []
@@ -308,8 +326,11 @@ def main() -> None:
         if args.local_files_only:
             e_cmd.append("--local-files-only")
         e_status, e_rc = _run(e_cmd, args.execute)
+        e_output = _copy_to_output_if_s3(e_json, out_dir) if args.execute and e_status == "ok" else str(e_json)
         e_metrics = _metrics_from_dual_handoff(e_json) if e_status == "ok" else None
         e_note = "Projection applied to KV cache before adapter-off decode."
+    if args.handoff_projection is None:
+        e_output = None
     records.append(
         RunRecord(
             run_id="E",
@@ -317,7 +338,7 @@ def main() -> None:
             status=e_status,
             return_code=e_rc,
             command=e_cmd,
-            output=str(e_json) if e_cmd else None,
+            output=e_output,
             metrics=e_metrics,
             notes=e_note,
         )
@@ -336,9 +357,9 @@ def main() -> None:
         "execute": bool(args.execute),
         "runs": [r.__dict__ for r in records],
     }
-    manifest_path = out_dir / "ablation_matrix.json"
-    summary_path = out_dir / "ablation_matrix.md"
-    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    manifest_path = join_path(out_dir, "ablation_matrix.json")
+    summary_path = join_path(out_dir, "ablation_matrix.md")
+    write_json(manifest_path, manifest, indent=2)
     _write_summary_md(summary_path, records)
     print(f"Wrote: {manifest_path}")
     print(f"Wrote: {summary_path}")
