@@ -286,3 +286,18 @@ python scripts\run_drope_recalibration.py `
   --max-steps 64 `
   --local-files-only
 ```
+
+## H5 Ablation Extension Contract
+
+The ablation manifest now supports H5 extension rows under `h5_extensions` with required run IDs:
+
+- `H5-PROV`
+- `H5-OOD`
+- `H5-DPTR`
+
+Each extension row follows:
+
+- `run_id`, `name`, `status`, `return_code`, `output`, `metrics`, `notes`
+
+Markdown summaries should include a row for each of the three H5 extension run IDs when present in the manifest.
+See `docs/H5_ABLATION_EXTENSION.md` for the compact contract and example.
