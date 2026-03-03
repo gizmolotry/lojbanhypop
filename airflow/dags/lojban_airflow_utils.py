@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -64,6 +65,72 @@ def validate_output_dir(output_dir: str) -> str:
     normalized = value.replace("\\", "/")
     if not any(normalized == root or normalized.startswith(f"{root}/") for root in allowed_local):
         raise ValueError(f"output_dir '{value}' is not under allowed local roots: {allowed_local}")
+    return value
+
+
+def validate_output_partition(output_dir: str, required_partition: str) -> str:
+    value = validate_output_dir(output_dir)
+    partition = required_partition.strip().replace("\\", "/").strip("/")
+    if not partition:
+        raise ValueError("required_partition cannot be empty")
+
+    normalized = value.replace("\\", "/").rstrip("/")
+    if normalized == partition or normalized.endswith(f"/{partition}") or f"/{partition}/" in f"{normalized}/":
+        return value
+
+    raise ValueError(
+        f"output_dir '{value}' must target the '{partition}' artifact partition "
+        "(for example s3://<bucket>/<prefix>/{partition}/...)"
+    )
+
+
+def sanitize_run_id(run_id: str, fallback: str = "manual") -> str:
+    raw = str(run_id).strip() or fallback
+    normalized = raw.replace(":", "_")
+    if not re.fullmatch(r"[A-Za-z0-9._-]{1,64}", normalized):
+        raise ValueError(
+            "run_id must match ^[A-Za-z0-9._-]{1,64}$ and may not contain path separators or traversal tokens."
+        )
+    return normalized
+
+
+def validate_input_artifact(input_artifact: str, required_partition: str) -> str:
+    value = str(input_artifact).strip()
+    if not value:
+        raise ValueError("input_artifact cannot be empty")
+    partition = required_partition.strip().replace("\\", "/").strip("/")
+    normalized = value.replace("\\", "/").rstrip("/")
+    in_partition = (
+        normalized == partition or normalized.endswith(f"/{partition}") or f"/{partition}/" in f"{normalized}/"
+    )
+    if normalized.startswith("s3://"):
+        if not in_partition:
+            raise ValueError(f"input_artifact '{value}' must be under partition '{partition}'")
+        return value
+
+    path_obj = Path(value)
+    if path_obj.is_absolute() and os.environ.get("LOJBAN_ALLOW_ABSOLUTE_INPUT_ARTIFACT", "0") != "1":
+        raise ValueError("absolute input_artifact paths are not allowed unless LOJBAN_ALLOW_ABSOLUTE_INPUT_ARTIFACT=1")
+    if ".." in path_obj.parts:
+        raise ValueError("input_artifact may not include path traversal ('..')")
+    if not in_partition:
+        raise ValueError(f"input_artifact '{value}' must be under partition '{partition}'")
+    return value
+
+
+def validate_distribution_json_path(path_value: str) -> str:
+    value = str(path_value).strip()
+    if not value:
+        raise ValueError("variable_token_distribution_json cannot be empty")
+    if value.startswith("s3://"):
+        raise ValueError("variable_token_distribution_json must be a local repo path under docs/")
+    normalized = value.replace("\\", "/")
+    if not normalized.startswith("docs/"):
+        raise ValueError("variable_token_distribution_json must be under docs/")
+    if not normalized.endswith(".json"):
+        raise ValueError("variable_token_distribution_json must point to a .json file")
+    if ".." in Path(value).parts:
+        raise ValueError("variable_token_distribution_json may not include path traversal ('..')")
     return value
 
 

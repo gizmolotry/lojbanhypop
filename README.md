@@ -29,14 +29,23 @@ powershell -ExecutionPolicy Bypass -File scripts\tasks.ps1 -Task run
 
 ## Airflow Orchestration
 
-Airflow DAG wrappers are available for the main experiment scripts:
+Airflow DAG wrappers are available for the canonical train/eval pipelines:
 
-- `airflow/dags/lojban_experiment_dag.py` (`scripts/run_experiment.py`)
-- `airflow/dags/lojban_phase_ablation_dag.py` (`scripts/run_phase_ablation.py`)
+- `airflow/dags/lojban_experiment_dag.py` (`scripts/pipeline_train_grounded_reasoner.py`)
+- `airflow/dags/lojban_phase_ablation_dag.py` (`scripts/pipeline_eval_manifold.py`)
 
 Setup and runtime configuration are documented in:
 
 - `docs/AIRFLOW_ORCHESTRATION.md`
+
+Artifact-contract-first partitions for S3-backed orchestration:
+
+- `models/frozen_manifolds` for train outputs
+- `telemetry/raw` for eval outputs
+
+Artifact contract schema:
+
+- `docs/artifact_contract_v1.schema.json`
 
 ## Phase 4: LoRA Weight Mutation
 
