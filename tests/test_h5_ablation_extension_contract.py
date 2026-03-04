@@ -10,7 +10,7 @@ from conftest import load_script_module
 
 mod = load_script_module("run_coconut_ablation_matrix", "scripts/run_coconut_ablation_matrix.py")
 
-REQUIRED_H5_RUN_IDS = {"H5-PROV", "H5-OOD", "H5-DPTR"}
+REQUIRED_EXTENSION_RUN_IDS = {"H5-PROV", "H5-OOD", "H5-DPTR", "J-1", "J-2", "J-3", "J-4"}
 REQUIRED_EXTENSION_KEYS = {"run_id", "name", "status", "return_code", "output", "metrics", "notes"}
 
 
@@ -18,7 +18,7 @@ def _validate_h5_extension_manifest(payload: dict) -> None:
     rows = payload.get("h5_extensions")
     assert isinstance(rows, list), "h5_extensions must be a list."
     ids = {str(r.get("run_id", "")) for r in rows if isinstance(r, dict)}
-    assert REQUIRED_H5_RUN_IDS.issubset(ids), "Missing one or more required H5 extension rows."
+    assert REQUIRED_EXTENSION_RUN_IDS.issubset(ids), "Missing one or more required H5/J extension rows."
     for row in rows:
         assert isinstance(row, dict), "Each H5 extension row must be an object."
         missing = REQUIRED_EXTENSION_KEYS.difference(row.keys())
@@ -57,6 +57,42 @@ def test_h5_extension_manifest_includes_required_rows_and_keys() -> None:
                 "metrics": {"final_acc": 0.36},
                 "notes": "Pointer transfer/distillation check.",
             },
+            {
+                "run_id": "J-1",
+                "name": "Graph Target (Factor Schema)",
+                "status": "ok",
+                "return_code": 0,
+                "output": "runs/true_coconut_h_series/<timestamp>/j-1.json",
+                "metrics": {"schema_valid_rate": 1.0},
+                "notes": "Graph schema extraction.",
+            },
+            {
+                "run_id": "J-2",
+                "name": "Paraphrase Explosion (Invariance)",
+                "status": "ok",
+                "return_code": 0,
+                "output": "runs/true_coconut_h_series/<timestamp>/j-2.json",
+                "metrics": {"invariance_rate": 0.9},
+                "notes": "Paraphrase invariance stress.",
+            },
+            {
+                "run_id": "J-3",
+                "name": "Stop-Grad Isolation Gate",
+                "status": "ok",
+                "return_code": 0,
+                "output": "runs/true_coconut_h_series/<timestamp>/j-3.json",
+                "metrics": {"stopgrad_contract_pass": 1},
+                "notes": "Isolation gate check.",
+            },
+            {
+                "run_id": "J-4",
+                "name": "Operator Curriculum Build",
+                "status": "ok",
+                "return_code": 0,
+                "output": "runs/true_coconut_h_series/<timestamp>/j-4.json",
+                "metrics": {"operator_count": 5},
+                "notes": "Operator curriculum generation.",
+            },
         ],
     }
 
@@ -87,7 +123,7 @@ def test_h5_extension_manifest_missing_required_row_fails() -> None:
         ]
     }
 
-    with pytest.raises(AssertionError, match="required H5 extension rows"):
+    with pytest.raises(AssertionError, match="required H5/J extension rows"):
         _validate_h5_extension_manifest(manifest)
 
 
@@ -101,6 +137,10 @@ def test_markdown_summary_includes_h5_extension_run_rows() -> None:
         mod.RunRecord("H5-PROV", "H5 Provenance", "ok", 0, [], None, {"final_acc": 0.39}, ""),
         mod.RunRecord("H5-OOD", "H5 Out-of-Distribution", "ok", 0, [], None, {"final_acc": 0.31}, ""),
         mod.RunRecord("H5-DPTR", "H5 Distillation Pointer Transfer", "ok", 0, [], None, {"final_acc": 0.36}, ""),
+        mod.RunRecord("J-1", "Graph Target (Factor Schema)", "ok", 0, [], None, {"schema_valid_rate": 1.0}, ""),
+        mod.RunRecord("J-2", "Paraphrase Explosion (Invariance)", "ok", 0, [], None, {"invariance_rate": 1.0}, ""),
+        mod.RunRecord("J-3", "Stop-Grad Isolation Gate", "ok", 0, [], None, {"stopgrad_contract_pass": 1.0}, ""),
+        mod.RunRecord("J-4", "Operator Curriculum Build", "ok", 0, [], None, {"operator_count": 5.0}, ""),
     ]
 
     out_dir = Path("artifacts/test_tmp") / f"h5_ext_{uuid.uuid4().hex}"
@@ -112,3 +152,7 @@ def test_markdown_summary_includes_h5_extension_run_rows() -> None:
     assert "| `H5-PROV` | `H5 Provenance` | `ok` | `0` |" in text
     assert "| `H5-OOD` | `H5 Out-of-Distribution` | `ok` | `0` |" in text
     assert "| `H5-DPTR` | `H5 Distillation Pointer Transfer` | `ok` | `0` |" in text
+    assert "| `J-1` | `Graph Target (Factor Schema)` | `ok` | `0` |" in text
+    assert "| `J-2` | `Paraphrase Explosion (Invariance)` | `ok` | `0` |" in text
+    assert "| `J-3` | `Stop-Grad Isolation Gate` | `ok` | `0` |" in text
+    assert "| `J-4` | `Operator Curriculum Build` | `ok` | `0` |" in text

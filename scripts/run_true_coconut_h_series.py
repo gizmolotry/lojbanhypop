@@ -35,6 +35,13 @@ def _safe_mean(xs: List[float]) -> float:
     return sum(xs) / len(xs) if xs else 0.0
 
 
+def _safe_float(value: object, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return float(default)
+
+
 def _extract_metrics(path: Path) -> Optional[Dict[str, float]]:
     payload = _read_json(path)
     if payload is None:
@@ -45,14 +52,14 @@ def _extract_metrics(path: Path) -> Optional[Dict[str, float]]:
     for row in rows:
         trace = row.get("step_cosine")
         if isinstance(trace, list) and trace:
-            vals = [float(s.get("cos_mean", 0.0)) for s in trace if isinstance(s, dict)]
+            vals = [_safe_float(s.get("cos_mean", 0.0)) for s in trace if isinstance(s, dict)]
             if vals:
                 step_means.append(_safe_mean(vals))
     return {
-        "base_acc": float(summary.get("base_acc", 0.0)),
-        "handoff_acc": float(summary.get("coconut_acc", 0.0)),
-        "handoff_lift": float(summary.get("coconut_lift", 0.0)),
-        "errors": float(summary.get("errors", 0)),
+        "base_acc": _safe_float(summary.get("base_acc", 0.0)),
+        "handoff_acc": _safe_float(summary.get("coconut_acc", 0.0)),
+        "handoff_lift": _safe_float(summary.get("coconut_lift", 0.0)),
+        "errors": _safe_float(summary.get("errors", 0)),
         "mean_step_cosine": _safe_mean(step_means),
     }
 
@@ -63,7 +70,7 @@ def _aggregate_metrics(rows: List[Dict[str, float]]) -> Optional[Dict[str, float
     keys = sorted({k for row in rows for k in row.keys()})
     out: Dict[str, float] = {}
     for key in keys:
-        vals = [float(row[key]) for row in rows if isinstance(row.get(key), (float, int))]
+        vals = [_safe_float(row[key]) for row in rows if isinstance(row.get(key), (float, int))]
         if vals:
             out[key] = _safe_mean(vals)
     out["seed_count"] = float(len(rows))
@@ -74,9 +81,9 @@ def _extract_provenance_metrics(path: Path) -> Dict[str, float]:
     payload = _read_json(path) or {}
     pm = payload.get("provenance_metrics", {}) if isinstance(payload, dict) else {}
     return {
-        "provenance_mean_l2_delta": float(pm.get("mean_l2_delta", 0.0)),
-        "provenance_exact_match_ratio_eps": float(pm.get("exact_match_ratio_eps", 0.0)),
-        "provenance_anchor_mean_l2_delta": float(pm.get("anchor_mean_l2_delta", 0.0)),
+        "provenance_mean_l2_delta": _safe_float(pm.get("mean_l2_delta", 0.0)),
+        "provenance_exact_match_ratio_eps": _safe_float(pm.get("exact_match_ratio_eps", 0.0)),
+        "provenance_anchor_mean_l2_delta": _safe_float(pm.get("anchor_mean_l2_delta", 0.0)),
     }
 
 
@@ -87,9 +94,9 @@ def _extract_ood_metrics(path: Path) -> Dict[str, float]:
     spatial = domains.get("spatial", {}) if isinstance(domains, dict) else {}
     temporal = domains.get("temporal", {}) if isinstance(domains, dict) else {}
     return {
-        "ood_accuracy": float(summary.get("accuracy", 0.0)),
-        "ood_spatial_accuracy": float(spatial.get("accuracy", 0.0)),
-        "ood_temporal_accuracy": float(temporal.get("accuracy", 0.0)),
+        "ood_accuracy": _safe_float(summary.get("accuracy", 0.0)),
+        "ood_spatial_accuracy": _safe_float(spatial.get("accuracy", 0.0)),
+        "ood_temporal_accuracy": _safe_float(temporal.get("accuracy", 0.0)),
     }
 
 
@@ -98,10 +105,10 @@ def _extract_dptr_metrics(path: Path) -> Dict[str, float]:
     summary = payload.get("summary", {}) if isinstance(payload, dict) else {}
     ptr = payload.get("dynamic_pointer_metrics", {}) if isinstance(payload, dict) else {}
     return {
-        "dptr_standard_accuracy": float(summary.get("standard_accuracy", 0.0)),
-        "dptr_dynamic_accuracy": float(summary.get("dynamic_accuracy", 0.0)),
-        "dptr_dynamic_minus_standard_accuracy": float(summary.get("dynamic_minus_standard_accuracy", 0.0)),
-        "dptr_self_ref_rate": float(ptr.get("self_ref_rate", 0.0)),
+        "dptr_standard_accuracy": _safe_float(summary.get("standard_accuracy", 0.0)),
+        "dptr_dynamic_accuracy": _safe_float(summary.get("dynamic_accuracy", 0.0)),
+        "dptr_dynamic_minus_standard_accuracy": _safe_float(summary.get("dynamic_minus_standard_accuracy", 0.0)),
+        "dptr_self_ref_rate": _safe_float(ptr.get("self_ref_rate", 0.0)),
     }
 
 
@@ -120,6 +127,33 @@ def _validate_json_artifact(path: Path, required_keys: List[str]) -> bool:
     if not isinstance(payload, dict):
         return False
     return all(k in payload for k in required_keys)
+
+
+def _validate_json_artifacts(paths: List[Path], required_keys: List[str]) -> Dict[str, float]:
+    total = len(paths)
+    valid = 0
+    for path in paths:
+        if _validate_json_artifact(path, required_keys):
+            valid += 1
+    return {
+        "validated_files": float(valid),
+        "total_files": float(total),
+        "validation_ratio": (float(valid) / float(total)) if total else 0.0,
+    }
+
+
+def _extract_j_metrics(path: Path) -> Optional[Dict[str, float]]:
+    payload = _read_json(path)
+    if not isinstance(payload, dict):
+        return None
+    metrics = payload.get("metrics")
+    if not isinstance(metrics, dict):
+        return None
+    out: Dict[str, float] = {}
+    for k, v in metrics.items():
+        if isinstance(v, (int, float)):
+            out[str(k)] = float(v)
+    return out if out else None
 
 
 def parse_args() -> argparse.Namespace:
@@ -147,7 +181,7 @@ def parse_args() -> argparse.Namespace:
         type=str,
         nargs="+",
         default=None,
-        help="Subset of runs: H1 H2 H3 H4 H5-PROV H5-OOD H5-DPTR",
+        help="Subset of runs: H1 H2 H3 H4 H5-PROV H5-OOD H5-DPTR J-1 J-2 J-3 J-4",
     )
     p.add_argument("--fail-fast", action="store_true", help="Stop immediately when any selected run fails.")
 
@@ -199,6 +233,10 @@ def main() -> None:
     prov_script = script_dir / "trace_h5_provenance.py"
     ood_script = script_dir / "eval_h5_ood_stress.py"
     dptr_script = script_dir / "eval_h5_dynamic_pointer_refactor.py"
+    j1_script = script_dir / "eval_j_1.py"
+    j2_script = script_dir / "eval_j_2.py"
+    j3_script = script_dir / "eval_j_3.py"
+    j4_script = script_dir / "eval_j_4.py"
 
     runs: List[HRun] = []
     abort_remaining = False
@@ -250,7 +288,7 @@ def main() -> None:
             cmd.extend(extra)
         return cmd
 
-    wanted = {r.upper() for r in (args.only_runs or ["H1", "H2", "H3", "H4", "H5-PROV", "H5-OOD", "H5-DPTR"])}
+    wanted = {r.upper() for r in (args.only_runs or ["H1", "H2", "H3", "H4", "H5-PROV", "H5-OOD", "H5-DPTR", "J-1", "J-2", "J-3", "J-4"])}
     run_specs = [
         ("H1", "Multi-Vector Injection (Bandwidth)", "input", args.h1_window, args.adapter, None),
         (
@@ -457,6 +495,81 @@ def main() -> None:
                 st, rc = "failed", -2
             metrics = _extract_dptr_metrics(out) if st == "ok" else None
             runs.append(HRun("H5-DPTR", "Dynamic Pointer Refactor Eval", st, rc, str(out), [str(out)], metrics, cmd, {"base_model": str(dptr_base), "adapter": str(dptr_adapter), "checkpoint": str(dptr_ckpt)}))
+            if st == "failed" and args.fail_fast:
+                abort_remaining = True
+
+    j1_out = out_dir / "j-1.json"
+    if "J-1" in wanted and not abort_remaining:
+        h5_ood_out = out_dir / "h5-ood.json"
+        cmd = [sys.executable, str(j1_script), "--output", str(j1_out)]
+        if h5_ood_out.exists():
+            cmd.extend(["--input-artifact", str(h5_ood_out)])
+        st, rc = _run(cmd, args.execute)
+        if st == "ok" and not _validate_json_artifact(j1_out, ["summary", "metrics", "graphs", "relation_histogram"]):
+            st, rc = "failed", -2
+        metrics = _extract_j_metrics(j1_out) if st == "ok" else None
+        runs.append(HRun("J-1", "Graph Target (Factor Schema)", st, rc, str(j1_out), [str(j1_out)], metrics, cmd, {"input_artifact": str(h5_ood_out) if h5_ood_out.exists() else None}))
+        if st == "failed" and args.fail_fast:
+            abort_remaining = True
+
+    j2_out = out_dir / "j-2.json"
+    if "J-2" in wanted and not abort_remaining:
+        j1_row = next((r for r in runs if r.run_id == "J-1"), None)
+        if j1_row is None:
+            runs.append(HRun("J-2", "Paraphrase Explosion (Invariance)", "skipped", None, str(j2_out), [str(j2_out)], None, [], {"reason": "missing_j1_run"}))
+        elif j1_row.status == "planned":
+            runs.append(HRun("J-2", "Paraphrase Explosion (Invariance)", "planned", None, str(j2_out), [str(j2_out)], None, [], {"reason": "planned_j1_dependency"}))
+        elif j1_row.status != "ok" or not j1_out.exists():
+            runs.append(HRun("J-2", "Paraphrase Explosion (Invariance)", "skipped", None, str(j2_out), [str(j2_out)], None, [], {"reason": "j1_not_ready"}))
+        else:
+            cmd = [sys.executable, str(j2_script), "--j1-artifact", str(j1_out), "--variants-per-graph", "1000", "--output", str(j2_out)]
+            st, rc = _run(cmd, args.execute)
+            if st == "ok" and not _validate_json_artifact(j2_out, ["summary", "metrics", "samples"]):
+                st, rc = "failed", -2
+            metrics = _extract_j_metrics(j2_out) if st == "ok" else None
+            runs.append(HRun("J-2", "Paraphrase Explosion (Invariance)", st, rc, str(j2_out), [str(j2_out)], metrics, cmd, {"j1_artifact": str(j1_out), "variants_per_graph": 1000}))
+            if st == "failed" and args.fail_fast:
+                abort_remaining = True
+
+    j3_out = out_dir / "j-3.json"
+    if "J-3" in wanted and not abort_remaining:
+        source_script = script_dir / "train_h5_persistent_vq_advisor.py"
+        cmd = [sys.executable, str(j3_script), "--source-script", str(source_script), "--output", str(j3_out)]
+        st, rc = _run(cmd, args.execute)
+        if st == "ok" and not _validate_json_artifact(j3_out, ["summary", "metrics"]):
+            st, rc = "failed", -2
+        metrics = _extract_j_metrics(j3_out) if st == "ok" else None
+        runs.append(HRun("J-3", "Stop-Grad Isolation Gate", st, rc, str(j3_out), [str(j3_out)], metrics, cmd, {"source_script": str(source_script)}))
+        if st == "failed" and args.fail_fast:
+            abort_remaining = True
+
+    j4_out = out_dir / "j-4.json"
+    j4_dataset_out = out_dir / "j-4_curriculum.jsonl"
+    if "J-4" in wanted and not abort_remaining:
+        cmd = [sys.executable, str(j4_script), "--per-operator", "256", "--output", str(j4_out), "--dataset-output", str(j4_dataset_out)]
+        st, rc = _run(cmd, args.execute)
+        if st == "ok" and not _validate_json_artifact(j4_out, ["summary", "metrics", "operator_histogram"]):
+            st, rc = "failed", -2
+        if st == "ok" and args.execute and not j4_dataset_out.exists():
+            st, rc = "failed", -3
+        metrics = _extract_j_metrics(j4_out) if st == "ok" else None
+        runs.append(HRun("J-4", "Operator Curriculum Build", st, rc, str(j4_out), [str(j4_out), str(j4_dataset_out)], metrics, cmd, {"dataset_output": str(j4_dataset_out), "per_operator": 256}))
+
+    h5j_ext_rows = []
+    for r in runs:
+        if str(r.run_id).startswith("H5-") or str(r.run_id).startswith("J-"):
+            notes = str(r.config.get("reason", "")) if isinstance(r.config, dict) else ""
+            h5j_ext_rows.append(
+                {
+                    "run_id": r.run_id,
+                    "name": r.name,
+                    "status": r.status,
+                    "return_code": r.return_code,
+                    "output": r.output,
+                    "metrics": r.metrics or {},
+                    "notes": notes,
+                }
+            )
 
     manifest = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -471,6 +584,7 @@ def main() -> None:
             "adapter": str(args.h5_adapter) if args.h5_adapter is not None else None,
             "checkpoint": str(args.h5_checkpoint) if args.h5_checkpoint is not None else None,
         },
+        "h5_extensions": h5j_ext_rows,
         "runs": [r.__dict__ for r in runs],
     }
     manifest_path = out_dir / "run_h_series.json"
@@ -502,6 +616,24 @@ def main() -> None:
                     f"base_acc={r.metrics.get('dptr_standard_accuracy', 0.0):.3f}, "
                     f"delta={r.metrics.get('dptr_dynamic_minus_standard_accuracy', 0.0):+.3f}"
                 )
+            elif r.run_id in {"J-1", "J-2", "J-3", "J-4"}:
+                if r.run_id == "J-1":
+                    key = (
+                        f"schema_valid_rate={r.metrics.get('schema_valid_rate', 0.0):.3f}, "
+                        f"graphs={r.metrics.get('graph_count', 0.0):.0f}"
+                    )
+                elif r.run_id == "J-2":
+                    key = (
+                        f"invariance_rate={r.metrics.get('invariance_rate', 0.0):.3f}, "
+                        f"variants={r.metrics.get('variant_count', 0.0):.0f}"
+                    )
+                elif r.run_id == "J-3":
+                    key = f"stopgrad_pass={r.metrics.get('stopgrad_contract_pass', 0.0):.0f}"
+                else:
+                    key = (
+                        f"samples={r.metrics.get('sample_count', 0.0):.0f}, "
+                        f"operators={r.metrics.get('operator_count', 0.0):.0f}"
+                    )
             else:
                 key = (
                     f"base={r.metrics.get('base_acc', 0.0):.3f}, "

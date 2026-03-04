@@ -287,17 +287,28 @@ python scripts\run_drope_recalibration.py `
   --local-files-only
 ```
 
-## H5 Ablation Extension Contract
+## H5/J Ablation Extension Contract
 
-The ablation manifest now supports H5 extension rows under `h5_extensions` with required run IDs:
+The ablation manifest now supports H5 and J extension rows under `h5_extensions` with required run IDs:
 
 - `H5-PROV`
 - `H5-OOD`
 - `H5-DPTR`
+- `J-1`
+- `J-2`
+- `J-3`
+- `J-4`
 
 Each extension row follows:
 
 - `run_id`, `name`, `status`, `return_code`, `output`, `metrics`, `notes`
 
-Markdown summaries should include a row for each of the three H5 extension run IDs when present in the manifest.
+`J-1..J-4` are Phase-7 invariance rows:
+
+- `J-1`: Graph target extraction to strict Entities+Edges schema
+- `J-2`: Paraphrase explosion invariance stress metric
+- `J-3`: Stop-grad isolation gate
+- `J-4`: Operator curriculum build
+
+Airflow wrapper for J-series is available at `airflow/dags/lojban_j_series_dag.py` and follows the same helper utilities as existing DAGs.
 See `docs/H5_ABLATION_EXTENSION.md` for the compact contract and example.
