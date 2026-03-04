@@ -33,6 +33,7 @@ Airflow DAG wrappers are available for the canonical train/eval pipelines:
 
 - `airflow/dags/lojban_experiment_dag.py` (`scripts/pipeline_train_grounded_reasoner.py`)
 - `airflow/dags/lojban_phase_ablation_dag.py` (`scripts/pipeline_eval_manifold.py`)
+- `airflow/dags/lojban_l_series_dag.py` (`scripts/train_l_series_mvs.py`)
 
 Setup and runtime configuration are documented in:
 
@@ -46,6 +47,23 @@ Artifact-contract-first partitions for S3-backed orchestration:
 Artifact contract schema:
 
 - `docs/artifact_contract_v1.schema.json`
+
+## L-Series (Lagrangian Series)
+
+L-Series MVS replaces static weighted-loss blending with a lexicographic augmented Lagrangian controller:
+
+- Tier A: arity/scope/identity constraints with dynamic multipliers (`lambda_i`)
+- Tier B: soft 3-valued logic + crispness pressure
+- Tier C: entropy-floor + overflow constraints
+
+Entrypoint:
+
+```powershell
+$env:PYTHONPATH="src"
+python scripts/train_l_series_mvs.py --base-model <model_or_path> --adapter <adapter_path>
+```
+
+See `docs/L_SERIES.md` for objective details and runtime knobs.
 
 ## Phase 4: LoRA Weight Mutation
 
