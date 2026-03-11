@@ -7,7 +7,16 @@ import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
+
+sys.path.append(str(Path(__file__).resolve().parent.parent / "src"))
+
+from lojban_evolution.series_contract import (
+    assert_output_path_allowed,
+    lineage_metadata,
+    series_metadata,
+    validate_series_outputs,
+)
 
 @dataclass
 class HRun:
@@ -20,6 +29,7 @@ class HRun:
     metrics: Optional[Dict[str, float]]
     command: List[str]
     config: Dict[str, object]
+    lineage: Dict[str, Any]
 
 
 def _read_json(path: Path) -> Optional[dict]:
@@ -122,6 +132,22 @@ def _run(cmd: List[str], execute: bool) -> tuple[str, Optional[int]]:
     return ("ok", rc) if rc == 0 else ("failed", rc)
 
 
+def _norm_path(value: str | Path | None) -> Optional[str]:
+    if value is None:
+        return None
+    return str(value).replace("\\", "/")
+
+
+def _lineage_cell(value: Any) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, list):
+        return ", ".join(str(x) for x in value)
+    if isinstance(value, dict):
+        return json.dumps(value, sort_keys=True)
+    return str(value)
+
+
 def _validate_json_artifact(path: Path, required_keys: List[str]) -> bool:
     payload = _read_json(path)
     if not isinstance(payload, dict):
@@ -156,6 +182,19 @@ def _extract_j_metrics(path: Path) -> Optional[Dict[str, float]]:
     return out if out else None
 
 
+def _m_series_alias(run_id: str) -> Optional[str]:
+    mapping = {
+        "H5-PROV": "M0.1",
+        "H5-OOD": "M0.2",
+        "H5-DPTR": "M0.3",
+        "J-1": "M1.1",
+        "J-2": "M1.2",
+        "J-4": "M1.3",
+        "J-5": "M1.4",
+    }
+    return mapping.get(str(run_id).upper())
+
+
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Run H-series ablations for True Coconut continuous feed.")
     p.add_argument("--base-model", required=True)
@@ -181,7 +220,7 @@ def parse_args() -> argparse.Namespace:
         type=str,
         nargs="+",
         default=None,
-        help="Subset of runs: H1 H2 H3 H4 H5-PROV H5-OOD H5-DPTR J-1 J-2 J-3 J-4",
+        help="Subset of runs: H1 H2 H3 H4 H5-PROV H5-OOD H5-DPTR J-1 J-2 J-3 J-4 J-5",
     )
     p.add_argument("--fail-fast", action="store_true", help="Stop immediately when any selected run fails.")
 
@@ -217,7 +256,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--h5-dptr-relation-bias", type=float, default=0.0)
     p.add_argument("--h5-dptr-use-iron-collar", action="store_true")
 
-    p.add_argument("--output-root", type=Path, default=Path("runs/true_coconut_h_series"))
+    p.add_argument("--output-root", type=Path, default=Path("runs/j_series"))
     p.add_argument("--local-files-only", action="store_true")
     p.add_argument("--execute", action="store_true")
     return p.parse_args()
@@ -226,7 +265,11 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-    out_dir = args.output_root / ts
+    wanted = {r.upper() for r in (args.only_runs or ["H1", "H2", "H3", "H4", "H5-PROV", "H5-OOD", "H5-DPTR", "J-1", "J-2", "J-3", "J-4", "J-5"])}
+    root = args.output_root
+    assert_output_path_allowed("M", root)
+    out_dir = root / ts
+    validate_series_outputs("M", [root], [out_dir])
     out_dir.mkdir(parents=True, exist_ok=True)
     script_dir = Path(__file__).resolve().parent
     true_coconut = script_dir / "true_coconut.py"
@@ -237,6 +280,7 @@ def main() -> None:
     j2_script = script_dir / "eval_j_2.py"
     j3_script = script_dir / "eval_j_3.py"
     j4_script = script_dir / "eval_j_4.py"
+    j5_script = script_dir / "eval_j_5.py"
 
     runs: List[HRun] = []
     abort_remaining = False
@@ -288,7 +332,6 @@ def main() -> None:
             cmd.extend(extra)
         return cmd
 
-    wanted = {r.upper() for r in (args.only_runs or ["H1", "H2", "H3", "H4", "H5-PROV", "H5-OOD", "H5-DPTR", "J-1", "J-2", "J-3", "J-4"])}
     run_specs = [
         ("H1", "Multi-Vector Injection (Bandwidth)", "input", args.h1_window, args.adapter, None),
         (
@@ -388,7 +431,7 @@ def main() -> None:
         agg = _aggregate_metrics(seed_metrics)
         run_config: Dict[str, object] = {
             "base_model": run_base_model,
-            "adapter": str(adapter),
+            "adapter": _norm_path(adapter),
             "seeds": run_seeds,
             "sample_size": run_sample_size,
             "dataset_size": run_dataset_size,
@@ -397,6 +440,13 @@ def main() -> None:
             "injection_mode": mode,
             "virtual_token_window": window,
         }
+        run_lineage = lineage_metadata(
+            "eval_only",
+            checkpoint_in=None,
+            checkpoint_out=None,
+            dataset_profile="legacy",
+            difficulty_tier="all",
+        )
         runs.append(
             HRun(
                 run_id,
@@ -408,6 +458,7 @@ def main() -> None:
                 agg,
                 first_cmd,
                 run_config,
+                run_lineage,
             )
         )
         if status == "failed" and args.fail_fast:
@@ -420,14 +471,52 @@ def main() -> None:
     if "H5-PROV" in wanted and not abort_remaining:
         out = out_dir / "h5-prov.json"
         if h53_ckpt is None or s1_ckpt is None:
-            runs.append(HRun("H5-PROV", "Provenance Trace", "skipped", None, str(out), [str(out)], None, [], {"reason": "missing_h53_or_slice1_checkpoint"}))
+            runs.append(
+                HRun(
+                    "H5-PROV",
+                    "Provenance Trace",
+                    "skipped",
+                    None,
+                    _norm_path(out),
+                    [_norm_path(out) or ""],
+                    None,
+                    [],
+                    {"reason": "missing_h53_or_slice1_checkpoint"},
+                    lineage_metadata(
+                        "eval_only",
+                        checkpoint_in=[_norm_path(h53_ckpt), _norm_path(s1_ckpt)],
+                        checkpoint_out=None,
+                        dataset_profile="provenance_trace",
+                        difficulty_tier="all",
+                    ),
+                )
+            )
         else:
             cmd = [sys.executable, str(prov_script), "--h53-checkpoint", str(h53_ckpt), "--slice1-checkpoint", str(s1_ckpt), "--top-k", str(args.h5_prov_top_k), "--output", str(out)]
             st, rc = _run(cmd, args.execute)
             if st == "ok" and not _validate_json_artifact(out, ["provenance_metrics", "provenance_map_topk"]):
                 st, rc = "failed", -2
             metrics = _extract_provenance_metrics(out) if st == "ok" else None
-            runs.append(HRun("H5-PROV", "Provenance Trace", st, rc, str(out), [str(out)], metrics, cmd, {"h53_checkpoint": str(h53_ckpt), "slice1_checkpoint": str(s1_ckpt), "top_k": args.h5_prov_top_k}))
+            runs.append(
+                HRun(
+                    "H5-PROV",
+                    "Provenance Trace",
+                    st,
+                    rc,
+                    _norm_path(out),
+                    [_norm_path(out) or ""],
+                    metrics,
+                    cmd,
+                    {"h53_checkpoint": _norm_path(h53_ckpt), "slice1_checkpoint": _norm_path(s1_ckpt), "top_k": args.h5_prov_top_k},
+                    lineage_metadata(
+                        "eval_only",
+                        checkpoint_in=[_norm_path(h53_ckpt), _norm_path(s1_ckpt)],
+                        checkpoint_out=None,
+                        dataset_profile="provenance_trace",
+                        difficulty_tier="all",
+                    ),
+                )
+            )
             if st == "failed" and args.fail_fast:
                 abort_remaining = True
 
@@ -437,7 +526,26 @@ def main() -> None:
         ood_adapter = args.h5_ood_adapter or args.h5_adapter or args.adapter
         ood_ckpt = args.h5_ood_checkpoint or args.h5_checkpoint
         if ood_ckpt is None:
-            runs.append(HRun("H5-OOD", "OOD Stress Test", "skipped", None, str(out), [str(out)], None, [], {"reason": "missing_h5_ood_checkpoint"}))
+            runs.append(
+                HRun(
+                    "H5-OOD",
+                    "OOD Stress Test",
+                    "skipped",
+                    None,
+                    _norm_path(out),
+                    [_norm_path(out) or ""],
+                    None,
+                    [],
+                    {"reason": "missing_h5_ood_checkpoint"},
+                    lineage_metadata(
+                        "eval_only",
+                        checkpoint_in=None,
+                        checkpoint_out=None,
+                        dataset_profile="ood_stress_v1",
+                        difficulty_tier="all",
+                    ),
+                )
+            )
         else:
             cmd = [
                 sys.executable, str(ood_script),
@@ -460,7 +568,26 @@ def main() -> None:
             if st == "ok" and not _validate_json_artifact(out, ["summary", "domains", "samples"]):
                 st, rc = "failed", -2
             metrics = _extract_ood_metrics(out) if st == "ok" else None
-            runs.append(HRun("H5-OOD", "OOD Stress Test", st, rc, str(out), [str(out)], metrics, cmd, {"base_model": str(ood_base), "adapter": str(ood_adapter), "checkpoint": str(ood_ckpt)}))
+            runs.append(
+                HRun(
+                    "H5-OOD",
+                    "OOD Stress Test",
+                    st,
+                    rc,
+                    _norm_path(out),
+                    [_norm_path(out) or ""],
+                    metrics,
+                    cmd,
+                    {"base_model": str(ood_base), "adapter": _norm_path(ood_adapter), "checkpoint": _norm_path(ood_ckpt)},
+                    lineage_metadata(
+                        "eval_only",
+                        checkpoint_in=_norm_path(ood_ckpt),
+                        checkpoint_out=None,
+                        dataset_profile="ood_stress_v1",
+                        difficulty_tier="all",
+                    ),
+                )
+            )
             if st == "failed" and args.fail_fast:
                 abort_remaining = True
 
@@ -470,7 +597,26 @@ def main() -> None:
         dptr_adapter = args.h5_dptr_adapter or args.h5_adapter or args.adapter
         dptr_ckpt = args.h5_dptr_checkpoint or args.h5_checkpoint
         if dptr_ckpt is None:
-            runs.append(HRun("H5-DPTR", "Dynamic Pointer Refactor Eval", "skipped", None, str(out), [str(out)], None, [], {"reason": "missing_h5_dptr_checkpoint"}))
+            runs.append(
+                HRun(
+                    "H5-DPTR",
+                    "Dynamic Pointer Refactor Eval",
+                    "skipped",
+                    None,
+                    _norm_path(out),
+                    [_norm_path(out) or ""],
+                    None,
+                    [],
+                    {"reason": "missing_h5_dptr_checkpoint"},
+                    lineage_metadata(
+                        "eval_only",
+                        checkpoint_in=None,
+                        checkpoint_out=None,
+                        dataset_profile="dynamic_pointer_refactor_v1",
+                        difficulty_tier="all",
+                    ),
+                )
+            )
         else:
             cmd = [
                 sys.executable, str(dptr_script),
@@ -494,7 +640,26 @@ def main() -> None:
             if st == "ok" and not _validate_json_artifact(out, ["summary", "dynamic_pointer_metrics", "samples"]):
                 st, rc = "failed", -2
             metrics = _extract_dptr_metrics(out) if st == "ok" else None
-            runs.append(HRun("H5-DPTR", "Dynamic Pointer Refactor Eval", st, rc, str(out), [str(out)], metrics, cmd, {"base_model": str(dptr_base), "adapter": str(dptr_adapter), "checkpoint": str(dptr_ckpt)}))
+            runs.append(
+                HRun(
+                    "H5-DPTR",
+                    "Dynamic Pointer Refactor Eval",
+                    st,
+                    rc,
+                    _norm_path(out),
+                    [_norm_path(out) or ""],
+                    metrics,
+                    cmd,
+                    {"base_model": str(dptr_base), "adapter": _norm_path(dptr_adapter), "checkpoint": _norm_path(dptr_ckpt)},
+                    lineage_metadata(
+                        "eval_only",
+                        checkpoint_in=_norm_path(dptr_ckpt),
+                        checkpoint_out=None,
+                        dataset_profile="dynamic_pointer_refactor_v1",
+                        difficulty_tier="all",
+                    ),
+                )
+            )
             if st == "failed" and args.fail_fast:
                 abort_remaining = True
 
@@ -508,7 +673,26 @@ def main() -> None:
         if st == "ok" and not _validate_json_artifact(j1_out, ["summary", "metrics", "graphs", "relation_histogram"]):
             st, rc = "failed", -2
         metrics = _extract_j_metrics(j1_out) if st == "ok" else None
-        runs.append(HRun("J-1", "Graph Target (Factor Schema)", st, rc, str(j1_out), [str(j1_out)], metrics, cmd, {"input_artifact": str(h5_ood_out) if h5_ood_out.exists() else None}))
+        runs.append(
+            HRun(
+                "J-1",
+                "Graph Target (Factor Schema)",
+                st,
+                rc,
+                _norm_path(j1_out),
+                [_norm_path(j1_out) or ""],
+                metrics,
+                cmd,
+                {"input_artifact": _norm_path(h5_ood_out) if h5_ood_out.exists() else None},
+                lineage_metadata(
+                    "eval_only",
+                    checkpoint_in=None,
+                    checkpoint_out=None,
+                    dataset_profile="factor_schema_graph_target_v1",
+                    difficulty_tier="all",
+                ),
+            )
+        )
         if st == "failed" and args.fail_fast:
             abort_remaining = True
 
@@ -516,18 +700,94 @@ def main() -> None:
     if "J-2" in wanted and not abort_remaining:
         j1_row = next((r for r in runs if r.run_id == "J-1"), None)
         if j1_row is None:
-            runs.append(HRun("J-2", "Paraphrase Explosion (Invariance)", "skipped", None, str(j2_out), [str(j2_out)], None, [], {"reason": "missing_j1_run"}))
+            runs.append(
+                HRun(
+                    "J-2",
+                    "Paraphrase Explosion (Invariance)",
+                    "skipped",
+                    None,
+                    _norm_path(j2_out),
+                    [_norm_path(j2_out) or ""],
+                    None,
+                    [],
+                    {"reason": "missing_j1_run"},
+                    lineage_metadata(
+                        "eval_only",
+                        checkpoint_in=None,
+                        checkpoint_out=None,
+                        dataset_profile="paraphrase_explosion_v1",
+                        difficulty_tier="all",
+                    ),
+                )
+            )
         elif j1_row.status == "planned":
-            runs.append(HRun("J-2", "Paraphrase Explosion (Invariance)", "planned", None, str(j2_out), [str(j2_out)], None, [], {"reason": "planned_j1_dependency"}))
+            runs.append(
+                HRun(
+                    "J-2",
+                    "Paraphrase Explosion (Invariance)",
+                    "planned",
+                    None,
+                    _norm_path(j2_out),
+                    [_norm_path(j2_out) or ""],
+                    None,
+                    [],
+                    {"reason": "planned_j1_dependency"},
+                    lineage_metadata(
+                        "eval_only",
+                        checkpoint_in=None,
+                        checkpoint_out=None,
+                        dataset_profile="paraphrase_explosion_v1",
+                        difficulty_tier="all",
+                    ),
+                )
+            )
         elif j1_row.status != "ok" or not j1_out.exists():
-            runs.append(HRun("J-2", "Paraphrase Explosion (Invariance)", "skipped", None, str(j2_out), [str(j2_out)], None, [], {"reason": "j1_not_ready"}))
+            runs.append(
+                HRun(
+                    "J-2",
+                    "Paraphrase Explosion (Invariance)",
+                    "skipped",
+                    None,
+                    _norm_path(j2_out),
+                    [_norm_path(j2_out) or ""],
+                    None,
+                    [],
+                    {"reason": "j1_not_ready"},
+                    lineage_metadata(
+                        "eval_only",
+                        checkpoint_in=None,
+                        checkpoint_out=None,
+                        dataset_profile="paraphrase_explosion_v1",
+                        difficulty_tier="all",
+                    ),
+                )
+            )
         else:
             cmd = [sys.executable, str(j2_script), "--j1-artifact", str(j1_out), "--variants-per-graph", "1000", "--output", str(j2_out)]
             st, rc = _run(cmd, args.execute)
             if st == "ok" and not _validate_json_artifact(j2_out, ["summary", "metrics", "samples"]):
                 st, rc = "failed", -2
             metrics = _extract_j_metrics(j2_out) if st == "ok" else None
-            runs.append(HRun("J-2", "Paraphrase Explosion (Invariance)", st, rc, str(j2_out), [str(j2_out)], metrics, cmd, {"j1_artifact": str(j1_out), "variants_per_graph": 1000}))
+            runs.append(
+                HRun(
+                    "J-2",
+                    "Paraphrase Explosion (Invariance)",
+                    st,
+                    rc,
+                    _norm_path(j2_out),
+                    [_norm_path(j2_out) or ""],
+                    metrics,
+                    cmd,
+                    {"j1_artifact": _norm_path(j1_out), "variants_per_graph": 1000},
+                    lineage_metadata(
+                        "eval_only",
+                        checkpoint_in=None,
+                        checkpoint_out=None,
+                        dataset_profile="paraphrase_explosion_v1",
+                        difficulty_tier="all",
+                    ),
+                )
+            )
             if st == "failed" and args.fail_fast:
                 abort_remaining = True
 
@@ -539,7 +799,26 @@ def main() -> None:
         if st == "ok" and not _validate_json_artifact(j3_out, ["summary", "metrics"]):
             st, rc = "failed", -2
         metrics = _extract_j_metrics(j3_out) if st == "ok" else None
-        runs.append(HRun("J-3", "Stop-Grad Isolation Gate", st, rc, str(j3_out), [str(j3_out)], metrics, cmd, {"source_script": str(source_script)}))
+        runs.append(
+            HRun(
+                "J-3",
+                "Stop-Grad Isolation Gate",
+                st,
+                rc,
+                _norm_path(j3_out),
+                [_norm_path(j3_out) or ""],
+                metrics,
+                cmd,
+                {"source_script": _norm_path(source_script)},
+                lineage_metadata(
+                    "eval_only",
+                    checkpoint_in=None,
+                    checkpoint_out=None,
+                    dataset_profile="stopgrad_isolation_v1",
+                    difficulty_tier="all",
+                ),
+            )
+        )
         if st == "failed" and args.fail_fast:
             abort_remaining = True
 
@@ -553,7 +832,57 @@ def main() -> None:
         if st == "ok" and args.execute and not j4_dataset_out.exists():
             st, rc = "failed", -3
         metrics = _extract_j_metrics(j4_out) if st == "ok" else None
-        runs.append(HRun("J-4", "Operator Curriculum Build", st, rc, str(j4_out), [str(j4_out), str(j4_dataset_out)], metrics, cmd, {"dataset_output": str(j4_dataset_out), "per_operator": 256}))
+        runs.append(
+            HRun(
+                "J-4",
+                "Operator Curriculum Build",
+                st,
+                rc,
+                _norm_path(j4_out),
+                [_norm_path(j4_out) or "", _norm_path(j4_dataset_out) or ""],
+                metrics,
+                cmd,
+                {"dataset_output": _norm_path(j4_dataset_out), "per_operator": 256},
+                lineage_metadata(
+                    "eval_only",
+                    checkpoint_in=None,
+                    checkpoint_out=None,
+                    dataset_profile="operator_curriculum_v1",
+                    difficulty_tier="all",
+                ),
+            )
+        )
+
+    j5_out = out_dir / "j-5.json"
+    j5_dataset_out = out_dir / "j-5_adversarial.jsonl"
+    if "J-5" in wanted and not abort_remaining:
+        cmd = [sys.executable, str(j5_script), "--sample-count", "512", "--novelty-threshold", "0.30", "--output", str(j5_out), "--dataset-output", str(j5_dataset_out)]
+        st, rc = _run(cmd, args.execute)
+        if st == "ok" and not _validate_json_artifact(j5_out, ["summary", "metrics", "samples"]):
+            st, rc = "failed", -2
+        if st == "ok" and args.execute and not j5_dataset_out.exists():
+            st, rc = "failed", -3
+        metrics = _extract_j_metrics(j5_out) if st == "ok" else None
+        runs.append(
+            HRun(
+                "J-5",
+                "Adversarial Synthesis (Scope/Foil)",
+                st,
+                rc,
+                _norm_path(j5_out),
+                [_norm_path(j5_out) or "", _norm_path(j5_dataset_out) or ""],
+                metrics,
+                cmd,
+                {"dataset_output": _norm_path(j5_dataset_out), "sample_count": 512, "novelty_threshold": 0.30},
+                lineage_metadata(
+                    "eval_only",
+                    checkpoint_in=None,
+                    checkpoint_out=None,
+                    dataset_profile="adversarial_synthesis_v1",
+                    difficulty_tier="all",
+                ),
+            )
+        )
 
     h5j_ext_rows = []
     for r in runs:
@@ -562,39 +891,51 @@ def main() -> None:
             h5j_ext_rows.append(
                 {
                     "run_id": r.run_id,
+                    "m_series_alias": _m_series_alias(r.run_id),
                     "name": r.name,
                     "status": r.status,
                     "return_code": r.return_code,
                     "output": r.output,
                     "metrics": r.metrics or {},
+                    "lineage": r.lineage,
                     "notes": notes,
                 }
             )
 
     manifest = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
+        "series": series_metadata("M", "M1", "scripts/run_true_coconut_h_series.py"),
+        "declared_output_root": _norm_path(root),
         "base_model": args.base_model,
-        "adapter": str(args.adapter),
+        "adapter": _norm_path(args.adapter),
         "sample_size": args.sample_size,
         "seeds": args.seeds,
         "dataset_size": args.dataset_size,
         "execute": bool(args.execute),
         "h5": {
             "base_model": args.h5_base_model,
-            "adapter": str(args.h5_adapter) if args.h5_adapter is not None else None,
-            "checkpoint": str(args.h5_checkpoint) if args.h5_checkpoint is not None else None,
+            "adapter": _norm_path(args.h5_adapter),
+            "checkpoint": _norm_path(args.h5_checkpoint),
         },
         "h5_extensions": h5j_ext_rows,
         "runs": [r.__dict__ for r in runs],
     }
     manifest_path = out_dir / "run_h_series.json"
+    md_path = out_dir / "run_h_series.md"
+    manifest_output_paths = [out_dir, manifest_path, md_path]
+    manifest_output_paths.extend(path for r in runs for path in r.output_files if path)
+    validate_series_outputs("M", [root], manifest_output_paths)
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
     lines = [
         "# Run H Series",
         "",
-        "| id | name | status | return_code | key metric |",
-        "|---|---|---|---:|---|",
+        f"- series_id: `{manifest['series']['series_id']}`",
+        f"- track: `{manifest['series']['track']}`",
+        f"- output_root: `{manifest['declared_output_root']}`",
+        "",
+        "| id | mode | dataset_profile | difficulty_tier | checkpoint_in | checkpoint_out | status | return_code | key metric |",
+        "|---|---|---|---|---|---|---|---:|---|",
     ]
     for r in runs:
         key = ""
@@ -616,7 +957,7 @@ def main() -> None:
                     f"base_acc={r.metrics.get('dptr_standard_accuracy', 0.0):.3f}, "
                     f"delta={r.metrics.get('dptr_dynamic_minus_standard_accuracy', 0.0):+.3f}"
                 )
-            elif r.run_id in {"J-1", "J-2", "J-3", "J-4"}:
+            elif r.run_id in {"J-1", "J-2", "J-3", "J-4", "J-5"}:
                 if r.run_id == "J-1":
                     key = (
                         f"schema_valid_rate={r.metrics.get('schema_valid_rate', 0.0):.3f}, "
@@ -629,10 +970,16 @@ def main() -> None:
                     )
                 elif r.run_id == "J-3":
                     key = f"stopgrad_pass={r.metrics.get('stopgrad_contract_pass', 0.0):.0f}"
-                else:
+                elif r.run_id == "J-4":
                     key = (
                         f"samples={r.metrics.get('sample_count', 0.0):.0f}, "
                         f"operators={r.metrics.get('operator_count', 0.0):.0f}"
+                    )
+                else:
+                    key = (
+                        f"accept_rate={r.metrics.get('generator_accept_rate', 0.0):.3f}, "
+                        f"accepted_foil_pair_accuracy={r.metrics.get('accepted_foil_pair_accuracy', r.metrics.get('foil_auc', 0.0)):.3f}, "
+                        f"minimal_edit={r.metrics.get('foil_minimal_edit_rate', 0.0):.3f}"
                     )
             else:
                 key = (
@@ -641,10 +988,13 @@ def main() -> None:
                     f"lift={r.metrics.get('handoff_lift', 0.0):+.3f}, "
                     f"mean_step_cos={r.metrics.get('mean_step_cosine', 0.0):.3f}"
                 )
-        lines.append(f"| `{r.run_id}` | `{r.name}` | `{r.status}` | `{r.return_code}` | {key} |")
+        lines.append(
+            f"| `{r.run_id}` | `{r.lineage['mode']}` | `{r.lineage['dataset_profile']}` | `{r.lineage['difficulty_tier']}` | "
+            f"`{_lineage_cell(r.lineage['checkpoint_in'])}` | `{_lineage_cell(r.lineage['checkpoint_out'])}` | "
+            f"`{r.status}` | `{r.return_code}` | {key} |"
+        )
     lines.append("")
     lines.append("- `Shock Tracking`: `mean_step_cos` is averaged from per-row step-wise cosine traces.")
-    md_path = out_dir / "run_h_series.md"
     md_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     print(f"Wrote: {manifest_path}")

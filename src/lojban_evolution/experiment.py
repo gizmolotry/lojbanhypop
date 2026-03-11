@@ -41,6 +41,7 @@ class Problem:
     prompt: str
     answer: str
     trace: Tuple[str, ...]
+    difficulty: str = "medium"
 
 
 @dataclass
@@ -106,18 +107,86 @@ def split_dataset(problems: Sequence[Problem]) -> tuple[list[Problem], list[Prob
     return train, val, test
 
 
-def generate_dataset(size: int = 1000, seed: int = 7) -> list[Problem]:
+def generate_dataset(
+    size: int = 1000,
+    seed: int = 7,
+    profile: str = "legacy",
+    difficulty_tier: str = "all",
+) -> list[Problem]:
     rng = random.Random(seed)
     problems: list[Problem] = []
+    profile_lower = str(profile).lower()
+    if profile_lower in {"legacy", "default"}:
+        allowed_difficulties = {"easy", "medium", "hard"} if str(difficulty_tier).lower() == "all" else {str(difficulty_tier).lower()}
+        for i in range(size):
+            mode = rng.choice(["winograd", "multi_agent", "knights_knaves"])
+            if mode == "winograd":
+                prompt, answer, trace = _generate_winograd_problem(rng)
+                difficulty = "easy"
+            elif mode == "multi_agent":
+                prompt, answer, trace = _generate_multi_agent_problem(rng)
+                difficulty = "medium"
+            else:
+                prompt, answer, trace = _generate_knights_knaves_problem(rng)
+                difficulty = "medium"
+            if difficulty not in allowed_difficulties:
+                continue
+            problems.append(Problem(problem_id=len(problems), prompt=prompt, answer=answer, trace=trace, difficulty=difficulty))
+        return problems
+
+    if profile_lower == "winograd_bench_v1":
+        tiers = ["easy", "medium", "hard"] if str(difficulty_tier).lower() == "all" else [str(difficulty_tier).lower()]
+        for i in range(size):
+            tier = rng.choice(tiers)
+            prompt, answer, trace = _generate_winograd_benchmark_problem(rng, tier=tier)
+            problems.append(Problem(problem_id=i, prompt=prompt, answer=answer, trace=trace, difficulty=tier))
+        return problems
+
+    # Diverse profiles: mixed logic families with explicit difficulty tiers.
+    mode_bands_v2 = {
+        "easy": ["winograd", "spatial", "temporal_order"],
+        "medium": ["multi_agent", "knights_knaves", "quantifier", "comparative"],
+        "hard": ["nested_scope", "deontic_legal", "counterfactual_chain"],
+    }
+    mode_bands_v3 = {
+        "easy": ["winograd", "winograd_bench", "spatial", "temporal_order"],
+        "medium": ["multi_agent", "knights_knaves", "quantifier", "comparative", "winograd_bench"],
+        "hard": ["nested_scope", "deontic_legal", "counterfactual_chain", "winograd_bench"],
+    }
+    mode_bands = mode_bands_v3 if profile_lower == "diverse_v3" else mode_bands_v2
+    if str(difficulty_tier).lower() == "all":
+        tiers = ["easy", "medium", "hard"]
+        tier_weights = [0.34, 0.38, 0.28]
+    else:
+        tiers = [str(difficulty_tier).lower()]
+        tier_weights = [1.0]
+
     for i in range(size):
-        mode = rng.choice(["winograd", "multi_agent", "knights_knaves"])
+        tier = rng.choices(tiers, weights=tier_weights, k=1)[0]
+        mode = rng.choice(mode_bands.get(tier, mode_bands["medium"]))
         if mode == "winograd":
             prompt, answer, trace = _generate_winograd_problem(rng)
+        elif mode == "spatial":
+            prompt, answer, trace = _generate_spatial_problem(rng)
+        elif mode == "temporal_order":
+            prompt, answer, trace = _generate_temporal_order_problem(rng)
+        elif mode == "winograd_bench":
+            prompt, answer, trace = _generate_winograd_benchmark_problem(rng, tier=tier)
         elif mode == "multi_agent":
             prompt, answer, trace = _generate_multi_agent_problem(rng)
-        else:
+        elif mode == "knights_knaves":
             prompt, answer, trace = _generate_knights_knaves_problem(rng)
-        problems.append(Problem(problem_id=i, prompt=prompt, answer=answer, trace=trace))
+        elif mode == "quantifier":
+            prompt, answer, trace = _generate_quantifier_problem(rng)
+        elif mode == "comparative":
+            prompt, answer, trace = _generate_comparative_problem(rng)
+        elif mode == "nested_scope":
+            prompt, answer, trace = _generate_nested_scope_problem(rng)
+        elif mode == "deontic_legal":
+            prompt, answer, trace = _generate_deontic_problem(rng)
+        else:
+            prompt, answer, trace = _generate_counterfactual_chain_problem(rng)
+        problems.append(Problem(problem_id=i, prompt=prompt, answer=answer, trace=trace, difficulty=tier))
     return problems
 
 
@@ -156,6 +225,54 @@ def _generate_winograd_problem(rng: random.Random) -> tuple[str, str, Tuple[str,
         resolve,
         "VERIFY_ID",
         answer_token,
+    )
+    return prompt, answer, trace
+
+
+def _generate_winograd_benchmark_problem(rng: random.Random, tier: str = "medium") -> tuple[str, str, Tuple[str, ...]]:
+    """Benchmark-inspired Winograd/DPR/WinoGrande-style schemas with lexical variants."""
+    easy = [
+        ("The trophy does not fit in the suitcase because it is too big. What is too big?", "trophy", "SIZE_CAUSAL"),
+        ("The trophy does not fit in the suitcase because it is too small. What is too small?", "suitcase", "SIZE_CAUSAL"),
+        ("The city councilmen refused the demonstrators a permit because they feared violence. Who feared violence?", "councilmen", "SOCIAL_CAUSAL"),
+        ("The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?", "demonstrators", "SOCIAL_CAUSAL"),
+        ("The crane could not lift the beam because it was too heavy. What was too heavy?", "beam", "PHYSICAL_CAUSAL"),
+        ("The crane could not lift the beam because it was too weak. What was too weak?", "crane", "PHYSICAL_CAUSAL"),
+    ]
+    medium = [
+        ("The delivery truck zoomed by the school bus because it was going so fast. What was going fast?", "delivery truck", "SPEED_CAUSAL"),
+        ("The delivery truck passed the school bus because it was going so slow. What was going slow?", "school bus", "SPEED_CAUSAL"),
+        ("Sam tried to call Jordan on the phone, but they were not available. Who was not available?", "Jordan", "AVAILABILITY"),
+        ("Sam tried to call Jordan on the phone, but they had no signal. Who had no signal?", "Sam", "AVAILABILITY"),
+        ("Alex thanked Riley because they helped with the migration. Who helped with the migration?", "Riley", "SOCIAL_INTENT"),
+        ("Alex criticized Riley because they missed the deadline. Who missed the deadline?", "Riley", "SOCIAL_INTENT"),
+    ]
+    hard = [
+        ("The lawyer questioned the witness after they reviewed the affidavit. Who reviewed the affidavit?", "lawyer", "ROLE_TEMPORAL"),
+        ("The lawyer questioned the witness after they contradicted prior testimony. Who contradicted prior testimony?", "witness", "ROLE_TEMPORAL"),
+        ("The engineer sent the analyst the report because they needed feedback before launch. Who needed feedback?", "engineer", "GOAL_CAUSAL"),
+        ("The engineer sent the analyst the report because they had deeper domain context. Who had deeper domain context?", "analyst", "GOAL_CAUSAL"),
+        ("Morgan did not forward the memo to Casey because they were confidential. What was confidential?", "memo", "POLICY_CAUSAL"),
+        ("Morgan did not forward the memo to Casey because they were unauthorized. Who was unauthorized?", "Casey", "POLICY_CAUSAL"),
+    ]
+
+    bank = easy if tier == "easy" else medium if tier == "medium" else hard
+    prompt, answer, fam = rng.choice(bank)
+    # lexical mutations to reduce brittle surface memorization
+    prompt = (
+        prompt.replace("because", rng.choice(["because", "since"]))
+        .replace("not ", rng.choice(["not ", "never "]))
+        .replace("deadline", rng.choice(["deadline", "delivery date"]))
+    )
+    trace = (
+        "TASK_WINOGRAD_BENCH",
+        f"WINO_FAMILY_{fam}",
+        "BIND_E1",
+        "BIND_E2",
+        "PRONOUN_REF",
+        "RESOLVE_REFERENT",
+        "VERIFY_ID",
+        "ANS_ENTITY",
     )
     return prompt, answer, trace
 
@@ -233,6 +350,93 @@ def _generate_knights_knaves_problem(rng: random.Random) -> tuple[str, str, Tupl
         "VERIFY_ID",
         "ANS_ROLE_MAP",
     )
+    return prompt, answer, trace
+
+
+def _generate_spatial_problem(rng: random.Random) -> tuple[str, str, Tuple[str, ...]]:
+    objs = ["blue box", "red box", "green crate", "silver case", "amber chest"]
+    a, b, c = rng.sample(objs, 3)
+    rel = rng.choice(["inside", "left of", "right of"])
+    if rel == "inside":
+        prompt = f"The {a} is inside the {b}. The {b} is inside the {c}. Is the {a} inside the {c}?"
+        answer = "yes"
+        trace = ("TASK_SPATIAL", "REL_INSIDE", "CHAIN_TRANSITIVE", "VERIFY_TRUE", "ANS_YES")
+    elif rel == "left of":
+        prompt = f"The {a} is left of the {b}. The {b} is left of the {c}. Is the {c} left of the {a}?"
+        answer = "no"
+        trace = ("TASK_SPATIAL", "REL_LEFT_OF", "CHAIN_TRANSITIVE", "VERIFY_FALSE", "ANS_NO")
+    else:
+        prompt = f"The {a} is right of the {b}. The {b} is right of the {c}. Is the {a} right of the {c}?"
+        answer = "yes"
+        trace = ("TASK_SPATIAL", "REL_RIGHT_OF", "CHAIN_TRANSITIVE", "VERIFY_TRUE", "ANS_YES")
+    return prompt, answer, trace
+
+
+def _generate_temporal_order_problem(rng: random.Random) -> tuple[str, str, Tuple[str, ...]]:
+    acts = ["review", "deploy", "test", "design", "document"]
+    a, b, c = rng.sample(acts, 3)
+    ask_true = rng.choice([True, False])
+    prompt = (
+        f"{a.capitalize()} happens before {b}. {b.capitalize()} happens before {c}. "
+        f"Does {a} happen before {c}?"
+        if ask_true
+        else f"{a.capitalize()} happens before {b}. {b.capitalize()} happens before {c}. "
+        f"Does {c} happen before {a}?"
+    )
+    answer = "yes" if ask_true else "no"
+    trace = ("TASK_TEMPORAL", "REL_BEFORE", "CHAIN_TRANSITIVE", "VERIFY_TRUE" if ask_true else "VERIFY_FALSE", "ANS_YES" if ask_true else "ANS_NO")
+    return prompt, answer, trace
+
+
+def _generate_quantifier_problem(rng: random.Random) -> tuple[str, str, Tuple[str, ...]]:
+    pair = rng.choice(
+        [
+            ("Every engineer reviewed a ticket. A ticket was reviewed by every engineer. Are these equivalent?", "no"),
+            ("No tester missed a build. Every tester did not miss a build. Are these equivalent?", "yes"),
+            ("Some analyst approved every report. Every report was approved by some analyst. Are these equivalent?", "no"),
+        ]
+    )
+    prompt, answer = pair
+    trace = ("TASK_QUANTIFIER", "SCOPE_BIND", "CHECK_EQUIV", "VERIFY_TRUE" if answer == "yes" else "VERIFY_FALSE", "ANS_YES" if answer == "yes" else "ANS_NO")
+    return prompt, answer, trace
+
+
+def _generate_comparative_problem(rng: random.Random) -> tuple[str, str, Tuple[str, ...]]:
+    vals = rng.sample([2, 3, 4, 5, 6, 7, 8], 3)
+    x, y, z = vals
+    prompt = f"If A > B and B > C, with A={z}, B={y}, C={x}, is A > C?"
+    answer = "yes" if z > x else "no"
+    trace = ("TASK_COMPARATIVE", "REL_GT", "CHAIN_TRANSITIVE", "VERIFY_TRUE" if answer == "yes" else "VERIFY_FALSE", "ANS_YES" if answer == "yes" else "ANS_NO")
+    return prompt, answer, trace
+
+
+def _generate_nested_scope_problem(rng: random.Random) -> tuple[str, str, Tuple[str, ...]]:
+    prompt = (
+        "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, "
+        "then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?"
+    )
+    answer = "no"
+    trace = ("TASK_NESTED_SCOPE", "FORALL_BIND", "EXISTS_BIND", "IMPLIES_CHAIN", "SCOPE_RESOLVE", "VERIFY_FALSE", "ANS_NO")
+    return prompt, answer, trace
+
+
+def _generate_deontic_problem(rng: random.Random) -> tuple[str, str, Tuple[str, ...]]:
+    prompt = (
+        "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. "
+        "Action P handles personal data and has no waiver. Is P permitted without approval?"
+    )
+    answer = "no"
+    trace = ("TASK_DEONTIC", "RULE_UNLESS", "REL_PERMISSION", "NEGATE_WAIVER", "VERIFY_FALSE", "ANS_NO")
+    return prompt, answer, trace
+
+
+def _generate_counterfactual_chain_problem(rng: random.Random) -> tuple[str, str, Tuple[str, ...]]:
+    prompt = (
+        "If backup failed, recovery would require manual restore. If manual restore is required, downtime exceeds one hour. "
+        "In fact backup did not fail. Must downtime exceed one hour?"
+    )
+    answer = "no"
+    trace = ("TASK_COUNTERFACTUAL", "IF_CHAIN", "FACT_OVERRIDE", "NEGATE_CONSEQUENT", "VERIFY_FALSE", "ANS_NO")
     return prompt, answer, trace
 
 

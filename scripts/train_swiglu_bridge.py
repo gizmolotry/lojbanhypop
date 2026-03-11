@@ -242,7 +242,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--output-bridge", type=Path, default=Path("runs/projections/swiglu_midlayer_bridge.pt"))
     p.add_argument("--output-report", type=Path, default=Path("runs/swiglu_bridge_report.json"))
     p.add_argument("--run-h3-eval", action="store_true")
-    p.add_argument("--h-series-output-root", type=Path, default=Path("runs/true_coconut_h_series"))
+    p.add_argument("--h-series-output-root", type=Path, default=Path("runs/h_series"))
     p.add_argument("--local-files-only", action="store_true")
     return p.parse_args()
 

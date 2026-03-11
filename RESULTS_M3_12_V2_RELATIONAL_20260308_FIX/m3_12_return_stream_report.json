@@ -1,0 +1,60 @@
+{
+  "timestamp": "2026-03-08T19:48:52.999229+00:00",
+  "config": {
+    "base_model": "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+    "adapter": "D:\\lojbanhypop\\runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+    "checkpoint": "D:\\lojbanhypop\\runs\\l_series\\m3_8_diversification\\20260307_013004\\hard\\m3_8_c\\20260307_013545\\l_series_checkpoint.pt",
+    "train_steps": "20",
+    "eval_size": "12",
+    "lr": "0.0003",
+    "bottleneck_dim": "32",
+    "num_queries": "8",
+    "max_logic_new_tokens": "48",
+    "max_final_new_tokens": "12",
+    "layer_index": "12",
+    "relation_vocab": "5",
+    "var_min_id": "5",
+    "seed": "42",
+    "run_id": "m3_12_20260308_fix_r4",
+    "output_root": "D:\\lojbanhypop\\artifacts\\runs\\telemetry\\raw\\ablation\\hypercube\\m3_12_geometric_return_stream",
+    "local_files_only": "True"
+  },
+  "cells": {
+    "A": {
+      "overall_accuracy": 0.08333333333333333,
+      "adjective_flip_accuracy": 0.0,
+      "causal_connective_accuracy": 0.1111111111111111,
+      "mean_active_tokens": 23.833333333333332,
+      "mean_operator_entropy": 0.8188944514023331,
+      "mean_scope_violation": 0.33955902493334134,
+      "return_signal_stats": {
+        "mean_gate_magnitude": 0.0,
+        "mean_cue_norm": 0.0
+      }
+    },
+    "B": {
+      "overall_accuracy": 0.08333333333333333,
+      "adjective_flip_accuracy": 0.0,
+      "causal_connective_accuracy": 0.1111111111111111,
+      "mean_active_tokens": 6.333333333333333,
+      "mean_operator_entropy": 0.0,
+      "mean_scope_violation": 0.4299840510366826,
+      "return_signal_stats": {
+        "mean_gate_magnitude": 0.1198449432849884,
+        "mean_cue_norm": 413.0822931925456
+      }
+    },
+    "C": {
+      "overall_accuracy": 0.08333333333333333,
+      "adjective_flip_accuracy": 0.0,
+      "causal_connective_accuracy": 0.1111111111111111,
+      "mean_active_tokens": 9.583333333333334,
+      "mean_operator_entropy": 0.32288910326833137,
+      "mean_scope_violation": 0.4602293747687754,
+      "return_signal_stats": {
+        "mean_gate_magnitude": 0.1198449432849884,
+        "mean_cue_norm": 366.56302134195965
+      }
+    }
+  }
+}

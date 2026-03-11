@@ -18,6 +18,7 @@ def _mk_tmp_root() -> Path:
 
 
 def _base_args(tmp_root: Path, only_runs: list[str], execute: bool, fail_fast: bool = False) -> Namespace:
+    output_root = Path("runs/j_series") / f"test_run_true_coconut_{uuid.uuid4().hex}"
     return Namespace(
         base_model="dummy-base",
         adapter=tmp_root / "dummy-adapter",
@@ -67,7 +68,7 @@ def _base_args(tmp_root: Path, only_runs: list[str], execute: bool, fail_fast: b
         h5_dptr_inject_scale=1.0,
         h5_dptr_relation_bias=0.0,
         h5_dptr_use_iron_collar=False,
-        output_root=tmp_root / "runs",
+        output_root=output_root,
         local_files_only=True,
         execute=execute,
     )
@@ -87,6 +88,7 @@ def test_planned_mode_keeps_j2_planned_when_j1_selected(monkeypatch) -> None:
 
     payload = _latest_manifest(args.output_root)
     rows = {r["run_id"]: r for r in payload["runs"]}
+    assert payload["series"]["series_id"] == "M"
     assert rows["J-1"]["status"] == "planned"
     assert rows["J-2"]["status"] == "planned"
 
@@ -106,6 +108,7 @@ def test_fail_fast_aborts_after_h5_dptr_failure_before_j_runs(monkeypatch) -> No
 
     payload = _latest_manifest(args.output_root)
     ids = [r["run_id"] for r in payload["runs"]]
+    assert payload["declared_output_root"].startswith("runs/j_series/")
     assert "H5-DPTR" in ids
     assert "J-1" not in ids
 
@@ -139,3 +142,4 @@ def test_j4_fails_if_dataset_sidecar_missing(monkeypatch) -> None:
     rows = {r["run_id"]: r for r in payload["runs"]}
     assert rows["J-4"]["status"] == "failed"
     assert rows["J-4"]["return_code"] == -3
+    assert rows["J-4"]["lineage"]["dataset_profile"] == "operator_curriculum_v1"

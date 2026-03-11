@@ -12,6 +12,7 @@ from lojban_evolution.l_series import (
     make_swap_variant,
     overflow_penalty,
     parse_scope_trace,
+    infer_swap_semantics,
 )
 
 
@@ -49,6 +50,25 @@ def test_swap_variant() -> None:
     p2, a2 = out
     assert "Bob" in p2 and "Alice" in p2
     assert a2 == "Bob"
+
+
+def test_swap_variant_ignores_header_tokens() -> None:
+    out = make_swap_variant(
+        "Scope Minimal Pair (quantifier order): Alice is connected to Bob. Return exactly A_EQ_B.",
+        "Alice",
+    )
+    assert out is not None
+    p2, a2 = out
+    assert "Alice" in p2 and "Bob" in p2
+    assert "Scope" in p2
+    assert a2 == "Bob"
+
+
+def test_infer_swap_semantics_symmetric_and_asymmetric() -> None:
+    assert infer_swap_semantics("AND(A,B)") == "invariant"
+    assert infer_swap_semantics("equal(x,y)") == "invariant"
+    assert infer_swap_semantics("GT(A,B)") == "foil"
+    assert infer_swap_semantics("A is greater than B.") == "foil"
 
 
 def test_crispness_and_entropy_penalties() -> None:

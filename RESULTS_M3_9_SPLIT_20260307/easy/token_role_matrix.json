@@ -1,0 +1,233 @@
+{
+  "3": {
+    "start_of_trace": 0.02909090909090909,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.9709090909090909,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 0.0
+  },
+  "1178": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 1.0,
+    "arg_slot_2": 0.0
+  },
+  "1601": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 1.0
+  },
+  "1139": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 1.0,
+    "arg_slot_2": 0.0
+  },
+  "1778": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 1.0
+  },
+  "579": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 0.7384615384615385,
+    "arg_slot_2": 0.26153846153846155
+  },
+  "1625": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 1.0
+  },
+  "1": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 1.0,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 0.0
+  },
+  "1641": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 1.0,
+    "arg_slot_2": 0.0
+  },
+  "7": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 1.0
+  },
+  "190": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 1.0
+  },
+  "1737": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 1.0,
+    "arg_slot_2": 0.0
+  },
+  "890": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 1.0
+  },
+  "1292": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 1.0,
+    "arg_slot_2": 0.0
+  },
+  "938": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.11764705882352941,
+    "predicate_head": 0.0,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 0.8823529411764706
+  },
+  "1650": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 1.0,
+    "arg_slot_2": 0.0
+  },
+  "1811": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.014705882352941176,
+    "predicate_head": 0.0,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 0.9852941176470589
+  },
+  "46": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 1.0,
+    "arg_slot_2": 0.0
+  },
+  "597": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 1.0,
+    "arg_slot_2": 0.0
+  },
+  "1146": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 1.0
+  },
+  "828": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 1.0,
+    "arg_slot_2": 0.0
+  },
+  "21": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 1.0,
+    "arg_slot_2": 0.0
+  },
+  "1900": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.05952380952380952,
+    "predicate_head": 0.0,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 0.9404761904761905
+  },
+  "494": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 1.0,
+    "arg_slot_2": 0.0
+  },
+  "218": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 1.0
+  },
+  "1346": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 1.0,
+    "arg_slot_2": 0.0
+  },
+  "1206": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 1.0
+  },
+  "1088": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 1.0,
+    "arg_slot_2": 0.0
+  },
+  "1782": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 1.0
+  },
+  "194": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 1.0,
+    "arg_slot_2": 0.0
+  },
+  "953": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 1.0
+  },
+  "316": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.0,
+    "predicate_head": 0.0,
+    "arg_slot_1": 1.0,
+    "arg_slot_2": 0.0
+  },
+  "1404": {
+    "start_of_trace": 0.0,
+    "end_of_trace": 0.16666666666666666,
+    "predicate_head": 0.0,
+    "arg_slot_1": 0.0,
+    "arg_slot_2": 0.8333333333333334
+  }
+}

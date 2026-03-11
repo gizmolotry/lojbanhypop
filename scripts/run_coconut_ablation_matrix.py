@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 from lojban_evolution.storage import StoragePath, is_s3_uri, join_path, make_dirs, write_bytes, write_json, write_text
+from lojban_evolution.series_contract import assert_output_path_allowed, series_metadata
 
 
 @dataclass
@@ -66,6 +67,9 @@ def _metrics_from_dual_handoff(path: Path) -> Optional[Dict[str, object]]:
     return {
         "control_base_final_acc": _safe_mean(base_final),
         "control_base_symbolic_acc": _safe_mean(base_symbolic),
+        "enhanced_t2t_final_acc": _safe_mean(adapter_final),
+        "enhanced_t2t_symbolic_acc": _safe_mean(adapter_symbolic),
+        # Backward-compatible aliases.
         "rigid_adapter_final_acc": _safe_mean(adapter_final),
         "rigid_adapter_symbolic_acc": _safe_mean(adapter_symbolic),
         "coconut_handoff_final_acc": _safe_mean(handoff_final),
@@ -111,10 +115,10 @@ def _write_summary_md(path: StoragePath, records: List[RunRecord]) -> None:
     for r in records:
         key_metric = ""
         if isinstance(r.metrics, dict):
-            if r.run_id in {"A", "B", "C"}:
+            if r.run_id in {"A", "B.1", "B.2", "C"}:
                 key_metric = (
                     f"base_final={r.metrics.get('control_base_final_acc', 0.0):.3f}, "
-                    f"adapter_final={r.metrics.get('rigid_adapter_final_acc', 0.0):.3f}, "
+                    f"adapter_final={r.metrics.get('enhanced_t2t_final_acc', r.metrics.get('rigid_adapter_final_acc', 0.0)):.3f}, "
                     f"handoff_final={r.metrics.get('coconut_handoff_final_acc', 0.0):.3f}"
                 )
             elif r.run_id == "D":
@@ -158,16 +162,22 @@ def _write_summary_md(path: StoragePath, records: List[RunRecord]) -> None:
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Formal A-E ablation matrix for Coconut Fusion.")
+    p = argparse.ArgumentParser(description="Formal A-G ablation matrix for Coconut Fusion.")
     p.add_argument("--base-model", required=True)
-    p.add_argument("--adapter", type=Path, required=True, help="Phase-5 Lojban adapter (Run B/C).")
+    p.add_argument("--adapter", type=Path, required=True, help="Legacy text-to-text adapter (Run B.1/C).")
+    p.add_argument(
+        "--b2-adapter",
+        type=Path,
+        default=None,
+        help="Enhanced-constraint text-to-text adapter for Run B.2 (no handoff path).",
+    )
     p.add_argument("--drope-adapter", type=Path, default=None, help="NoPE-recalibrated adapter for Run D.")
     p.add_argument("--handoff-projection", type=Path, default=None, help="Projection checkpoint for Run E.")
     p.add_argument("--sample-size", type=int, default=24)
     p.add_argument("--seeds", type=int, nargs="+", default=[7, 11])
     p.add_argument("--dataset-size", type=int, default=1000)
     p.add_argument("--max-new-tokens", type=int, default=48)
-    p.add_argument("--output-root", type=str, default="runs/coconut_ablation_matrix")
+    p.add_argument("--output-root", type=str, default="runs/ablation/a_to_g")
     p.add_argument("--local-files-only", action="store_true")
     p.add_argument("--execute", action="store_true")
     return p.parse_args()
@@ -175,10 +185,11 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    assert_output_path_allowed("A-G", args.output_root)
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     out_dir = join_path(args.output_root, ts)
     s3_output = is_s3_uri(out_dir)
-    local_out_dir = Path(out_dir) if not s3_output else Path("runs/_staging_coconut_ablation_matrix") / ts
+    local_out_dir = Path(out_dir) if not s3_output else Path("runs/_staging_ablation_a_to_g") / ts
     make_dirs(local_out_dir, parents=True, exist_ok=True)
 
     eval_handoff = Path(__file__).resolve().parent / "eval_hf_dual_mode_handoff.py"
@@ -186,7 +197,7 @@ def main() -> None:
 
     records: List[RunRecord] = []
 
-    # A/B/C from one comparable run.
+    # A/B.1/C from one comparable run.
     abc_json = local_out_dir / "run_abc_dual_handoff.json"
     abc_cmd = [
         sys.executable,
@@ -213,7 +224,11 @@ def main() -> None:
     abc_metrics = _metrics_from_dual_handoff(abc_json) if abc_status == "ok" else None
     for rid, name, note in [
         ("A", "Control (English CoT -> English)", "Derived from base_acc in dual-handoff run."),
-        ("B", "Rigid Lojban (Text-to-Text)", "Derived from adapter_acc in dual-handoff run."),
+        (
+            "B.1",
+            "Legacy Text-to-Text (No Handoff)",
+            "Derived from adapter_acc in dual-handoff run using --adapter.",
+        ),
         ("C", "Coconut Fusion (Latent KV Handoff)", "Derived from handoff_acc in dual-handoff run."),
     ]:
         records.append(
@@ -226,6 +241,58 @@ def main() -> None:
                 output=abc_output,
                 metrics=abc_metrics,
                 notes=note,
+            )
+        )
+
+    # B.2: enhanced constraints, text-to-text only (no handoff architecture).
+    if args.b2_adapter is None:
+        records.append(
+            RunRecord(
+                run_id="B.2",
+                name="Enhanced Constraint Text-to-Text (No Handoff)",
+                status="skipped",
+                return_code=None,
+                command=[],
+                output=None,
+                metrics=None,
+                notes="Skipped: pass --b2-adapter to evaluate enhanced loss/constraint text-to-text path.",
+            )
+        )
+    else:
+        b2_json = local_out_dir / "run_b2_dual_handoff.json"
+        b2_cmd = [
+            sys.executable,
+            str(eval_handoff),
+            "--base-model",
+            args.base_model,
+            "--adapter",
+            str(args.b2_adapter),
+            "--sample-size",
+            str(args.sample_size),
+            "--seeds",
+            *[str(s) for s in args.seeds],
+            "--dataset-size",
+            str(args.dataset_size),
+            "--max-new-tokens",
+            str(args.max_new_tokens),
+            "--output",
+            str(b2_json),
+        ]
+        if args.local_files_only:
+            b2_cmd.append("--local-files-only")
+        b2_status, b2_rc = _run(b2_cmd, args.execute)
+        b2_output = _copy_to_output_if_s3(b2_json, out_dir) if args.execute and b2_status == "ok" else str(b2_json)
+        b2_metrics = _metrics_from_dual_handoff(b2_json) if b2_status == "ok" else None
+        records.append(
+            RunRecord(
+                run_id="B.2",
+                name="Enhanced Constraint Text-to-Text (No Handoff)",
+                status=b2_status,
+                return_code=b2_rc,
+                command=b2_cmd,
+                output=b2_output,
+                metrics=b2_metrics,
+                notes="Derived from adapter_acc using --b2-adapter (constraint/loss enhancements only, no handoff).",
             )
         )
 
@@ -346,8 +413,10 @@ def main() -> None:
 
     manifest = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
+        "series": series_metadata("A-G", "benchmark_ablation", "scripts/run_coconut_ablation_matrix.py"),
         "base_model": args.base_model,
         "adapter": str(args.adapter),
+        "b2_adapter": str(args.b2_adapter) if args.b2_adapter is not None else None,
         "drope_adapter": str(nope_adapter),
         "handoff_projection": str(args.handoff_projection) if args.handoff_projection is not None else None,
         "sample_size": args.sample_size,

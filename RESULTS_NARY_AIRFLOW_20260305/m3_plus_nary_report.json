@@ -1,0 +1,100 @@
+{
+  "generated_utc": "2026-03-05T14:45:13.117785+00:00",
+  "report_type": "m3_plus_family",
+  "series_id": "M",
+  "track": "M3+",
+  "inputs": {
+    "base_model": "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+    "adapter": "runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+    "j5_summary": "runs/j_series/20260304_231200/j-5.json",
+    "dynamic_arity_signatures": true,
+    "operator_arity_json": "configs/operator_arity_registry_nary.json",
+    "default_relation_arity": 2
+  },
+  "rows": [
+    {
+      "run_id": "M3.0",
+      "name": "Baseline Gate Run (L6-C + curriculum)",
+      "status": "ok",
+      "return_code": 0,
+      "run_dir": "runs/l_series/m3_plus_nary/20260305_141934/m3_0/20260305_141940",
+      "summary_path": "runs/l_series/m3_plus_nary/20260305_141934/m3_0/20260305_141940/l_series_summary.json",
+      "checkpoint_path": "runs/l_series/m3_plus_nary/20260305_141934/m3_0/20260305_141940/l_series_checkpoint.pt",
+      "final_constraint_arity_strict": 0.75,
+      "final_constraint_scope": 0.0,
+      "final_constraint_scope_unbound": 0.0,
+      "final_constraint_identity": 0.016394030302762985,
+      "tier_b_enabled": true,
+      "tier_c_enabled": true
+    },
+    {
+      "run_id": "M3.1",
+      "name": "Binding Bootcamp (unbound focus)",
+      "status": "ok",
+      "return_code": 0,
+      "run_dir": "runs/l_series/m3_plus_nary/20260305_141934/m3_1/20260305_142449",
+      "summary_path": "runs/l_series/m3_plus_nary/20260305_141934/m3_1/20260305_142449/l_series_summary.json",
+      "checkpoint_path": "runs/l_series/m3_plus_nary/20260305_141934/m3_1/20260305_142449/l_series_checkpoint.pt",
+      "final_constraint_arity_strict": 0.75,
+      "final_constraint_scope": 0.0,
+      "final_constraint_scope_unbound": 0.0,
+      "final_constraint_identity": 0.0,
+      "tier_b_enabled": true,
+      "tier_c_enabled": true
+    },
+    {
+      "run_id": "M3.2",
+      "name": "Depth Ramp (1->4 curriculum pressure)",
+      "status": "ok",
+      "return_code": 0,
+      "run_dir": "runs/l_series/m3_plus_nary/20260305_141934/m3_2/20260305_142952",
+      "summary_path": "runs/l_series/m3_plus_nary/20260305_141934/m3_2/20260305_142952/l_series_summary.json",
+      "checkpoint_path": "runs/l_series/m3_plus_nary/20260305_141934/m3_2/20260305_142952/l_series_checkpoint.pt",
+      "final_constraint_arity_strict": 0.75,
+      "final_constraint_scope": 0.0,
+      "final_constraint_scope_unbound": 0.0,
+      "final_constraint_identity": 0.0,
+      "tier_b_enabled": true,
+      "tier_c_enabled": true
+    },
+    {
+      "run_id": "M3.3",
+      "name": "Truth Discrimination (foil-sensitive tier B)",
+      "status": "ok",
+      "return_code": 0,
+      "run_dir": "runs/l_series/m3_plus_nary/20260305_141934/m3_3/20260305_143503",
+      "summary_path": "runs/l_series/m3_plus_nary/20260305_141934/m3_3/20260305_143503/l_series_summary.json",
+      "checkpoint_path": "runs/l_series/m3_plus_nary/20260305_141934/m3_3/20260305_143503/l_series_checkpoint.pt",
+      "final_constraint_arity_strict": 0.75,
+      "final_constraint_scope": 0.0,
+      "final_constraint_scope_unbound": 0.0,
+      "final_constraint_identity": 0.0,
+      "tier_b_enabled": true,
+      "tier_c_enabled": true
+    },
+    {
+      "run_id": "M3.4",
+      "name": "Compression Activation (tier C pressure)",
+      "status": "ok",
+      "return_code": 0,
+      "run_dir": "runs/l_series/m3_plus_nary/20260305_141934/m3_4/20260305_144012",
+      "summary_path": "runs/l_series/m3_plus_nary/20260305_141934/m3_4/20260305_144012/l_series_summary.json",
+      "checkpoint_path": "runs/l_series/m3_plus_nary/20260305_141934/m3_4/20260305_144012/l_series_checkpoint.pt",
+      "final_constraint_arity_strict": 0.75,
+      "final_constraint_scope": 0.0,
+      "final_constraint_scope_unbound": 0.0,
+      "final_constraint_identity": 0.0,
+      "tier_b_enabled": true,
+      "tier_c_enabled": true
+    }
+  ],
+  "gate_eval": {
+    "arity_feasible": false,
+    "identity_guardrail_lte_0_05": true,
+    "unbound_solved_lt_0_02": true,
+    "scope_gate_lt_0_10": true,
+    "foil_metric_polarity_check_true_gt_false_rate": 1.0,
+    "foil_auc_reported": 1.0,
+    "phase3_graduation_ready": false
+  }
+}

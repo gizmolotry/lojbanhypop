@@ -160,13 +160,17 @@ def main() -> None:
             "Missing dependency: peft. Install with `pip install peft` to run adapter evaluation."
         ) from exc
 
-    tokenizer = AutoTokenizer.from_pretrained(args.base_model, local_files_only=args.local_files_only)
+    adapter_has_tokenizer = (args.adapter / "tokenizer.json").exists() or (args.adapter / "tokenizer_config.json").exists()
+    tokenizer_source = str(args.adapter) if adapter_has_tokenizer else args.base_model
+    tokenizer = AutoTokenizer.from_pretrained(tokenizer_source, local_files_only=args.local_files_only)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
     base_model = AutoModelForCausalLM.from_pretrained(args.base_model, local_files_only=args.local_files_only)
+    base_model.resize_token_embeddings(len(tokenizer))
     base_model.eval()
     adapted_backbone = AutoModelForCausalLM.from_pretrained(args.base_model, local_files_only=args.local_files_only)
+    adapted_backbone.resize_token_embeddings(len(tokenizer))
     adapted_model = PeftModel.from_pretrained(adapted_backbone, str(args.adapter), local_files_only=args.local_files_only)
     adapted_model.eval()
 

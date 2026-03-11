@@ -15,6 +15,7 @@ Required run rows:
 - `J-2`
 - `J-3`
 - `J-4`
+- `J-5` (recommended)
 
 Each row must include:
 
@@ -36,7 +37,7 @@ Example:
       "name": "H5 Provenance",
       "status": "ok",
       "return_code": 0,
-      "output": "runs/coconut_ablation_matrix/h5_prov.json",
+      "output": "runs/ablation/a_to_g/h5_prov.json",
       "metrics": {
         "final_acc": 0.39
       },
@@ -47,7 +48,7 @@ Example:
       "name": "H5 Out-of-Distribution",
       "status": "ok",
       "return_code": 0,
-      "output": "runs/coconut_ablation_matrix/h5_ood.json",
+      "output": "runs/ablation/a_to_g/h5_ood.json",
       "metrics": {
         "final_acc": 0.31
       },
@@ -58,7 +59,7 @@ Example:
       "name": "H5 Distillation Pointer Transfer",
       "status": "ok",
       "return_code": 0,
-      "output": "runs/coconut_ablation_matrix/h5_dptr.json",
+      "output": "runs/ablation/a_to_g/h5_dptr.json",
       "metrics": {
         "final_acc": 0.36
       },
@@ -69,7 +70,7 @@ Example:
       "name": "Graph Target (Factor Schema)",
       "status": "ok",
       "return_code": 0,
-      "output": "runs/true_coconut_h_series/<timestamp>/j-1.json",
+      "output": "runs/j_series/<timestamp>/j-1.json",
       "metrics": {
         "schema_valid_rate": 1.0,
         "graph_count": 20
@@ -81,7 +82,7 @@ Example:
       "name": "Paraphrase Explosion (Invariance)",
       "status": "ok",
       "return_code": 0,
-      "output": "runs/true_coconut_h_series/<timestamp>/j-2.json",
+      "output": "runs/j_series/<timestamp>/j-2.json",
       "metrics": {
         "invariance_rate": 0.92,
         "variant_count": 20000
@@ -93,7 +94,7 @@ Example:
       "name": "Stop-Grad Isolation Gate",
       "status": "ok",
       "return_code": 0,
-      "output": "runs/true_coconut_h_series/<timestamp>/j-3.json",
+      "output": "runs/j_series/<timestamp>/j-3.json",
       "metrics": {
         "stopgrad_contract_pass": 1
       },
@@ -104,7 +105,7 @@ Example:
       "name": "Operator Curriculum Build",
       "status": "ok",
       "return_code": 0,
-      "output": "runs/true_coconut_h_series/<timestamp>/j-4.json",
+      "output": "runs/j_series/<timestamp>/j-4.json",
       "metrics": {
         "sample_count": 1280,
         "operator_count": 5
@@ -133,3 +134,4 @@ When these rows are present in the manifest, the markdown summary must include:
 - `J-2` emits invariance artifacts from paraphrase mutation of `J-1`: `summary`, `metrics`, `samples`.
 - `J-3` emits stop-grad gate artifacts: `summary`, `metrics`.
 - `J-4` emits operator curriculum artifacts: `summary`, `metrics`, `operator_histogram` and a sidecar JSONL dataset.
+- `J-5` emits adversarially synthesized factor-graph tasks with acceptance gates (`schema_valid`, `solver_consistency`, `novelty`, dedupe), minimal-edit foil control (`foil_minimal_edit_rate`, `accepted_foil_pair_accuracy`), and scope diagnostics (`scope_components_mean`, `scope_components_by_depth`, `accept_rate_by_depth`) plus a sidecar JSONL dataset. Deprecated aliases (`foil_auc`, `scope_by_depth`) remain for backward compatibility only.

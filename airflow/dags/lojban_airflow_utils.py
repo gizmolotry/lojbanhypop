@@ -134,10 +134,41 @@ def validate_distribution_json_path(path_value: str) -> str:
     return value
 
 
+def validate_baseline_manifest_path(path_value: str) -> str:
+    value = str(path_value).strip()
+    if not value:
+        raise ValueError("baseline_manifest cannot be empty")
+    if value.startswith("s3://"):
+        raise ValueError("baseline_manifest must be a local repo path under docs/")
+    normalized = value.replace("\\", "/")
+    if not normalized.startswith("docs/"):
+        raise ValueError("baseline_manifest must be under docs/")
+    if not normalized.endswith(".json"):
+        raise ValueError("baseline_manifest must point to a .json file")
+    if ".." in Path(value).parts:
+        raise ValueError("baseline_manifest may not include path traversal ('..')")
+    manifest_path = _repo_root() / Path(normalized)
+    if not manifest_path.is_file():
+        raise FileNotFoundError(f"baseline_manifest does not exist: {manifest_path}")
+    return value
+
+
 def merge_conf(defaults: Mapping[str, object], dag_conf: Mapping[str, object] | None) -> dict[str, object]:
     merged = dict(defaults)
-    if dag_conf:
-        for key, value in dag_conf.items():
-            if key in merged and value is not None:
-                merged[key] = value
+    if dag_conf is None:
+        return merged
+    if not isinstance(dag_conf, Mapping):
+        raise TypeError("dag_run.conf must be a mapping of config keys to values")
+
+    unknown_keys = sorted(str(key) for key in dag_conf.keys() if key not in merged)
+    if unknown_keys:
+        allowed_keys = ", ".join(sorted(str(key) for key in merged))
+        raise ValueError(
+            "Unknown dag_run.conf keys: "
+            f"{unknown_keys}. Allowed keys: [{allowed_keys}]"
+        )
+
+    for key, value in dag_conf.items():
+        if value is not None:
+            merged[key] = value
     return merged

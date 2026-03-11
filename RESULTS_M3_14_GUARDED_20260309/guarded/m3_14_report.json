@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-03-09T16:25:29.400722+00:00",
+  "track": "M3.14",
+  "config": {
+    "base_model": "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+    "adapter": "D:\\lojbanhypop\\runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+    "checkpoint": "D:\\lojbanhypop\\runs\\l_series\\m3_8_diversification\\20260307_013004\\hard\\m3_8_c\\20260307_013545\\l_series_checkpoint.pt",
+    "train_steps": "8",
+    "eval_size": "8",
+    "lr": "0.0003",
+    "max_logic_new_tokens": "48",
+    "max_final_new_tokens": "12",
+    "layer_index": "12",
+    "relation_vocab": "5",
+    "var_min_id": "5",
+    "max_nodes": "10",
+    "runtime_gate_cap": "0.03",
+    "runtime_cue_norm_cap": "1.0",
+    "seed": "42",
+    "run_id": "m3_14_prelim_guarded_20260309",
+    "output_root": "D:\\lojbanhypop\\artifacts\\runs\\telemetry\\raw\\ablation\\hypercube\\m3_14_structural_alignment_bridge",
+    "local_files_only": "True"
+  },
+  "cells": {
+    "A": {
+      "overall_accuracy": 0.125,
+      "adjective_accuracy": 0.0,
+      "causal_accuracy": 0.16666666666666666,
+      "mean_active_tokens": 23.25,
+      "mean_operator_entropy": 0.7992765191765543,
+      "mean_scope": 0.3414820836087714,
+      "mean_alignment_loss": 1.3726626336574554,
+      "mean_alignment_similarity": 0.06523092091083527,
+      "mean_gate": 0.0,
+      "mean_cue_norm": 0.0,
+      "train_alignment_loss": 0.0,
+      "train_alignment_similarity": 0.0
+    },
+    "B": {
+      "overall_accuracy": 0.125,
+      "adjective_accuracy": 0.0,
+      "causal_accuracy": 0.16666666666666666,
+      "mean_active_tokens": 23.25,
+      "mean_operator_entropy": 0.7992765191765543,
+      "mean_scope": 0.3414820836087714,
+      "mean_alignment_loss": 0.6241503413766623,
+      "mean_alignment_similarity": 0.09807674586772919,
+      "mean_gate": 0.11920291930437088,
+      "mean_cue_norm": 0.0,
+      "train_alignment_loss": 0.9056830257177353,
+      "train_alignment_similarity": 0.21265330165624619
+    },
+    "C": {
+      "overall_accuracy": 0.125,
+      "adjective_accuracy": 0.0,
+      "causal_accuracy": 0.16666666666666666,
+      "mean_active_tokens": 23.25,
+      "mean_operator_entropy": 0.8135701515306109,
+      "mean_scope": 0.3414820836087714,
+      "mean_alignment_loss": 0.6427365522831678,
+      "mean_alignment_similarity": 0.0977809876203537,
+      "mean_gate": 0.11920291930437088,
+      "mean_cue_norm": 0.9999999701976776,
+      "train_alignment_loss": 0.9247842505574226,
+      "train_alignment_similarity": 0.21254471689462662
+    }
+  }
+}

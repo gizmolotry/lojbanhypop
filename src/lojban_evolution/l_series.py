@@ -54,15 +54,73 @@ def compute_arity_violation(triples: Sequence[Tuple[int, int, int]], relation_vo
     return float(bad) / float(len(triples))
 
 
+@dataclass(frozen=True)
+class RelationEvent:
+    rel: int
+    args: Tuple[int, ...]
+
+
+def parse_relation_events_from_sequence(
+    token_ids: Sequence[int],
+    relation_vocab: int,
+    var_min_id: int,
+    operator_arity_registry: Mapping[int, int] | None = None,
+    default_relation_arity: int = 2,
+) -> Tuple[List[RelationEvent], float]:
+    """Parse flat token stream into dynamic-signature relation events.
+
+    Each event starts with a relation token (< relation_vocab). The parser looks up the
+    expected arity for that relation and consumes exactly N subsequent variable tokens.
+    """
+    ids = [int(x) for x in token_ids]
+    if not ids:
+        return [], 0.0
+    reg = {int(k): int(v) for k, v in (operator_arity_registry or {}).items()}
+    default_n = max(1, int(default_relation_arity))
+    i = 0
+    bad = 0
+    events: List[RelationEvent] = []
+    while i < len(ids):
+        rel = int(ids[i])
+        if rel < 0 or rel >= int(relation_vocab):
+            bad += 1
+            i += 1
+            continue
+        n = int(reg.get(rel, default_n))
+        n = max(1, n)
+        args: List[int] = []
+        for j in range(n):
+            k = i + 1 + j
+            if k >= len(ids):
+                bad += 1
+                break
+            tok = int(ids[k])
+            args.append(tok)
+            if tok < int(var_min_id):
+                bad += 1
+        if len(args) == n:
+            events.append(RelationEvent(rel=rel, args=tuple(args)))
+        i += 1 + n
+    denom = float(max(1, len(events) + bad))
+    return events, float(bad) / denom
+
+
 @dataclass
 class ScopeViolation:
+    unbalanced: int = 0
     unbound: int = 0
     escape: int = 0
-    mismatch: int = 0
+    quantifier_assoc: int = 0
+    shadowing: int = 0
 
     @property
     def total(self) -> int:
-        return self.unbound + self.escape + self.mismatch
+        return self.unbalanced + self.unbound + self.escape + self.quantifier_assoc + self.shadowing
+
+    @property
+    def mismatch(self) -> int:
+        # Backward-compatible aggregate for older callers/tests.
+        return self.unbalanced + self.quantifier_assoc
 
 
 def _norm_tok(token: str) -> str:
@@ -81,8 +139,11 @@ def parse_scope_trace(tokens: Iterable[str]) -> ScopeViolation:
         t = toks[i]
         if t in {"FORALL", "EXISTS"}:
             if i + 1 >= len(toks) or not toks[i + 1].startswith("VAR_"):
-                out.mismatch += 1
+                out.quantifier_assoc += 1
             else:
+                active_bound = set().union(*stack) if stack else set()
+                if toks[i + 1] in active_bound:
+                    out.shadowing += 1
                 pending_bindings.append(toks[i + 1])
                 seen.add(toks[i + 1])
                 i += 1
@@ -91,7 +152,7 @@ def parse_scope_trace(tokens: Iterable[str]) -> ScopeViolation:
             pending_bindings = []
         elif t == "SCOPE_CLOSE":
             if not stack:
-                out.mismatch += 1
+                out.unbalanced += 1
             else:
                 stack.pop()
         elif t.startswith("VAR_"):
@@ -105,18 +166,37 @@ def parse_scope_trace(tokens: Iterable[str]) -> ScopeViolation:
         i += 1
 
     if stack:
-        out.mismatch += len(stack)
+        out.unbalanced += len(stack)
     if pending_bindings:
-        out.mismatch += len(pending_bindings)
+        out.quantifier_assoc += len(pending_bindings)
     return out
 
 
-def compute_scope_violation_rate(tokens: Iterable[str]) -> float:
+def compute_scope_violation_components(tokens: Iterable[str]) -> Dict[str, float]:
     tok_list = [str(t) for t in tokens if str(t).strip()]
     if not tok_list:
-        return 0.0
+        return {
+            "scope_total": 0.0,
+            "scope_unbalanced": 0.0,
+            "scope_lifetime": 0.0,
+            "scope_unbound": 0.0,
+            "scope_quantifier_assoc": 0.0,
+            "scope_shadowing": 0.0,
+        }
     v = parse_scope_trace(tok_list)
-    return float(v.total) / float(len(tok_list))
+    denom = float(len(tok_list))
+    return {
+        "scope_total": float(v.total) / denom,
+        "scope_unbalanced": float(v.unbalanced) / denom,
+        "scope_lifetime": float(v.escape) / denom,
+        "scope_unbound": float(v.unbound) / denom,
+        "scope_quantifier_assoc": float(v.quantifier_assoc) / denom,
+        "scope_shadowing": float(v.shadowing) / denom,
+    }
+
+
+def compute_scope_violation_rate(tokens: Iterable[str]) -> float:
+    return compute_scope_violation_components(tokens)["scope_total"]
 
 
 def build_scope_tokens_from_triples(triples: Sequence[Tuple[int, int, int]], var_prefix: str = "VAR") -> List[str]:
@@ -138,10 +218,43 @@ def build_scope_tokens_from_triples(triples: Sequence[Tuple[int, int, int]], var
     return out
 
 
+def build_scope_tokens_from_events(events: Sequence[RelationEvent], var_prefix: str = "VAR") -> List[str]:
+    out: List[str] = ["SCOPE_OPEN"]
+    introduced: set[int] = set()
+    for ev in events:
+        for idx, v in enumerate(ev.args):
+            if int(v) not in introduced:
+                quant = "FORALL" if idx == 0 else "EXISTS"
+                out.extend([quant, f"{var_prefix}_{int(v)}", "SCOPE_OPEN"])
+                introduced.add(int(v))
+            out.append(f"{var_prefix}_{int(v)}")
+    out.extend(["SCOPE_CLOSE"] * (len(introduced) + 1))
+    return out
+
+
 def make_swap_variant(prompt: str, answer: str) -> Optional[Tuple[str, str]]:
     names = re.findall(r"\b[A-Z][A-Za-z0-9_]*\b", prompt)
+    stop = {
+        "SCOPE",
+        "MINIMAL",
+        "PAIR",
+        "QUANTIFIER",
+        "ORDER",
+        "NEGATION",
+        "RETURN",
+        "EXACTLY",
+        "FORALL",
+        "EXISTS",
+        "NOT",
+        "AND",
+        "OR",
+        "A",
+        "B",
+    }
     uniq: List[str] = []
     for n in names:
+        if n.upper() in stop:
+            continue
         if n not in uniq:
             uniq.append(n)
     if len(uniq) < 2:
@@ -211,3 +324,116 @@ def to_float_dict(d: Mapping[str, torch.Tensor]) -> Dict[str, float]:
     for k, v in d.items():
         out[str(k)] = float(v.detach().item()) if isinstance(v, torch.Tensor) else float(v)
     return out
+
+
+def generate_scope_minimal_pair_samples(n: int = 500, seed: int = 7) -> List[Dict[str, str]]:
+    """Build quantifier-negation minimal pairs for scope discipline drills."""
+    rng = torch.Generator()
+    rng.manual_seed(int(seed))
+
+    names = [
+        ("knight", "village"),
+        ("agent", "station"),
+        ("box", "room"),
+        ("student", "class"),
+        ("robot", "lab"),
+    ]
+    rels = ["trusts", "visits", "sees", "contains", "supports"]
+    preds = ["truthful", "active", "safe", "connected", "stable"]
+
+    out: List[Dict[str, str]] = []
+    for i in range(int(n)):
+        pair_type = int(torch.randint(0, 2, (1,), generator=rng).item())
+        name = names[int(torch.randint(0, len(names), (1,), generator=rng).item())]
+        rel = rels[int(torch.randint(0, len(rels), (1,), generator=rng).item())]
+        pred = preds[int(torch.randint(0, len(preds), (1,), generator=rng).item())]
+        x, y = name
+        if pair_type == 0:
+            a = f"FORALL x EXISTS y : {x}(x) AND {y}(y) AND {rel}(x,y)"
+            b = f"EXISTS y FORALL x : {x}(x) AND {y}(y) AND {rel}(x,y)"
+            truth = "A_NEQ_B"
+            prompt = (
+                "Scope Minimal Pair (quantifier order):\n"
+                f"A: {a}\n"
+                f"B: {b}\n"
+                "Return exactly A_NEQ_B if meaning differs, else A_EQ_B."
+            )
+            answer = truth
+        else:
+            a = f"NOT EXISTS x : {x}(x) AND {pred}(x)"
+            b = f"FORALL x : {x}(x) -> NOT {pred}(x)"
+            truth = "A_EQ_B"
+            prompt = (
+                "Scope Minimal Pair (negation/quantifier):\n"
+                f"A: {a}\n"
+                f"B: {b}\n"
+                "Return exactly A_NEQ_B if meaning differs, else A_EQ_B."
+            )
+            answer = truth
+        out.append({"prompt": prompt, "answer": answer, "pair": "scope_minimal_pair", "index": str(i)})
+    return out
+
+
+def infer_swap_semantics(prompt: str) -> str:
+    """Infer whether variable swap should preserve or flip semantics.
+
+    Returns:
+      - "invariant" for clearly symmetric predicate patterns
+      - "foil" otherwise
+    """
+    txt = str(prompt)
+    up = txt.upper()
+    symmetric_names = {
+        "AND",
+        "OR",
+        "AND3",
+        "SAME_AS",
+        "EQUAL",
+        "EQUALITY",
+        "EQ",
+        "COREF",
+        "SET_EQ",
+        "SETEQ",
+        "IDENTICAL",
+        "SIBLING",
+        "CONNECTED",
+        "INTERSECTS",
+        "OVERLAPS",
+    }
+    asymmetric_names = {
+        "GT",
+        "INSIDE",
+        "CONTAINS",
+        "CAUSE",
+        "CAUSES",
+        "NORTH_OF",
+        "GIVE",
+        "MOVE",
+        "PARENT_OF",
+    }
+    preds = re.findall(r"\b([A-Z_][A-Z0-9_]*)\s*\(", up)
+    if preds:
+        if any(p in asymmetric_names for p in preds):
+            return "foil"
+        if all(p in symmetric_names for p in preds):
+            return "invariant"
+        return "foil"
+    # Light natural-language fallback for symmetric forms.
+    if (
+        (" SAME AS " in f" {up} ")
+        or (" EQUAL " in f" {up} ")
+        or (" IDENTICAL " in f" {up} ")
+        or (" CONNECTED " in f" {up} ")
+        or (" SIBLING " in f" {up} ")
+    ):
+        return "invariant"
+    if (
+        (" GREATER THAN " in f" {up} ")
+        or (" INSIDE " in f" {up} ")
+        or (" CONTAINS " in f" {up} ")
+        or (" CAUSES " in f" {up} ")
+        or (" NORTH OF " in f" {up} ")
+        or (" GIVES " in f" {up} ")
+    ):
+        return "foil"
+    return "foil"

@@ -1,0 +1,103 @@
+{
+  "0": {
+    "cluster_id": 0,
+    "label": "predicate_heads",
+    "member_tokens": [
+      0
+    ],
+    "member_count": 1,
+    "dominant_role": "predicate_head"
+  },
+  "1": {
+    "cluster_id": 1,
+    "label": "predicate_heads",
+    "member_tokens": [
+      3
+    ],
+    "member_count": 1,
+    "dominant_role": "predicate_head"
+  },
+  "2": {
+    "cluster_id": 2,
+    "label": "referential_markers",
+    "member_tokens": [
+      61,
+      359,
+      499,
+      729,
+      914,
+      944,
+      1032,
+      1054,
+      1268,
+      1511,
+      1585,
+      1695,
+      1895,
+      1919
+    ],
+    "member_count": 14,
+    "dominant_role": "arg_slot_1"
+  },
+  "3": {
+    "cluster_id": 3,
+    "label": "referential_markers",
+    "member_tokens": [
+      75,
+      274,
+      302,
+      304,
+      315,
+      504,
+      505,
+      533,
+      551,
+      555,
+      608,
+      704,
+      772,
+      793,
+      830,
+      853,
+      920,
+      975,
+      989,
+      1194,
+      1232,
+      1333,
+      1396,
+      1458,
+      1483,
+      1544,
+      1638,
+      1998
+    ],
+    "member_count": 28,
+    "dominant_role": "arg_slot_2"
+  },
+  "4": {
+    "cluster_id": 4,
+    "label": "referential_markers",
+    "member_tokens": [
+      182,
+      453,
+      564,
+      639,
+      659,
+      734,
+      865,
+      908,
+      915,
+      990,
+      999,
+      1022,
+      1248,
+      1261,
+      1866,
+      1910,
+      1971
+    ],
+    "member_count": 17,
+    "dominant_role": "arg_slot_1"
+  }
+}

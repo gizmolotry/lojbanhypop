@@ -1,0 +1,9 @@
+{
+  "generated_utc": "2026-03-05T19:01:16.451856+00:00",
+  "series_id": "M",
+  "track": "M4",
+  "baseline_manifest": "docs/baselines/m_series_baseline_manifest.json",
+  "ran_m3_5_first": true,
+  "m3_5_report_json": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_5_symmetry/manual_20260305/m3_5_symmetry_20260305_181349/m3_5_symmetry_report.json",
+  "m4_report_json": "artifacts/runs/telemetry/raw/ablation/hypercube/m4/manual_20260305/manual_20260305_181349/m3_plus_20260305_183211/m3_plus_report.json"
+}

@@ -1,0 +1,24 @@
+{
+  "generated_utc": "2026-03-07T02:01:42.583610+00:00",
+  "report_type": "m3_9_primitive_probe",
+  "series_id": "M",
+  "track": "M3.9",
+  "inputs": {
+    "base_model": "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+    "adapter": "runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+    "checkpoint": "runs/l_series/m3_8_diversification/20260307_013004/easy/m3_8_c/20260307_013238/l_series_checkpoint.pt",
+    "baseline_manifest": "docs/baselines/m_series_baseline_manifest.json",
+    "dataset_size": 80,
+    "dataset_profile": "diverse_v2",
+    "difficulty_tier": "easy",
+    "candidate_topk": 10,
+    "causal_samples": 8
+  },
+  "summary": {
+    "active_token_count": 33,
+    "primitive_candidate_count": 10,
+    "mean_baseline_ce_loss": 3.3338495176285505,
+    "mean_baseline_scope": 0.3768763429490443,
+    "mean_baseline_arity": 0.0
+  }
+}

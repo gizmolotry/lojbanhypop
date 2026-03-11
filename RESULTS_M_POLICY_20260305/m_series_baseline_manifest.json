@@ -1,0 +1,22 @@
+{
+  "series_id": "M",
+  "baseline_id": "M_BASE_20260305",
+  "declared_at_utc": "2026-03-05T00:00:00Z",
+  "description": "M-series baseline manifest: inherit best J and best L before representation-layer experiments.",
+  "upstream_best": {
+    "j_series": "M1.4/J-5",
+    "l_series": "M2.C/L6-C"
+  },
+  "m_base": {
+    "dataset": "runs/j_series/20260304_231200/j-5_adversarial.jsonl",
+    "constraints": "L6-C (Tier A/B/C defaults from run_l6_ablation_branch)",
+    "identity_reg": "swap_test_regularizer_enabled",
+    "curriculum": "recursive_scope_depth_ramp_with_minimal_edit_foils",
+    "optimizer": "AdamW_lr_2e-4_seed_7"
+  },
+  "freeze_rules": {
+    "within_number_runs_are_siblings": true,
+    "promote_new_baseline_only_on_explicit_series_step": true,
+    "between_letters_inherit_previous_best": true
+  }
+}
