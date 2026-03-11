@@ -1,0 +1,195 @@
+{
+  "timestamp": "2026-03-11T11:04:05.779760+00:00",
+  "series": {
+    "series_contract_version": "1.0",
+    "series_id": "M",
+    "track": "M3.15b",
+    "script": "scripts/run_m3_15b_relation_local_rotary.py"
+  },
+  "track": "M3.15b",
+  "lineage": {
+    "mode": "train",
+    "checkpoint_in": "runs/l_series/m3_8_diversification/decollapse_small/20260311_103934/hard/m3_8_b/20260311_104736/l_series_checkpoint.pt",
+    "checkpoint_out": null,
+    "dataset_profile": "winograd_family_split",
+    "difficulty_tier": "mixed"
+  },
+  "baseline_manifest": "docs/baselines/m_series_baseline_manifest.json",
+  "baseline_id": "M_BASE_20260310_REFAC",
+  "config": {
+    "base_model": "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+    "adapter": "runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+    "checkpoint": "runs\\l_series\\m3_8_diversification\\decollapse_small\\20260311_103934\\hard\\m3_8_b\\20260311_104736\\l_series_checkpoint.pt",
+    "train_steps": "60",
+    "eval_size": "64",
+    "lr": "0.0003",
+    "max_logic_new_tokens": "48",
+    "layer_index": "12",
+    "relation_vocab": "5",
+    "var_min_id": "5",
+    "max_nodes": "12",
+    "align_weight": "1.0",
+    "margin_weight": "0.5",
+    "margin": "0.2",
+    "runtime_gate_cap": "0.03",
+    "runtime_cue_norm_cap": "1.0",
+    "runtime_enable_min_acc_gain": "0.02",
+    "seed": "42",
+    "baseline_manifest": "docs\\baselines\\m_series_baseline_manifest.json",
+    "pack_jsonl": "None",
+    "strict_balance": "True",
+    "run_id": "m3_15b_20260311_after_decollapse",
+    "output_root": "artifacts\\runs\\telemetry\\raw\\ablation\\hypercube\\m3_15b_relation_local_rotary\\decollapse_followup",
+    "local_files_only": "True"
+  },
+  "data_split": {
+    "train_pair_ids": [
+      "size_02",
+      "social_01",
+      "social_02",
+      "speed_01"
+    ],
+    "val_pair_ids": [
+      "policy_01"
+    ],
+    "eval_pair_ids": [
+      "size_01",
+      "role_01"
+    ],
+    "seed2_eval_meta": {
+      "train_pair_ids": [
+        "role_01",
+        "policy_01",
+        "social_02",
+        "social_01"
+      ],
+      "val_pair_ids": [
+        "size_02"
+      ],
+      "eval_pair_ids": [
+        "speed_01",
+        "size_01"
+      ]
+    },
+    "runtime_policy_source": "validation_pack",
+    "final_metrics_source": "eval_pack"
+  },
+  "cells": {
+    "A": {
+      "train": {
+        "alignment_loss": 0.0,
+        "margin_loss": 0.0,
+        "alignment_similarity": 0.0
+      },
+      "metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.5,
+        "causal_accuracy": 0.5,
+        "mean_alignment_loss": 3.4252824895083904,
+        "mean_alignment_similarity": 0.018147869777749293,
+        "mean_active_tokens": 14.5,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 0.93130153729747,
+        "mean_top1_op_share": 0.4554036458333333,
+        "mean_scope": 0.40100250626566414,
+        "mean_intervention_delta_gold": 0.0,
+        "runtime_enabled": false
+      },
+      "validation_metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.5,
+        "mean_alignment_loss": 3.1782966032624245,
+        "mean_alignment_similarity": -0.017823300964664668,
+        "mean_active_tokens": 11.5,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 0.8056587479369475,
+        "mean_top1_op_share": 0.4947916666666667,
+        "mean_scope": 0.4174843889384478,
+        "mean_intervention_delta_gold": 0.0,
+        "runtime_enabled": false
+      }
+    },
+    "B": {
+      "train": {
+        "alignment_loss": 0.6177937433123588,
+        "margin_loss": 1.2728625806669394,
+        "alignment_similarity": 0.03960367952240631
+      },
+      "metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.5,
+        "causal_accuracy": 0.5,
+        "mean_alignment_loss": 0.7374612740240991,
+        "mean_alignment_similarity": 0.04727250535506755,
+        "mean_active_tokens": 12.5,
+        "mean_active_op_count": 1.0,
+        "mean_operator_entropy": 0.0,
+        "mean_top1_op_share": 1.0,
+        "mean_scope": 0.40100250626566414,
+        "mean_intervention_delta_gold": 0.003669966012239456,
+        "runtime_enabled": false
+      },
+      "validation_metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.5,
+        "mean_alignment_loss": 0.8917417116463184,
+        "mean_alignment_similarity": 0.09243985661305487,
+        "mean_active_tokens": 9.75,
+        "mean_active_op_count": 1.25,
+        "mean_operator_entropy": 0.16782150442608673,
+        "mean_top1_op_share": 0.9010416666666666,
+        "mean_scope": 0.4174843889384478,
+        "mean_intervention_delta_gold": -0.003586030565202236,
+        "runtime_enabled": false
+      }
+    },
+    "C": {
+      "train": {
+        "alignment_loss": 0.623747003202637,
+        "margin_loss": 1.2717154217263062,
+        "alignment_similarity": 0.007957300955119232
+      },
+      "metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.5,
+        "causal_accuracy": 0.5,
+        "mean_alignment_loss": 0.7115893349982798,
+        "mean_alignment_similarity": 0.009795575286261737,
+        "mean_active_tokens": 13.0,
+        "mean_active_op_count": 1.5,
+        "mean_operator_entropy": 0.3461394368281594,
+        "mean_top1_op_share": 0.7604166666666667,
+        "mean_scope": 0.40100250626566414,
+        "mean_intervention_delta_gold": -0.00031569600105285645,
+        "runtime_enabled": false
+      },
+      "runtime_enabled_by_policy": false
+    },
+    "B_seed2_eval": {
+      "metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.5,
+        "causal_accuracy": 0.5,
+        "mean_alignment_loss": 0.2573285880498588,
+        "mean_alignment_similarity": 0.07365071075037122,
+        "mean_active_tokens": 15.65625,
+        "mean_active_op_count": 1.71875,
+        "mean_operator_entropy": 0.3272864508280371,
+        "mean_top1_op_share": 0.84375,
+        "mean_scope": 0.3844652615144418,
+        "mean_intervention_delta_gold": 0.003635302186012268,
+        "runtime_enabled": false
+      }
+    }
+  },
+  "promotion_gates": {
+    "accuracy_up": false,
+    "no_entropy_collapse": false,
+    "no_scope_regression": true,
+    "positive_intervention_delta": true,
+    "seed_stability": false,
+    "promote_to_next": false
+  }
+}
