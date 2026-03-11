@@ -177,6 +177,71 @@ def _decode_logic_tokens(
     return tokens
 
 
+def _masked_relation_logits(
+    arity_head: AdvisorArityHead,
+    z: torch.Tensor,
+    relation_vocab: int,
+    relation_bias: torch.Tensor | None = None,
+) -> torch.Tensor:
+    logits = _masked_logits(arity_head.head_rel(z), 0, int(relation_vocab))[:, : int(relation_vocab)]
+    if relation_bias is not None:
+        rb = relation_bias.view(1, -1)[:, : int(relation_vocab)]
+        logits = logits + rb
+    return logits
+
+
+def _mean_relation_probs(
+    arity_head: AdvisorArityHead,
+    z_st: torch.Tensor,
+    relation_vocab: int,
+    relation_bias: torch.Tensor | None = None,
+) -> torch.Tensor:
+    probs: list[torch.Tensor] = []
+    for i in range(z_st.shape[1]):
+        logits = _masked_relation_logits(arity_head, z_st[:, i, :], int(relation_vocab), relation_bias=relation_bias)
+        probs.append(torch.softmax(logits, dim=-1))
+    return torch.stack(probs, dim=0).mean(dim=(0, 1))
+
+
+def _distribution_entropy(probs: torch.Tensor) -> torch.Tensor:
+    p = probs.clamp(min=1e-8)
+    return -torch.sum(p * torch.log(p))
+
+
+def _scaled_relation_bias(raw_bias: torch.Tensor, scale: float) -> torch.Tensor:
+    centered = raw_bias - torch.mean(raw_bias)
+    return torch.tanh(centered) * float(scale)
+
+
+def _anti_collapse_loss(
+    base_probs: torch.Tensor,
+    on_probs: torch.Tensor,
+    *,
+    entropy_floor_ratio: float,
+    top1_margin: float,
+    top1_weight: float,
+    kl_weight: float,
+) -> tuple[torch.Tensor, dict[str, float]]:
+    base_entropy = _distribution_entropy(base_probs)
+    on_entropy = _distribution_entropy(on_probs)
+    entropy_floor_loss = torch.relu((float(entropy_floor_ratio) * base_entropy) - on_entropy)
+    base_top1 = torch.max(base_probs)
+    on_top1 = torch.max(on_probs)
+    top1_loss = torch.relu(on_top1 - (base_top1 + float(top1_margin)))
+    drift_kl = torch.sum(on_probs.clamp(min=1e-8) * (torch.log(on_probs.clamp(min=1e-8)) - torch.log(base_probs.clamp(min=1e-8))))
+    loss = entropy_floor_loss + (float(top1_weight) * top1_loss) + (float(kl_weight) * drift_kl)
+    stats = {
+        "base_entropy": float(base_entropy.detach().item()),
+        "on_entropy": float(on_entropy.detach().item()),
+        "base_top1_share": float(base_top1.detach().item()),
+        "on_top1_share": float(on_top1.detach().item()),
+        "entropy_floor_loss": float(entropy_floor_loss.detach().item()),
+        "top1_loss": float(top1_loss.detach().item()),
+        "drift_kl": float(drift_kl.detach().item()),
+    }
+    return loss, stats
+
+
 def _candidate_first_token_id(tokenizer, candidate: str) -> int:
     ids = tokenizer(" " + str(candidate), add_special_tokens=False, return_tensors="pt").input_ids
     if int(ids.numel()) == 0:
@@ -497,13 +562,27 @@ def _train_bridge_cell(
     args: argparse.Namespace,
 ) -> dict[str, float]:
     if cell == "A":
-        return {"alignment_loss": 0.0, "margin_loss": 0.0, "alignment_similarity": 0.0}
+        return {
+            "alignment_loss": 0.0,
+            "margin_loss": 0.0,
+            "alignment_similarity": 0.0,
+            "anti_collapse_loss": 0.0,
+            "base_operator_entropy": 0.0,
+            "on_operator_entropy": 0.0,
+            "base_top1_share": 1.0,
+            "on_top1_share": 1.0,
+        }
 
     bridge.train()
     opt = torch.optim.AdamW(bridge.parameters(), lr=float(args.lr), weight_decay=0.01)
     align_hist: list[float] = []
     marg_hist: list[float] = []
     sim_hist: list[float] = []
+    anti_hist: list[float] = []
+    base_entropy_hist: list[float] = []
+    on_entropy_hist: list[float] = []
+    base_top1_hist: list[float] = []
+    on_top1_hist: list[float] = []
 
     for step in range(int(args.train_steps)):
         item = train_pack[step % len(train_pack)]
@@ -531,8 +610,28 @@ def _train_bridge_cell(
 
         opt.zero_grad()
         align_loss, align_sim = bridge.alignment_metrics(local_hidden, rel_nodes)
-        rb = bridge.relation_bias(local_hidden, rel_nodes)
-        on_tokens = _decode_logic_tokens(arity_head, z_st, int(args.relation_vocab), int(args.var_min_id), relation_bias=rb)
+        cue = bridge.runtime_cue(local_hidden, cue_norm_cap=float(args.runtime_cue_norm_cap))
+        gate = torch.sigmoid(bridge.gate)
+        if float(args.bridge_train_gate_cap) > 0.0:
+            gate = torch.clamp(gate, max=float(args.bridge_train_gate_cap))
+        z_use = z_st + gate * cue
+        rb = None
+        if cell == "C":
+            raw_rb = bridge.relation_bias(local_hidden, rel_nodes)
+            rb = _scaled_relation_bias(raw_rb, float(args.relation_bias_scale))
+
+        base_probs = _mean_relation_probs(arity_head, z_st, int(args.relation_vocab), relation_bias=None)
+        on_probs = _mean_relation_probs(arity_head, z_use, int(args.relation_vocab), relation_bias=rb)
+        anti_collapse_loss, anti_stats = _anti_collapse_loss(
+            base_probs,
+            on_probs,
+            entropy_floor_ratio=float(args.collapse_entropy_floor_ratio),
+            top1_margin=float(args.collapse_top1_margin),
+            top1_weight=float(args.collapse_top1_weight),
+            kl_weight=float(args.collapse_kl_weight),
+        )
+
+        on_tokens = _decode_logic_tokens(arity_head, z_use, int(args.relation_vocab), int(args.var_min_id), relation_bias=rb)
         on_states = torch.cat([arity_head.token_to_embedding(t, codebook) for t in on_tokens], dim=1)
         on_ids = torch.stack(on_tokens, dim=1)
         s_gold = _score_candidate_first_token_with_adapter(
@@ -542,18 +641,33 @@ def _train_bridge_cell(
             model, tokenizer, prompt, foil, advisor_adapter, on_states, on_ids, int(args.layer_index)
         )
         margin_loss = torch.relu(torch.tensor(float(args.margin), device=model.device, dtype=model.dtype) - (torch.tensor(s_gold, device=model.device, dtype=model.dtype) - torch.tensor(s_foil, device=model.device, dtype=model.dtype)))
-        reg = 0.01 * torch.mean(rb * rb)
-        loss = float(args.align_weight) * align_loss + float(args.margin_weight) * margin_loss + reg
+        reg = 0.01 * torch.mean(cue * cue) + (0.01 * torch.mean(rb * rb) if rb is not None else torch.zeros((), device=model.device, dtype=model.dtype))
+        loss = (
+            float(args.align_weight) * align_loss
+            + float(args.margin_weight) * margin_loss
+            + float(args.anti_collapse_weight) * anti_collapse_loss
+            + reg
+        )
         loss.backward()
         opt.step()
         align_hist.append(float(align_loss.detach().item()))
         marg_hist.append(float(margin_loss.detach().item()))
         sim_hist.append(float(align_sim.detach().item()))
+        anti_hist.append(float(anti_collapse_loss.detach().item()))
+        base_entropy_hist.append(float(anti_stats["base_entropy"]))
+        on_entropy_hist.append(float(anti_stats["on_entropy"]))
+        base_top1_hist.append(float(anti_stats["base_top1_share"]))
+        on_top1_hist.append(float(anti_stats["on_top1_share"]))
 
     return {
         "alignment_loss": float(sum(align_hist) / max(1, len(align_hist))),
         "margin_loss": float(sum(marg_hist) / max(1, len(marg_hist))),
         "alignment_similarity": float(sum(sim_hist) / max(1, len(sim_hist))),
+        "anti_collapse_loss": float(sum(anti_hist) / max(1, len(anti_hist))),
+        "base_operator_entropy": float(sum(base_entropy_hist) / max(1, len(base_entropy_hist))),
+        "on_operator_entropy": float(sum(on_entropy_hist) / max(1, len(on_entropy_hist))),
+        "base_top1_share": float(sum(base_top1_hist) / max(1, len(base_top1_hist))),
+        "on_top1_share": float(sum(on_top1_hist) / max(1, len(on_top1_hist))),
     }
 
 
@@ -601,15 +715,18 @@ def _evaluate_cell(
             align_eval_hist.append(float(eval_align.item()))
             sim_eval_hist.append(float(eval_sim.item()))
 
-            rb = bridge.relation_bias(local_hidden, rel_nodes) if cell in {"B", "C"} else None
-            if cell == "C" and runtime_enabled:
+            cue = None
+            rb = None
+            if cell in {"B", "C"}:
                 cue = bridge.runtime_cue(local_hidden, cue_norm_cap=float(args.runtime_cue_norm_cap))
                 gate = torch.sigmoid(bridge.gate)
                 if float(args.runtime_gate_cap) > 0.0:
                     gate = torch.clamp(gate, max=float(args.runtime_gate_cap))
                 z_use = z_st + gate * cue
+                if cell == "C" and runtime_enabled:
+                    raw_rb = bridge.relation_bias(local_hidden, rel_nodes)
+                    rb = _scaled_relation_bias(raw_rb, float(args.relation_bias_scale))
             else:
-                cue = None
                 z_use = z_st
 
             on_tokens = _decode_logic_tokens(arity_head, z_use, int(args.relation_vocab), int(args.var_min_id), relation_bias=rb)
@@ -717,6 +834,13 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--align-weight", type=float, default=1.0)
     p.add_argument("--margin-weight", type=float, default=0.5)
     p.add_argument("--margin", type=float, default=0.2)
+    p.add_argument("--anti-collapse-weight", type=float, default=1.0)
+    p.add_argument("--collapse-entropy-floor-ratio", type=float, default=0.85)
+    p.add_argument("--collapse-top1-margin", type=float, default=0.10)
+    p.add_argument("--collapse-top1-weight", type=float, default=1.0)
+    p.add_argument("--collapse-kl-weight", type=float, default=0.5)
+    p.add_argument("--bridge-train-gate-cap", type=float, default=0.08)
+    p.add_argument("--relation-bias-scale", type=float, default=0.15)
     p.add_argument("--runtime-gate-cap", type=float, default=0.03)
     p.add_argument("--runtime-cue-norm-cap", type=float, default=1.0)
     p.add_argument("--runtime-enable-min-acc-gain", type=float, default=0.02)
@@ -812,7 +936,11 @@ def main() -> None:
         split_meta_seed2 = {"seed": int(args.seed) + 1}
     (run_dir / "m3_15b_eval_pack_preview.json").write_text(json.dumps(pack_eval[:20], indent=2), encoding="utf-8")
 
-    cells = {"A": "control", "B": "alignment+margin(no runtime cue)", "C": "alignment+margin(+runtime cue if enabled)"}
+    cells = {
+        "A": "control",
+        "B": "cue-only bridge alignment + anti-collapse",
+        "C": "cue bridge + guarded residual relation bias after validation gate",
+    }
     report: dict[str, Any] = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "series": series_metadata("M", "M3.15b", "scripts/run_m3_15b_relation_local_rotary.py"),
@@ -891,6 +1019,15 @@ def main() -> None:
             f"- B vs A accuracy threshold: `{float(args.runtime_enable_min_acc_gain):.3f}`",
             "- policy_selection_split: `validation`",
             f"- C runtime enabled: `{bool(runtime_enabled)}`",
+            "",
+            "## Anti-Collapse Controls",
+            f"- anti_collapse_weight: `{float(args.anti_collapse_weight):.3f}`",
+            f"- collapse_entropy_floor_ratio: `{float(args.collapse_entropy_floor_ratio):.3f}`",
+            f"- collapse_top1_margin: `{float(args.collapse_top1_margin):.3f}`",
+            f"- collapse_top1_weight: `{float(args.collapse_top1_weight):.3f}`",
+            f"- collapse_kl_weight: `{float(args.collapse_kl_weight):.3f}`",
+            f"- bridge_train_gate_cap: `{float(args.bridge_train_gate_cap):.3f}`",
+            f"- relation_bias_scale: `{float(args.relation_bias_scale):.3f}`",
             "",
             "## Promotion Gates",
         ]
