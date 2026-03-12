@@ -1,0 +1,100 @@
+{
+  "generated_utc": "2026-03-12T12:33:35.805822+00:00",
+  "report_type": "m4_0_semantic_probe",
+  "series": {
+    "series_contract_version": "1.0",
+    "series_id": "M",
+    "track": "M4.0",
+    "script": "scripts/run_m4_0_semantic_probe.py"
+  },
+  "lineage": {
+    "mode": "eval_only",
+    "checkpoint_in": "D:/lojbanhypop/runs/l_series/m3_8_diversification/decollapse_small/20260311_103934/hard/m3_8_b/20260311_104736/l_series_checkpoint.pt",
+    "checkpoint_out": null,
+    "dataset_profile": "winograd_family_split",
+    "difficulty_tier": "mixed"
+  },
+  "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json",
+  "baseline_id": "M_BRIDGE_BASE_20260311_DEC",
+  "config": {
+    "base_model": "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+    "adapter": "D:\\lojbanhypop\\runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+    "checkpoint": "D:\\lojbanhypop\\runs\\l_series\\m3_8_diversification\\decollapse_small\\20260311_103934\\hard\\m3_8_b\\20260311_104736\\l_series_checkpoint.pt",
+    "baseline_manifest": "docs\\baselines\\m_series_bridge_baseline_manifest.json",
+    "dataset_size": "128",
+    "seed": "42",
+    "layer_index": "12",
+    "relation_vocab": "5",
+    "max_slots": "8",
+    "max_logic_new_tokens": "48",
+    "causal_threshold": "0.9",
+    "output_root": "artifacts\\runs\\telemetry\\raw\\ablation\\hypercube\\m4_0_semantic_probe\\bridge_base_v1",
+    "run_id": "m4_0_20260312_bridge_base_v1",
+    "local_files_only": "True"
+  },
+  "data_split": {
+    "train_pair_ids": [
+      "size_02",
+      "social_01",
+      "social_02",
+      "speed_01"
+    ],
+    "val_pair_ids": [
+      "policy_01"
+    ],
+    "eval_pair_ids": [
+      "size_01",
+      "role_01"
+    ],
+    "seed2_eval_meta": {
+      "train_pair_ids": [
+        "role_01",
+        "policy_01",
+        "social_02",
+        "social_01"
+      ],
+      "val_pair_ids": [
+        "size_02"
+      ],
+      "eval_pair_ids": [
+        "speed_01",
+        "size_01"
+      ]
+    }
+  },
+  "probe": {
+    "bag": {
+      "train_accuracy": 0.5703125,
+      "val_accuracy": 0.5,
+      "eval_accuracy": 0.5,
+      "seed2_accuracy": 0.5,
+      "input_dim": 5
+    },
+    "positional": {
+      "train_accuracy": 0.5,
+      "val_accuracy": 0.5,
+      "eval_accuracy": 0.5,
+      "seed2_accuracy": 0.5,
+      "input_dim": 40
+    },
+    "dominant_ops": {
+      "label0_op": 1,
+      "label1_op": 1,
+      "label0_purity": 0.435546875,
+      "label1_purity": 0.4524739583333333,
+      "distinct": false
+    }
+  },
+  "m4_1_causal_scrub": {
+    "executed": false,
+    "reason": "probe_below_threshold_or_non_distinct_ops",
+    "dominant_ops": {
+      "label0_op": 1,
+      "label1_op": 1,
+      "label0_purity": 0.435546875,
+      "label1_purity": 0.4524739583333333,
+      "distinct": false
+    }
+  },
+  "m4_2_recommendation": "implement_predicate_grounding"
+}
