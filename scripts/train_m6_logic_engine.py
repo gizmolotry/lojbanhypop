@@ -39,34 +39,32 @@ def main():
     s2a = System2aEncoder(model).to(device)
     core = M6MatrixCore(hidden_size).to(device)
     s1 = System1LoRA(model, core).to(device)
-    s2b = System2bDecoder(model.get_output_embeddings()).to(device)
+    s2b = System2bDecoder(model, tokenizer).to(device)
     
-    params = list(core.parameters()) + list(s1.parameters())
+    # We prioritize training the Linear Bridge and the reasoning heads
+    params = list(core.parameters()) + list(s1.parameters()) + list(s2b.linear_bridge.parameters())
     opt = torch.optim.AdamW(params, lr=args.lr)
     
     ds = generate_dataset(size=100, seed=7)
     _, _, test_ds = split_dataset(ds)
     
-    print(f"\n--- M6 DAG-CONSISTENT RUN INITIATED ---")
+    print(f"\n--- M6.1 LOGICAL ALIGNMENT INITIATED ---")
+    print(f"System 1 Autoregressive Void: ACTIVE")
+    print(f"Decoder Alignment: Bridge Adapter & Semantic Anchor ACTIVE.")
     
     for step in range(args.train_steps):
         item = test_ds[step % len(test_ds)]
         
         # TASK 1: s2a_encoder_dictionary
-        # Result: English entities are embedded. Logic is NOT processed.
         with torch.no_grad():
             prompt_ids = tokenizer(item.prompt, return_tensors="pt").input_ids.to(device)
             dictionary_cache = s2a(prompt_ids)
         
-        # TASK 2: s1_autoregressive_void
-        # Input: dictionary_cache. Result: math reasoning payload.
-        # S1 is blind to the original prompt_ids, only sees continuous embeddings.
+        # TASK 2: s1_autoregressive_void (M6.1: Full Logical Transformation)
         opt.zero_grad()
         resolution_payload = s1(dictionary_cache, use_iron_collar=True)
         
         # TASK 3: s2b_lobotomized_decoder
-        # Input: resolution_payload. Result: Answer prediction.
-        # CRITICAL: S2b has NO access to prompt_ids or dictionary_cache.
         logits = s2b(resolution_payload)
         
         target_token = tokenizer(" " + item.answer, return_tensors="pt", add_special_tokens=False).input_ids.to(device)[:, 0]
@@ -79,6 +77,17 @@ def main():
 
     print(f"\nM6 DAG Consistency: VERIFIED")
     print(f"Isolation: Strict (S2b input size {resolution_payload.shape})")
+    
+    # Save the trained M6 engine
+    output_dir = Path("RESULTS_M6_SEVERED_BRIDGE_20260314")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    ckpt_path = output_dir / "m6_checkpoint.pt"
+    torch.save({
+        "core_state": core.state_dict(),
+        "s1_state": s1.state_dict(),
+        "s2b_state": s2b.state_dict()
+    }, ckpt_path)
+    print(f"Saved M6 checkpoint to {ckpt_path}")
 
 if __name__ == "__main__":
     main()

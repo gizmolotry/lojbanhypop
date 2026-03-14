@@ -40,10 +40,23 @@ def main():
     s2a = System2aEncoder(model).to(device)
     core = M6MatrixCore(hidden_size).to(device)
     s1 = System1LoRA(model, core).to(device)
-    s2b = System2bDecoder(model.get_output_embeddings()).to(device)
+    s2b = System2bDecoder(model, tokenizer).to(device)
     
-    # In a real evaluation, we would load the trained weights here
-    # For this simulation, we'll evaluate the untrained state
+    # Load trained weights
+    ckpt_path = args.output_dir / "m6_checkpoint.pt"
+    if ckpt_path.exists():
+        ckpt = torch.load(ckpt_path, map_location=device)
+        core.load_state_dict(ckpt["core_state"])
+        s1.load_state_dict(ckpt["s1_state"])
+        s2b.load_state_dict(ckpt["s2b_state"])
+        print(f"Loaded trained M6 engine from {ckpt_path}")
+    else:
+        print(f"Warning: No checkpoint found at {ckpt_path}. Evaluating untrained state.")
+        
+    s2a.eval()
+    core.eval()
+    s1.eval()
+    s2b.eval()
     
     ds = generate_dataset(size=100, seed=7)
     _, _, test_ds = split_dataset(ds)

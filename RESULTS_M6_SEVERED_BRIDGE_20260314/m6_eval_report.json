@@ -1,0 +1,129 @@
+{
+  "timestamp": "2026-03-14T19:24:25.897907+00:00",
+  "accuracy": 0.7,
+  "correct_count": 14,
+  "total_evaluated": 20,
+  "isolation_status": "Strict",
+  "details": [
+    {
+      "prompt": "Bob puts the red ball in the drawer. Frank moves it to the shelf while Bob is outside. Dana takes the blue ball. Where does Bob think the red ball is?",
+      "target_answer": "drawer",
+      "predicted": "A",
+      "correct": true
+    },
+    {
+      "prompt": "Dana puts the red ball in the shelf. Alice moves it to the box while Dana is outside. Eve takes the blue ball. Where does Dana think the red ball is?",
+      "target_answer": "shelf",
+      "predicted": "A",
+      "correct": false
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "target_answer": "demonstrators",
+      "predicted": "A",
+      "correct": true
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they feared violence. Who feared violence?",
+      "target_answer": "councilmen",
+      "predicted": "A",
+      "correct": false
+    },
+    {
+      "prompt": "The trophy does not fit in the suitcase because it is too small. What is too small?",
+      "target_answer": "suitcase",
+      "predicted": "A",
+      "correct": true
+    },
+    {
+      "prompt": "A says: 'B is a knave.' B says: 'A and C are both knights.' C says: 'A is a knave.' Who is what?",
+      "target_answer": "A=knight,B=knave,C=knight",
+      "predicted": "A",
+      "correct": true
+    },
+    {
+      "prompt": "A says: 'B is a knave.' B says: 'C is a knight.' C says: 'A is a knight.' Who is what?",
+      "target_answer": "A=knight,B=knave,C=knight",
+      "predicted": "A",
+      "correct": true
+    },
+    {
+      "prompt": "Charlie puts the red ball in the desk. Frank moves it to the drawer while Charlie is watching. Bob takes the blue ball. Where does Charlie think the red ball is?",
+      "target_answer": "drawer",
+      "predicted": "A",
+      "correct": true
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they feared violence. Who feared violence?",
+      "target_answer": "councilmen",
+      "predicted": "A",
+      "correct": false
+    },
+    {
+      "prompt": "A says: 'B is a knave.' B says: 'C is a knight.' C says: 'A is a knight.' Who is what?",
+      "target_answer": "A=knight,B=knave,C=knight",
+      "predicted": "A",
+      "correct": true
+    },
+    {
+      "prompt": "The trophy does not fit in the suitcase because it is too small. What is too small?",
+      "target_answer": "suitcase",
+      "predicted": "A",
+      "correct": true
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "target_answer": "demonstrators",
+      "predicted": "A",
+      "correct": true
+    },
+    {
+      "prompt": "The trophy does not fit in the suitcase because it is too big. What is too big?",
+      "target_answer": "trophy",
+      "predicted": "A",
+      "correct": false
+    },
+    {
+      "prompt": "The trophy does not fit in the suitcase because it is too big. What is too big?",
+      "target_answer": "trophy",
+      "predicted": "A",
+      "correct": false
+    },
+    {
+      "prompt": "A says: 'B is a knave.' B says: 'A and C are both knights.' C says: 'A is a knave.' Who is what?",
+      "target_answer": "A=knight,B=knave,C=knight",
+      "predicted": "A",
+      "correct": true
+    },
+    {
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "target_answer": "A=knight,B=knight,C=knave",
+      "predicted": "A",
+      "correct": true
+    },
+    {
+      "prompt": "Dana puts the red ball in the box. Eve moves it to the cabinet while Dana is outside. Bob takes the blue ball. Where does Dana think the red ball is?",
+      "target_answer": "box",
+      "predicted": "A",
+      "correct": false
+    },
+    {
+      "prompt": "A says: 'B is a knave.' B says: 'C is a knight.' C says: 'A is a knight.' Who is what?",
+      "target_answer": "A=knight,B=knave,C=knight",
+      "predicted": "A",
+      "correct": true
+    },
+    {
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "target_answer": "A=knight,B=knight,C=knave",
+      "predicted": "A",
+      "correct": true
+    },
+    {
+      "prompt": "A says: 'B is a knave.' B says: 'A and C are both knights.' C says: 'A is a knave.' Who is what?",
+      "target_answer": "A=knight,B=knave,C=knight",
+      "predicted": "A",
+      "correct": true
+    }
+  ]
+}
