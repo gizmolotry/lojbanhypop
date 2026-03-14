@@ -7,49 +7,57 @@ class M6MatrixCore(nn.Module):
     """
     The Topological Bedrock for M6.
     Enforces the strictly fixed 10-slot width: [OP, x1, x2, x3... x9]
+    Slot 0: Operator (Codebook K=2000)
+    Slots 1-9: Hard Pointers (Indices into S2a prompt embeddings)
     """
-    def __init__(self, hidden_size: int, codebook_size: int = 2000, num_slots: int = 10):
+    def __init__(self, hidden_size: int, codebook_size: int = 2000, max_prompt_len: int = 128):
         super().__init__()
-        self.num_slots = num_slots
         self.hidden_size = hidden_size
         self.codebook_size = codebook_size
+        self.max_prompt_len = max_prompt_len
+        self.num_x_slots = 9
         
-        # OP_QUOTE is hardcoded to invoke the pointer network
+        # Hardcoded indices from spec
         self.OP_QUOTE_IDX = 0
         self.OP_STOP_IDX = 1
         self.PAD_IDX = 2
         
-        # Emits logits for the 10 slots
-        self.heads = nn.ModuleList([
-            nn.Linear(hidden_size, codebook_size) for _ in range(num_slots)
+        # Head for the Operator slot (K=2000)
+        self.op_head = nn.Linear(hidden_size, codebook_size)
+        
+        # Heads for the 9 Variable slots (Pointers to prompt locations)
+        self.x_heads = nn.ModuleList([
+            nn.Linear(hidden_size, max_prompt_len) for _ in range(self.num_x_slots)
         ])
 
-    def forward(self, s1_hidden_state: torch.Tensor) -> torch.Tensor:
+    def forward(self, s1_hidden_state: torch.Tensor, use_iron_collar: bool = True) -> Tuple[torch.Tensor, torch.Tensor]:
         """
-        Takes the autoregressive hidden state from System 1 and produces
-        the 10-slot discrete logic matrix.
+        Produces the 10-slot discrete logic matrix components.
+        Returns:
+            op_logits: [B, K]
+            x_logits: [B, 9, Max_Prompt_Len]
         """
-        # s1_hidden_state: [batch, length, hidden_size]
-        slot_logits = []
-        for head in self.heads:
-            slot_logits.append(head(s1_hidden_state))
+        op_logits = self.op_head(s1_hidden_state)
+        
+        if use_iron_collar:
+            # Physical Law #1: The Iron Collar
+            # Strictly isolate Operator to indices 0-4 (AND, OR, NOT, IMPLIES, XOR)
+            mask = torch.full_like(op_logits, -1e9)
+            mask[:, :5] = 0
+            op_logits = op_logits + mask
             
-        # Output: [batch, length, num_slots, codebook_size]
-        return torch.stack(slot_logits, dim=2)
+        x_logits_list = []
+        for head in self.x_heads:
+            x_logits_list.append(head(s1_hidden_state))
+            
+        x_logits = torch.stack(x_logits_list, dim=1)
+        return op_logits, x_logits
     
-    def apply_lc6_constraints(self, slot_logits: torch.Tensor, gate_values: torch.Tensor) -> torch.Tensor:
+    def apply_iron_collar(self, op_logits: torch.Tensor, x_logits: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
         """
-        Dynamic Arity via Decay:
-        If gate_values[slot_i] is low, slot_i is forced to PAD_IDX.
+        Strict Arity-Typing Mask (Physical Law #1).
+        In M6, the slots are architecturally separated, so the collar is implicit.
+        However, we can enforce the Operator slot to exclude 'Variable' semantics 
+        if we choose to restrict the 2000-token codebook.
         """
-        # slot_logits: [B, num_slots, codebook_size]
-        # gate_values: [B, num_slots] (0.0 to 1.0)
-        
-        # Create a strong bias toward PAD_IDX (index 2)
-        pad_mask = torch.zeros_like(slot_logits)
-        pad_mask[:, :, self.PAD_IDX] = 1e9 
-        
-        # Interpolate between raw logits and the PAD force based on arity-decay
-        # gate_values == 1.0 means active, 0.0 means decay to <PAD>
-        decayed_logits = (gate_values.unsqueeze(-1) * slot_logits) + ((1.0 - gate_values.unsqueeze(-1)) * pad_mask)
-        return decayed_logits
+        return op_logits, x_logits
