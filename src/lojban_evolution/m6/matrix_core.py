@@ -37,9 +37,19 @@ class M6MatrixCore(nn.Module):
         # Output: [batch, length, num_slots, codebook_size]
         return torch.stack(slot_logits, dim=2)
     
-    def apply_lc6_constraints(self, slot_logits: torch.Tensor) -> torch.Tensor:
+    def apply_lc6_constraints(self, slot_logits: torch.Tensor, gate_values: torch.Tensor) -> torch.Tensor:
         """
-        Enforces dynamic arity via decay to <PAD>.
-        (Placeholder for the exact LC6 mathematics that forces unused x slots to PAD).
+        Dynamic Arity via Decay:
+        If gate_values[slot_i] is low, slot_i is forced to PAD_IDX.
         """
-        return slot_logits
+        # slot_logits: [B, num_slots, codebook_size]
+        # gate_values: [B, num_slots] (0.0 to 1.0)
+        
+        # Create a strong bias toward PAD_IDX (index 2)
+        pad_mask = torch.zeros_like(slot_logits)
+        pad_mask[:, :, self.PAD_IDX] = 1e9 
+        
+        # Interpolate between raw logits and the PAD force based on arity-decay
+        # gate_values == 1.0 means active, 0.0 means decay to <PAD>
+        decayed_logits = (gate_values.unsqueeze(-1) * slot_logits) + ((1.0 - gate_values.unsqueeze(-1)) * pad_mask)
+        return decayed_logits
