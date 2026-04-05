@@ -1,0 +1,34 @@
+[
+  {
+    "prompt": "Morgan did not forward the memo to Casey because they were confidential.",
+    "answer": "memo",
+    "target_text": "memo, not Casey",
+    "family": "morgan_casey",
+    "bucket": "disambiguation",
+    "polarity": "candidate_0",
+    "pair_id": "m3_19_pair_00022",
+    "variant_id": "v0",
+    "candidates": [
+      "memo",
+      "Casey"
+    ],
+    "gold_index": 0,
+    "target_kind": "rich_resumption"
+  },
+  {
+    "prompt": "The councilmen refused the permit to the demonstrators because they feared violence.",
+    "answer": "councilmen",
+    "target_text": "councilmen",
+    "family": "councilmen_demonstrators",
+    "bucket": "noun_phrase",
+    "polarity": "candidate_0",
+    "pair_id": "m3_19_pair_00001",
+    "variant_id": "v0",
+    "candidates": [
+      "councilmen",
+      "demonstrators"
+    ],
+    "gold_index": 0,
+    "target_kind": "answer_span"
+  }
+]

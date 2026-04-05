@@ -1,0 +1,1732 @@
+{
+  "schema_version": "1.0",
+  "generated_utc": "2026-03-30T02:24:23.293572+00:00",
+  "source_history_manifest": "artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/ablation_history_backfill_m_excavation_20260329/ablation_history_manifest.json",
+  "family_count": 33,
+  "families": [
+    {
+      "family_key": "A-G",
+      "program_layer": "legacy_orchestration",
+      "normalized_ids": [
+        "a_to_g.a",
+        "a_to_g.b_1",
+        "a_to_g.b_2",
+        "a_to_g.c",
+        "a_to_g.d",
+        "a_to_g.e"
+      ],
+      "legacy_aliases": [
+        "A",
+        "A-G/A",
+        "A-G/B.1",
+        "A-G/B.2",
+        "A-G/C",
+        "A-G/D",
+        "A-G/E",
+        "B.1",
+        "B.2",
+        "C",
+        "D",
+        "E"
+      ],
+      "canonical_ids": [
+        "a_to_g.a",
+        "a_to_g.b_1",
+        "a_to_g.b_2",
+        "a_to_g.c",
+        "a_to_g.d",
+        "a_to_g.e"
+      ],
+      "titles": [
+        "Control (English CoT -> English)",
+        "Legacy Text-to-Text (No Handoff)",
+        "Enhanced Constraint Text-to-Text (No Handoff)",
+        "Coconut Fusion (Latent KV Handoff)",
+        "NoPE Fusion (DroPE + latent handoff)",
+        "Babel Bridge (Projected latent handoff)"
+      ],
+      "script_paths": [
+        "scripts/run_coconut_ablation_matrix.py"
+      ],
+      "dag_paths": [
+        "airflow/dags/lojban_ablation_matrix_dag.py"
+      ],
+      "reproducibility": [
+        "artifact_only",
+        "doc_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 6,
+      "runnable_count": 0,
+      "artifact_only_count": 5,
+      "doc_only_count": 1,
+      "title_summary": "Babel Bridge (Projected latent handoff) + 5 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "H",
+      "program_layer": "legacy_orchestration",
+      "normalized_ids": [
+        "h.series.h3",
+        "legacy.h.h1",
+        "legacy.h.h2",
+        "legacy.h.h3",
+        "legacy.h.h4"
+      ],
+      "legacy_aliases": [
+        "H1",
+        "H2",
+        "H3",
+        "H4"
+      ],
+      "canonical_ids": [
+        "h.series.h3",
+        "legacy.h.h1",
+        "legacy.h.h2",
+        "legacy.h.h3",
+        "legacy.h.h4"
+      ],
+      "titles": [
+        "SwiGLU Mid-Layer Bridge (Non-Linear Alignment)",
+        "Linear Bridge",
+        "Deep Linear Bridge",
+        "SwiGLU Non-Linear Bridge",
+        "Deep SwiGLU Bridge"
+      ],
+      "script_paths": [
+        "D:/lojbanhypop/scripts/true_coconut.py"
+      ],
+      "dag_paths": [],
+      "reproducibility": [
+        "artifact_only",
+        "doc_only"
+      ],
+      "evidence_classes": [
+        "artifact",
+        "doc_reported"
+      ],
+      "entry_count": 5,
+      "runnable_count": 0,
+      "artifact_only_count": 1,
+      "doc_only_count": 4,
+      "title_summary": "Deep Linear Bridge + 4 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "H5",
+      "program_layer": "legacy_orchestration",
+      "normalized_ids": [
+        "h.series.h5_dptr",
+        "h.series.h5_ood",
+        "h.series.h5_prov"
+      ],
+      "legacy_aliases": [
+        "H5-DPTR",
+        "H5-OOD",
+        "H5-PROV"
+      ],
+      "canonical_ids": [
+        "h.series.h5_dptr",
+        "h.series.h5_ood",
+        "h.series.h5_prov"
+      ],
+      "titles": [
+        "Dynamic Pointer Refactor Eval",
+        "OOD Stress Test",
+        "Provenance Trace"
+      ],
+      "script_paths": [
+        "D:/lojbanhypop/scripts/eval_h5_dynamic_pointer_refactor.py",
+        "D:/lojbanhypop/scripts/eval_h5_ood_stress.py",
+        "D:/lojbanhypop/scripts/trace_h5_provenance.py"
+      ],
+      "dag_paths": [],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 3,
+      "runnable_count": 0,
+      "artifact_only_count": 3,
+      "doc_only_count": 0,
+      "title_summary": "Dynamic Pointer Refactor Eval + 2 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "J",
+      "program_layer": "legacy_orchestration",
+      "normalized_ids": [
+        "M1.1",
+        "M1.2",
+        "M1.3",
+        "M1.4",
+        "M1.5"
+      ],
+      "legacy_aliases": [
+        "J-1",
+        "J-2",
+        "J-3",
+        "J-4",
+        "J-5"
+      ],
+      "canonical_ids": [
+        "j.series.j_1",
+        "j.series.j_2",
+        "j.series.j_3",
+        "j.series.j_4",
+        "j.series.j_5"
+      ],
+      "titles": [
+        "Graph Target (Factor Schema)",
+        "Paraphrase Explosion (Invariance)",
+        "Stop-Grad Isolation Gate",
+        "Operator Curriculum Build",
+        "Adversarial Synthesis (Scope/Foil)"
+      ],
+      "script_paths": [
+        "D:/lojbanhypop/scripts/eval_j_1.py",
+        "D:/lojbanhypop/scripts/eval_j_2.py",
+        "D:/lojbanhypop/scripts/eval_j_3.py",
+        "D:/lojbanhypop/scripts/eval_j_4.py",
+        "D:/lojbanhypop/scripts/eval_j_5.py",
+        "D:/lojbanhypop/scripts/train_h5_persistent_vq_advisor.py"
+      ],
+      "dag_paths": [
+        "airflow/dags/lojban_j_series_dag.py"
+      ],
+      "reproducibility": [
+        "runnable"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 5,
+      "runnable_count": 5,
+      "artifact_only_count": 0,
+      "doc_only_count": 0,
+      "title_summary": "Adversarial Synthesis (Scope/Foil) + 4 more",
+      "status_summary": "runnable"
+    },
+    {
+      "family_key": "L",
+      "program_layer": "legacy_orchestration",
+      "normalized_ids": [
+        "M2.1",
+        "M2.2",
+        "M2.3",
+        "M3.0",
+        "M3.1",
+        "M3.2",
+        "M3.3",
+        "M3.4",
+        "l.branch.m3_5.m3_5_a",
+        "l.branch.m3_5.m3_5_b",
+        "l.branch.m3_5.m3_5_c",
+        "l.branch.m3_6.m3_6_a",
+        "l.branch.m3_6.m3_6_b",
+        "l.branch.m3_6.m3_6_c",
+        "l.branch.m3_7.m3_7_a",
+        "l.branch.m3_7.m3_7_b",
+        "l.branch.m3_7.m3_7_c",
+        "l.branch.m3_8.m3_8_a",
+        "l.branch.m3_8.m3_8_b",
+        "l.branch.m3_8.m3_8_c",
+        "l.series.charter"
+      ],
+      "legacy_aliases": [
+        "L-Series",
+        "L6-A",
+        "L6-B",
+        "L6-C",
+        "Lagrangian Series",
+        "M2.A",
+        "M2.B",
+        "M2.C",
+        "M3.5.A",
+        "M3.5.B",
+        "M3.5.C",
+        "M3.6.A",
+        "M3.6.B",
+        "M3.6.C",
+        "M3.6.M3.6.A",
+        "M3.6.M3.6.B",
+        "M3.6.M3.6.C",
+        "M3.7.A",
+        "M3.7.B",
+        "M3.7.C",
+        "M3.8.A",
+        "M3.8.B",
+        "M3.8.C"
+      ],
+      "canonical_ids": [
+        "l.branch.m3.m3_0",
+        "l.branch.m3.m3_1",
+        "l.branch.m3.m3_2",
+        "l.branch.m3.m3_3",
+        "l.branch.m3.m3_4",
+        "l.branch.m3_5.m3_5_a",
+        "l.branch.m3_5.m3_5_b",
+        "l.branch.m3_5.m3_5_c",
+        "l.branch.m3_6.m3_6_a",
+        "l.branch.m3_6.m3_6_b",
+        "l.branch.m3_6.m3_6_c",
+        "l.branch.m3_7.m3_7_a",
+        "l.branch.m3_7.m3_7_b",
+        "l.branch.m3_7.m3_7_c",
+        "l.branch.m3_8.m3_8_a",
+        "l.branch.m3_8.m3_8_b",
+        "l.branch.m3_8.m3_8_c",
+        "l.series.charter",
+        "l.series.l6.l6_a",
+        "l.series.l6.l6_b",
+        "l.series.l6.l6_c"
+      ],
+      "titles": [
+        "Scope Drill + TierB Force + Soft Constraint Identity Audit",
+        "Scope Drill Only",
+        "TierB Force + Soft Constraint Audit Only",
+        "Baseline Gate Run (L6-C + curriculum)",
+        "Binding Bootcamp (unbound focus)",
+        "Depth Ramp (1->4 curriculum pressure)",
+        "Truth Discrimination (foil-sensitive tier B)",
+        "Compression Activation (tier C pressure)",
+        "Asymmetric Baseline (forced non-commutativity)",
+        "Symmetry-aware crucible (invariant vs foil)",
+        "Ablated anchor (swap-test disabled)",
+        "M3.6 M3.6.A",
+        "M3.6 M3.6.B",
+        "M3.6 M3.6.C",
+        "Control (no shadow pressure)",
+        "Paraphrase shadow alignment",
+        "Family separation + rolling shadow",
+        "Operator entropy regularization",
+        "Domain reuse reward",
+        "Family clustering objective",
+        "L-Series Lexicographic Augmented Lagrangian Controller"
+      ],
+      "script_paths": [
+        "scripts/run_l6_ablation_branch.py",
+        "scripts/train_l_series_mvs.py"
+      ],
+      "dag_paths": [
+        "airflow/dags/lojban_l_series_dag.py"
+      ],
+      "reproducibility": [
+        "artifact_only",
+        "doc_only",
+        "runnable"
+      ],
+      "evidence_classes": [
+        "artifact",
+        "doc_reported"
+      ],
+      "entry_count": 21,
+      "runnable_count": 3,
+      "artifact_only_count": 17,
+      "doc_only_count": 1,
+      "title_summary": "Ablated anchor (swap-test disabled) + 20 more",
+      "status_summary": "partially_runnable"
+    },
+    {
+      "family_key": "Phase Eval",
+      "program_layer": "legacy_orchestration",
+      "normalized_ids": [
+        "phase5.objective.ablate_compositional_consistency_loss",
+        "phase5.objective.ablate_compression_regularization_loss",
+        "phase5.objective.ablate_coverage_regularization_loss",
+        "phase5.objective.ablate_roundtrip_consistency_loss",
+        "phase5.objective.ablate_semantic_unambiguity_loss",
+        "phase5.objective.baseline_no_phase5",
+        "phase5.objective.phase5_full",
+        "phase5.train.ablate_compositional_consistency_weight",
+        "phase5.train.ablate_compression_regularization_weight",
+        "phase5.train.ablate_coverage_regularization_weight",
+        "phase5.train.ablate_roundtrip_consistency_weight",
+        "phase5.train.ablate_semantic_unambiguity_weight",
+        "phase5.train.baseline_no_phase5",
+        "phase5.train.phase5_full"
+      ],
+      "legacy_aliases": [
+        "ablate_compositional_consistency_loss",
+        "ablate_compositional_consistency_weight",
+        "ablate_compression_regularization_loss",
+        "ablate_compression_regularization_weight",
+        "ablate_coverage_regularization_loss",
+        "ablate_coverage_regularization_weight",
+        "ablate_roundtrip_consistency_loss",
+        "ablate_roundtrip_consistency_weight",
+        "ablate_semantic_unambiguity_loss",
+        "ablate_semantic_unambiguity_weight",
+        "baseline_no_phase5",
+        "phase5_full"
+      ],
+      "canonical_ids": [
+        "phase5.objective.ablate_compositional_consistency_loss",
+        "phase5.objective.ablate_compression_regularization_loss",
+        "phase5.objective.ablate_coverage_regularization_loss",
+        "phase5.objective.ablate_roundtrip_consistency_loss",
+        "phase5.objective.ablate_semantic_unambiguity_loss",
+        "phase5.objective.baseline_no_phase5",
+        "phase5.objective.phase5_full",
+        "phase5.train.ablate_compositional_consistency_weight",
+        "phase5.train.ablate_compression_regularization_weight",
+        "phase5.train.ablate_coverage_regularization_weight",
+        "phase5.train.ablate_roundtrip_consistency_weight",
+        "phase5.train.ablate_semantic_unambiguity_weight",
+        "phase5.train.baseline_no_phase5",
+        "phase5.train.phase5_full"
+      ],
+      "titles": [
+        "ablate_compositional_consistency_loss",
+        "ablate_compression_regularization_loss",
+        "ablate_coverage_regularization_loss",
+        "ablate_roundtrip_consistency_loss",
+        "ablate_semantic_unambiguity_loss",
+        "baseline_no_phase5",
+        "phase5_full",
+        "ablate_compositional_consistency_weight",
+        "ablate_compression_regularization_weight",
+        "ablate_coverage_regularization_weight",
+        "ablate_roundtrip_consistency_weight",
+        "ablate_semantic_unambiguity_weight",
+        "baseline_no_phase5",
+        "phase5_full"
+      ],
+      "script_paths": [
+        "scripts/run_phase5_objective_ablation.py",
+        "scripts/run_phase5_train_ablation.py"
+      ],
+      "dag_paths": [
+        "airflow/dags/lojban_phase_ablation_dag.py"
+      ],
+      "reproducibility": [
+        "runnable"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 14,
+      "runnable_count": 14,
+      "artifact_only_count": 0,
+      "doc_only_count": 0,
+      "title_summary": "ablate_compositional_consistency_loss + 11 more",
+      "status_summary": "runnable"
+    },
+    {
+      "family_key": "M3.9",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M3.9"
+      ],
+      "legacy_aliases": [],
+      "canonical_ids": [
+        "m.track.m3_9"
+      ],
+      "titles": [
+        "M3.9 telemetry report"
+      ],
+      "script_paths": [
+        "scripts/run_m3_9_primitive_probe.py"
+      ],
+      "dag_paths": [
+        "airflow/dags/lojban_m3_9_primitive_probe_dag.py"
+      ],
+      "reproducibility": [
+        "runnable"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 1,
+      "runnable_count": 1,
+      "artifact_only_count": 0,
+      "doc_only_count": 0,
+      "title_summary": "M3.9 telemetry report",
+      "status_summary": "runnable"
+    },
+    {
+      "family_key": "M3.10",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M3.10"
+      ],
+      "legacy_aliases": [],
+      "canonical_ids": [
+        "m.track.m3_10"
+      ],
+      "titles": [
+        "M3.10 telemetry report"
+      ],
+      "script_paths": [
+        "scripts/run_m3_10_ood_accuracy_probe.py"
+      ],
+      "dag_paths": [
+        "airflow/dags/lojban_m3_10_ood_accuracy_probe_dag.py"
+      ],
+      "reproducibility": [
+        "runnable"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 1,
+      "runnable_count": 1,
+      "artifact_only_count": 0,
+      "doc_only_count": 0,
+      "title_summary": "M3.10 telemetry report",
+      "status_summary": "runnable"
+    },
+    {
+      "family_key": "M3.11",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M3.11"
+      ],
+      "legacy_aliases": [],
+      "canonical_ids": [
+        "m.track.m3_11"
+      ],
+      "titles": [
+        "M3.11 telemetry report"
+      ],
+      "script_paths": [
+        "scripts/run_m3_11_winograd_failure_anatomy.py"
+      ],
+      "dag_paths": [
+        "airflow/dags/lojban_m3_11_winograd_failure_anatomy_dag.py"
+      ],
+      "reproducibility": [
+        "runnable"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 1,
+      "runnable_count": 1,
+      "artifact_only_count": 0,
+      "doc_only_count": 0,
+      "title_summary": "M3.11 telemetry report",
+      "status_summary": "runnable"
+    },
+    {
+      "family_key": "M3.12",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M3.12.A",
+        "M3.12.B",
+        "M3.12.C"
+      ],
+      "legacy_aliases": [
+        "A",
+        "B",
+        "C"
+      ],
+      "canonical_ids": [
+        "m.track.m3_12.a",
+        "m.track.m3_12.b",
+        "m.track.m3_12.c"
+      ],
+      "titles": [
+        "M3.12 A",
+        "M3.12 B",
+        "M3.12 C"
+      ],
+      "script_paths": [],
+      "dag_paths": [
+        "airflow/dags/lojban_m3_12_geometric_return_stream_dag.py"
+      ],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 3,
+      "runnable_count": 0,
+      "artifact_only_count": 3,
+      "doc_only_count": 0,
+      "title_summary": "M3.12 A + 2 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "M3.13",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M3.13.A",
+        "M3.13.B",
+        "M3.13.C",
+        "M3.13.D"
+      ],
+      "legacy_aliases": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "canonical_ids": [
+        "m.track.m3_13.a",
+        "m.track.m3_13.b",
+        "m.track.m3_13.c",
+        "m.track.m3_13.d"
+      ],
+      "titles": [
+        "M3.13 A",
+        "M3.13 B",
+        "M3.13 C",
+        "M3.13 D"
+      ],
+      "script_paths": [],
+      "dag_paths": [],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 4,
+      "runnable_count": 0,
+      "artifact_only_count": 4,
+      "doc_only_count": 0,
+      "title_summary": "M3.13 A + 3 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "M3.14",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M3.14.A",
+        "M3.14.B",
+        "M3.14.C"
+      ],
+      "legacy_aliases": [
+        "A",
+        "B",
+        "C"
+      ],
+      "canonical_ids": [
+        "m.track.m3_14.a",
+        "m.track.m3_14.b",
+        "m.track.m3_14.c"
+      ],
+      "titles": [
+        "M3.14 A",
+        "M3.14 B",
+        "M3.14 C"
+      ],
+      "script_paths": [],
+      "dag_paths": [
+        "airflow/dags/lojban_m3_14_structural_alignment_bridge_dag.py"
+      ],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 3,
+      "runnable_count": 0,
+      "artifact_only_count": 3,
+      "doc_only_count": 0,
+      "title_summary": "M3.14 A + 2 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "M3.15",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M3.15.A",
+        "M3.15.B",
+        "M3.15.C"
+      ],
+      "legacy_aliases": [
+        "A",
+        "B",
+        "C"
+      ],
+      "canonical_ids": [
+        "m.track.m3_15.a",
+        "m.track.m3_15.b",
+        "m.track.m3_15.c"
+      ],
+      "titles": [
+        "M3.15 A",
+        "M3.15 B",
+        "M3.15 C"
+      ],
+      "script_paths": [],
+      "dag_paths": [
+        "airflow/dags/lojban_m3_15_rotary_coconut_dag.py",
+        "airflow/dags/lojban_m3_15_rotary_coconut_seven_dag.py"
+      ],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 3,
+      "runnable_count": 0,
+      "artifact_only_count": 3,
+      "doc_only_count": 0,
+      "title_summary": "M3.15 A + 2 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "M3.15b",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M3.15b.A",
+        "M3.15b.B",
+        "M3.15b.C"
+      ],
+      "legacy_aliases": [
+        "A",
+        "B",
+        "C"
+      ],
+      "canonical_ids": [
+        "m.track.m3_15b.a",
+        "m.track.m3_15b.b",
+        "m.track.m3_15b.c"
+      ],
+      "titles": [
+        "M3.15b A",
+        "M3.15b B",
+        "M3.15b C"
+      ],
+      "script_paths": [],
+      "dag_paths": [
+        "airflow/dags/lojban_m3_15b_relation_local_rotary_dag.py"
+      ],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 3,
+      "runnable_count": 0,
+      "artifact_only_count": 3,
+      "doc_only_count": 0,
+      "title_summary": "M3.15b A + 2 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "M3.15c",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M3.15c.A",
+        "M3.15c.B",
+        "M3.15c.C"
+      ],
+      "legacy_aliases": [
+        "A",
+        "B",
+        "C"
+      ],
+      "canonical_ids": [
+        "m.track.m3_15c.a",
+        "m.track.m3_15c.b",
+        "m.track.m3_15c.c"
+      ],
+      "titles": [
+        "M3.15c A",
+        "M3.15c B",
+        "M3.15c C"
+      ],
+      "script_paths": [],
+      "dag_paths": [
+        "airflow/dags/lojban_m3_15c_family_conditioned_bridge_dag.py"
+      ],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 3,
+      "runnable_count": 0,
+      "artifact_only_count": 3,
+      "doc_only_count": 0,
+      "title_summary": "M3.15c A + 2 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "M3.15d",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M3.15d.A",
+        "M3.15d.B",
+        "M3.15d.C",
+        "M3.15d.D"
+      ],
+      "legacy_aliases": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "canonical_ids": [
+        "m.track.m3_15d.a",
+        "m.track.m3_15d.b",
+        "m.track.m3_15d.c",
+        "m.track.m3_15d.d"
+      ],
+      "titles": [
+        "M3.15d A",
+        "M3.15d B",
+        "M3.15d C",
+        "M3.15d D"
+      ],
+      "script_paths": [],
+      "dag_paths": [
+        "airflow/dags/lojban_m3_15d_answer_path_forcing_dag.py"
+      ],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 4,
+      "runnable_count": 0,
+      "artifact_only_count": 4,
+      "doc_only_count": 0,
+      "title_summary": "M3.15d A + 3 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "M3.16",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M3.16.A",
+        "M3.16.B",
+        "M3.16.C",
+        "M3.16.D"
+      ],
+      "legacy_aliases": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "canonical_ids": [
+        "m.track.m3_16.a",
+        "m.track.m3_16.b",
+        "m.track.m3_16.c",
+        "m.track.m3_16.d"
+      ],
+      "titles": [
+        "M3.16 A",
+        "M3.16 B",
+        "M3.16 C",
+        "M3.16 D"
+      ],
+      "script_paths": [],
+      "dag_paths": [
+        "airflow/dags/lojban_m3_16_continuous_graph_bias_dag.py"
+      ],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 4,
+      "runnable_count": 0,
+      "artifact_only_count": 4,
+      "doc_only_count": 0,
+      "title_summary": "M3.16 A + 3 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "M3.17",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M3.17.A",
+        "M3.17.B",
+        "M3.17.C",
+        "M3.17.D"
+      ],
+      "legacy_aliases": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "canonical_ids": [
+        "m.track.m3_17.a",
+        "m.track.m3_17.b",
+        "m.track.m3_17.c",
+        "m.track.m3_17.d"
+      ],
+      "titles": [
+        "control no re-entry",
+        "single return-state bottleneck",
+        "three return-state bottleneck",
+        "direct residual re-encoder"
+      ],
+      "script_paths": [],
+      "dag_paths": [
+        "airflow/dags/lojban_m3_17_advisor_reentry_bridge_dag.py"
+      ],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 4,
+      "runnable_count": 0,
+      "artifact_only_count": 4,
+      "doc_only_count": 0,
+      "title_summary": "control no re-entry + 3 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "M3.18",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M3.18.A",
+        "M3.18.B",
+        "M3.18.C",
+        "M3.18.D",
+        "M3.18.E"
+      ],
+      "legacy_aliases": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "canonical_ids": [
+        "m.track.m3_18.a",
+        "m.track.m3_18.b",
+        "m.track.m3_18.c",
+        "m.track.m3_18.d",
+        "m.track.m3_18.e"
+      ],
+      "titles": [
+        "control no advisor",
+        "frozen single return token",
+        "frozen multi-return token bundle",
+        "learned residual continuation vector",
+        "hybrid token plus residual translator"
+      ],
+      "script_paths": [],
+      "dag_paths": [
+        "airflow/dags/lojban_m3_18_decoder_reentry_resume_dag.py"
+      ],
+      "reproducibility": [
+        "runnable"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 5,
+      "runnable_count": 5,
+      "artifact_only_count": 0,
+      "doc_only_count": 0,
+      "title_summary": "control no advisor + 4 more",
+      "status_summary": "runnable"
+    },
+    {
+      "family_key": "M3.19",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M3.19.D0",
+        "M3.19.D1",
+        "M3.19.D2",
+        "M3.19.D3"
+      ],
+      "legacy_aliases": [
+        "D0",
+        "D1",
+        "D2",
+        "D3"
+      ],
+      "canonical_ids": [
+        "m.track.m3_19.d0",
+        "m.track.m3_19.d1",
+        "m.track.m3_19.d2",
+        "m.track.m3_19.d3"
+      ],
+      "titles": [
+        "M3.19 D0",
+        "M3.19 D1",
+        "M3.19 D2",
+        "M3.19 D3"
+      ],
+      "script_paths": [],
+      "dag_paths": [
+        "airflow/dags/lojban_m3_19_d_mainline_grid_dag.py"
+      ],
+      "reproducibility": [
+        "runnable"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 4,
+      "runnable_count": 4,
+      "artifact_only_count": 0,
+      "doc_only_count": 0,
+      "title_summary": "M3.19 D0 + 3 more",
+      "status_summary": "runnable"
+    },
+    {
+      "family_key": "M4.0",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M4.0"
+      ],
+      "legacy_aliases": [],
+      "canonical_ids": [
+        "m.track.m4_0"
+      ],
+      "titles": [
+        "M4.0 telemetry report"
+      ],
+      "script_paths": [
+        "scripts/run_m4_0_semantic_probe.py"
+      ],
+      "dag_paths": [
+        "airflow/dags/lojban_m4_0_semantic_probe_dag.py"
+      ],
+      "reproducibility": [
+        "runnable"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 1,
+      "runnable_count": 1,
+      "artifact_only_count": 0,
+      "doc_only_count": 0,
+      "title_summary": "M4.0 telemetry report",
+      "status_summary": "runnable"
+    },
+    {
+      "family_key": "M4.2",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M4.2"
+      ],
+      "legacy_aliases": [],
+      "canonical_ids": [
+        "m.track.m4_2"
+      ],
+      "titles": [
+        "M4.2 telemetry report"
+      ],
+      "script_paths": [
+        "scripts/run_m4_2_predicate_grounding.py"
+      ],
+      "dag_paths": [
+        "airflow/dags/lojban_m4_2_predicate_grounding_dag.py"
+      ],
+      "reproducibility": [
+        "runnable"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 1,
+      "runnable_count": 1,
+      "artifact_only_count": 0,
+      "doc_only_count": 0,
+      "title_summary": "M4.2 telemetry report",
+      "status_summary": "runnable"
+    },
+    {
+      "family_key": "M5",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M5.0.A",
+        "M5.0.B",
+        "M5.0.C"
+      ],
+      "legacy_aliases": [
+        "M5.A",
+        "M5.B",
+        "M5.C"
+      ],
+      "canonical_ids": [
+        "m.track.m5_0.a",
+        "m.track.m5_0.b",
+        "m.track.m5_0.c"
+      ],
+      "titles": [
+        "Reuse-oriented control",
+        "Selective lexical adversary + reuse",
+        "Selective lexical adversary + family clustering"
+      ],
+      "script_paths": [],
+      "dag_paths": [
+        "airflow/dags/lojban_m5_autoformalization_dag.py"
+      ],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 3,
+      "runnable_count": 0,
+      "artifact_only_count": 3,
+      "doc_only_count": 0,
+      "title_summary": "Reuse-oriented control + 2 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "M5.1",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M5.1.N0",
+        "M5.1.N1",
+        "M5.1.N2",
+        "M5.1.N3"
+      ],
+      "legacy_aliases": [
+        "M5.N0",
+        "M5.N1",
+        "M5.N2",
+        "M5.N3"
+      ],
+      "canonical_ids": [
+        "m.track.m5_1.n0",
+        "m.track.m5_1.n1",
+        "m.track.m5_1.n2",
+        "m.track.m5_1.n3"
+      ],
+      "titles": [
+        "Padded core only",
+        "Core + uniformity + GRL",
+        "Add counterfactual invariance",
+        "Full padded crucible"
+      ],
+      "script_paths": [],
+      "dag_paths": [
+        "airflow/dags/lojban_m5_padded_nary_dag.py"
+      ],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 4,
+      "runnable_count": 0,
+      "artifact_only_count": 4,
+      "doc_only_count": 0,
+      "title_summary": "Add counterfactual invariance + 3 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "M5.2",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M5.2"
+      ],
+      "legacy_aliases": [
+        "M5.2.autoregressive_chain.run"
+      ],
+      "canonical_ids": [
+        "m.track.m5_2"
+      ],
+      "titles": [
+        "M5.2.autoregressive_chain.run telemetry report"
+      ],
+      "script_paths": [
+        "scripts/run_m5_2_autoregressive_chain.py"
+      ],
+      "dag_paths": [
+        "airflow/dags/lojban_m5_2_autoregressive_chain_dag.py"
+      ],
+      "reproducibility": [
+        "runnable"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 1,
+      "runnable_count": 1,
+      "artifact_only_count": 0,
+      "doc_only_count": 0,
+      "title_summary": "M5.2.autoregressive_chain.run telemetry report",
+      "status_summary": "runnable"
+    },
+    {
+      "family_key": "M5.3",
+      "program_layer": "bridge_and_serialization",
+      "normalized_ids": [
+        "M5.3"
+      ],
+      "legacy_aliases": [
+        "M5.3.masked_pair_chain.run"
+      ],
+      "canonical_ids": [
+        "m.track.m5_3"
+      ],
+      "titles": [
+        "M5.3.masked_pair_chain.run telemetry report"
+      ],
+      "script_paths": [
+        "scripts/run_m5_3_masked_pair_chain.py"
+      ],
+      "dag_paths": [
+        "airflow/dags/lojban_m5_3_masked_pair_chain_dag.py"
+      ],
+      "reproducibility": [
+        "runnable"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 1,
+      "runnable_count": 1,
+      "artifact_only_count": 0,
+      "doc_only_count": 0,
+      "title_summary": "M5.3.masked_pair_chain.run telemetry report",
+      "status_summary": "runnable"
+    },
+    {
+      "family_key": "M6",
+      "program_layer": "manifold_and_return_path",
+      "normalized_ids": [
+        "M6.0",
+        "M6.1",
+        "M6.2",
+        "M6.3",
+        "M6.6"
+      ],
+      "legacy_aliases": [
+        "RESULTS_M6_1_ALIGNMENT_70ACC",
+        "RESULTS_M6_2_ALIGNED_30ACC",
+        "RESULTS_M6_3_SCRATCHPAD_35ACC",
+        "RESULTS_M6_6_DIRECTED_AST_FINAL",
+        "RESULTS_M6_SEVERED_BRIDGE_20260314"
+      ],
+      "canonical_ids": [
+        "m.track.m6_0",
+        "m.track.m6_1",
+        "m.track.m6_2",
+        "m.track.m6_3",
+        "m.track.m6_6"
+      ],
+      "titles": [
+        "M6 severed bridge",
+        "M6.1 alignment 70acc",
+        "M6.2 aligned 30acc",
+        "M6.3 scratchpad 35acc",
+        "M6.6 directed AST final"
+      ],
+      "script_paths": [
+        "scripts/eval_m6_logic_engine.py",
+        "scripts/train_m6_logic_engine.py"
+      ],
+      "dag_paths": [],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 5,
+      "runnable_count": 0,
+      "artifact_only_count": 5,
+      "doc_only_count": 0,
+      "title_summary": "M6 severed bridge + 4 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "M7",
+      "program_layer": "manifold_and_return_path",
+      "normalized_ids": [
+        "M7.0"
+      ],
+      "legacy_aliases": [
+        "M7",
+        "RESULTS_M7_INTERLEAVED_COPROCESSOR"
+      ],
+      "canonical_ids": [
+        "m.track.m7_0"
+      ],
+      "titles": [
+        "M7 interleaved coprocessor"
+      ],
+      "script_paths": [
+        "scripts/eval_m7_interleaved.py",
+        "scripts/train_m7_interleaved.py"
+      ],
+      "dag_paths": [],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 1,
+      "runnable_count": 0,
+      "artifact_only_count": 1,
+      "doc_only_count": 0,
+      "title_summary": "M7 interleaved coprocessor",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "M8",
+      "program_layer": "manifold_and_return_path",
+      "normalized_ids": [
+        "M8.0"
+      ],
+      "legacy_aliases": [
+        "M8",
+        "RESULTS_M8_COUNCIL_OF_ORACLES"
+      ],
+      "canonical_ids": [
+        "m.track.m8_0"
+      ],
+      "titles": [
+        "M8 council of oracles"
+      ],
+      "script_paths": [
+        "scripts/eval_m8_council.py",
+        "scripts/train_m8_council.py"
+      ],
+      "dag_paths": [],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 1,
+      "runnable_count": 0,
+      "artifact_only_count": 1,
+      "doc_only_count": 0,
+      "title_summary": "M8 council of oracles",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "M9",
+      "program_layer": "manifold_and_return_path",
+      "normalized_ids": [
+        "M9.0",
+        "M9.1"
+      ],
+      "legacy_aliases": [
+        "M9.audit",
+        "M9.hypercube",
+        "RESULTS_M9_AUDIT",
+        "RESULTS_M9_HYPERCUBE"
+      ],
+      "canonical_ids": [
+        "m.track.m9_0",
+        "m.track.m9_1"
+      ],
+      "titles": [
+        "M9 duel hypercube",
+        "M9 provenance manifold audit"
+      ],
+      "script_paths": [
+        "scripts/m9/eval_m9.py"
+      ],
+      "dag_paths": [],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 2,
+      "runnable_count": 0,
+      "artifact_only_count": 2,
+      "doc_only_count": 0,
+      "title_summary": "M9 duel hypercube + 1 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "M10",
+      "program_layer": "manifold_and_return_path",
+      "normalized_ids": [
+        "M10.0",
+        "M10.1",
+        "M10.2",
+        "M10.3"
+      ],
+      "legacy_aliases": [
+        "M10.audit",
+        "M10.final_bridge",
+        "M10.floor_lock",
+        "M10.publication",
+        "RESULTS_M10_AUDIT",
+        "final_bridge_audit",
+        "final_floor_lock",
+        "final_publication_metrics"
+      ],
+      "canonical_ids": [
+        "m.track.m10_0",
+        "m.track.m10_1",
+        "m.track.m10_2",
+        "m.track.m10_3"
+      ],
+      "titles": [
+        "M10 floor lock audit",
+        "M10 final bridge audit",
+        "M10 audit",
+        "M10 publication metrics"
+      ],
+      "script_paths": [
+        "scripts/m10/final_audit.py"
+      ],
+      "dag_paths": [],
+      "reproducibility": [
+        "artifact_only"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 4,
+      "runnable_count": 0,
+      "artifact_only_count": 4,
+      "doc_only_count": 0,
+      "title_summary": "M10 audit + 3 more",
+      "status_summary": "artifact_only"
+    },
+    {
+      "family_key": "M14",
+      "program_layer": "manifold_and_return_path",
+      "normalized_ids": [
+        "M14.A",
+        "M14.B",
+        "M14.C",
+        "M14.D",
+        "M14.E"
+      ],
+      "legacy_aliases": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "canonical_ids": [
+        "m.track.m14.a",
+        "m.track.m14.b",
+        "m.track.m14.c",
+        "m.track.m14.d",
+        "m.track.m14.e"
+      ],
+      "titles": [
+        "scratchpad-only control",
+        "strict residual scratchpad",
+        "relaxed residual scratchpad",
+        "severance-threshold residual scratchpad",
+        "token-only scratchpad baseline"
+      ],
+      "script_paths": [],
+      "dag_paths": [
+        "airflow/dags/lojban_m14_symbiote_scratchpad_dag.py"
+      ],
+      "reproducibility": [
+        "runnable"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 5,
+      "runnable_count": 5,
+      "artifact_only_count": 0,
+      "doc_only_count": 0,
+      "title_summary": "relaxed residual scratchpad + 4 more",
+      "status_summary": "runnable"
+    },
+    {
+      "family_key": "History",
+      "program_layer": "control_plane",
+      "normalized_ids": [],
+      "legacy_aliases": [],
+      "canonical_ids": [],
+      "title_summary": "Backfill and aggregate suite control plane",
+      "script_paths": [
+        "scripts/run_ablation_history_backfill.py",
+        "scripts/render_ablation_history_catalog.py",
+        "scripts/run_m_bridge_ablation_test_suite.py",
+        "scripts/build_ablation_program_map.py"
+      ],
+      "dag_paths": [
+        "airflow/dags/lojban_ablation_history_backfill_dag.py",
+        "airflow/dags/lojban_m_bridge_ablation_test_suite_dag.py"
+      ],
+      "reproducibility": [
+        "runnable"
+      ],
+      "evidence_classes": [
+        "artifact"
+      ],
+      "entry_count": 0,
+      "runnable_count": 1,
+      "artifact_only_count": 0,
+      "doc_only_count": 0,
+      "status_summary": "runnable"
+    }
+  ],
+  "transitions": [
+    {
+      "transition_id": "M1_to_M2",
+      "status": "legacy_inferred",
+      "from_major": "M1",
+      "to_major": "M2",
+      "selected_upstream": "M1.5",
+      "inherits_components": [
+        "generator-derived diagnostic dataset discipline",
+        "scope and foil stress awareness"
+      ],
+      "reopened_components": [
+        "training objective regime",
+        "constraint controller"
+      ],
+      "rejected_components": [
+        "diagnostic-only success criterion"
+      ],
+      "promotion_basis": [
+        "accepted_foil_pair_accuracy",
+        "scope diagnostics"
+      ]
+    },
+    {
+      "transition_id": "M2_to_M3",
+      "status": "legacy_inferred",
+      "from_major": "M2",
+      "to_major": "M3",
+      "selected_upstream": "M2.1",
+      "inherits_components": [
+        "constraint-aware training stack",
+        "scope and identity discipline"
+      ],
+      "reopened_components": [
+        "bridge exposure strategy",
+        "return-path geometry"
+      ],
+      "rejected_components": [
+        "static objective-only optimization as sole lever"
+      ],
+      "promotion_basis": [
+        "constraint_scope",
+        "constraint_identity"
+      ]
+    },
+    {
+      "transition_id": "M3_to_M4",
+      "status": "excavated_inferred",
+      "from_major": "M3",
+      "to_major": "M4",
+      "selected_upstream": "M3.8.C",
+      "inherits_components": [
+        "constraint-aware branch training stack",
+        "early bridge geometry probes",
+        "operator diversification pressure"
+      ],
+      "reopened_components": [
+        "semantic probing",
+        "predicate grounding",
+        "operator family structure"
+      ],
+      "rejected_components": [
+        "bridge exposure as the only progress axis"
+      ],
+      "promotion_basis": [
+        "held_out_accuracy",
+        "operator family consistency"
+      ]
+    },
+    {
+      "transition_id": "M4_to_M5",
+      "status": "excavated_inferred",
+      "from_major": "M4",
+      "to_major": "M5",
+      "selected_upstream": "M4.2",
+      "inherits_components": [
+        "predicate-family grounding signal",
+        "operator family evaluation harness"
+      ],
+      "reopened_components": [
+        "serialization format",
+        "chain supervision objective",
+        "formalization depth"
+      ],
+      "rejected_components": [
+        "probe-only evaluation as sufficient end state"
+      ],
+      "promotion_basis": [
+        "held_out_accuracy",
+        "logical_accuracy"
+      ]
+    },
+    {
+      "transition_id": "M5_to_M6",
+      "status": "excavated_inferred",
+      "from_major": "M5",
+      "to_major": "M6",
+      "selected_upstream": "M5.3",
+      "inherits_components": [
+        "chain-style structured supervision",
+        "formalized reasoning serialization"
+      ],
+      "reopened_components": [
+        "logic-engine bridge",
+        "alignment and scratchpad exposure"
+      ],
+      "rejected_components": [
+        "serialization-only progress without stronger bridge tests"
+      ],
+      "promotion_basis": [
+        "held_out_accuracy",
+        "english_fluency_score"
+      ]
+    },
+    {
+      "transition_id": "M6_to_M7",
+      "status": "excavated_inferred",
+      "from_major": "M6",
+      "to_major": "M7",
+      "selected_upstream": "M6.3",
+      "inherits_components": [
+        "logic-engine bridge calibration lessons",
+        "scratchpad-directed bridge experience"
+      ],
+      "reopened_components": [
+        "interleaving schedule",
+        "coprocessor timing"
+      ],
+      "rejected_components": [
+        "single-pass bridge injection as the only coupling mode"
+      ],
+      "promotion_basis": [
+        "held_out_accuracy",
+        "semantic probe stability"
+      ]
+    },
+    {
+      "transition_id": "M7_to_M8",
+      "status": "excavated_inferred",
+      "from_major": "M7",
+      "to_major": "M8",
+      "selected_upstream": "M7.0",
+      "inherits_components": [
+        "interleaved structured rollout",
+        "coprocessor timing discipline"
+      ],
+      "reopened_components": [
+        "multi-oracle composition",
+        "council aggregation"
+      ],
+      "rejected_components": [
+        "single-coprocessor rollout as final architecture"
+      ],
+      "promotion_basis": [
+        "held_out_accuracy",
+        "final_answer_lift"
+      ]
+    },
+    {
+      "transition_id": "M8_to_M9",
+      "status": "excavated_inferred",
+      "from_major": "M8",
+      "to_major": "M9",
+      "selected_upstream": "M8.0",
+      "inherits_components": [
+        "structured multi-agent reasoning lessons",
+        "English baseline comparison harness"
+      ],
+      "reopened_components": [
+        "native provenance manifold",
+        "phase curriculum",
+        "tokenizer synchronization"
+      ],
+      "rejected_components": [
+        "oracle composition as the terminal substrate"
+      ],
+      "promotion_basis": [
+        "held_out_accuracy",
+        "logical_accuracy",
+        "codebook health"
+      ]
+    },
+    {
+      "transition_id": "M9_to_M10",
+      "status": "excavated_inferred",
+      "from_major": "M9",
+      "to_major": "M10",
+      "selected_upstream": "M9.0",
+      "inherits_components": [
+        "provenance manifold engine",
+        "synchronized reasoning state",
+        "audit harnesses"
+      ],
+      "reopened_components": [
+        "translator depth",
+        "English head design",
+        "joint alignment"
+      ],
+      "rejected_components": [
+        "direct manifold outputs without translation or readout heads"
+      ],
+      "promotion_basis": [
+        "macro_f1",
+        "bridge audit accuracy"
+      ]
+    },
+    {
+      "transition_id": "M10_to_M11",
+      "status": "documented",
+      "from_major": "M10",
+      "to_major": "M11",
+      "selected_upstream": "M10",
+      "inherits_components": [
+        "translator and English head infrastructure",
+        "final audit harness"
+      ],
+      "reopened_components": [
+        "native manifold structure",
+        "discriminative bridge training"
+      ],
+      "rejected_components": [
+        "monolithic vocabulary embeddings"
+      ],
+      "promotion_basis": [
+        "macro_f1",
+        "native discriminative accuracy"
+      ]
+    },
+    {
+      "transition_id": "M11_to_M14",
+      "status": "documented_redirection",
+      "from_major": "M11",
+      "to_major": "M14",
+      "selected_upstream": "M11",
+      "inherits_components": [
+        "manifold oracle signal",
+        "M11 discriminative head as cognition proof"
+      ],
+      "reopened_components": [
+        "generative return path",
+        "scratchpad compute horizon",
+        "residual injection locality"
+      ],
+      "rejected_components": [
+        "raw direct sidecar exposure during answer rollout"
+      ],
+      "promotion_basis": [
+        "mean_accuracy",
+        "macro_f1",
+        "m3.18 and m3.19 re-entry diagnostics"
+      ]
+    }
+  ]
+}

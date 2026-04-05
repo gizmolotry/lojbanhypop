@@ -1,0 +1,29 @@
+{
+  "series_id": "M",
+  "baseline_id": "M_BASE_20260310_REFAC",
+  "declared_at_utc": "2026-03-10T22:23:00Z",
+  "description": "Post-refactor M-series baseline manifest. Frozen after train/test split repair, strict series output enforcement, and explicit upstream J/L rebuilds.",
+  "upstream_best": {
+    "j_series": "runs/j_series/20260310_refactor/j-5.json",
+    "l_series": "runs/l_series/l6_ablation/refactor_clean/20260310_221033/l6_ablation_manifest.json"
+  },
+  "m_base": {
+    "dataset": "runs/j_series/20260310_refactor/j-5_adversarial.jsonl",
+    "constraints": "runs/l_series/l6_ablation/refactor_clean/20260310_221033/l6-c/20260310_222234/l_series_summary.json",
+    "identity_reg": "swap_test_regularizer_enabled",
+    "curriculum": "recursive_scope_depth_ramp_with_minimal_edit_foils",
+    "optimizer": "AdamW_lr_2e-4_seed_7",
+    "checkpoint": "runs/l_series/l6_ablation/refactor_clean/20260310_221033/l6-c/20260310_222234/l_series_checkpoint.pt"
+  },
+  "freeze_rules": {
+    "within_number_runs_are_siblings": true,
+    "promote_new_baseline_only_on_explicit_series_step": true,
+    "between_letters_inherit_previous_best": true
+  },
+  "lineage_policy": {
+    "post_refactor_clean": true,
+    "train_eval_split_fixed": true,
+    "declared_root_enforced": true,
+    "deprecated_metric_aliases_allowed_for_compatibility_only": true
+  }
+}

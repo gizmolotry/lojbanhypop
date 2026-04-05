@@ -1,0 +1,62 @@
+[
+  {
+    "item_id": "",
+    "pair_id": "m3_19_pair_00003",
+    "family": "lawyer_witness",
+    "bucket": "noun_phrase",
+    "prompt": "The lawyer questioned the witness after they contradicted prior testimony.",
+    "candidates": [
+      "lawyer",
+      "witness"
+    ],
+    "gold_answer": "witness",
+    "model_answer": "witness",
+    "correct": true,
+    "active_token_count": 0.0,
+    "active_op_count": 0.0,
+    "operator_entropy": 0.0,
+    "operator_top1_share": 0.0,
+    "scope": 0.0,
+    "score_on_gold": -0.5625119805335999,
+    "score_on_foil": -4.318235874176025,
+    "score_off_gold": -0.5625119805335999,
+    "answer_delta": 3.7557239532470703,
+    "gold_delta_on_off": 0.0,
+    "scratchpad_attention_mass": 0.04594083731838813,
+    "scratchpad_residual_norm": 0.0,
+    "scratchpad_gate_mean": 0.0,
+    "scratchpad_gate_overflow": 0.0,
+    "scratchpad_attn_entropy": 0.0,
+    "cell_mode": "scratchpad_control"
+  },
+  {
+    "item_id": "",
+    "pair_id": "m3_19_pair_00029",
+    "family": "manager_intern",
+    "bucket": "explanatory",
+    "prompt": "The manager monitored the intern, so they learned the process.",
+    "candidates": [
+      "manager",
+      "intern"
+    ],
+    "gold_answer": "intern",
+    "model_answer": "intern",
+    "correct": true,
+    "active_token_count": 0.0,
+    "active_op_count": 0.0,
+    "operator_entropy": 0.0,
+    "operator_top1_share": 0.0,
+    "scope": 0.0,
+    "score_on_gold": -2.9378421306610107,
+    "score_on_foil": -7.831570625305176,
+    "score_off_gold": -2.9378421306610107,
+    "answer_delta": 4.893728256225586,
+    "gold_delta_on_off": 0.0,
+    "scratchpad_attention_mass": 0.04058863455429673,
+    "scratchpad_residual_norm": 0.0,
+    "scratchpad_gate_mean": 0.0,
+    "scratchpad_gate_overflow": 0.0,
+    "scratchpad_attn_entropy": 0.0,
+    "cell_mode": "scratchpad_control"
+  }
+]

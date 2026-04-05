@@ -1,0 +1,631 @@
+{
+  "alpha": 0.12915518879890442,
+  "samples": [
+    {
+      "index": 1,
+      "difficulty": "hard",
+      "prompt": "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. Action P handles personal data and has no waiver. Is P permitted without approval?",
+      "target": "no",
+      "logic_string": "<loj_99> <loj_2041> <loj_2037> <loj_2039> <loj_2012> <loj_2009> <loj_2027> <loj_2032> <loj_2019> <loj_2005>",
+      "op_idx": 99,
+      "pointer_argmax": [
+        26,
+        2,
+        39,
+        21,
+        24,
+        6,
+        13,
+        12,
+        32
+      ],
+      "pointer_confidence": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "norms": {
+        "h_eng": 296.6195068359375,
+        "op_vec": 29.16989517211914,
+        "ptr_mean": 0.1623091995716095,
+        "logic_state": 29.19786834716797,
+        "h_base": 282.0248718261719,
+        "delta": 108776.90625,
+        "h_final": 108728.71875,
+        "delta_over_base": 385.699692178373
+      },
+      "lm": {
+        "target_token_id": 902,
+        "target_prob_before": 0.0,
+        "target_prob_after": 0.0,
+        "target_prob_delta": 0.0,
+        "top5_before": [
+          {
+            "token_id": 153775,
+            "token": "<loj_2110>",
+            "prob": 1.0
+          },
+          {
+            "token_id": 2,
+            "token": "#",
+            "prob": 0.0
+          },
+          {
+            "token_id": 0,
+            "token": "!",
+            "prob": 0.0
+          },
+          {
+            "token_id": 3,
+            "token": "$",
+            "prob": 0.0
+          },
+          {
+            "token_id": 1,
+            "token": "\"",
+            "prob": 0.0
+          }
+        ],
+        "top5_after": [
+          {
+            "token_id": 153603,
+            "token": "<loj_1938>",
+            "prob": 1.0
+          },
+          {
+            "token_id": 2,
+            "token": "#",
+            "prob": 0.0
+          },
+          {
+            "token_id": 0,
+            "token": "!",
+            "prob": 0.0
+          },
+          {
+            "token_id": 3,
+            "token": "$",
+            "prob": 0.0
+          },
+          {
+            "token_id": 1,
+            "token": "\"",
+            "prob": 0.0
+          }
+        ]
+      },
+      "head": {
+        "pred_class": 8,
+        "pred_label": "suitcase",
+        "top3": [
+          {
+            "class_idx": 8,
+            "label": "suitcase",
+            "prob": 0.1925887167453766
+          },
+          {
+            "class_idx": 5,
+            "label": "shelf",
+            "prob": 0.09064443409442902
+          },
+          {
+            "class_idx": 9,
+            "label": "trophy",
+            "prob": 0.0900750458240509
+          }
+        ],
+        "entropy": 2.5591630935668945,
+        "margin_top1_top2": 0.10194428265094757
+      }
+    },
+    {
+      "index": 2,
+      "difficulty": "medium",
+      "prompt": "Charlie puts the red ball in the drawer. Frank moves it to the cabinet while Charlie is watching. Bob takes the blue ball. Where does Charlie think the red ball is?",
+      "target": "cabinet",
+      "logic_string": "<loj_99> <loj_2019> <loj_2037> <loj_2039> <loj_2031> <loj_2046> <loj_2021> <loj_2032> <loj_2013> <loj_2032>",
+      "op_idx": 99,
+      "pointer_argmax": [
+        26,
+        39,
+        22,
+        6,
+        2,
+        4,
+        23,
+        9,
+        20
+      ],
+      "pointer_confidence": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "norms": {
+        "h_eng": 288.78216552734375,
+        "op_vec": 29.16989517211914,
+        "ptr_mean": 0.159245103597641,
+        "logic_state": 29.197341918945312,
+        "h_base": 254.48634338378906,
+        "delta": 108776.90625,
+        "h_final": 108705.84375,
+        "delta_over_base": 427.4371064617557
+      },
+      "lm": {
+        "target_token_id": 21921,
+        "target_prob_before": 0.0,
+        "target_prob_after": 0.0,
+        "target_prob_delta": 0.0,
+        "top5_before": [
+          {
+            "token_id": 153702,
+            "token": "<loj_2037>",
+            "prob": 1.0
+          },
+          {
+            "token_id": 153697,
+            "token": "<loj_2032>",
+            "prob": 1.1291873025241866e-30
+          },
+          {
+            "token_id": 2,
+            "token": "#",
+            "prob": 0.0
+          },
+          {
+            "token_id": 1,
+            "token": "\"",
+            "prob": 0.0
+          },
+          {
+            "token_id": 0,
+            "token": "!",
+            "prob": 0.0
+          }
+        ],
+        "top5_after": [
+          {
+            "token_id": 153603,
+            "token": "<loj_1938>",
+            "prob": 1.0
+          },
+          {
+            "token_id": 2,
+            "token": "#",
+            "prob": 0.0
+          },
+          {
+            "token_id": 0,
+            "token": "!",
+            "prob": 0.0
+          },
+          {
+            "token_id": 3,
+            "token": "$",
+            "prob": 0.0
+          },
+          {
+            "token_id": 1,
+            "token": "\"",
+            "prob": 0.0
+          }
+        ]
+      },
+      "head": {
+        "pred_class": 8,
+        "pred_label": "suitcase",
+        "top3": [
+          {
+            "class_idx": 8,
+            "label": "suitcase",
+            "prob": 0.19274571537971497
+          },
+          {
+            "class_idx": 5,
+            "label": "shelf",
+            "prob": 0.0907529816031456
+          },
+          {
+            "class_idx": 9,
+            "label": "trophy",
+            "prob": 0.09019941836595535
+          }
+        ],
+        "entropy": 2.55900239944458,
+        "margin_top1_top2": 0.10199273377656937
+      }
+    },
+    {
+      "index": 3,
+      "difficulty": "medium",
+      "prompt": "The delivery truck zoomed by the school bus since it was going so fast. What was going fast?",
+      "target": "delivery truck",
+      "logic_string": "<loj_99> <loj_2002> <loj_2013> <loj_2020> <loj_2012> <loj_2013> <loj_2018> <loj_2032> <loj_2007> <loj_2007>",
+      "op_idx": 99,
+      "pointer_argmax": [
+        16,
+        2,
+        18,
+        27,
+        6,
+        20,
+        13,
+        11,
+        18
+      ],
+      "pointer_confidence": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "norms": {
+        "h_eng": 291.37481689453125,
+        "op_vec": 29.16989517211914,
+        "ptr_mean": 0.1697571873664856,
+        "logic_state": 29.19661521911621,
+        "h_base": 273.2219543457031,
+        "delta": 108776.90625,
+        "h_final": 108729.0,
+        "delta_over_base": 398.1265213862207
+      },
+      "lm": {
+        "target_token_id": 9691,
+        "target_prob_before": 0.0,
+        "target_prob_after": 0.0,
+        "target_prob_delta": 0.0,
+        "top5_before": [
+          {
+            "token_id": 153697,
+            "token": "<loj_2032>",
+            "prob": 1.0
+          },
+          {
+            "token_id": 2,
+            "token": "#",
+            "prob": 0.0
+          },
+          {
+            "token_id": 0,
+            "token": "!",
+            "prob": 0.0
+          },
+          {
+            "token_id": 3,
+            "token": "$",
+            "prob": 0.0
+          },
+          {
+            "token_id": 1,
+            "token": "\"",
+            "prob": 0.0
+          }
+        ],
+        "top5_after": [
+          {
+            "token_id": 153603,
+            "token": "<loj_1938>",
+            "prob": 1.0
+          },
+          {
+            "token_id": 2,
+            "token": "#",
+            "prob": 0.0
+          },
+          {
+            "token_id": 0,
+            "token": "!",
+            "prob": 0.0
+          },
+          {
+            "token_id": 3,
+            "token": "$",
+            "prob": 0.0
+          },
+          {
+            "token_id": 1,
+            "token": "\"",
+            "prob": 0.0
+          }
+        ]
+      },
+      "head": {
+        "pred_class": 8,
+        "pred_label": "suitcase",
+        "top3": [
+          {
+            "class_idx": 8,
+            "label": "suitcase",
+            "prob": 0.19266542792320251
+          },
+          {
+            "class_idx": 5,
+            "label": "shelf",
+            "prob": 0.0907832458615303
+          },
+          {
+            "class_idx": 9,
+            "label": "trophy",
+            "prob": 0.09017354249954224
+          }
+        ],
+        "entropy": 2.559082508087158,
+        "margin_top1_top2": 0.10188218206167221
+      }
+    },
+    {
+      "index": 4,
+      "difficulty": "easy",
+      "prompt": "The green crate is inside the red box. The red box is inside the blue box. Is the green crate inside the blue box?",
+      "target": "yes",
+      "logic_string": "<loj_1> <loj_2023> <loj_2037> <loj_2034> <loj_2031> <loj_2000> <loj_2008> <loj_2032> <loj_2013> <loj_2007>",
+      "op_idx": 1,
+      "pointer_argmax": [
+        21,
+        38,
+        9,
+        6,
+        17,
+        1,
+        5,
+        26,
+        37
+      ],
+      "pointer_confidence": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "norms": {
+        "h_eng": 292.1510009765625,
+        "op_vec": 30.507184982299805,
+        "ptr_mean": 0.19227257370948792,
+        "logic_state": 30.536420822143555,
+        "h_base": 285.80877685546875,
+        "delta": 4151.21826171875,
+        "h_final": 4103.51708984375,
+        "delta_over_base": 14.524460401081292
+      },
+      "lm": {
+        "target_token_id": 9834,
+        "target_prob_before": 0.0,
+        "target_prob_after": 0.0,
+        "target_prob_delta": 0.0,
+        "top5_before": [
+          {
+            "token_id": 153775,
+            "token": "<loj_2110>",
+            "prob": 1.0
+          },
+          {
+            "token_id": 2,
+            "token": "#",
+            "prob": 0.0
+          },
+          {
+            "token_id": 0,
+            "token": "!",
+            "prob": 0.0
+          },
+          {
+            "token_id": 3,
+            "token": "$",
+            "prob": 0.0
+          },
+          {
+            "token_id": 1,
+            "token": "\"",
+            "prob": 0.0
+          }
+        ],
+        "top5_after": [
+          {
+            "token_id": 153603,
+            "token": "<loj_1938>",
+            "prob": 1.0
+          },
+          {
+            "token_id": 2,
+            "token": "#",
+            "prob": 0.0
+          },
+          {
+            "token_id": 0,
+            "token": "!",
+            "prob": 0.0
+          },
+          {
+            "token_id": 3,
+            "token": "$",
+            "prob": 0.0
+          },
+          {
+            "token_id": 1,
+            "token": "\"",
+            "prob": 0.0
+          }
+        ]
+      },
+      "head": {
+        "pred_class": 8,
+        "pred_label": "suitcase",
+        "top3": [
+          {
+            "class_idx": 8,
+            "label": "suitcase",
+            "prob": 0.2019387036561966
+          },
+          {
+            "class_idx": 5,
+            "label": "shelf",
+            "prob": 0.0917639285326004
+          },
+          {
+            "class_idx": 9,
+            "label": "trophy",
+            "prob": 0.08918093889951706
+          }
+        ],
+        "entropy": 2.542334794998169,
+        "margin_top1_top2": 0.11017477512359619
+      }
+    },
+    {
+      "index": 5,
+      "difficulty": "hard",
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "target": "no",
+      "logic_string": "<loj_99> <loj_2002> <loj_2032> <loj_2034> <loj_2031> <loj_2045> <loj_2000> <loj_2009> <loj_2007> <loj_2014>",
+      "op_idx": 99,
+      "pointer_argmax": [
+        21,
+        31,
+        17,
+        46,
+        53,
+        6,
+        9,
+        10,
+        18
+      ],
+      "pointer_confidence": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "norms": {
+        "h_eng": 297.4930114746094,
+        "op_vec": 29.16989517211914,
+        "ptr_mean": 0.20995734632015228,
+        "logic_state": 29.20094871520996,
+        "h_base": 291.2547607421875,
+        "delta": 108776.90625,
+        "h_final": 108725.5859375,
+        "delta_over_base": 373.47683510068566
+      },
+      "lm": {
+        "target_token_id": 902,
+        "target_prob_before": 0.0,
+        "target_prob_after": 0.0,
+        "target_prob_delta": 0.0,
+        "top5_before": [
+          {
+            "token_id": 153775,
+            "token": "<loj_2110>",
+            "prob": 0.9999983310699463
+          },
+          {
+            "token_id": 153697,
+            "token": "<loj_2032>",
+            "prob": 1.6846596508912626e-06
+          },
+          {
+            "token_id": 153702,
+            "token": "<loj_2037>",
+            "prob": 5.0720950799192495e-39
+          },
+          {
+            "token_id": 1,
+            "token": "\"",
+            "prob": 0.0
+          },
+          {
+            "token_id": 0,
+            "token": "!",
+            "prob": 0.0
+          }
+        ],
+        "top5_after": [
+          {
+            "token_id": 153603,
+            "token": "<loj_1938>",
+            "prob": 1.0
+          },
+          {
+            "token_id": 2,
+            "token": "#",
+            "prob": 0.0
+          },
+          {
+            "token_id": 0,
+            "token": "!",
+            "prob": 0.0
+          },
+          {
+            "token_id": 3,
+            "token": "$",
+            "prob": 0.0
+          },
+          {
+            "token_id": 1,
+            "token": "\"",
+            "prob": 0.0
+          }
+        ]
+      },
+      "head": {
+        "pred_class": 8,
+        "pred_label": "suitcase",
+        "top3": [
+          {
+            "class_idx": 8,
+            "label": "suitcase",
+            "prob": 0.19260798394680023
+          },
+          {
+            "class_idx": 5,
+            "label": "shelf",
+            "prob": 0.09066875278949738
+          },
+          {
+            "class_idx": 9,
+            "label": "trophy",
+            "prob": 0.0900905653834343
+          }
+        ],
+        "entropy": 2.5591630935668945,
+        "margin_top1_top2": 0.10193923115730286
+      }
+    }
+  ],
+  "summary": {
+    "num_samples": 5,
+    "accuracy": 0.0,
+    "pred_counts": {
+      "suitcase": 5
+    },
+    "avg_target_prob_delta": 0.0,
+    "avg_delta_over_base": 319.8529231056233,
+    "avg_head_entropy": 2.5557491779327393,
+    "avg_head_margin_top1_top2": 0.10358664095401764
+  }
+}

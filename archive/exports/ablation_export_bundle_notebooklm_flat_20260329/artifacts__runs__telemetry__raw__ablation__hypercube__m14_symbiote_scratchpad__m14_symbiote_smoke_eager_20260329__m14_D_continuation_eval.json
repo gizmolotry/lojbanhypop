@@ -1,0 +1,54 @@
+[
+  {
+    "item_id": "",
+    "pair_id": "m3_19_pair_00003",
+    "prompt": "The lawyer questioned the witness after they contradicted prior testimony.",
+    "target_text": "witness",
+    "generated_text": "witness\nExplanation: The",
+    "generated_token_ids": [
+      11298,
+      198,
+      69769,
+      25,
+      576
+    ],
+    "resume_first_token_accuracy": 0.0,
+    "continuation_overlap_f1": 0.5,
+    "gold_mention_rate": 1.0,
+    "exact_match_rate": 0.0,
+    "contamination_rate": 0.0,
+    "loop_rate": 0.0,
+    "scratchpad_bleed_rate": 0.0,
+    "english_stays_english_rate": 1.0,
+    "english_fluency_score": 1.0,
+    "scratchpad_attention_mass": 0.04594083731838813,
+    "scratchpad_residual_norm": 0.006896349135786295,
+    "scratchpad_gate_mean": 0.11923493444919586
+  },
+  {
+    "item_id": "",
+    "pair_id": "m3_19_pair_00029",
+    "prompt": "The manager monitored the intern, so they learned the process.",
+    "target_text": "intern, because they learned the process",
+    "generated_text": "process\nExplanation: The",
+    "generated_token_ids": [
+      1882,
+      198,
+      69769,
+      25,
+      576
+    ],
+    "resume_first_token_accuracy": 0.0,
+    "continuation_overlap_f1": 0.4444444444444444,
+    "gold_mention_rate": 0.0,
+    "exact_match_rate": 0.0,
+    "contamination_rate": 0.0,
+    "loop_rate": 0.0,
+    "scratchpad_bleed_rate": 0.0,
+    "english_stays_english_rate": 1.0,
+    "english_fluency_score": 1.0,
+    "scratchpad_attention_mass": 0.04058863455429673,
+    "scratchpad_residual_norm": 0.005924610421061516,
+    "scratchpad_gate_mean": 0.11923493444919586
+  }
+]

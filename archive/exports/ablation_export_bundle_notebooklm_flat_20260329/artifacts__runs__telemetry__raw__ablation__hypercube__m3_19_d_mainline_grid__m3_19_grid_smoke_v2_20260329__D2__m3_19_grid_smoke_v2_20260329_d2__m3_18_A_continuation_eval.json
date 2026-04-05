@@ -1,0 +1,46 @@
+[
+  {
+    "item_id": "",
+    "pair_id": "m3_19_pair_00022",
+    "prompt": "Morgan did not forward the memo to Casey because they were confidential.",
+    "target_text": "memo, not Casey",
+    "generated_text": "Casey.\nExplanation: The",
+    "generated_token_ids": [
+      44524,
+      624,
+      69769,
+      25,
+      576
+    ],
+    "resume_first_token_accuracy": 0.0,
+    "continuation_overlap_f1": 0.3333333333333333,
+    "gold_mention_rate": 0.0,
+    "exact_match_rate": 0.0,
+    "contamination_rate": 0.0,
+    "loop_rate": 0.0,
+    "english_stays_english_rate": 1.0,
+    "english_fluency_score": 1.0
+  },
+  {
+    "item_id": "",
+    "pair_id": "m3_19_pair_00001",
+    "prompt": "The councilmen refused the permit to the demonstrators because they feared violence.",
+    "target_text": "councilmen",
+    "generated_text": "demonstrators.\nExplanation: The",
+    "generated_token_ids": [
+      66408,
+      624,
+      69769,
+      25,
+      576
+    ],
+    "resume_first_token_accuracy": 0.0,
+    "continuation_overlap_f1": 0.0,
+    "gold_mention_rate": 0.0,
+    "exact_match_rate": 0.0,
+    "contamination_rate": 0.0,
+    "loop_rate": 0.0,
+    "english_stays_english_rate": 1.0,
+    "english_fluency_score": 1.0
+  }
+]

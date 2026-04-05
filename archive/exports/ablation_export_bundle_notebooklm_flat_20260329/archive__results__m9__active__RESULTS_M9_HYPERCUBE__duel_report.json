@@ -1,0 +1,1519 @@
+{
+  "timestamp": "2026-03-22T23:26:26.827643+00:00",
+  "acc_a": {
+    "easy": 0.5185185185185185,
+    "medium": 0.48717948717948717,
+    "hard": 0.5,
+    "overall": 0.5
+  },
+  "acc_b": {
+    "easy": 0.4074074074074074,
+    "medium": 0.5384615384615384,
+    "hard": 0.5,
+    "overall": 0.49
+  },
+  "details_a": [
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "pred": "the given statement describes a dependency relationship between services and regions. the condition specifies degradation of the regions. we need to determine if it's possible for an alert to remain even when all regions are healthy. analysis requires logical equivalence. solution falls short of standard reasoning approach. assessment fails acceptable solution scope. conclusion refuses acceptance resolution valid",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "pred": "the given statement describes a dependency relationship between services and regions. the condition specifies degradation of the regions. we need to determine if it's possible for an alert to remain even when all regions are healthy. analysis requires logical equivalence. solution falls short of standard reasoning approach. assessment fails acceptable solution scope. conclusion refuses acceptance resolution valid",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The engineer sent the analyst the report since they needed feedback before launch. Who needed feedback?",
+      "pred": "first, let's identify the primary entity. next, let's identify the secondary entity. let's analyze the causal relationship. let's resolve the pronoun reference. solution: analyze):(report) sent-(engineer) before.(launch) launched.analyst failed to receive feedback. therefore, the answer is analyst",
+      "target": "engineer",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The engineer sent the analyst the report because they needed feedback before launch. Who needed feedback?",
+      "pred": "first, let's identify the primary entity. next, let's identify the secondary entity. let's analyze the causal relationship. let's resolve the pronoun reference. solution: analyze1: identify the conflicting relationship. analyze2:\u67e5\u660e\u4e8b\u5b9e\u77db\u76fe\u3002analyze1\u89d2\u8272\u4e0d\u5339\u914d\u3002 reasoning: win-win",
+      "target": "engineer",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Bob puts the red ball in the box. Eve moves it to the cabinet while Bob is outside. Alice takes the blue ball. Where does Bob think the red ball is?",
+      "pred": "first, let's identify the location of the red ball. bob put it in the box. next, let's identify the location of the blue ball. bob moved it to the cabinet. finally, let's identify the location where alice took it. the blue ball was taken by alice. therefore, the answer is cabinet",
+      "target": "box",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Test happens before design. Design happens before document. Does test happen before document?",
+      "pred": "the conditions are transitive. intransitive logic applies the contrapositive. the condition is false. therefore, the answer is no.\nanswer: no\n\npurpose: this question relates to a specific context. handling local circumstances requires adaptation. analyzing the situation before taking action ensures accuracy. verifying the status after handling",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. Action P handles personal data and has no waiver. Is P permitted without approval?",
+      "pred": "first, let's identify the policy conditions. next, let's apply the conditional analysis. let's resolve the condition. finally, verify the answer.\nexplanation: there are no conflicting conditions. therefore, the answer is no.\nanswer: no\nsolution: reasoning was incorrect logical sequence was broken\nproblem: policy: if",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Morgan did never forward the memo to Casey because they were confidential. What was confidential?",
+      "pred": "first, let's identify the role of morgan. then, let's identify the role of confidentiality. let's analyze the condition. since the role cannot be morgan, we assume it's a role equivalent to it. analyzing the condition. let's determine the reason. the reason must be an analogous entity. identifying",
+      "target": "memo",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "pred": "first, let's identify the role of the city councilmen. they are the actors. next, let's identify the role of the demonstrators. they are the subjects. the action is \"refused\". therefore, the condition is false.\nanswer: revolution is not mentioned \u89e3\u6790\uff1a\u5728\u8fd9\u4e2a\u573a\u666f\u4e2d\uff0c\u6ca1\u6709\u63d0\u5230\u9769\u547d",
+      "target": "demonstrators",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "If A > B and B > C, with A=4, B=6, C=7, is A > C?",
+      "pred": "first, let's define variables. let x = a > b. let y = b > c. we need to check if x > y. let's substitute the values. x = 4 > 6 = not greater than. y = 6 > 7 = not greater than. since both conditions are",
+      "target": "no",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Morgan did never forward the memo to Casey because they were confidential. What was confidential?",
+      "pred": "first, let's identify the role of morgan. then, let's identify the role of confidentiality. let's analyze the condition. since the role cannot be morgan, we assume it's a role equivalent to it. analyzing the condition. let's determine the reason. the reason must be an analogous entity. identifying",
+      "target": "memo",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "If A > B and B > C, with A=2, B=8, C=7, is A > C?",
+      "pred": "first, let's define variables. let x = a, y = b, z = c. now, let's substitute the values. x > y, z > y. since x < y, we have a contradiction. therefore, the statement is false.\r\nanswer: false\r\nexplanation: if a > b and",
+      "target": "no",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The red box is inside the blue box. The blue box is inside the amber chest. Is the red box inside the amber chest?",
+      "pred": "first, let's identify the entities. next, let's analyze the relationship. let's determine if the condition is true. finally, let's present the answer.\nexplanation: there are no conflicting claims or alternatives. therefore, the answer is yes.\nanswer: yes\nsolution: verbal reasoning\ncounterpoint: logical reasoning",
+      "target": "yes",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The lawyer questioned the witness after they reviewed the affidavit. Who reviewed the affidavit?",
+      "pred": "first, let's identify the role of the lawyer. then, let's identify the role of the witness. let's analyze the relationship between these roles. the role of the lawyer implies action before the role of the witness. therefore, the answer is lawyer.\nanswer: lawyer \u89e3\u6790\uff1a\u5728\u6b64\u89d2\u8272\u5bf9\u8d28\u540e\uff0c",
+      "target": "lawyer",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Alex criticized Riley because they missed the delivery date. Who missed the delivery date?",
+      "pred": "first, let's identify the subject of the question. analyzing ordered_list_1... the ordered list does not provide specific individuals. looking for a mismatched entity. analyzing target_list_2... the target entity is missing. checking condition logic. this conditional statement is false. therefore, the answer is either",
+      "target": "Riley",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit since they feared violence. Who feared violence?",
+      "pred": "first, let's identify the role player. next, let's determine the role-related entity. let's analyze the causal relationship. isilon does not have a specific role. therefore, the answer is unknown.\nanswer: unknown \u89e3\u6790\uff1a\u7531\u4e8e\u8fd9\u4e2a\u89d2\u8272\u4e0d\u5728\u53ef\u7528\u9009\u9879\u5217\u8868\u4e2d\uff0c\u56e0\u6b64\u65e0\u6cd5\u8fdb\u884c\u63a8\u7406\u3002\u6b63\u786e\u7b54\u6848",
+      "target": "councilmen",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Morgan did not forward the memo to Casey since they were confidential. What was confidential?",
+      "pred": "first, let's identify the role of morgan. next, let's identify the role of casey. let's analyze the condition mechanism. in modal logic, this is a quantifier scope relation. applying the rule, we find the object. therefore, the answer is the object.\nanswer: confidential\nreasoning: this",
+      "target": "memo",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Sam tried to call Jordan on the phone, but they had no signal. Who had no signal?",
+      "pred": "first, let's identify the subject of the question. analyzing call... in this case, the event is \"called\" and the target is \"no signal\". analyzing phone... this is a technical device used for communication. the condition states that there was no signal. therefore, the first entity had a problem with",
+      "target": "Sam",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Some analyst approved every report. Every report was approved by some analyst. Are these equivalent?",
+      "pred": "the first statement says \"some analyst approved every report\". the second statement says \"every report approved by some analyst\". these statements are not equivalent.\nanswer: no \u89e3\u6790\uff1a\u540c\u4e49\u8bcd\u5173\u7cfb\u4e0d\u5bf9\u3002\n\n\u63d0\u95ee:\u5982\u679cx\u662f analyst\uff0c\u90a3\u4e48x\u4e0d\u662fanalyst\u3002\u5982\u679cy\u662f analyst\uff0c\u90a3\u4e48y\u662fanalyst",
+      "target": "no",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "No tester missed a build. Every tester did not miss a build. Are these equivalent?",
+      "pred": "the first statement implies that at least one tester did not miss a build. the second statement implies that no more than one tester did not miss a build. these statements are contradictory. therefore, the answer is no.\nanswer: no\nexplanation: if at least one did not then there must be more than one..|",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "A says: 'B is a knave.' B says: 'A and C are both knights.' C says: 'A is a knave.' Who is what?",
+      "pred": "first, let k be the claim of a. next, let b be the claim of b. then, let c be the claim of c. now, let x be the identity of k. let y be the identity of b. let z be the identity of c. analyzing the sequence, we have a",
+      "target": "A=knight,B=knave,C=knight",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "A says: 'B is a knave.' B says: 'C is a knight.' C says: 'A is a knight.' Who is what?",
+      "pred": "first, let k be the identity of the first speaker. next, let b be the identity of the second speaker. the third speaker claims that k is a knight. however, the fourth speaker denies this claim and states that b is a knight. therefore, k is not the second speaker. finally, the fifth speaker",
+      "target": "A=knight,B=knave,C=knight",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Deploy happens before document. Document happens before design. Does deploy happen before design?",
+      "pred": "first, let's identify the order. analyzing order before... the condition holds true. therefore, the answer is yes.\nanswer: yes\n\nquestion: deploy happens before document. document happens before design. does deploy happen before design?\nreasoning: let's analyze pronouns referring to the same object #1ates:",
+      "target": "yes",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The engineer sent the analyst the report because they needed feedback before launch. Who needed feedback?",
+      "pred": "first, let's identify the primary entity. next, let's identify the secondary entity. let's analyze the causal relationship. let's resolve the pronoun reference. solution: analyze1: identify the conflicting relationship. analyze2:\u67e5\u660e\u4e8b\u5b9e\u77db\u76fe\u3002analyze1\u89d2\u8272\u4e0d\u5339\u914d\u3002 reasoning: win-win",
+      "target": "engineer",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Document happens before deploy. Deploy happens before test. Does document happen before test?",
+      "pred": "the conditions are chronological. no order relation between the events. therefore, the answer is no.\nanswer: no",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. Action P handles personal data and has no waiver. Is P permitted without approval?",
+      "pred": "first, let's identify the policy conditions. next, let's apply the conditional analysis. let's resolve the condition. finally, verify the answer.\nexplanation: there are no conflicting conditions. therefore, the answer is no.\nanswer: no\nsolution: reasoning was incorrect logical sequence was broken\nproblem: policy: if",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The engineer sent the analyst the report because they had deeper domain context. Who had deeper domain context?",
+      "pred": "first, let's identify the roleplayers. analyzing order badge_contractor applies... let's resolve the pronoun reference. corrects the pronoun reference... identify the correct entity. find the appropriate role. explain the reason. verify the scale. ensure the validity of assertoric position. determine the relationship.",
+      "target": "analyst",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The delivery truck zoomed by the school bus because it was going so fast. What was going fast?",
+      "pred": "first, let's identify the main entity. next, let's identify the subordinate entity. let's analyze the causal relationship. analyzing orderary...\nanswer: school bus\nreasoning: this is a logical relationship where the first entity happens due to the second entity. therefore, the answer is school bus. ancert",
+      "target": "delivery truck",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "pred": "first, let's identify the role of the city councilmen. they are the actors. next, let's identify the role of the demonstrators. they are the subjects. the action is \"refused\". therefore, the condition is false.\nanswer: revolution is not mentioned \u89e3\u6790\uff1a\u5728\u8fd9\u4e2a\u573a\u666f\u4e2d\uff0c\u6ca1\u6709\u63d0\u5230\u9769\u547d",
+      "target": "demonstrators",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Alex criticized Riley because they missed the delivery date. Who missed the delivery date?",
+      "pred": "first, let's identify the subject of the question. analyzing ordered_list_1... the ordered list does not provide specific individuals. looking for a mismatched entity. analyzing target_list_2... the target entity is missing. checking condition logic. this conditional statement is false. therefore, the answer is either",
+      "target": "Riley",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit since they advocated revolution. Who advocated revolution?",
+      "pred": "first, let's identify the main entity. next, let's identify the subordinate entity. let's analyze the causal relationship. verifying the condition asserts ownership. finally, let's resolve the identity. solution: revolution verification: ownership analyzing the logical structure. assertion: ownership reasoning: final answer: the city council",
+      "target": "demonstrators",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The trophy does never fit in the suitcase since it is too big. What is too big?",
+      "pred": "first, let's identify the entity of interest. next, let's analyze the logical relationship. let's deal with non-selitive internal logic. analyzing non-selitive internal logic involves identifying a target object and an agent acting on it. verifying if the entity matches the condition. since the condition is",
+      "target": "trophy",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Charlie puts the red ball in the cabinet. Bob moves it to the shelf while Charlie is watching. Eve takes the blue ball. Where does Charlie think the red ball is?",
+      "pred": "first, let's identify the location of the red ball. according to the first statement, charlie puts the red ball in the cabinet. now, let's identify the location of the blue ball. according to the second statement, eve takes the blue ball. since there are no mentions of a red ball or a blue ball",
+      "target": "shelf",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The trophy does not fit in the suitcase because it is too small. What is too small?",
+      "pred": "first, let's identify the entity of interest. next, let's analyze the logical relationship. let's\u7834\u51b0\u884c\u4e3a\u3002a conditional statement doesn't require any action or object to be analyzed. therefore, the answer is no action or no object.\nanswer: no action or no object\nreasoning: this question is",
+      "target": "suitcase",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "pred": "first, let's identify the role of the city councilmen. they are the actors. next, let's identify the role of the demonstrators. they are the subjects. the action is \"refused\". therefore, the condition is false.\nanswer: revolution is not mentioned \u89e3\u6790\uff1a\u5728\u8fd9\u4e2a\u573a\u666f\u4e2d\uff0c\u6ca1\u6709\u63d0\u5230\u9769\u547d",
+      "target": "demonstrators",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Every engineer reviewed a ticket. A ticket was reviewed by every engineer. Are these equivalent?",
+      "pred": "the first statement implies that at least one engineer reviewed a ticket. the second statement implies that every ticket was reviewed by at least one engineer. these statements are not equivalent.\nanswer: no \u89e3\u6790\uff1a\u540c\u4e49\u8f6c\u4f4d\u522b\u89e3\u3002",
+      "target": "no",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The engineer sent the analyst the report because they had deeper domain context. Who had deeper domain context?",
+      "pred": "first, let's identify the roleplayers. analyzing order badge_contractor applies... let's resolve the pronoun reference. corrects the pronoun reference... identify the correct entity. find the appropriate role. explain the reason. verify the scale. ensure the validity of assertoric position. determine the relationship.",
+      "target": "analyst",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "pred": "the given statement describes a dependency relationship between services and regions. the condition specifies degradation of the regions. we need to determine if it's possible for an alert to remain even when all regions are healthy. analysis requires logical equivalence. solution falls short of standard reasoning approach. assessment fails acceptable solution scope. conclusion refuses acceptance resolution valid",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. Action P handles personal data and has no waiver. Is P permitted without approval?",
+      "pred": "first, let's identify the policy conditions. next, let's apply the conditional analysis. let's resolve the condition. finally, verify the answer.\nexplanation: there are no conflicting conditions. therefore, the answer is no.\nanswer: no\nsolution: reasoning was incorrect logical sequence was broken\nproblem: policy: if",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Alex thanked Riley because they helped with the migration. Who helped with the migration?",
+      "pred": "first, let's identify the role of alex and riley. analyzing pronoun references... analyzing roles... in the second sentence, the subject is \"riley\" and the object is \"helped\". this matches the first sentence's pronoun reference. therefore, the answer is riley.\nanswer: 1",
+      "target": "Riley",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The delivery truck passed the school bus because it was going so slow. What was going slow?",
+      "pred": "first, let's identify the main entity. next, let's identify the subordinate entity. let's analyze the causal relationship. analyzing orderary...\nanswer: school bus\nexplanation: a school bus is a type of vehicle that can pass slower than other vehicles on the road. therefore, the first-principial reason",
+      "target": "school bus",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "If A > B and B > C, with A=3, B=2, C=6, is A > C?",
+      "pred": "first, let's define variables. let x = a, y = b, z = c. now, let's substitute the values. x > y, z > y. since x < y, we have a contradiction. therefore, the statement is false.\r\nanswer: false\r\nexplanation: if a > b then",
+      "target": "no",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. Action P handles personal data and has no waiver. Is P permitted without approval?",
+      "pred": "first, let's identify the policy conditions. next, let's apply the conditional analysis. let's resolve the condition. finally, verify the answer.\nexplanation: there are no conflicting conditions. therefore, the answer is no.\nanswer: no\nsolution: reasoning was incorrect logical sequence was broken\nproblem: policy: if",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The engineer sent the analyst the report since they needed feedback before launch. Who needed feedback?",
+      "pred": "first, let's identify the primary entity. next, let's identify the secondary entity. let's analyze the causal relationship. let's resolve the pronoun reference. solution: analyze):(report) sent-(engineer) before.(launch) launched.analyst failed to receive feedback. therefore, the answer is analyst",
+      "target": "engineer",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Sam tried to call Jordan on the phone, but they had no signal. Who had no signal?",
+      "pred": "first, let's identify the subject of the question. analyzing call... in this case, the event is \"called\" and the target is \"no signal\". analyzing phone... this is a technical device used for communication. the condition states that there was no signal. therefore, the first entity had a problem with",
+      "target": "Sam",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Frank puts the red ball in the cabinet. Charlie moves it to the box while Frank is watching. Eve takes the blue ball. Where does Frank think the red ball is?",
+      "pred": "first, let's identify the entities: frank, charlie, and eve. next, let's analyze the sequence of events: putting the red ball, moving it, and taking it. now, let's locate the relevant phrase: thinks. finally, let's resolve the question: since charlie moved the red ball before eve",
+      "target": "box",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The crane could not lift the beam because it was too weak. What was too weak?",
+      "pred": "first, let's identify the main entity. next, let's identify the subordinate entity. let's analyze the causal relationship. verifying the plan...\nanswer: strong... \u89e3\u6790: logical relations can be resolved by substituting equivalent terms.\nsolution: strong... \u89e3\u6790: interpretation mechanism can resolve by swapping roles.\nfact",
+      "target": "crane",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. Action P handles personal data and has no waiver. Is P permitted without approval?",
+      "pred": "first, let's identify the policy conditions. next, let's apply the conditional analysis. let's resolve the condition. finally, verify the answer.\nexplanation: there are no conflicting conditions. therefore, the answer is no.\nanswer: no\nsolution: reasoning was incorrect logical sequence was broken\nproblem: policy: if",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "If A > B and B > C, with A=4, B=2, C=7, is A > C?",
+      "pred": "first, let's define variables. let x = a > b. let y = b > c. we need to check if x > y. let's substitute the values. x = 4 > 2. y = 2 > 7. since 4 is not greater than 7, the condition",
+      "target": "no",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Review happens before design. Design happens before test. Does review happen before test?",
+      "pred": "first, let's identify the order. the condition is an inequality. negative sign indicates reverse order. let's transmute <= > symbol. since the left hand side is not equal to the right hand side, they are not related.\nanswer: no \u89e3\u6790: \u5728\u903b\u8f91\u8fd0\u7b97\u4e2d\uff0c\u62ec\u53f7\u4f18\u5148\u4e8e\u64cd\u4f5c\u7b26",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Deploy happens before design. Design happens before document. Does deploy happen before document?",
+      "pred": "the order is cyclic... dep does not come before doc... therefore, the answer is no.\nanswer: no\n\nexplanation: deploy and design are sequential events in a cycle where each precedes the other. there is no order between them that would allow for \"no\" relationship.\nqualifying reasoning: if p implies",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "A says: 'B is a knave.' B says: 'A and C are both knights.' C says: 'A is a knave.' Who is what?",
+      "pred": "first, let k be the claim of a. next, let b be the claim of b. then, let c be the claim of c. now, let x be the identity of k. let y be the identity of b. let z be the identity of c. analyzing the sequence, we have a",
+      "target": "A=knight,B=knave,C=knight",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "No tester missed a build. Every tester did not miss a build. Are these equivalent?",
+      "pred": "the first statement implies that at least one tester did not miss a build. the second statement implies that no more than one tester did not miss a build. these statements are contradictory. therefore, the answer is no.\nanswer: no\nexplanation: if at least one did not then there must be more than one..|",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Frank puts the red ball in the box. Dana moves it to the desk while Frank is outside. Alice takes the blue ball. Where does Frank think the red ball is?",
+      "pred": "first, let's identify the location of the red ball. we know that frank put the red ball in the box. next, let's identify the location of the blue ball. we know that dana moved the red ball to the desk. now, let's identify the location of the yellow ball. we don't have",
+      "target": "box",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Sam tried to call Jordan on the phone, but they were never available. Who was never available?",
+      "pred": "first, let's identify the subject of the question. in logic, the first entity is sam. next, let's identify the target of the question. in logic, the second entity is jordan. the condition is \"never available.\" therefore, the object of the question is not present. thus, the answer is none",
+      "target": "Jordan",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The silver case is left of the amber chest. The amber chest is left of the green crate. Is the green crate left of the silver case?",
+      "pred": "first, let's identify the relationships. the relationships are transitive. applying transitivity, we have abce. the condition is false. therefore, the second sentence does not imply the first one. finally, let's analyze the problem. since the relationship is transitive, the second sentence does not imply the first",
+      "target": "no",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The engineer sent the analyst the report since they had deeper domain context. Who had deeper domain context?",
+      "pred": "first, let's identify the roleplayers. analyzing order case fails. could abhbe not reset? let's reset(let's-analyzeordercase). could ans4reset? let's reset(analyzeroleplayers)....the answer is roleplayer.\nanswering model cheated\u67e5\u65e0\u76f8\u5173",
+      "target": "analyst",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Test happens before deploy. Deploy happens before review. Does review happen before test?",
+      "pred": "the order is cyclic... so let's break it down each condition... test comes first... review comes next... therefore, the answer is no.\nanswer: no\n\nmother says \"i'm a girl\" father says \"i'm a boy\". does this mean they are different?\nanalyzing policy:\nthe phrase implies identity",
+      "target": "no",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The silver case is right of the amber chest. The amber chest is right of the red box. Is the silver case right of the red box?",
+      "pred": "first, let's identify the relationships. the relations are transitive. applying transitivity, we have (silver case) (right of) (amber chest) and (amber chest) (right of) (red box). since these are transitive pairs, the third one is also transitive. therefore, the answer",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The engineer sent the analyst the report since they needed feedback before launch. Who needed feedback?",
+      "pred": "first, let's identify the primary entity. next, let's identify the secondary entity. let's analyze the causal relationship. let's resolve the pronoun reference. solution: analyze):(report) sent-(engineer) before.(launch) launched.analyst failed to receive feedback. therefore, the answer is analyst",
+      "target": "engineer",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "pred": "the given statement describes a dependency relationship between services and regions. the condition specifies degradation of the regions. we need to determine if it's possible for an alert to remain even when all regions are healthy. analysis requires logical equivalence. solution falls short of standard reasoning approach. assessment fails acceptable solution scope. conclusion refuses acceptance resolution valid",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "pred": "first, let's identify the identities. next, let's analyze the claims. let's troubleshoot the puzzle. analyzing the claims...\nexplanation:a is not a knight because he says \"a is a knave\". therefore, a is not a knight.\nanalyzing the claims...\nexplanation:b is not a knight because",
+      "target": "A=knight,B=knight,C=knave",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Design happens before deploy. Deploy happens before test. Does design happen before test?",
+      "pred": "the conditions are sequential. no order relation between the events. therefore, the answer is no.\nanswer: no",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "If backup failed, recovery would require manual restore. If manual restore is required, downtime exceeds one hour. In fact backup did not fail. Must downtime exceed one hour?",
+      "pred": "first, let's break down the claims: 1. backup failed\n2. recovery would require manual restore\n3. downtime exceeds one hour\n4. backup did not fail\n5. manual restore is required\n6. therefore, downtime exceeds one hour\nconclusion: thus, the answer is so",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Dana puts the red ball in the desk. Alice moves it to the cabinet while Dana is watching. Charlie takes the blue ball. Where does Dana think the red ball is?",
+      "pred": "first, let's identify the entities: dana, alice, and charlie. next, let's analyze the sequence of events: dana puts the red ball, alice moves it, and then charlie takes it. now, let's determine the spatial relationship: the red ball is on a desk, desk, cabinet, and finally",
+      "target": "cabinet",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "pred": "the given statement describes a dependency relationship between services and regions. the condition specifies degradation of the regions. we need to determine if it's possible for an alert to remain even when all regions are healthy. analysis requires logical equivalence. solution falls short of standard reasoning approach. assessment fails acceptable solution scope. conclusion refuses acceptance resolution valid",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "If A > B and B > C, with A=2, B=8, C=3, is A > C?",
+      "pred": "first, let's define variables. let x = a, y = b, z = c. now, let's apply the transitive property. if x > y and y > z, then x > z. substituting the values in. if 2 > 8 and 8 > 3,",
+      "target": "no",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The red box is left of the silver case. The silver case is left of the amber chest. Is the amber chest left of the red box?",
+      "pred": "first, let's identify the relationships. the first condition states that the red box is to the left of the silver case. the second condition states that the silver case is to the left of the amber chest. we need to determine if the first statement implies the second. since the first condition does not imply the second,",
+      "target": "no",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "If A > B and B > C, with A=3, B=5, C=4, is A > C?",
+      "pred": "first, let's define variables. let x = a > b. let y = b > c. we need to check if x > y. let's substitute the values. x = 3 > 5 and y = 5 > 4. since the condition is not satisfied, a does not > c",
+      "target": "no",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "pred": "the given statement describes a dependency relationship between services and regions. the condition specifies degradation of the regions. we need to determine if it's possible for an alert to remain even when all regions are healthy. analysis requires logical equivalence. solution falls short of standard reasoning approach. assessment fails acceptable solution scope. conclusion refuses acceptance resolution valid",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Bob puts the red ball in the box. Alice moves it to the desk while Bob is outside. Charlie takes the blue ball. Where does Bob think the red ball is?",
+      "pred": "first, let's identify the location of the red ball. bob put it in the box. next, let's identify the location of the blue ball. alice moved it to the desk. now, let's identify the location of the red ball. charlie took it and placed it on the desk. therefore, the answer",
+      "target": "box",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "If backup failed, recovery would require manual restore. If manual restore is required, downtime exceeds one hour. In fact backup did not fail. Must downtime exceed one hour?",
+      "pred": "first, let's break down the claims: 1. backup failed\n2. recovery would require manual restore\n3. downtime exceeds one hour\n4. backup did not fail\n5. manual restore is required\n6. therefore, downtime exceeds one hour\nconclusion: thus, the answer is so",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Alex criticized Riley since they missed the deadline. Who missed the deadline?",
+      "pred": "the problem involves a causal relationship between two entities. first, we need to identify the first entity (alex) and the second entity (riley). next, we need to determine who is the cause of the misspecification. finally, we need to identify the correct pronoun to replace it.\nsolution: analyzing",
+      "target": "Riley",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "pred": "the given statement describes a dependency relationship between services and regions. the condition specifies degradation of the regions. we need to determine if it's possible for an alert to remain even when all regions are healthy. analysis requires logical equivalence. solution falls short of standard reasoning approach. assessment fails acceptable solution scope. conclusion refuses acceptance resolution valid",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Design happens before document. Document happens before test. Does design happen before test?",
+      "pred": "the conditions are chronological. no permutation of events has a previous event. therefore, the claim is false.\nanswer: no\n\nexplanation: design comes before test in this sequence. if it happened after, it would come before the other two. thus, they cannot occur in this order.\n\nsolution: no\n\nsolution: no",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "pred": "first, let's identify the role of the city councilmen. they are the actors. next, let's identify the role of the demonstrators. they are the subjects. the action is \"refused\". therefore, the condition is false.\nanswer: revolution is not mentioned \u89e3\u6790\uff1a\u5728\u8fd9\u4e2a\u573a\u666f\u4e2d\uff0c\u6ca1\u6709\u63d0\u5230\u9769\u547d",
+      "target": "demonstrators",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "No tester missed a build. Every tester did not miss a build. Are these equivalent?",
+      "pred": "the first statement implies that at least one tester did not miss a build. the second statement implies that no more than one tester did not miss a build. these statements are contradictory. therefore, the answer is no.\nanswer: no\nexplanation: if at least one did not then there must be more than one..|",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "pred": "the given statement describes a dependency relationship between services and regions. the condition specifies degradation of the regions. we need to determine if it's possible for an alert to remain even when all regions are healthy. analysis requires logical equivalence. solution falls short of standard reasoning approach. assessment fails acceptable solution scope. conclusion refuses acceptance resolution valid",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "If backup failed, recovery would require manual restore. If manual restore is required, downtime exceeds one hour. In fact backup did not fail. Must downtime exceed one hour?",
+      "pred": "first, let's break down the claims: 1. backup failed\n2. recovery would require manual restore\n3. downtime exceeds one hour\n4. backup did not fail\n5. manual restore is required\n6. therefore, downtime exceeds one hour\nconclusion: thus, the answer is so",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "If A > B and B > C, with A=3, B=4, C=8, is A > C?",
+      "pred": "first, let's define variables. let x = a, y = b, z = c. now, let's apply the transitive property. if x > y and y > z, then x > z. substituting the values in. if 3 > 4 and 4 > 8,",
+      "target": "no",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "If A > B and B > C, with A=8, B=3, C=2, is A > C?",
+      "pred": "first, let's define variables. let x = a > b. let y = b > c. we need to check if x > y. let's substitute the values. x = 8 > 3. y = 3 > 2. since 8 > 3, it follows that 8",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "pred": "the given statement describes a dependency relationship between services and regions. the condition specifies degradation of the regions. we need to determine if it's possible for an alert to remain even when all regions are healthy. analysis requires logical equivalence. solution falls short of standard reasoning approach. assessment fails acceptable solution scope. conclusion refuses acceptance resolution valid",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The red box is inside the silver case. The silver case is inside the amber chest. Is the red box inside the amber chest?",
+      "pred": "first, let's identify the entities. next, let's analyze the relationship. let's verify the condition. finally, let's determine a conclusion. action verification. solution action verification. analyzing\u6cd5\u5f8b\u8d23\u4efbaction validation. validating result. accepting the answer. therefore, the answer is yes.\nanswer: yes",
+      "target": "yes",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Alex criticized Riley since they missed the delivery date. Who missed the delivery date?",
+      "pred": "first, let's identify the subject of the question. analyzing ordered_list_1... the ordered list does not provide specific individuals. looking for a mismatched entity. analyzing target_list_2... the target entity is missing. checking condition validity. this condition is false. therefore, the answer is either.",
+      "target": "Riley",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "pred": "first, let's identify the identities. next, let's analyze the claims. let's troubleshoot the puzzle. analyzing the claims...\nexplanation:a is not a knight because he says \"a is a knave\". therefore, a is not a knight.\nanalyzing the claims...\nexplanation:b is not a knight because",
+      "target": "A=knight,B=knight,C=knave",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. Action P handles personal data and has no waiver. Is P permitted without approval?",
+      "pred": "first, let's identify the policy conditions. next, let's apply the conditional analysis. let's resolve the condition. finally, verify the answer.\nexplanation: there are no conflicting conditions. therefore, the answer is no.\nanswer: no\nsolution: reasoning was incorrect logical sequence was broken\nproblem: policy: if",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "pred": "first, let's identify the role of the city councilmen. they are the actors. next, let's identify the role of the demonstrators. they are the subjects. the action is \"refused\". therefore, the condition is false.\nanswer: revolution is not mentioned \u89e3\u6790\uff1a\u5728\u8fd9\u4e2a\u573a\u666f\u4e2d\uff0c\u6ca1\u6709\u63d0\u5230\u9769\u547d",
+      "target": "demonstrators",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "No tester missed a build. Every tester did not miss a build. Are these equivalent?",
+      "pred": "the first statement implies that at least one tester did not miss a build. the second statement implies that no more than one tester did not miss a build. these statements are contradictory. therefore, the answer is no.\nanswer: no\nexplanation: if at least one did not then there must be more than one..|",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "If backup failed, recovery would require manual restore. If manual restore is required, downtime exceeds one hour. In fact backup did not fail. Must downtime exceed one hour?",
+      "pred": "first, let's break down the claims: 1. backup failed\n2. recovery would require manual restore\n3. downtime exceeds one hour\n4. backup did not fail\n5. manual restore is required\n6. therefore, downtime exceeds one hour\nconclusion: thus, the answer is so",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Test happens before document. Document happens before design. Does design happen before test?",
+      "pred": "the order of events is not specified in the question. therefore, the answer is no.\nanswer: no\n\nexplanation: this is a temporal ordering puzzle. therefore, the answer is yes.\ncarefulreadingonlyreasonableanswer:no",
+      "target": "no",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Test happens before deploy. Deploy happens before review. Does test happen before review?",
+      "pred": "the condition is transitive. inverse holds true. therefore, the answer is yes.\nanswer: yes \u89e3\u6790\uff1a\u5206\u6790\u6bcf\u4e2a\u6761\u4ef6\uff0c\u67e5\u770b\u5b83\u4eec\u7684\u4f20\u9012\u5173\u7cfb\u3002\u786e\u8ba4\u903b\u8f91\u65b9\u5411\u3002\u5224\u65ad\u7ed3\u679c\u3002",
+      "target": "yes",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The trophy does never fit in the suitcase since it is too small. What is too small?",
+      "pred": "first, let's identify the entity of interest. next, let's analyze the logical relationship. let's deal with non-selitive internal logic. analyzing non-selitive internal logic...\nanswer: suitcase\nexplanation: the condition states that the trophy does not fit in the suitcase, so the smaller item must",
+      "target": "suitcase",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Alex criticized Riley because they missed the delivery date. Who missed the delivery date?",
+      "pred": "first, let's identify the subject of the question. analyzing ordered_list_1... the ordered list does not provide specific individuals. looking for a mismatched entity. analyzing target_list_2... the target entity is missing. checking condition logic. this conditional statement is false. therefore, the answer is either",
+      "target": "Riley",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The lawyer questioned the witness after they contradicted prior testimony. Who contradicted prior testimony?",
+      "pred": "first, let's identify the first entity. next, let's identify the second entity. let's analyze the logical relationship. in order to resolve the pronoun reference, we need to determine the correct noun. finally, let's verify the solution.\nanalysis step by step. after the lawyer questioned the witness, they contrad",
+      "target": "witness",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Eve puts the red ball in the drawer. Bob moves it to the box while Eve is outside. Dana takes the blue ball. Where does Eve think the red ball is?",
+      "pred": "first, let's identify the location of the red ball. according to the first statement, the red ball is put in the drawer. now, let's identify the location of the blue ball. according to the second statement, the blue ball is taken from the box. since the blue ball cannot be in both locations simultaneously",
+      "target": "drawer",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Eve puts the red ball in the box. Frank moves it to the shelf while Eve is watching. Alice takes the blue ball. Where does Eve think the red ball is?",
+      "pred": "first, let's identify the location of the red ball. since frank moved it to the shelf, it cannot be on the floor or in the cabinet. next, let's identify the location of the blue ball. similarly, it cannot be on the floor or in the cabinet. therefore, the only remaining option is on",
+      "target": "shelf",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "If backup failed, recovery would require manual restore. If manual restore is required, downtime exceeds one hour. In fact backup did not fail. Must downtime exceed one hour?",
+      "pred": "first, let's break down the claims: 1. backup failed\n2. recovery would require manual restore\n3. downtime exceeds one hour\n4. backup did not fail\n5. manual restore is required\n6. therefore, downtime exceeds one hour\nconclusion: thus, the answer is so",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The trophy does not fit in the suitcase since it is too big. What is too big?",
+      "pred": "first, let's identify the entity of interest. next, let's analyze the logical relationship. let's\u7834\u51b0\u884c\u4e3a\u3002a and b have a serial relation. c\u89e3\u5c01\u3002d\u89e3\u5c01\u3002e\u5206\u6790\u89e3\u5c01\u3002f\u89e3\u5c01\u3002logical reasoning step. solution: \u6839\u636e\u903b\u8f91\u5173\u8054\u89c4\u5219\u3002 reason",
+      "target": "trophy",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The delivery truck passed the school bus since it was going so slow. What was going slow?",
+      "pred": "first, let's identify the main entity. next, let's identify the subordinate entity. let's analyze the causal relationship. verifying... the slower vehicle is the delivery truck. therefore, the answer is the delivery truck.\nanswer: school \u89e3\u6790: \u89e3\u91ca\u8bcd\u4e49\u3002\u67e5\u8bc1\u6587\u732e\u3002\u5ba1\u6838\u4e8b\u5b9e\u3002\u786e\u8ba4",
+      "target": "school bus",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "If backup failed, recovery would require manual restore. If manual restore is required, downtime exceeds one hour. In fact backup did not fail. Must downtime exceed one hour?",
+      "pred": "first, let's break down the claims: 1. backup failed\n2. recovery would require manual restore\n3. downtime exceeds one hour\n4. backup did not fail\n5. manual restore is required\n6. therefore, downtime exceeds one hour\nconclusion: thus, the answer is so",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    }
+  ],
+  "details_b": [
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2031> <loj_2038> <loj_2018> <loj_2054> <loj_2025> <loj_2021> <loj_2052>",
+      "pred": "yes\nsolution: the answer is yes",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2050> <loj_2038> <loj_2050> <loj_2054> <loj_2032> <loj_2021> <loj_2035>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The engineer sent the analyst the report since they needed feedback before launch. Who needed feedback?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2026> <loj_2017> <loj_2019> <loj_2005> <loj_2025> <loj_2005> <loj_2012>",
+      "pred": "analyst\nsolution: analyst needs feedback because",
+      "target": "engineer",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The engineer sent the analyst the report because they needed feedback before launch. Who needed feedback?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2026> <loj_2017> <loj_2004> <loj_2005> <loj_2025> <loj_2007> <loj_2012>",
+      "pred": "analyst\nexplanation: analyst is the person",
+      "target": "engineer",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Bob puts the red ball in the box. Eve moves it to the cabinet while Bob is outside. Alice takes the blue ball. Where does Bob think the red ball is?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2036> <loj_2038> <loj_2035> <loj_2005> <loj_2032> <loj_2041> <loj_2031>",
+      "pred": "box\nsolution: eve moves the red",
+      "target": "box",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Test happens before design. Design happens before document. Does test happen before document?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2024> <loj_2002> <loj_2018> <loj_2005> <loj_2023> <loj_2017> <loj_2012>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. Action P handles personal data and has no waiver. Is P permitted without approval?",
+      "logic": "<loj_99> <loj_2000> <loj_2038> <loj_2036> <loj_2038> <loj_2035> <loj_2022> <loj_2032> <loj_2023> <loj_2044>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Morgan did never forward the memo to Casey because they were confidential. What was confidential?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2017> <loj_2019> <loj_2005> <loj_2023> <loj_2005> <loj_2009>",
+      "pred": "confidential\nsolution: confidential means secret or",
+      "target": "memo",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2017> <loj_2019> <loj_2005> <loj_2004> <loj_2005> <loj_2009>",
+      "pred": "demonstrators\nexplanation: the word \"adv",
+      "target": "demonstrators",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "If A > B and B > C, with A=4, B=6, C=7, is A > C?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2031> <loj_2038> <loj_2035> <loj_2005> <loj_2032> <loj_2035> <loj_2012>",
+      "pred": "yes\nsolution: since a > b",
+      "target": "no",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Morgan did never forward the memo to Casey because they were confidential. What was confidential?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2002> <loj_2015> <loj_2005> <loj_2025> <loj_2005> <loj_2009>",
+      "pred": "confidential\nsolution: confidential means secret or",
+      "target": "memo",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "If A > B and B > C, with A=2, B=8, C=7, is A > C?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2031> <loj_2038> <loj_2035> <loj_2005> <loj_2032> <loj_2035> <loj_2031>",
+      "pred": "yes\nsolution: since a > b",
+      "target": "no",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The red box is inside the blue box. The blue box is inside the amber chest. Is the red box inside the amber chest?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2036> <loj_2038> <loj_2035> <loj_2005> <loj_2032> <loj_2017> <loj_2031>",
+      "pred": "yes\nsolution: we can see that",
+      "target": "yes",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The lawyer questioned the witness after they reviewed the affidavit. Who reviewed the affidavit?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2015> <loj_2017> <loj_2004> <loj_2005> <loj_2023> <loj_2021> <loj_2024>",
+      "pred": "lawyer\nexplanation: the lawyer is the",
+      "target": "lawyer",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Alex criticized Riley because they missed the delivery date. Who missed the delivery date?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2017> <loj_2004> <loj_2005> <loj_2005> <loj_2005> <loj_2011>",
+      "pred": "alex\nsolution: alex is the person",
+      "target": "riley",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit since they feared violence. Who feared violence?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2002> <loj_2019> <loj_2005> <loj_2003> <loj_2005> <loj_2024>",
+      "pred": "demonstrators\nexplanation: the word \"fe",
+      "target": "councilmen",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Morgan did not forward the memo to Casey since they were confidential. What was confidential?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2017> <loj_2019> <loj_2005> <loj_2025> <loj_2023> <loj_2009>",
+      "pred": "confidential\nsolution: confidential means that something",
+      "target": "memo",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Sam tried to call Jordan on the phone, but they had no signal. Who had no signal?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2031> <loj_2017> <loj_2019> <loj_2005> <loj_2025> <loj_2017> <loj_2031>",
+      "pred": "jordan\nsolution: the answer is jordan",
+      "target": "sam",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Some analyst approved every report. Every report was approved by some analyst. Are these equivalent?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2024> <loj_2002> <loj_2018> <loj_2005> <loj_2023> <loj_2009> <loj_2000>",
+      "pred": "no\nsolution: the first sentence says",
+      "target": "no",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "No tester missed a build. Every tester did not miss a build. Are these equivalent?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2024> <loj_2002> <loj_2002> <loj_2005> <loj_2025> <loj_2027> <loj_2000>",
+      "pred": "yes\nsolution: the first line says",
+      "target": "yes",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "A says: 'B is a knave.' B says: 'A and C are both knights.' C says: 'A is a knave.' Who is what?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2031> <loj_2038> <loj_2035> <loj_2005> <loj_2042> <loj_2041> <loj_2045>",
+      "pred": "a\nsolution: since the answer is",
+      "target": "a=knight,b=knave,c=knight",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "A says: 'B is a knave.' B says: 'C is a knight.' C says: 'A is a knight.' Who is what?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2031> <loj_2038> <loj_2035> <loj_2005> <loj_2042> <loj_2041> <loj_2031>",
+      "pred": "a is a knight.\nsolution:\n1",
+      "target": "a=knight,b=knave,c=knight",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Deploy happens before document. Document happens before design. Does deploy happen before design?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2024> <loj_2017> <loj_2012> <loj_2002> <loj_2023> <loj_2007> <loj_2009>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The engineer sent the analyst the report because they needed feedback before launch. Who needed feedback?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2026> <loj_2017> <loj_2012> <loj_2005> <loj_2004> <loj_2017> <loj_2029>",
+      "pred": "analyst\nexplanation: the engineer sends the",
+      "target": "engineer",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Document happens before deploy. Deploy happens before test. Does document happen before test?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2024> <loj_2002> <loj_2018> <loj_2026> <loj_2026> <loj_2023> <loj_2012>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. Action P handles personal data and has no waiver. Is P permitted without approval?",
+      "logic": "<loj_99> <loj_2000> <loj_2040> <loj_2036> <loj_2038> <loj_2035> <loj_2005> <loj_2032> <loj_2012> <loj_2045>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The engineer sent the analyst the report because they had deeper domain context. Who had deeper domain context?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2031> <loj_2002> <loj_2004> <loj_2005> <loj_2004> <loj_2021> <loj_2031>",
+      "pred": "analyst\nsolution: the answer is that",
+      "target": "analyst",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The delivery truck zoomed by the school bus because it was going so fast. What was going fast?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2031> <loj_2017> <loj_2012> <loj_2005> <loj_2032> <loj_2017> <loj_2031>",
+      "pred": "truck\nexplanation: the truck is moving",
+      "target": "delivery truck",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2015> <loj_2002> <loj_2019> <loj_2005> <loj_2004> <loj_2023> <loj_2009>",
+      "pred": "demonstrators\nexplanation: the word \"adv",
+      "target": "demonstrators",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Alex criticized Riley because they missed the delivery date. Who missed the delivery date?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2002> <loj_2004> <loj_2005> <loj_2005> <loj_2005> <loj_2026>",
+      "pred": "alex\nexplanation: alex is the person",
+      "target": "riley",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit since they advocated revolution. Who advocated revolution?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2002> <loj_2021> <loj_2005> <loj_2024> <loj_2005> <loj_2009>",
+      "pred": "demonstrators\nexplanation: the word \"adv",
+      "target": "demonstrators",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The trophy does never fit in the suitcase since it is too big. What is too big?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2002> <loj_2021> <loj_2005> <loj_2025> <loj_2007> <loj_2026>",
+      "pred": "ustum\nsolution: the answer is",
+      "target": "trophy",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Charlie puts the red ball in the cabinet. Bob moves it to the shelf while Charlie is watching. Eve takes the blue ball. Where does Charlie think the red ball is?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2036> <loj_2038> <loj_2037> <loj_2005> <loj_2032> <loj_2041> <loj_2031>",
+      "pred": "shelf\nsolution: the red ball must",
+      "target": "shelf",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The trophy does not fit in the suitcase because it is too small. What is too small?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2015> <loj_2017> <loj_2030> <loj_2005> <loj_2005> <loj_2007> <loj_2012>",
+      "pred": "hread\nsolution: thread is too",
+      "target": "suitcase",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2017> <loj_2019> <loj_2005> <loj_2021> <loj_2017> <loj_2009>",
+      "pred": "demonstrators\nexplanation: the word \"adv",
+      "target": "demonstrators",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Every engineer reviewed a ticket. A ticket was reviewed by every engineer. Are these equivalent?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2017> <loj_2018> <loj_2005> <loj_2025> <loj_2021> <loj_2012>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "no",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The engineer sent the analyst the report because they had deeper domain context. Who had deeper domain context?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2031> <loj_2017> <loj_2004> <loj_2005> <loj_2025> <loj_2017> <loj_2031>",
+      "pred": "analyst\nsolution: the answer is that",
+      "target": "analyst",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2031> <loj_2038> <loj_2018> <loj_2054> <loj_2025> <loj_2041> <loj_2045>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. Action P handles personal data and has no waiver. Is P permitted without approval?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2024> <loj_2038> <loj_2035> <loj_2005> <loj_2042> <loj_2023> <loj_2044>",
+      "pred": "no\nsolution: the answer is \"",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Alex thanked Riley because they helped with the migration. Who helped with the migration?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2026> <loj_2017> <loj_2004> <loj_2005> <loj_2005> <loj_2017> <loj_2011>",
+      "pred": "riley\nexplanation: alex thanked riley because",
+      "target": "riley",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The delivery truck passed the school bus because it was going so slow. What was going slow?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2002> <loj_2019> <loj_2005> <loj_2005> <loj_2023> <loj_2029>",
+      "pred": "school bus\nsolution: the answer is",
+      "target": "school bus",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "If A > B and B > C, with A=3, B=2, C=6, is A > C?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2031> <loj_2038> <loj_2035> <loj_2002> <loj_2032> <loj_2035> <loj_2031>",
+      "pred": "yes\nsolution: since a > b",
+      "target": "no",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. Action P handles personal data and has no waiver. Is P permitted without approval?",
+      "logic": "<loj_99> <loj_2000> <loj_2015> <loj_2031> <loj_2038> <loj_2035> <loj_2005> <loj_2042> <loj_2017> <loj_2045>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The engineer sent the analyst the report since they needed feedback before launch. Who needed feedback?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2017> <loj_2011> <loj_2005> <loj_2025> <loj_2023> <loj_2012>",
+      "pred": "analyst\nexplanation: analyst is the person",
+      "target": "engineer",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Sam tried to call Jordan on the phone, but they had no signal. Who had no signal?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2031> <loj_2017> <loj_2019> <loj_2005> <loj_2025> <loj_2005> <loj_2031>",
+      "pred": "jordan\nsolution: the answer is jordan",
+      "target": "sam",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Frank puts the red ball in the cabinet. Charlie moves it to the box while Frank is watching. Eve takes the blue ball. Where does Frank think the red ball is?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2036> <loj_2038> <loj_2035> <loj_2005> <loj_2032> <loj_2041> <loj_2038>",
+      "pred": "box\nsolution: the red ball must",
+      "target": "box",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The crane could not lift the beam because it was too weak. What was too weak?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2024> <loj_2017> <loj_2021> <loj_2005> <loj_2020> <loj_2023> <loj_2029>",
+      "pred": "beam\nsolution: the answer is beam",
+      "target": "crane",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. Action P handles personal data and has no waiver. Is P permitted without approval?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2036> <loj_2038> <loj_2035> <loj_2005> <loj_2032> <loj_2017> <loj_2044>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "If A > B and B > C, with A=4, B=2, C=7, is A > C?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2031> <loj_2038> <loj_2035> <loj_2005> <loj_2032> <loj_2023> <loj_2038>",
+      "pred": "yes\nsolution: since a > b",
+      "target": "no",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Review happens before design. Design happens before test. Does review happen before test?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2015> <loj_2017> <loj_2019> <loj_2005> <loj_2025> <loj_2012> <loj_2012>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Deploy happens before design. Design happens before document. Does deploy happen before document?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2024> <loj_2002> <loj_2018> <loj_2002> <loj_2004> <loj_2023> <loj_2009>",
+      "pred": "no\nexplanation:\ndeploy happens before design",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "A says: 'B is a knave.' B says: 'A and C are both knights.' C says: 'A is a knave.' Who is what?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2031> <loj_2038> <loj_2035> <loj_2005> <loj_2042> <loj_2041> <loj_2031>",
+      "pred": "a\nsolution: since the answer is",
+      "target": "a=knight,b=knave,c=knight",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "No tester missed a build. Every tester did not miss a build. Are these equivalent?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2002> <loj_2021> <loj_2005> <loj_2025> <loj_2021> <loj_2022>",
+      "pred": "yes\nsolution:\n1. the first",
+      "target": "yes",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Frank puts the red ball in the box. Dana moves it to the desk while Frank is outside. Alice takes the blue ball. Where does Frank think the red ball is?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2031> <loj_2038> <loj_2008> <loj_2036> <loj_2032> <loj_2041> <loj_2031>",
+      "pred": "box\nsolution: the red ball is",
+      "target": "box",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Sam tried to call Jordan on the phone, but they were never available. Who was never available?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2031> <loj_2017> <loj_2019> <loj_2005> <loj_2005> <loj_2023> <loj_2031>",
+      "pred": "jordan\nsolution: the answer is jordan",
+      "target": "jordan",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The silver case is left of the amber chest. The amber chest is left of the green crate. Is the green crate left of the silver case?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2031> <loj_2038> <loj_2015> <loj_2010> <loj_2032> <loj_2035> <loj_2026>",
+      "pred": "yes\nsolution: we can see that",
+      "target": "no",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The engineer sent the analyst the report since they had deeper domain context. Who had deeper domain context?",
+      "logic": "<loj_99> <loj_2000> <loj_2016> <loj_2031> <loj_2002> <loj_2004> <loj_2005> <loj_2025> <loj_2021> <loj_2012>",
+      "pred": "analyst\nsolution: the answer is that",
+      "target": "analyst",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Test happens before deploy. Deploy happens before review. Does review happen before test?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2024> <loj_2017> <loj_2018> <loj_2002> <loj_2026> <loj_2017> <loj_2009>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "no",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The silver case is right of the amber chest. The amber chest is right of the red box. Is the silver case right of the red box?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2036> <loj_2038> <loj_2035> <loj_2006> <loj_2032> <loj_2021> <loj_2031>",
+      "pred": "yes\nsolution: we can see that",
+      "target": "yes",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The engineer sent the analyst the report since they needed feedback before launch. Who needed feedback?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2002> <loj_2004> <loj_2005> <loj_2025> <loj_2005> <loj_2012>",
+      "pred": "analyst\nsolution: analyst needs feedback because",
+      "target": "engineer",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2031> <loj_2038> <loj_2035> <loj_2054> <loj_2032> <loj_2023> <loj_2052>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2031> <loj_2038> <loj_2035> <loj_2005> <loj_2042> <loj_2041> <loj_2033>",
+      "pred": "knight\nsolution: since the answer must",
+      "target": "a=knight,b=knight,c=knave",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Design happens before deploy. Deploy happens before test. Does design happen before test?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2018> <loj_2002> <loj_2018> <loj_2005> <loj_2004> <loj_2023> <loj_2009>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "If backup failed, recovery would require manual restore. If manual restore is required, downtime exceeds one hour. In fact backup did not fail. Must downtime exceed one hour?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2024> <loj_2038> <loj_2030> <loj_2036> <loj_2032> <loj_2023> <loj_2045>",
+      "pred": "false\nsolution: the answer is false",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Dana puts the red ball in the desk. Alice moves it to the cabinet while Dana is watching. Charlie takes the blue ball. Where does Dana think the red ball is?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2036> <loj_2038> <loj_2037> <loj_2005> <loj_2005> <loj_2041> <loj_2024>",
+      "pred": "cabinet\nsolution: dana thinks the red",
+      "target": "cabinet",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2031> <loj_2038> <loj_2018> <loj_2054> <loj_2032> <loj_2027> <loj_2052>",
+      "pred": "no\nsolution: the answer is yes",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "If A > B and B > C, with A=2, B=8, C=3, is A > C?",
+      "logic": "<loj_99> <loj_2000> <loj_2038> <loj_2031> <loj_2038> <loj_2035> <loj_2005> <loj_2005> <loj_2035> <loj_2031>",
+      "pred": "yes\nsolution: since a > b",
+      "target": "no",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The red box is left of the silver case. The silver case is left of the amber chest. Is the amber chest left of the red box?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2031> <loj_2038> <loj_2018> <loj_2005> <loj_2032> <loj_2017> <loj_2031>",
+      "pred": "yes\nsolution: we can see that",
+      "target": "no",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "If A > B and B > C, with A=3, B=5, C=4, is A > C?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2010> <loj_2038> <loj_2035> <loj_2022> <loj_2032> <loj_2035> <loj_2012>",
+      "pred": "yes\nsolution: since a > b",
+      "target": "no",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2038> <loj_2018> <loj_2054> <loj_2005> <loj_2017> <loj_2052>",
+      "pred": "yes\nsolution: the answer is yes",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Bob puts the red ball in the box. Alice moves it to the desk while Bob is outside. Charlie takes the blue ball. Where does Bob think the red ball is?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2031> <loj_2038> <loj_2037> <loj_2005> <loj_2005> <loj_2041> <loj_2031>",
+      "pred": "box\nsolution: the red ball is",
+      "target": "box",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "If backup failed, recovery would require manual restore. If manual restore is required, downtime exceeds one hour. In fact backup did not fail. Must downtime exceed one hour?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2031> <loj_2038> <loj_2021> <loj_2005> <loj_2032> <loj_2023> <loj_2045>",
+      "pred": "false\nsolution: the answer is false",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Alex criticized Riley since they missed the deadline. Who missed the deadline?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2024> <loj_2017> <loj_2019> <loj_2005> <loj_2005> <loj_2007> <loj_2009>",
+      "pred": "riley\nsolution: the answer is that",
+      "target": "riley",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2038> <loj_2035> <loj_2054> <loj_2031> <loj_2017> <loj_2052>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Design happens before document. Document happens before test. Does design happen before test?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2015> <loj_2002> <loj_2018> <loj_2005> <loj_2025> <loj_2012> <loj_2009>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2002> <loj_2019> <loj_2019> <loj_2021> <loj_2021> <loj_2009>",
+      "pred": "demonstrators\nexplanation: the word \"adv",
+      "target": "demonstrators",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "No tester missed a build. Every tester did not miss a build. Are these equivalent?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2024> <loj_2002> <loj_2021> <loj_2022> <loj_2025> <loj_2009> <loj_2012>",
+      "pred": "yes\nsolution:\n1. the first",
+      "target": "yes",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2031> <loj_2038> <loj_2018> <loj_2054> <loj_2032> <loj_2021> <loj_2052>",
+      "pred": "yes\nsolution: the answer is yes",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "If backup failed, recovery would require manual restore. If manual restore is required, downtime exceeds one hour. In fact backup did not fail. Must downtime exceed one hour?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2031> <loj_2038> <loj_2018> <loj_2026> <loj_2032> <loj_2023> <loj_2045>",
+      "pred": "false\nsolution: the answer is false",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "If A > B and B > C, with A=3, B=4, C=8, is A > C?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2031> <loj_2038> <loj_2035> <loj_2002> <loj_2032> <loj_2009> <loj_2035>",
+      "pred": "yes\nsolution: since a > b",
+      "target": "no",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "If A > B and B > C, with A=8, B=3, C=2, is A > C?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2031> <loj_2038> <loj_2035> <loj_2019> <loj_2032> <loj_2023> <loj_2037>",
+      "pred": "yes\nsolution: since a > b",
+      "target": "yes",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2024> <loj_2038> <loj_2035> <loj_2054> <loj_2032> <loj_2023> <loj_2052>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The red box is inside the silver case. The silver case is inside the amber chest. Is the red box inside the amber chest?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2036> <loj_2038> <loj_2035> <loj_2006> <loj_2032> <loj_2017> <loj_2031>",
+      "pred": "yes\nsolution: we can see that",
+      "target": "yes",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Alex criticized Riley since they missed the delivery date. Who missed the delivery date?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2002> <loj_2002> <loj_2005> <loj_2005> <loj_2005> <loj_2012>",
+      "pred": "riley\nsolution: alex is the one",
+      "target": "riley",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2031> <loj_2038> <loj_2035> <loj_2005> <loj_2005> <loj_2039> <loj_2038>",
+      "pred": "knight\nsolution: since the answer must",
+      "target": "a=knight,b=knight,c=knave",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. Action P handles personal data and has no waiver. Is P permitted without approval?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2036> <loj_2038> <loj_2035> <loj_2005> <loj_2042> <loj_2017> <loj_2045>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "no",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2015> <loj_2002> <loj_2019> <loj_2019> <loj_2021> <loj_2021> <loj_2029>",
+      "pred": "demonstrators\nexplanation: the word \"adv",
+      "target": "demonstrators",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "No tester missed a build. Every tester did not miss a build. Are these equivalent?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2004> <loj_2021> <loj_2005> <loj_2025> <loj_2021> <loj_2024>",
+      "pred": "yes\nsolution:\n1. the first",
+      "target": "yes",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "If backup failed, recovery would require manual restore. If manual restore is required, downtime exceeds one hour. In fact backup did not fail. Must downtime exceed one hour?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2031> <loj_2038> <loj_2021> <loj_2005> <loj_2032> <loj_2023> <loj_2045>",
+      "pred": "false\nsolution: the answer is false",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Test happens before document. Document happens before design. Does design happen before test?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2024> <loj_2017> <loj_2019> <loj_2005> <loj_2025> <loj_2017> <loj_2020>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "no",
+      "correct": true,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Test happens before deploy. Deploy happens before review. Does test happen before review?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2024> <loj_2017> <loj_2018> <loj_2006> <loj_2025> <loj_2017> <loj_2009>",
+      "pred": "no\nsolution: the answer is no",
+      "target": "yes",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The trophy does never fit in the suitcase since it is too small. What is too small?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2015> <loj_2017> <loj_2030> <loj_2005> <loj_2011> <loj_2007> <loj_2024>",
+      "pred": "small\nsolution: the answer is \"",
+      "target": "suitcase",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "Alex criticized Riley because they missed the delivery date. Who missed the delivery date?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2017> <loj_2004> <loj_2005> <loj_2005> <loj_2005> <loj_2009>",
+      "pred": "alex\nsolution: alex is the person",
+      "target": "riley",
+      "correct": false,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "The lawyer questioned the witness after they contradicted prior testimony. Who contradicted prior testimony?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2017> <loj_2019> <loj_2005> <loj_2005> <loj_2023> <loj_2029>",
+      "pred": "witness\nsolution: witness contradicts prior",
+      "target": "witness",
+      "correct": true,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "Eve puts the red ball in the drawer. Bob moves it to the box while Eve is outside. Dana takes the blue ball. Where does Eve think the red ball is?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2026> <loj_2038> <loj_2035> <loj_2005> <loj_2005> <loj_2041> <loj_2020>",
+      "pred": "drawer\nsolution: eve thinks the red",
+      "target": "drawer",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "Eve puts the red ball in the box. Frank moves it to the shelf while Eve is watching. Alice takes the blue ball. Where does Eve think the red ball is?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2036> <loj_2038> <loj_2037> <loj_2005> <loj_2032> <loj_2041> <loj_2031>",
+      "pred": "shelf\nsolution: eve thinks the red",
+      "target": "shelf",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "If backup failed, recovery would require manual restore. If manual restore is required, downtime exceeds one hour. In fact backup did not fail. Must downtime exceed one hour?",
+      "logic": "<loj_99> <loj_2000> <loj_2006> <loj_2024> <loj_2038> <loj_2021> <loj_2010> <loj_2032> <loj_2023> <loj_2045>",
+      "pred": "false\nsolution: the answer is false",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    },
+    {
+      "prompt": "The trophy does not fit in the suitcase since it is too big. What is too big?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2002> <loj_2030> <loj_2022> <loj_2025> <loj_2007> <loj_2026>",
+      "pred": "big\nsolution: the answer is \"",
+      "target": "trophy",
+      "correct": false,
+      "difficulty": "easy"
+    },
+    {
+      "prompt": "The delivery truck passed the school bus since it was going so slow. What was going slow?",
+      "logic": "<loj_99> <loj_2000> <loj_2026> <loj_2024> <loj_2002> <loj_2019> <loj_2005> <loj_2005> <loj_2017> <loj_2029>",
+      "pred": "school bus\nsolution: the answer is",
+      "target": "school bus",
+      "correct": true,
+      "difficulty": "medium"
+    },
+    {
+      "prompt": "If backup failed, recovery would require manual restore. If manual restore is required, downtime exceeds one hour. In fact backup did not fail. Must downtime exceed one hour?",
+      "logic": "<loj_99> <loj_2000> <loj_2008> <loj_2024> <loj_2038> <loj_2043> <loj_2010> <loj_2042> <loj_2023> <loj_2044>",
+      "pred": "false\nsolution: the answer is false",
+      "target": "no",
+      "correct": false,
+      "difficulty": "hard"
+    }
+  ]
+}

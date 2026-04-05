@@ -1,0 +1,27 @@
+{
+  "generated_utc": "2026-03-13T01:12:19.609728+00:00",
+  "report_type": "operator_domain_matrix",
+  "operators": [
+    1
+  ],
+  "matrix": {
+    "logical": {
+      "1": 1.0
+    },
+    "ordering": {
+      "1": 1.0
+    },
+    "spatial": {
+      "1": 1.0
+    },
+    "event": {
+      "1": 1.0
+    },
+    "social": {
+      "1": 1.0
+    },
+    "graph": {
+      "1": 1.0
+    }
+  }
+}

@@ -1,0 +1,546 @@
+{
+  "schema_version": "1.0",
+  "component_inventory_keys": [
+    "prompt_format",
+    "tokenizer_additions",
+    "adapter_type",
+    "residual_gate_type",
+    "injection_layer",
+    "loss_objective",
+    "data_pack",
+    "kill_test_suite",
+    "evaluation_harness",
+    "discriminator_head",
+    "archive_reporting_path"
+  ],
+  "major_families": {
+    "M1": {
+      "question_boundary": "data invariance and adversarial synthesis diagnostics",
+      "architectural_thesis": "lock dataset invariance, paraphrase robustness, and foil acceptance before architectural coupling work.",
+      "allowed_ablation_axes": [
+        "generator depth",
+        "foil acceptance thresholds",
+        "invariance synthesis",
+        "scope diagnostics"
+      ],
+      "forbidden_drift_axes": [
+        "bridge architecture changes",
+        "decoder residual injection",
+        "scratchpad token mediation"
+      ],
+      "promotion_basis": [
+        "accept_rate_by_depth",
+        "accepted_foil_pair_accuracy",
+        "invariance rate"
+      ],
+      "metrics_primary": [
+        "accepted_foil_pair_accuracy",
+        "invariance rate"
+      ],
+      "metrics_guardrail": [
+        "accept_rate_by_depth"
+      ],
+      "baseline_manifest": "docs/baselines/m1_series_baseline_manifest.json"
+    },
+    "M2": {
+      "question_boundary": "constraint-optimized Lagrangian training",
+      "architectural_thesis": "replace static objective blending with lexicographic augmented-Lagrangian control while preserving scoped identity and arity constraints.",
+      "allowed_ablation_axes": [
+        "tier-a lock regime",
+        "scope drill pressure",
+        "tier-b force valves",
+        "soft identity audit"
+      ],
+      "forbidden_drift_axes": [
+        "bridge exposure strategy",
+        "scratchpad tokenizer changes",
+        "decoder continuation losses"
+      ],
+      "promotion_basis": [
+        "constraint_arity_strict",
+        "constraint_scope",
+        "constraint_identity"
+      ],
+      "metrics_primary": [
+        "constraint_scope",
+        "constraint_identity"
+      ],
+      "metrics_guardrail": [
+        "constraint_arity_strict"
+      ],
+      "baseline_manifest": "docs/baselines/m2_series_baseline_manifest.json"
+    },
+    "M3": {
+      "question_boundary": "bridge exposure and return-channel shaping",
+      "architectural_thesis": "test how structured advisor state should couple back into generation without collapsing the decoder's English continuation manifold.",
+      "allowed_ablation_axes": [
+        "LoRA positioning",
+        "bias or return-state geometry",
+        "answer path forcing",
+        "residual re-entry compression",
+        "continuation supervision"
+      ],
+      "forbidden_drift_axes": [
+        "base dataset family replacement",
+        "discriminator-only evaluation as sole success criterion"
+      ],
+      "promotion_basis": [
+        "mean_intervention_delta_gold",
+        "resume_first_token_accuracy",
+        "english_fluency_score"
+      ],
+      "metrics_primary": [
+        "overall_accuracy",
+        "mean_intervention_delta_gold",
+        "resume_first_token_accuracy"
+      ],
+      "metrics_guardrail": [
+        "english_fluency_score",
+        "loop_rate",
+        "contamination_rate"
+      ],
+      "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
+    },
+    "M4": {
+      "question_boundary": "semantic grounding and predicate family structure",
+      "architectural_thesis": "improve predicate and operator grounding before later chain-style reasoning expansions.",
+      "allowed_ablation_axes": [
+        "semantic probe family",
+        "predicate grounding",
+        "operator family evaluation"
+      ],
+      "forbidden_drift_axes": [
+        "scratchpad token injection",
+        "M11 discriminative readout substitution"
+      ],
+      "promotion_basis": [
+        "held_out_accuracy",
+        "operator family consistency"
+      ],
+      "metrics_primary": [
+        "held_out_accuracy"
+      ],
+      "metrics_guardrail": [
+        "logical_accuracy"
+      ],
+      "baseline_manifest": "docs/baselines/m_series_baseline_manifest.json"
+    },
+    "M5": {
+      "question_boundary": "formalization and chain structuring",
+      "architectural_thesis": "test autoregressive, masked-pair, and padded-n-ary chain formats for structured reasoning serialization.",
+      "allowed_ablation_axes": [
+        "autoregressive chain",
+        "masked pair chain",
+        "padded n-ary serialization"
+      ],
+      "forbidden_drift_axes": [
+        "M9 manifold replacement",
+        "M14 scratchpad mediation"
+      ],
+      "promotion_basis": [
+        "held_out_accuracy",
+        "logical_accuracy"
+      ],
+      "metrics_primary": [
+        "held_out_accuracy",
+        "logical_accuracy"
+      ],
+      "metrics_guardrail": [
+        "final_ce_loss"
+      ],
+      "baseline_manifest": "docs/baselines/m_series_baseline_manifest.json"
+    },
+    "M6": {
+      "question_boundary": "logic engine bridge",
+      "architectural_thesis": "test a direct logic-engine bridge and its calibration limits before interleaved and council-style decompositions.",
+      "allowed_ablation_axes": [
+        "logic engine bridge scale",
+        "alignment regime",
+        "scratchpad direct bridge"
+      ],
+      "forbidden_drift_axes": [
+        "council routing",
+        "native manifold discriminative swap"
+      ],
+      "promotion_basis": [
+        "held_out_accuracy",
+        "english_fluency_score"
+      ],
+      "metrics_primary": [
+        "held_out_accuracy"
+      ],
+      "metrics_guardrail": [
+        "english_fluency_score"
+      ],
+      "baseline_manifest": "docs/baselines/m_series_baseline_manifest.json"
+    },
+    "M7": {
+      "question_boundary": "interleaved coprocessor",
+      "architectural_thesis": "interleave structured coprocessor steps with base decoding while preserving operator semantics.",
+      "allowed_ablation_axes": [
+        "interleaving schedule",
+        "semantic probe alignment"
+      ],
+      "forbidden_drift_axes": [
+        "multi-oracle council voting"
+      ],
+      "promotion_basis": [
+        "held_out_accuracy",
+        "semantic probe stability"
+      ],
+      "metrics_primary": [
+        "held_out_accuracy"
+      ],
+      "metrics_guardrail": [
+        "logical_accuracy"
+      ],
+      "baseline_manifest": "docs/baselines/m_series_baseline_manifest.json"
+    },
+    "M8": {
+      "question_boundary": "council-of-oracles composition",
+      "architectural_thesis": "test multi-oracle composition against a monolithic English baseline and direct council rollout.",
+      "allowed_ablation_axes": [
+        "oracle composition",
+        "baseline comparison"
+      ],
+      "forbidden_drift_axes": [
+        "M9 provenance manifold substitution"
+      ],
+      "promotion_basis": [
+        "held_out_accuracy",
+        "final_answer_lift"
+      ],
+      "metrics_primary": [
+        "held_out_accuracy",
+        "final_answer_lift"
+      ],
+      "metrics_guardrail": [
+        "logical_accuracy"
+      ],
+      "baseline_manifest": "docs/baselines/m_series_baseline_manifest.json"
+    },
+    "M9": {
+      "question_boundary": "provenance manifold and contrastive NLI engine",
+      "architectural_thesis": "replace monolithic vocabulary state with a provenance-aware manifold and synchronized tokenizer-backed reasoning engine.",
+      "allowed_ablation_axes": [
+        "phase curriculum",
+        "mov gate",
+        "phase forge progression",
+        "synchronized tokenizer path"
+      ],
+      "forbidden_drift_axes": [
+        "M10 translator/head swap during base forge phases"
+      ],
+      "promotion_basis": [
+        "held_out_accuracy",
+        "logical_accuracy",
+        "codebook health"
+      ],
+      "metrics_primary": [
+        "held_out_accuracy",
+        "logical_accuracy"
+      ],
+      "metrics_guardrail": [
+        "geometry_retention"
+      ],
+      "baseline_manifest": "docs/baselines/m_series_baseline_manifest.json"
+    },
+    "M10": {
+      "question_boundary": "english translation and return-path adaptation",
+      "architectural_thesis": "translate structured manifold state into English-compatible continuation or discriminative readout heads.",
+      "allowed_ablation_axes": [
+        "translator depth",
+        "english head structure",
+        "joint alignment"
+      ],
+      "forbidden_drift_axes": [
+        "re-entry scratchpad mediation without explicit family reboot"
+      ],
+      "promotion_basis": [
+        "macro_f1",
+        "held_out_accuracy",
+        "final_ce_loss"
+      ],
+      "metrics_primary": [
+        "held_out_accuracy",
+        "macro_f1"
+      ],
+      "metrics_guardrail": [
+        "final_ce_loss"
+      ],
+      "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
+    },
+    "M11": {
+      "question_boundary": "native discriminative manifold readout",
+      "architectural_thesis": "prove that the manifold carries useful cognition through native discriminative heads even when generative re-entry remains unresolved.",
+      "allowed_ablation_axes": [
+        "discriminative adapter training",
+        "head readout",
+        "adapter disable ablation"
+      ],
+      "forbidden_drift_axes": [
+        "raw generative rollout claims without re-entry metrics"
+      ],
+      "promotion_basis": [
+        "mean_accuracy",
+        "macro_f1"
+      ],
+      "metrics_primary": [
+        "mean_accuracy",
+        "macro_f1"
+      ],
+      "metrics_guardrail": [
+        "held_out_accuracy"
+      ],
+      "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
+    },
+    "M14": {
+      "question_boundary": "symbiote scratchpad re-entry",
+      "architectural_thesis": "use bounded scratchpad tokens as a compute horizon while injecting continuous advisor math only into scratchpad states before English resumption.",
+      "allowed_ablation_axes": [
+        "scratchpad length",
+        "scratchpad gate threshold",
+        "injection layer",
+        "residual scratchpad alpha"
+      ],
+      "forbidden_drift_axes": [
+        "direct raw sidecar exposure to answer token",
+        "token-only return path as mainline"
+      ],
+      "promotion_basis": [
+        "mean_intervention_delta_gold",
+        "resume_first_token_accuracy",
+        "scratchpad_bleed_rate"
+      ],
+      "metrics_primary": [
+        "mean_intervention_delta_gold",
+        "resume_first_token_accuracy"
+      ],
+      "metrics_guardrail": [
+        "english_fluency_score",
+        "loop_rate",
+        "scratchpad_bleed_rate"
+      ],
+      "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
+    }
+  },
+  "entry_overrides": {
+    "j.series.j_1": {
+      "normalized_canonical_id": "M1.1",
+      "series_major": 1,
+      "series_minor": 1,
+      "legacy_aliases_to_add": ["M1.1"]
+    },
+    "j.series.j_2": {
+      "normalized_canonical_id": "M1.2",
+      "series_major": 1,
+      "series_minor": 2,
+      "legacy_aliases_to_add": ["M1.2"]
+    },
+    "j.series.j_3": {
+      "normalized_canonical_id": "M1.3",
+      "series_major": 1,
+      "series_minor": 3,
+      "legacy_aliases_to_add": ["M1.3"]
+    },
+    "j.series.j_4": {
+      "normalized_canonical_id": "M1.4",
+      "series_major": 1,
+      "series_minor": 4,
+      "legacy_aliases_to_add": ["M1.4"]
+    },
+    "j.series.j_5": {
+      "normalized_canonical_id": "M1.5",
+      "series_major": 1,
+      "series_minor": 5,
+      "legacy_aliases_to_add": ["M1.5"]
+    },
+    "l.series.l6.l6_a": {
+      "normalized_canonical_id": "M2.1",
+      "series_major": 2,
+      "series_minor": 1,
+      "legacy_aliases_to_add": ["M2.1"]
+    },
+    "l.series.l6.l6_b": {
+      "normalized_canonical_id": "M2.2",
+      "series_major": 2,
+      "series_minor": 2,
+      "legacy_aliases_to_add": ["M2.2"]
+    },
+    "l.series.l6.l6_c": {
+      "normalized_canonical_id": "M2.3",
+      "series_major": 2,
+      "series_minor": 3,
+      "legacy_aliases_to_add": ["M2.3"]
+    },
+    "m.track.m3_18.d": {
+      "inherits_from": ["M3.17.D"],
+      "inherits_components": ["residual re-entry path", "continuation evaluation harness"],
+      "changed_components": ["short continuation supervision", "re-entry metrics"],
+      "component_inventory": {
+        "prompt_format": "question -> Answer: -> short continuation",
+        "adapter_type": "learned residual continuation vector",
+        "residual_gate_type": "guarded residual injection",
+        "loss_objective": "continuation_ce",
+        "data_pack": "M3.19 resumption pack precursor",
+        "evaluation_harness": "m_bridge_ablation_test_suite",
+        "archive_reporting_path": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume"
+      }
+    },
+    "m.track.m3_19.d0": {
+      "inherits_from": ["M3.18.D"],
+      "inherits_components": ["residual continuation vector", "continuation CE objective"],
+      "changed_components": ["4-bucket resumption pack", "guard threshold grid"],
+      "component_inventory": {
+        "prompt_format": "question -> Final answer: -> 1-5 token continuation",
+        "adapter_type": "D-mainline residual re-entry",
+        "residual_gate_type": "guard-thresholded residual norm",
+        "loss_objective": "continuation_ce",
+        "data_pack": "M3.19 4-bucket resumption pack",
+        "evaluation_harness": "m_bridge_ablation_test_suite",
+        "archive_reporting_path": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid"
+      }
+    },
+    "m.track.m14.c": {
+      "inherits_from": ["M3.19.D0", "M11"],
+      "inherits_components": ["continuation CE objective", "native discriminative oracle", "re-entry guardrails"],
+      "changed_components": ["<symbiote> scratchpad", "scratchpad-only residual injection"],
+      "component_inventory": {
+        "prompt_format": "english prompt -> 4 x <symbiote> -> Final answer:",
+        "tokenizer_additions": ["<symbiote>"],
+        "adapter_type": "residual scratchpad compressor",
+        "residual_gate_type": "scratchpad alpha gate",
+        "injection_layer": "12",
+        "loss_objective": "continuation_ce",
+        "data_pack": "M3.19 4-bucket resumption pack",
+        "kill_test_suite": "continuation contamination and loop diagnostics",
+        "evaluation_harness": "m_bridge_ablation_test_suite",
+        "discriminator_head": "M11 native discriminative head",
+        "archive_reporting_path": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad"
+      }
+    }
+  },
+  "transition_manifests": [
+    {
+      "transition_id": "M1_to_M2",
+      "status": "legacy_inferred",
+      "from_major": "M1",
+      "to_major": "M2",
+      "selected_upstream": "M1.5",
+      "inherits_components": ["generator-derived diagnostic dataset discipline", "scope and foil stress awareness"],
+      "reopened_components": ["training objective regime", "constraint controller"],
+      "rejected_components": ["diagnostic-only success criterion"],
+      "promotion_basis": ["accepted_foil_pair_accuracy", "scope diagnostics"]
+    },
+    {
+      "transition_id": "M2_to_M3",
+      "status": "legacy_inferred",
+      "from_major": "M2",
+      "to_major": "M3",
+      "selected_upstream": "M2.1",
+      "inherits_components": ["constraint-aware training stack", "scope and identity discipline"],
+      "reopened_components": ["bridge exposure strategy", "return-path geometry"],
+      "rejected_components": ["static objective-only optimization as sole lever"],
+      "promotion_basis": ["constraint_scope", "constraint_identity"]
+    },
+    {
+      "transition_id": "M3_to_M4",
+      "status": "excavated_inferred",
+      "from_major": "M3",
+      "to_major": "M4",
+      "selected_upstream": "M3.8.C",
+      "inherits_components": ["constraint-aware branch training stack", "early bridge geometry probes", "operator diversification pressure"],
+      "reopened_components": ["semantic probing", "predicate grounding", "operator family structure"],
+      "rejected_components": ["bridge exposure as the only progress axis"],
+      "promotion_basis": ["held_out_accuracy", "operator family consistency"]
+    },
+    {
+      "transition_id": "M4_to_M5",
+      "status": "excavated_inferred",
+      "from_major": "M4",
+      "to_major": "M5",
+      "selected_upstream": "M4.2",
+      "inherits_components": ["predicate-family grounding signal", "operator family evaluation harness"],
+      "reopened_components": ["serialization format", "chain supervision objective", "formalization depth"],
+      "rejected_components": ["probe-only evaluation as sufficient end state"],
+      "promotion_basis": ["held_out_accuracy", "logical_accuracy"]
+    },
+    {
+      "transition_id": "M5_to_M6",
+      "status": "excavated_inferred",
+      "from_major": "M5",
+      "to_major": "M6",
+      "selected_upstream": "M5.3",
+      "inherits_components": ["chain-style structured supervision", "formalized reasoning serialization"],
+      "reopened_components": ["logic-engine bridge", "alignment and scratchpad exposure"],
+      "rejected_components": ["serialization-only progress without stronger bridge tests"],
+      "promotion_basis": ["held_out_accuracy", "english_fluency_score"]
+    },
+    {
+      "transition_id": "M6_to_M7",
+      "status": "excavated_inferred",
+      "from_major": "M6",
+      "to_major": "M7",
+      "selected_upstream": "M6.3",
+      "inherits_components": ["logic-engine bridge calibration lessons", "scratchpad-directed bridge experience"],
+      "reopened_components": ["interleaving schedule", "coprocessor timing"],
+      "rejected_components": ["single-pass bridge injection as the only coupling mode"],
+      "promotion_basis": ["held_out_accuracy", "semantic probe stability"]
+    },
+    {
+      "transition_id": "M7_to_M8",
+      "status": "excavated_inferred",
+      "from_major": "M7",
+      "to_major": "M8",
+      "selected_upstream": "M7.0",
+      "inherits_components": ["interleaved structured rollout", "coprocessor timing discipline"],
+      "reopened_components": ["multi-oracle composition", "council aggregation"],
+      "rejected_components": ["single-coprocessor rollout as final architecture"],
+      "promotion_basis": ["held_out_accuracy", "final_answer_lift"]
+    },
+    {
+      "transition_id": "M8_to_M9",
+      "status": "excavated_inferred",
+      "from_major": "M8",
+      "to_major": "M9",
+      "selected_upstream": "M8.0",
+      "inherits_components": ["structured multi-agent reasoning lessons", "English baseline comparison harness"],
+      "reopened_components": ["native provenance manifold", "phase curriculum", "tokenizer synchronization"],
+      "rejected_components": ["oracle composition as the terminal substrate"],
+      "promotion_basis": ["held_out_accuracy", "logical_accuracy", "codebook health"]
+    },
+    {
+      "transition_id": "M9_to_M10",
+      "status": "excavated_inferred",
+      "from_major": "M9",
+      "to_major": "M10",
+      "selected_upstream": "M9.0",
+      "inherits_components": ["provenance manifold engine", "synchronized reasoning state", "audit harnesses"],
+      "reopened_components": ["translator depth", "English head design", "joint alignment"],
+      "rejected_components": ["direct manifold outputs without translation or readout heads"],
+      "promotion_basis": ["macro_f1", "bridge audit accuracy"]
+    },
+    {
+      "transition_id": "M10_to_M11",
+      "status": "documented",
+      "from_major": "M10",
+      "to_major": "M11",
+      "selected_upstream": "M10",
+      "inherits_components": ["translator and English head infrastructure", "final audit harness"],
+      "reopened_components": ["native manifold structure", "discriminative bridge training"],
+      "rejected_components": ["monolithic vocabulary embeddings"],
+      "promotion_basis": ["macro_f1", "native discriminative accuracy"]
+    },
+    {
+      "transition_id": "M11_to_M14",
+      "status": "documented_redirection",
+      "from_major": "M11",
+      "to_major": "M14",
+      "selected_upstream": "M11",
+      "inherits_components": ["manifold oracle signal", "M11 discriminative head as cognition proof"],
+      "reopened_components": ["generative return path", "scratchpad compute horizon", "residual injection locality"],
+      "rejected_components": ["raw direct sidecar exposure during answer rollout"],
+      "promotion_basis": ["mean_accuracy", "macro_f1", "m3.18 and m3.19 re-entry diagnostics"]
+    }
+  ]
+}

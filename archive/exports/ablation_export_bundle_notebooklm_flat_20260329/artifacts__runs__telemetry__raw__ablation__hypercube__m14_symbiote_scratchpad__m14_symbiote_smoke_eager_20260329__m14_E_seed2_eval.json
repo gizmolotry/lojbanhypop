@@ -1,0 +1,62 @@
+[
+  {
+    "item_id": "",
+    "pair_id": "m3_19_pair_00001",
+    "family": "councilmen_demonstrators",
+    "bucket": "noun_phrase",
+    "prompt": "The councilmen refused the permit to the demonstrators because they feared violence.",
+    "candidates": [
+      "councilmen",
+      "demonstrators"
+    ],
+    "gold_answer": "councilmen",
+    "model_answer": "demonstrators",
+    "correct": false,
+    "active_token_count": 0.0,
+    "active_op_count": 0.0,
+    "operator_entropy": 0.0,
+    "operator_top1_share": 0.0,
+    "scope": 0.0,
+    "score_on_gold": -9.228516578674316,
+    "score_on_foil": -4.738872528076172,
+    "score_off_gold": -9.226771354675293,
+    "answer_delta": -4.4896440505981445,
+    "gold_delta_on_off": -0.0017452239990234375,
+    "scratchpad_attention_mass": 0.03559537806237737,
+    "scratchpad_residual_norm": 0.07107234001159668,
+    "scratchpad_gate_mean": 0.11917205899953842,
+    "scratchpad_gate_overflow": 0.0,
+    "scratchpad_attn_entropy": 0.0,
+    "cell_mode": "token_only_scratchpad"
+  },
+  {
+    "item_id": "",
+    "pair_id": "m3_19_pair_00002",
+    "family": "engineer_analyst",
+    "bucket": "noun_phrase",
+    "prompt": "The engineer sent the report to the analyst because they had deeper context.",
+    "candidates": [
+      "engineer",
+      "analyst"
+    ],
+    "gold_answer": "analyst",
+    "model_answer": "analyst",
+    "correct": true,
+    "active_token_count": 0.0,
+    "active_op_count": 0.0,
+    "operator_entropy": 0.0,
+    "operator_top1_share": 0.0,
+    "scope": 0.0,
+    "score_on_gold": -1.1539582014083862,
+    "score_on_foil": -5.804879188537598,
+    "score_off_gold": -1.1541508436203003,
+    "answer_delta": 4.650920867919922,
+    "gold_delta_on_off": 0.0001926422119140625,
+    "scratchpad_attention_mass": 0.039469309306393065,
+    "scratchpad_residual_norm": 0.07107234001159668,
+    "scratchpad_gate_mean": 0.11917205899953842,
+    "scratchpad_gate_overflow": 0.0,
+    "scratchpad_attn_entropy": 0.0,
+    "cell_mode": "token_only_scratchpad"
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "generated_utc": "2026-03-06T04:03:38.935735+00:00",
+  "report_type": "operator_cluster_report",
+  "clusters": [
+    [
+      1
+    ]
+  ],
+  "behavior_vectors": {
+    "1": [
+      1.0,
+      0.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ]
+  }
+}

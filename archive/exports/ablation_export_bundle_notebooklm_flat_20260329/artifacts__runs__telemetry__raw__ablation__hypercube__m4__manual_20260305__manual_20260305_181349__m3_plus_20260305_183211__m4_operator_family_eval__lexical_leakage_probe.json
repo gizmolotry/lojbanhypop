@@ -1,0 +1,10 @@
+{
+  "generated_utc": "2026-03-06T04:03:38.935735+00:00",
+  "report_type": "lexical_leakage_probe",
+  "operator_lexical_probe_acc": 0.09722222222222222,
+  "majority_baseline_acc": 0.2361111111111111,
+  "test_size": 72,
+  "op_to_majority_label_train": {
+    "1": "equal"
+  }
+}

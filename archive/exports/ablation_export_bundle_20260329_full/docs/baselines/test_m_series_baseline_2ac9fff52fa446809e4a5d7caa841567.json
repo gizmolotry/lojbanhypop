@@ -1,0 +1,15 @@
+{
+  "series_id": "M",
+  "baseline_id": "M_BASE_TEST_2ac9fff52fa446809e4a5d7caa841567",
+  "upstream_best": {
+    "j_series": "M1.4/J-5",
+    "l_series": "M2.C/L6-C"
+  },
+  "m_base": {
+    "dataset": "runs/j_series/test_j5_clean.jsonl",
+    "constraints": "L6-C",
+    "identity_reg": "swap_test",
+    "curriculum": "recursive_scope_depth_ramp_with_minimal_edit_foils",
+    "optimizer": "AdamW_lr_2e-4_seed_7"
+  }
+}

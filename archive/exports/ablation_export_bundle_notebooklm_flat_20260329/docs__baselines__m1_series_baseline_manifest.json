@@ -1,0 +1,9 @@
+{
+  "baseline_id": "m1_series_diagnostics",
+  "series_major": "M1",
+  "purpose": "Data invariance and adversarial synthesis diagnostics baseline.",
+  "notes": [
+    "Used as the normalized baseline anchor for J-series to M1.x remapping.",
+    "Historical values remain aliased to J-1 through J-5 in the canonical ledger."
+  ]
+}

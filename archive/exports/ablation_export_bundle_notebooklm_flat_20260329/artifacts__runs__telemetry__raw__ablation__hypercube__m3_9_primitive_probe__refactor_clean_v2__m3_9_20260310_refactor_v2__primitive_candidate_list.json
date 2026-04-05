@@ -1,0 +1,290 @@
+[
+  {
+    "token_id": 940,
+    "score": 0.792814519895909,
+    "specialization": 1.0,
+    "causal_score": 0.585629039791818,
+    "position_entropy": 0.0,
+    "samples_with_token": 12,
+    "deletion": {
+      "delta_ce_loss": 0.6631145675977071,
+      "delta_arity_violation": 0.6916373883765189,
+      "delta_scope_total": -0.27288327359145187
+    },
+    "substitution": {
+      "token_substitute": 441,
+      "delta_ce_loss": 0.6373954017957052,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.06477370398951021
+    },
+    "neighbor_swap": {
+      "delta_ce_loss": 0.6631145675977071,
+      "delta_arity_violation": 0.041666666666666664,
+      "delta_scope_total": 0.0
+    }
+  },
+  {
+    "token_id": 1710,
+    "score": 0.6171592423391121,
+    "specialization": 1.0,
+    "causal_score": 0.2343184846782242,
+    "position_entropy": 0.0,
+    "samples_with_token": 12,
+    "deletion": {
+      "delta_ce_loss": -0.044466873009999595,
+      "delta_arity_violation": 0.9929078014184397,
+      "delta_scope_total": 0.048903644008279935
+    },
+    "substitution": {
+      "token_substitute": 1625,
+      "delta_ce_loss": -0.08531233668327332,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.012828041381992927
+    },
+    "neighbor_swap": {
+      "delta_ce_loss": -1.7682711283365886e-06,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.012484854496109699
+    }
+  },
+  {
+    "token_id": 1,
+    "score": 0.6070531676359348,
+    "specialization": 0.9381005078254355,
+    "causal_score": 0.276005827446434,
+    "position_entropy": 0.09962338946616205,
+    "samples_with_token": 12,
+    "deletion": {
+      "delta_ce_loss": 0.055302441120147705,
+      "delta_arity_violation": 1.0,
+      "delta_scope_total": -0.28011022041068995
+    },
+    "substitution": {
+      "token_substitute": 396,
+      "delta_ce_loss": 0.038359751303990684,
+      "delta_arity_violation": 1.0,
+      "delta_scope_total": 0.0
+    },
+    "neighbor_swap": {
+      "delta_ce_loss": -0.006256724397341411,
+      "delta_arity_violation": 0.020833333333333332,
+      "delta_scope_total": -0.010931201093007903
+    }
+  },
+  {
+    "token_id": 1188,
+    "score": 0.600654367379405,
+    "specialization": 1.0,
+    "causal_score": 0.20130873475881006,
+    "position_entropy": 0.0,
+    "samples_with_token": 12,
+    "deletion": {
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.7481060606060606,
+      "delta_scope_total": -0.2584376131879897
+    },
+    "substitution": {
+      "token_substitute": 1611,
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.08291926245192699
+    },
+    "neighbor_swap": {
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.08395548615493083
+    }
+  },
+  {
+    "token_id": 441,
+    "score": 0.5998743642308293,
+    "specialization": 1.0,
+    "causal_score": 0.19974872846165853,
+    "position_entropy": 0.0,
+    "samples_with_token": 12,
+    "deletion": {
+      "delta_ce_loss": 0.00018141667048136392,
+      "delta_arity_violation": 0.6916373883765189,
+      "delta_scope_total": -0.27288327359145187
+    },
+    "substitution": {
+      "token_substitute": 940,
+      "delta_ce_loss": 0.03404078880945841,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.06477370398951021
+    },
+    "neighbor_swap": {
+      "delta_ce_loss": 7.748603820800781e-07,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.06633954584268943
+    }
+  },
+  {
+    "token_id": 1611,
+    "score": 0.5816314637148128,
+    "specialization": 0.9619541926708156,
+    "causal_score": 0.20130873475881006,
+    "position_entropy": 0.06123236472475258,
+    "samples_with_token": 12,
+    "deletion": {
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.7481060606060606,
+      "delta_scope_total": -0.2584376131879897
+    },
+    "substitution": {
+      "token_substitute": 1188,
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.08291926245192699
+    },
+    "neighbor_swap": {
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.041666666666666664,
+      "delta_scope_total": 0.0
+    }
+  },
+  {
+    "token_id": 1735,
+    "score": 0.5803323829669211,
+    "specialization": 1.0,
+    "causal_score": 0.16066476593384232,
+    "position_entropy": 0.0,
+    "samples_with_token": 12,
+    "deletion": {
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.6432459178624443,
+      "delta_scope_total": -0.16007791180676736
+    },
+    "substitution": {
+      "token_substitute": 462,
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.025999887071577785
+    },
+    "neighbor_swap": {
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.02871323639613339
+    }
+  },
+  {
+    "token_id": 462,
+    "score": 0.5803323829669211,
+    "specialization": 1.0,
+    "causal_score": 0.16066476593384232,
+    "position_entropy": 0.0,
+    "samples_with_token": 12,
+    "deletion": {
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.6432459178624443,
+      "delta_scope_total": -0.16007791180676736
+    },
+    "substitution": {
+      "token_substitute": 1735,
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.025999887071577785
+    },
+    "neighbor_swap": {
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.041666666666666664,
+      "delta_scope_total": 0.0
+    }
+  },
+  {
+    "token_id": 498,
+    "score": 0.5681163895924077,
+    "specialization": 1.0,
+    "causal_score": 0.13623277918481538,
+    "position_entropy": 0.0,
+    "samples_with_token": 12,
+    "deletion": {
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.4621632607294032,
+      "delta_scope_total": -0.2190006351946737
+    },
+    "substitution": {
+      "token_substitute": 1214,
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.030925448419943168
+    },
+    "neighbor_swap": {
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.03349780218005025
+    }
+  },
+  {
+    "token_id": 1214,
+    "score": 0.5681163895924077,
+    "specialization": 1.0,
+    "causal_score": 0.13623277918481538,
+    "position_entropy": 0.0,
+    "samples_with_token": 12,
+    "deletion": {
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.4621632607294032,
+      "delta_scope_total": -0.2190006351946737
+    },
+    "substitution": {
+      "token_substitute": 498,
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.030925448419943168
+    },
+    "neighbor_swap": {
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.041666666666666664,
+      "delta_scope_total": 0.0
+    }
+  },
+  {
+    "token_id": 396,
+    "score": 0.5679739011746656,
+    "specialization": 1.0,
+    "causal_score": 0.1359478023493313,
+    "position_entropy": 0.0,
+    "samples_with_token": 11,
+    "deletion": {
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.4741315594974132,
+      "delta_scope_total": -0.2056074522492433
+    },
+    "substitution": {
+      "token_substitute": 1360,
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.1423859722367185
+    },
+    "neighbor_swap": {
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.14158804639012298
+    }
+  },
+  {
+    "token_id": 1360,
+    "score": 0.5061925621555539,
+    "specialization": 0.8764373219617765,
+    "causal_score": 0.1359478023493313,
+    "position_entropy": 0.19886645859660534,
+    "samples_with_token": 11,
+    "deletion": {
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.4741315594974132,
+      "delta_scope_total": -0.2056074522492433
+    },
+    "substitution": {
+      "token_substitute": 396,
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.0,
+      "delta_scope_total": -0.1423859722367185
+    },
+    "neighbor_swap": {
+      "delta_ce_loss": 0.0,
+      "delta_arity_violation": 0.041666666666666664,
+      "delta_scope_total": 0.0
+    }
+  }
+]

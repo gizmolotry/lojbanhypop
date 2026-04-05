@@ -1,0 +1,22 @@
+{
+  "generated_utc": "2026-03-13T00:23:20.966637+00:00",
+  "report_type": "operator_family_report",
+  "active_op_count": 1,
+  "top1_op_share": 1.0,
+  "paraphrase_operator_consistency": 1.0,
+  "paraphrase_consistency_by_family": {
+    "equality": 1.0,
+    "comparison": 1.0,
+    "containment": 1.0,
+    "causal": 1.0,
+    "transfer": 1.0,
+    "connectivity": 1.0
+  },
+  "per_op_swap_invariant_rate": {
+    "1": 1.0
+  },
+  "per_op_swap_foil_change_rate": {
+    "1": 0.0
+  },
+  "predicate_family_score": 0.8215909090909091
+}

@@ -1,0 +1,62 @@
+[
+  {
+    "item_id": "",
+    "pair_id": "m3_19_pair_00003",
+    "family": "lawyer_witness",
+    "bucket": "noun_phrase",
+    "prompt": "The lawyer questioned the witness after they contradicted prior testimony.",
+    "candidates": [
+      "lawyer",
+      "witness"
+    ],
+    "gold_answer": "witness",
+    "model_answer": "witness",
+    "correct": true,
+    "active_token_count": 13.0,
+    "active_op_count": 3.0,
+    "operator_entropy": 0.9222208985694438,
+    "operator_top1_share": 0.4583333333333333,
+    "scope": 0.4067796610169492,
+    "score_on_gold": -0.5619426965713501,
+    "score_on_foil": -4.318260669708252,
+    "score_off_gold": -0.5625119805335999,
+    "answer_delta": 3.7563180923461914,
+    "gold_delta_on_off": 0.0005692839622497559,
+    "scratchpad_attention_mass": 0.04594083731838813,
+    "scratchpad_residual_norm": 0.006896349135786295,
+    "scratchpad_gate_mean": 0.11923493444919586,
+    "scratchpad_gate_overflow": 0.0,
+    "scratchpad_attn_entropy": 4.969728469848633,
+    "cell_mode": "severance_threshold_residual_scratchpad"
+  },
+  {
+    "item_id": "",
+    "pair_id": "m3_19_pair_00029",
+    "family": "manager_intern",
+    "bucket": "explanatory",
+    "prompt": "The manager monitored the intern, so they learned the process.",
+    "candidates": [
+      "manager",
+      "intern"
+    ],
+    "gold_answer": "intern",
+    "model_answer": "intern",
+    "correct": true,
+    "active_token_count": 13.0,
+    "active_op_count": 3.0,
+    "operator_entropy": 1.089703172672284,
+    "operator_top1_share": 0.3958333333333333,
+    "scope": 0.4067796610169492,
+    "score_on_gold": -2.9378881454467773,
+    "score_on_foil": -7.8309326171875,
+    "score_off_gold": -2.9378421306610107,
+    "answer_delta": 4.893044471740723,
+    "gold_delta_on_off": -4.601478576660156e-05,
+    "scratchpad_attention_mass": 0.04058863455429673,
+    "scratchpad_residual_norm": 0.005924610421061516,
+    "scratchpad_gate_mean": 0.11923493444919586,
+    "scratchpad_gate_overflow": 0.0,
+    "scratchpad_attn_entropy": 4.96973991394043,
+    "cell_mode": "severance_threshold_residual_scratchpad"
+  }
+]

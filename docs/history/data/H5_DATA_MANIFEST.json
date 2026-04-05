@@ -1,0 +1,52 @@
+{
+  "project": "H5 Emergent Predicate Advisor",
+  "runs": [
+    {
+      "id": "H5.1",
+      "name": "Grounded Dictionary Incubation",
+      "steps": 1000,
+      "dir": "runs/true_coconut_h5/20260302_053614",
+      "final_loss": 327.96,
+      "final_ce": 13.71,
+      "ptr": 3,
+      "surgery": "active_bias_only"
+    },
+    {
+      "id": "H5.2a",
+      "name": "Gearbox Control (Standard Attention)",
+      "steps": 1000,
+      "dir": "runs/true_coconut_h5/20260302_062528",
+      "final_loss": 293.88,
+      "final_ce": 13.24,
+      "ptr": 3,
+      "surgery": false,
+      "accuracy": 0.375
+    },
+    {
+      "id": "H5.2b",
+      "name": "Neuro-Symbolic (Surgery Enabled)",
+      "steps": 1000,
+      "dir": "runs/true_coconut_h5/20260302_070646",
+      "final_loss": 293.88,
+      "final_ce": 13.24,
+      "ptr": 3,
+      "surgery": true,
+      "surgery_hits": 0,
+      "accuracy": 0.375
+    },
+    {
+      "id": "H5.3",
+      "name": "Joint RD Optimization (Dark Reasoner)",
+      "steps": 1000,
+      "dir": "runs/true_coconut_h5/20260302_172603",
+      "final_loss": 368.69,
+      "final_ce": 12.34,
+      "ptr": 3,
+      "surgery": true,
+      "surgery_hits": 0,
+      "accuracy": 1.000,
+      "finding": "Looping cured. Accuracy recovered to 100% on test set. Language remains emergent/opaque."
+    }
+  ],
+  "verification_script": "scripts/verify_h5_ablation.py"
+}

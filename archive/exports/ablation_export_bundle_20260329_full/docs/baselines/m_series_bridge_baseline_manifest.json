@@ -1,0 +1,39 @@
+{
+  "series_id": "M",
+  "baseline_id": "M_BRIDGE_BASE_20260311_DEC",
+  "declared_at_utc": "2026-03-11T11:20:00Z",
+  "description": "Bridge-focused M-series comparison base. Inherits the clean post-refactor M base but promotes the de-collapsed M3.8.B checkpoint for subsequent bridge experiments.",
+  "upstream_best": {
+    "j_series": "runs/j_series/20260310_refactor/j-5.json",
+    "l_series": "runs/l_series/l6_ablation/refactor_clean/20260310_221033/l6_ablation_manifest.json",
+    "m3_8_decollapse": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_8_diversification/decollapse_small/m3_8_diversification_20260311_103934/m3_8_diversification_report.json"
+  },
+  "m_base": {
+    "dataset": "runs/j_series/20260310_refactor/j-5_adversarial.jsonl",
+    "constraints": "runs/l_series/l6_ablation/refactor_clean/20260310_221033/l6-c/20260310_222234/l_series_summary.json",
+    "identity_reg": "swap_test_regularizer_enabled",
+    "curriculum": "recursive_scope_depth_ramp_with_minimal_edit_foils",
+    "optimizer": "AdamW_lr_2e-4_seed_7",
+    "checkpoint": "runs/l_series/m3_8_diversification/decollapse_small/20260311_103934/hard/m3_8_b/20260311_104736/l_series_checkpoint.pt"
+  },
+  "bridge_base": {
+    "source_run_id": "M3.8.B",
+    "source_report": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_8_diversification/decollapse_small/m3_8_diversification_20260311_103934/m3_8_diversification_report.json",
+    "checkpoint": "runs/l_series/m3_8_diversification/decollapse_small/20260311_103934/hard/m3_8_b/20260311_104736/l_series_checkpoint.pt",
+    "operator_entropy": 1.6093924045562744,
+    "operator_top1_share": 0.2027810513973236,
+    "scope": 0.0,
+    "identity": 0.0
+  },
+  "freeze_rules": {
+    "within_number_runs_are_siblings": true,
+    "promote_new_baseline_only_on_explicit_series_step": true,
+    "between_letters_inherit_previous_best": true
+  },
+  "lineage_policy": {
+    "post_refactor_clean": true,
+    "train_eval_split_fixed": true,
+    "declared_root_enforced": true,
+    "bridge_experiments_default_to_decollapsed_checkpoint": true
+  }
+}

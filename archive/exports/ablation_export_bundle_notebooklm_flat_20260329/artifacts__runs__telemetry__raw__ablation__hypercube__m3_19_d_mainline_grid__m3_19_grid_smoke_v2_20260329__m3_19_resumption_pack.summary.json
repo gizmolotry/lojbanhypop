@@ -1,0 +1,40 @@
+{
+  "generated_utc": "2026-03-29T15:07:46.212398Z",
+  "size": 64,
+  "strict_balance": true,
+  "bucket_counts": {
+    "noun_phrase": 16,
+    "clause_continuation": 16,
+    "disambiguation": 16,
+    "explanatory": 16
+  },
+  "bucket_label_counts": {
+    "noun_phrase": {
+      "candidate_0": 8,
+      "candidate_1": 8
+    },
+    "clause_continuation": {
+      "candidate_0": 8,
+      "candidate_1": 8
+    },
+    "disambiguation": {
+      "candidate_0": 8,
+      "candidate_1": 8
+    },
+    "explanatory": {
+      "candidate_0": 8,
+      "candidate_1": 8
+    }
+  },
+  "families": [
+    "alex_riley",
+    "councilmen_demonstrators",
+    "engineer_analyst",
+    "lawyer_witness",
+    "manager_intern",
+    "morgan_casey",
+    "trophy_suitcase",
+    "truck_bus"
+  ],
+  "output": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/m3_19_resumption_pack.jsonl"
+}

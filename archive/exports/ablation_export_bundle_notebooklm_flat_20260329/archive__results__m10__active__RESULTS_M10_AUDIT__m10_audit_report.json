@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-03-28T04:23:55.135772+00:00",
+  "mode": "m10b",
+  "status": "success",
+  "details": [
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "logic": "<loj_99> <loj_2000> <loj_2032> <loj_2037> <loj_2009> <loj_2044> <loj_2033> <loj_2006> <loj_2018> <loj_2053>",
+      "prediction": "answer:",
+      "target": "no",
+      "correct": false
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "logic": "<loj_99> <loj_2033> <loj_2014> <loj_2037> <loj_2042> <loj_2015> <loj_2016> <loj_2012> <loj_2013> <loj_2035>",
+      "prediction": "no",
+      "target": "no",
+      "correct": true
+    },
+    {
+      "prompt": "The engineer sent the analyst the report since they needed feedback before launch. Who needed feedback?",
+      "logic": "<loj_99> <loj_2020> <loj_2008> <loj_2027> <loj_2005> <loj_2003> <loj_2009> <loj_2007> <loj_2016> <loj_2003>",
+      "prediction": "answer:",
+      "target": "engineer",
+      "correct": false
+    },
+    {
+      "prompt": "The engineer sent the analyst the report because they needed feedback before launch. Who needed feedback?",
+      "logic": "<loj_99> <loj_2024> <loj_2017> <loj_2022> <loj_2011> <loj_2003> <loj_2003> <loj_2023> <loj_2021> <loj_2014>",
+      "prediction": "answer:",
+      "target": "engineer",
+      "correct": false
+    },
+    {
+      "prompt": "Bob puts the red ball in the box. Eve moves it to the cabinet while Bob is outside. Alice takes the blue ball. Where does Bob think the red ball is?",
+      "logic": "<loj_99> <loj_2020> <loj_2036> <loj_2015> <loj_2005> <loj_2046> <loj_2046> <loj_2042> <loj_2007> <loj_2025>",
+      "prediction": "box",
+      "target": "box",
+      "correct": true
+    },
+    {
+      "prompt": "Test happens before design. Design happens before document. Does test happen before document?",
+      "logic": "<loj_99> <loj_2024> <loj_2026> <loj_2017> <loj_2006> <loj_2004> <loj_2019> <loj_2022> <loj_2013> <loj_2027>",
+      "prediction": "no",
+      "target": "yes",
+      "correct": false
+    },
+    {
+      "prompt": "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. Action P handles personal data and has no waiver. Is P permitted without approval?",
+      "logic": "<loj_99> <loj_2031> <loj_2017> <loj_2000> <loj_2011> <loj_2003> <loj_2015> <loj_2023> <loj_2013> <loj_2027>",
+      "prediction": "no",
+      "target": "no",
+      "correct": true
+    },
+    {
+      "prompt": "Morgan did never forward the memo to Casey because they were confidential. What was confidential?",
+      "logic": "<loj_99> <loj_2020> <loj_2008> <loj_2025> <loj_2009> <loj_2015> <loj_2009> <loj_2022> <loj_2014> <loj_2013>",
+      "prediction": "memo",
+      "target": "memo",
+      "correct": true
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "logic": "<loj_99> <loj_2000> <loj_2017> <loj_2005> <loj_2011> <loj_2007> <loj_2015> <loj_2018> <loj_2014> <loj_2025>",
+      "prediction": "demonstrators",
+      "target": "demonstrators",
+      "correct": true
+    },
+    {
+      "prompt": "If A > B and B > C, with A=4, B=6, C=7, is A > C?",
+      "logic": "<loj_99> <loj_2020> <loj_2024> <loj_2026> <loj_2005> <loj_2003> <loj_2033> <loj_2023> <loj_2013> <loj_2003>",
+      "prediction": "no",
+      "target": "no",
+      "correct": true
+    }
+  ],
+  "accuracy": 0.6
+}

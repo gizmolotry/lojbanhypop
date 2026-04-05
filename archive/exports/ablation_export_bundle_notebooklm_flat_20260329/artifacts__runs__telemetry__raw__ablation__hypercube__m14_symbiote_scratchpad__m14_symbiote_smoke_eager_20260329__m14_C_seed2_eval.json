@@ -1,0 +1,62 @@
+[
+  {
+    "item_id": "",
+    "pair_id": "m3_19_pair_00001",
+    "family": "councilmen_demonstrators",
+    "bucket": "noun_phrase",
+    "prompt": "The councilmen refused the permit to the demonstrators because they feared violence.",
+    "candidates": [
+      "councilmen",
+      "demonstrators"
+    ],
+    "gold_answer": "councilmen",
+    "model_answer": "demonstrators",
+    "correct": false,
+    "active_token_count": 13.0,
+    "active_op_count": 3.0,
+    "operator_entropy": 0.9222208985694438,
+    "operator_top1_share": 0.4583333333333333,
+    "scope": 0.4067796610169492,
+    "score_on_gold": -9.22485065460205,
+    "score_on_foil": -4.732887268066406,
+    "score_off_gold": -9.226771354675293,
+    "answer_delta": -4.4919633865356445,
+    "gold_delta_on_off": 0.0019207000732421875,
+    "scratchpad_attention_mass": 0.03559537806237737,
+    "scratchpad_residual_norm": 0.007769070100039244,
+    "scratchpad_gate_mean": 0.11917205899953842,
+    "scratchpad_gate_overflow": 0.0,
+    "scratchpad_attn_entropy": 4.9696760177612305,
+    "cell_mode": "relaxed_residual_scratchpad"
+  },
+  {
+    "item_id": "",
+    "pair_id": "m3_19_pair_00002",
+    "family": "engineer_analyst",
+    "bucket": "noun_phrase",
+    "prompt": "The engineer sent the report to the analyst because they had deeper context.",
+    "candidates": [
+      "engineer",
+      "analyst"
+    ],
+    "gold_answer": "analyst",
+    "model_answer": "analyst",
+    "correct": true,
+    "active_token_count": 13.0,
+    "active_op_count": 3.0,
+    "operator_entropy": 1.0892080913644198,
+    "operator_top1_share": 0.375,
+    "scope": 0.4067796610169492,
+    "score_on_gold": -1.1540205478668213,
+    "score_on_foil": -5.80583381652832,
+    "score_off_gold": -1.1541508436203003,
+    "answer_delta": 4.651813507080078,
+    "gold_delta_on_off": 0.0001302957534790039,
+    "scratchpad_attention_mass": 0.039469309306393065,
+    "scratchpad_residual_norm": 0.00632017757743597,
+    "scratchpad_gate_mean": 0.11917205899953842,
+    "scratchpad_gate_overflow": 0.0,
+    "scratchpad_attn_entropy": 4.969709396362305,
+    "cell_mode": "relaxed_residual_scratchpad"
+  }
+]

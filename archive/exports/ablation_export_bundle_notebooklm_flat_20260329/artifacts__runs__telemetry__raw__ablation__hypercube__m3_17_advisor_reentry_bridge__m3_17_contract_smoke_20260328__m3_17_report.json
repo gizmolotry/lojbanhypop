@@ -1,0 +1,452 @@
+{
+  "timestamp": "2026-03-28T18:32:12.249033+00:00",
+  "series": {
+    "series_contract_version": "1.0",
+    "series_id": "M",
+    "track": "M3.17",
+    "script": "scripts/run_m3_17_advisor_reentry_bridge.py"
+  },
+  "track": "M3.17",
+  "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json",
+  "baseline_id": "M_BRIDGE_BASE_20260311_DEC",
+  "config": {
+    "base_model": "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+    "adapter": "D:/lojbanhypop/runs/phase5_two_stage_recovery_anchors/20260302_030738/stage2_phase5",
+    "checkpoint": "D:\\lojbanhypop\\runs\\l_series\\m3_8_diversification\\decollapse_small\\20260311_103934\\hard\\m3_8_b\\20260311_104736\\l_series_checkpoint.pt",
+    "train_steps": "1",
+    "eval_size": "4",
+    "lr": "0.0003",
+    "bottleneck_dim": "64",
+    "num_return_tokens": "3",
+    "max_logic_new_tokens": "48",
+    "layer_index": "12",
+    "relation_vocab": "5",
+    "var_min_id": "5",
+    "answer_weight": "1.0",
+    "margin": "0.2",
+    "return_norm_weight": "0.01",
+    "seed": "42",
+    "baseline_manifest": "docs\\baselines\\m_series_bridge_baseline_manifest.json",
+    "pack_jsonl": "None",
+    "strict_balance": "True",
+    "run_id": "m3_17_contract_smoke_20260328",
+    "output_root": "artifacts\\runs\\telemetry\\raw\\ablation\\hypercube\\m3_17_advisor_reentry_bridge",
+    "local_files_only": "True"
+  },
+  "data_split": {
+    "train_pair_ids": [
+      "size_02",
+      "social_01",
+      "social_02",
+      "speed_01"
+    ],
+    "val_pair_ids": [
+      "policy_01"
+    ],
+    "eval_pair_ids": [
+      "size_01",
+      "role_01"
+    ],
+    "seed2_eval_meta": {
+      "train_pair_ids": [
+        "role_01",
+        "policy_01",
+        "social_02",
+        "social_01"
+      ],
+      "val_pair_ids": [
+        "size_02"
+      ],
+      "eval_pair_ids": [
+        "speed_01",
+        "size_01"
+      ]
+    },
+    "runtime_policy_source": "validation_metrics",
+    "final_metrics_source": "eval_pack"
+  },
+  "ablation_contract": {
+    "family_version": "1.0",
+    "family_name": "m_bridge_ablations",
+    "runner_script": "scripts/run_m3_17_advisor_reentry_bridge.py",
+    "dag": "airflow/dags/lojban_m3_17_advisor_reentry_bridge_dag.py",
+    "implementation_label": "advisor_reentry_bridge",
+    "tensor_flow": {
+      "carrier": "advisor state summary",
+      "exposure": "compressed return-state handoff before continuation",
+      "reentry": "single_or_multi_return_tokens_or_residual_summary",
+      "scoring_surface": "language_model_answer_logits_from_reentry_state"
+    },
+    "lora_positioning": {
+      "base_adapter": "phase5_two_stage_recovery_anchor_adapter",
+      "bridge_coupling_locus": "pre_answer_reentry_state",
+      "bridge_application": "single_or_multi_state_decoder_resumption"
+    },
+    "parameter_axes": {
+      "shared": [
+        "base_model",
+        "adapter",
+        "checkpoint",
+        "train_steps",
+        "eval_size",
+        "lr",
+        "max_logic_new_tokens",
+        "layer_index",
+        "relation_vocab",
+        "var_min_id",
+        "answer_weight",
+        "margin",
+        "seed",
+        "strict_balance"
+      ],
+      "track_specific": [
+        "bottleneck_dim",
+        "num_return_tokens",
+        "return_norm_weight"
+      ]
+    },
+    "loss_profile": {
+      "primary": "answer_path_margin",
+      "regularizers": [
+        "return_norm_penalty"
+      ]
+    },
+    "variant_cells": {
+      "A": {
+        "label": "control no re-entry",
+        "mode": "control_no_reentry",
+        "exposure_policy": "none",
+        "reentry_policy": "none",
+        "scorer": "lm_answer_logits"
+      },
+      "B": {
+        "label": "single return-state bottleneck",
+        "mode": "single_return_state",
+        "exposure_policy": "single_summary_state",
+        "reentry_policy": "single_return_token",
+        "scorer": "lm_answer_logits"
+      },
+      "C": {
+        "label": "three return-state bottleneck",
+        "mode": "three_return_states",
+        "exposure_policy": "short_summary_bundle",
+        "reentry_policy": "multi_return_tokens",
+        "scorer": "lm_answer_logits"
+      },
+      "D": {
+        "label": "direct residual re-encoder",
+        "mode": "direct_residual_reencoder",
+        "exposure_policy": "single_residual_summary",
+        "reentry_policy": "residual_hidden_delta",
+        "scorer": "lm_head_from_residual_hidden"
+      }
+    },
+    "normalized_metric_aliases": {
+      "overall_accuracy": "held_out_accuracy",
+      "validation_accuracy": "validation_accuracy",
+      "seed2_accuracy": "alternate_seed_accuracy",
+      "mean_answer_delta": "gold_vs_foil_margin",
+      "mean_intervention_delta_gold": "intervention_effect_on_gold",
+      "mean_scope": "scope_violation_score",
+      "mean_operator_entropy": "operator_entropy",
+      "mean_top1_op_share": "operator_top1_share",
+      "mean_alignment_similarity": "alignment_similarity",
+      "mean_bias_norm": "state_norm",
+      "mean_return_norm": "state_norm",
+      "mean_bias_gate": "state_gate",
+      "mean_return_gate": "state_gate",
+      "mean_return_attn_entropy": "state_attention_entropy",
+      "mean_candidate_mass": "candidate_focus_mass",
+      "mean_cue_mass": "cue_focus_mass"
+    },
+    "checkpoint_in": "D:/lojbanhypop/runs/l_series/m3_8_diversification/decollapse_small/20260311_103934/hard/m3_8_b/20260311_104736/l_series_checkpoint.pt"
+  },
+  "cells": {
+    "A": {
+      "train": {
+        "answer_path_loss": 0.0,
+        "answer_delta": 0.0,
+        "return_norm": 0.0,
+        "gate": 0.0,
+        "attn_entropy": 0.0
+      },
+      "metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.5,
+        "causal_accuracy": 0.5,
+        "mean_answer_delta": 0.47921061515808105,
+        "mean_active_tokens": 14.5,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 0.9302867658545232,
+        "mean_top1_op_share": 0.4583333333333333,
+        "mean_scope": 0.40100250626566414,
+        "mean_intervention_delta_gold": 0.0,
+        "mean_return_norm": 0.0,
+        "mean_return_gate": 0.0,
+        "mean_return_attn_entropy": 0.0
+      },
+      "validation_metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.5,
+        "mean_answer_delta": 3.5955967903137207,
+        "mean_active_tokens": 11.0,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 0.7797497839345339,
+        "mean_top1_op_share": 0.5,
+        "mean_scope": 0.42105263157894735,
+        "mean_intervention_delta_gold": 0.0,
+        "mean_return_norm": 0.0,
+        "mean_return_gate": 0.0,
+        "mean_return_attn_entropy": 0.0
+      },
+      "variant_spec": {
+        "label": "control no re-entry",
+        "mode": "control_no_reentry",
+        "exposure_policy": "none",
+        "reentry_policy": "none",
+        "scorer": "lm_answer_logits"
+      }
+    },
+    "B": {
+      "train": {
+        "answer_path_loss": 0.0,
+        "answer_delta": 3.3362836837768555,
+        "return_norm": 0.004729173146188259,
+        "gate": 0.11920291930437088,
+        "attn_entropy": 4.969809532165527
+      },
+      "metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.5,
+        "causal_accuracy": 0.5,
+        "mean_answer_delta": -0.10562705993652344,
+        "mean_active_tokens": 14.5,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 0.9302867658545232,
+        "mean_top1_op_share": 0.4583333333333333,
+        "mean_scope": 0.40100250626566414,
+        "mean_intervention_delta_gold": -12.582847356796265,
+        "mean_return_norm": 0.0014678696752525866,
+        "mean_return_gate": 0.11917205899953842,
+        "mean_return_attn_entropy": 4.9697935581207275
+      },
+      "validation_metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.5,
+        "mean_answer_delta": 1.116887092590332,
+        "mean_active_tokens": 11.0,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 0.7797497839345339,
+        "mean_top1_op_share": 0.5,
+        "mean_scope": 0.42105263157894735,
+        "mean_intervention_delta_gold": -11.75615119934082,
+        "mean_return_norm": 0.0014078105450607836,
+        "mean_return_gate": 0.11917205899953842,
+        "mean_return_attn_entropy": 4.9697911739349365
+      },
+      "variant_spec": {
+        "label": "single return-state bottleneck",
+        "mode": "single_return_state",
+        "exposure_policy": "single_summary_state",
+        "reentry_policy": "single_return_token",
+        "scorer": "lm_answer_logits"
+      }
+    },
+    "B_seed2_eval": {
+      "metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.5,
+        "causal_accuracy": 0.5,
+        "mean_answer_delta": 0.14851808547973633,
+        "mean_active_tokens": 17.0,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 1.0878655114689353,
+        "mean_top1_op_share": 0.390625,
+        "mean_scope": 0.3840749414519906,
+        "mean_intervention_delta_gold": -13.546852350234985,
+        "mean_return_norm": 0.0017355257587041706,
+        "mean_return_gate": 0.11917205899953842,
+        "mean_return_attn_entropy": 4.96979546546936
+      },
+      "variant_spec": {
+        "label": "single return-state bottleneck",
+        "mode": "single_return_state",
+        "exposure_policy": "single_summary_state",
+        "reentry_policy": "single_return_token",
+        "scorer": "lm_answer_logits"
+      }
+    },
+    "C": {
+      "train": {
+        "answer_path_loss": 0.0,
+        "answer_delta": 2.115706443786621,
+        "return_norm": 0.005180083215236664,
+        "gate": 0.11920291930437088,
+        "attn_entropy": 4.9698028564453125
+      },
+      "metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.5,
+        "causal_accuracy": 0.5,
+        "mean_answer_delta": 0.033155202865600586,
+        "mean_active_tokens": 14.5,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 0.9302867658545232,
+        "mean_top1_op_share": 0.4583333333333333,
+        "mean_scope": 0.40100250626566414,
+        "mean_intervention_delta_gold": -14.467817783355713,
+        "mean_return_norm": 0.0011425690172472969,
+        "mean_return_gate": 0.11917205899953842,
+        "mean_return_attn_entropy": 4.9697959423065186
+      },
+      "validation_metrics": {
+        "overall_accuracy": 1.0,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 1.0,
+        "mean_answer_delta": 0.31367015838623047,
+        "mean_active_tokens": 11.0,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 0.7797497839345339,
+        "mean_top1_op_share": 0.5,
+        "mean_scope": 0.42105263157894735,
+        "mean_intervention_delta_gold": -12.66401481628418,
+        "mean_return_norm": 0.000709597283275798,
+        "mean_return_gate": 0.11917205899953842,
+        "mean_return_attn_entropy": 4.969793319702148
+      },
+      "variant_spec": {
+        "label": "three return-state bottleneck",
+        "mode": "three_return_states",
+        "exposure_policy": "short_summary_bundle",
+        "reentry_policy": "multi_return_tokens",
+        "scorer": "lm_answer_logits"
+      }
+    },
+    "C_seed2_eval": {
+      "metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.5,
+        "causal_accuracy": 0.5,
+        "mean_answer_delta": 0.1558544635772705,
+        "mean_active_tokens": 17.0,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 1.0878655114689353,
+        "mean_top1_op_share": 0.390625,
+        "mean_scope": 0.3840749414519906,
+        "mean_intervention_delta_gold": -14.804465293884277,
+        "mean_return_norm": 0.0017104498110711575,
+        "mean_return_gate": 0.11917205899953842,
+        "mean_return_attn_entropy": 4.969799637794495
+      },
+      "variant_spec": {
+        "label": "three return-state bottleneck",
+        "mode": "three_return_states",
+        "exposure_policy": "short_summary_bundle",
+        "reentry_policy": "multi_return_tokens",
+        "scorer": "lm_answer_logits"
+      }
+    },
+    "D": {
+      "train": {
+        "answer_path_loss": 0.44137686491012573,
+        "answer_delta": -0.2413768768310547,
+        "return_norm": 0.004523709416389465,
+        "gate": 0.11920291930437088,
+        "attn_entropy": 4.969810962677002
+      },
+      "metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.5,
+        "causal_accuracy": 0.5,
+        "mean_answer_delta": 0.47921039164066315,
+        "mean_active_tokens": 14.5,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 0.9302867658545232,
+        "mean_top1_op_share": 0.4583333333333333,
+        "mean_scope": 0.40100250626566414,
+        "mean_intervention_delta_gold": -1.8289312720298767e-05,
+        "mean_return_norm": 0.006561049143783748,
+        "mean_return_gate": 0.11917205899953842,
+        "mean_return_attn_entropy": 4.969736695289612
+      },
+      "validation_metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.5,
+        "mean_answer_delta": 3.5955748558044434,
+        "mean_active_tokens": 11.0,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 0.7797497839345339,
+        "mean_top1_op_share": 0.5,
+        "mean_scope": 0.42105263157894735,
+        "mean_intervention_delta_gold": 5.125999450683594e-05,
+        "mean_return_norm": 0.0073382980190217495,
+        "mean_return_gate": 0.11917205899953842,
+        "mean_return_attn_entropy": 4.969722270965576
+      },
+      "variant_spec": {
+        "label": "direct residual re-encoder",
+        "mode": "direct_residual_reencoder",
+        "exposure_policy": "single_residual_summary",
+        "reentry_policy": "residual_hidden_delta",
+        "scorer": "lm_head_from_residual_hidden"
+      }
+    },
+    "D_seed2_eval": {
+      "metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.5,
+        "causal_accuracy": 0.5,
+        "mean_answer_delta": 0.15023395419120789,
+        "mean_active_tokens": 17.0,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 1.0878655114689353,
+        "mean_top1_op_share": 0.390625,
+        "mean_scope": 0.3840749414519906,
+        "mean_intervention_delta_gold": -2.625584602355957e-05,
+        "mean_return_norm": 0.005743384710513055,
+        "mean_return_gate": 0.11917205899953842,
+        "mean_return_attn_entropy": 4.969755411148071
+      },
+      "variant_spec": {
+        "label": "direct residual re-encoder",
+        "mode": "direct_residual_reencoder",
+        "exposure_policy": "single_residual_summary",
+        "reentry_policy": "residual_hidden_delta",
+        "scorer": "lm_head_from_residual_hidden"
+      }
+    }
+  },
+  "lineage": {
+    "mode": "train",
+    "checkpoint_in": "D:/lojbanhypop/runs/l_series/m3_8_diversification/decollapse_small/20260311_103934/hard/m3_8_b/20260311_104736/l_series_checkpoint.pt",
+    "checkpoint_out": null,
+    "dataset_profile": "winograd_family_split",
+    "difficulty_tier": "mixed"
+  },
+  "promotion_gates": {
+    "B": {
+      "accuracy_up": false,
+      "no_scope_regression": true,
+      "positive_intervention_delta": false,
+      "seed_stability": true,
+      "promote_to_next": false
+    },
+    "C": {
+      "accuracy_up": false,
+      "no_scope_regression": true,
+      "positive_intervention_delta": false,
+      "seed_stability": true,
+      "promote_to_next": false
+    },
+    "D": {
+      "accuracy_up": false,
+      "no_scope_regression": true,
+      "positive_intervention_delta": false,
+      "seed_stability": true,
+      "promote_to_next": false
+    }
+  }
+}

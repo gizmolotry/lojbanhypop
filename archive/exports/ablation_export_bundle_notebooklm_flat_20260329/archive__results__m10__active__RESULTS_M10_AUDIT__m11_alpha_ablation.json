@@ -1,0 +1,669 @@
+{
+  "trained_alpha": 0.12915518879890442,
+  "num_samples": 20,
+  "runs": [
+    {
+      "mode": "base_only",
+      "alpha": null,
+      "accuracy": 0.55,
+      "pred_counts": {
+        "no": 11,
+        "unknown": 6,
+        "shelf": 1,
+        "suitcase": 1,
+        "yes": 1
+      },
+      "avg_margin_top1_top2": 0.5864556811968213,
+      "avg_entropy": 0.5703209257218986,
+      "avg_delta_over_base": 0.0,
+      "examples": [
+        {
+          "target": "no",
+          "pred": "no",
+          "top3": [
+            {
+              "label": "no",
+              "prob": 0.5813201665878296
+            },
+            {
+              "label": "yes",
+              "prob": 0.41054871678352356
+            },
+            {
+              "label": "box",
+              "prob": 0.0019491598941385746
+            }
+          ],
+          "delta_over_base": 0.0
+        },
+        {
+          "target": "a=knight,b=knight,c=knave",
+          "pred": "unknown",
+          "top3": [
+            {
+              "label": "unknown",
+              "prob": 0.9592059254646301
+            },
+            {
+              "label": "no",
+              "prob": 0.01799335516989231
+            },
+            {
+              "label": "yes",
+              "prob": 0.010241827927529812
+            }
+          ],
+          "delta_over_base": 0.0
+        },
+        {
+          "target": "no",
+          "pred": "no",
+          "top3": [
+            {
+              "label": "no",
+              "prob": 0.6575487852096558
+            },
+            {
+              "label": "yes",
+              "prob": 0.33778873085975647
+            },
+            {
+              "label": "box",
+              "prob": 0.0011013438925147057
+            }
+          ],
+          "delta_over_base": 0.0
+        },
+        {
+          "target": "yes",
+          "pred": "no",
+          "top3": [
+            {
+              "label": "no",
+              "prob": 0.57342529296875
+            },
+            {
+              "label": "yes",
+              "prob": 0.4229275584220886
+            },
+            {
+              "label": "box",
+              "prob": 0.0008183540776371956
+            }
+          ],
+          "delta_over_base": 0.0
+        },
+        {
+          "target": "shelf",
+          "pred": "shelf",
+          "top3": [
+            {
+              "label": "shelf",
+              "prob": 0.6215025782585144
+            },
+            {
+              "label": "box",
+              "prob": 0.20422686636447906
+            },
+            {
+              "label": "unknown",
+              "prob": 0.06038437783718109
+            }
+          ],
+          "delta_over_base": 0.0
+        }
+      ]
+    },
+    {
+      "mode": "alpha_0",
+      "alpha": 0.0,
+      "accuracy": 0.55,
+      "pred_counts": {
+        "no": 11,
+        "unknown": 6,
+        "shelf": 1,
+        "suitcase": 1,
+        "yes": 1
+      },
+      "avg_margin_top1_top2": 0.5549062316204072,
+      "avg_entropy": 0.6392606028355658,
+      "avg_delta_over_base": 0.0,
+      "examples": [
+        {
+          "target": "no",
+          "pred": "no",
+          "top3": [
+            {
+              "label": "no",
+              "prob": 0.6501469612121582
+            },
+            {
+              "label": "yes",
+              "prob": 0.34251514077186584
+            },
+            {
+              "label": "box",
+              "prob": 0.001548955449834466
+            }
+          ],
+          "delta_over_base": 0.0
+        },
+        {
+          "target": "a=knight,b=knight,c=knave",
+          "pred": "unknown",
+          "top3": [
+            {
+              "label": "unknown",
+              "prob": 0.836956799030304
+            },
+            {
+              "label": "no",
+              "prob": 0.09648282080888748
+            },
+            {
+              "label": "yes",
+              "prob": 0.04270429536700249
+            }
+          ],
+          "delta_over_base": 0.0
+        },
+        {
+          "target": "no",
+          "pred": "no",
+          "top3": [
+            {
+              "label": "no",
+              "prob": 0.6109567284584045
+            },
+            {
+              "label": "yes",
+              "prob": 0.38132548332214355
+            },
+            {
+              "label": "unknown",
+              "prob": 0.0018100450979545712
+            }
+          ],
+          "delta_over_base": 0.0
+        },
+        {
+          "target": "yes",
+          "pred": "no",
+          "top3": [
+            {
+              "label": "no",
+              "prob": 0.5391107797622681
+            },
+            {
+              "label": "yes",
+              "prob": 0.45782002806663513
+            },
+            {
+              "label": "box",
+              "prob": 0.0005960421403869987
+            }
+          ],
+          "delta_over_base": 0.0
+        },
+        {
+          "target": "shelf",
+          "pred": "shelf",
+          "top3": [
+            {
+              "label": "shelf",
+              "prob": 0.6912888884544373
+            },
+            {
+              "label": "box",
+              "prob": 0.18856601417064667
+            },
+            {
+              "label": "unknown",
+              "prob": 0.0339781790971756
+            }
+          ],
+          "delta_over_base": 0.0
+        }
+      ]
+    },
+    {
+      "mode": "alpha_1e-4",
+      "alpha": 0.0001,
+      "accuracy": 0.55,
+      "pred_counts": {
+        "no": 13,
+        "shelf": 1,
+        "unknown": 4,
+        "suitcase": 1,
+        "yes": 1
+      },
+      "avg_margin_top1_top2": 0.5171160952100763,
+      "avg_entropy": 0.6525657481513918,
+      "avg_delta_over_base": 0.24221234114119844,
+      "examples": [
+        {
+          "target": "no",
+          "pred": "no",
+          "top3": [
+            {
+              "label": "no",
+              "prob": 0.694623589515686
+            },
+            {
+              "label": "yes",
+              "prob": 0.3019452393054962
+            },
+            {
+              "label": "suitcase",
+              "prob": 0.0006382128340192139
+            }
+          ],
+          "delta_over_base": 0.2743343338049729
+        },
+        {
+          "target": "a=knight,b=knight,c=knave",
+          "pred": "no",
+          "top3": [
+            {
+              "label": "no",
+              "prob": 0.662375271320343
+            },
+            {
+              "label": "yes",
+              "prob": 0.1782572716474533
+            },
+            {
+              "label": "unknown",
+              "prob": 0.1406516432762146
+            }
+          ],
+          "delta_over_base": 0.2809847614800506
+        },
+        {
+          "target": "no",
+          "pred": "no",
+          "top3": [
+            {
+              "label": "no",
+              "prob": 0.7213343977928162
+            },
+            {
+              "label": "yes",
+              "prob": 0.2764340043067932
+            },
+            {
+              "label": "suitcase",
+              "prob": 0.0004405462241265923
+            }
+          ],
+          "delta_over_base": 0.2824623781055523
+        },
+        {
+          "target": "yes",
+          "pred": "no",
+          "top3": [
+            {
+              "label": "no",
+              "prob": 0.6055222153663635
+            },
+            {
+              "label": "yes",
+              "prob": 0.39268794655799866
+            },
+            {
+              "label": "drawer",
+              "prob": 0.0003869770443998277
+            }
+          ],
+          "delta_over_base": 0.2844441979982813
+        },
+        {
+          "target": "shelf",
+          "pred": "shelf",
+          "top3": [
+            {
+              "label": "shelf",
+              "prob": 0.8604768514633179
+            },
+            {
+              "label": "box",
+              "prob": 0.08039969950914383
+            },
+            {
+              "label": "suitcase",
+              "prob": 0.022282734513282776
+            }
+          ],
+          "delta_over_base": 0.29695958738290984
+        }
+      ]
+    },
+    {
+      "mode": "alpha_1e-3",
+      "alpha": 0.001,
+      "accuracy": 0.1,
+      "pred_counts": {
+        "suitcase": 17,
+        "yes": 2,
+        "no": 1
+      },
+      "avg_margin_top1_top2": 0.10733297988772392,
+      "avg_entropy": 2.2191387474536897,
+      "avg_delta_over_base": 2.419775496438054,
+      "examples": [
+        {
+          "target": "no",
+          "pred": "suitcase",
+          "top3": [
+            {
+              "label": "suitcase",
+              "prob": 0.21436363458633423
+            },
+            {
+              "label": "no",
+              "prob": 0.13751111924648285
+            },
+            {
+              "label": "yes",
+              "prob": 0.10115405917167664
+            }
+          ],
+          "delta_over_base": 2.760262009563454
+        },
+        {
+          "target": "a=knight,b=knight,c=knave",
+          "pred": "suitcase",
+          "top3": [
+            {
+              "label": "suitcase",
+              "prob": 0.19050480425357819
+            },
+            {
+              "label": "drawer",
+              "prob": 0.08906774967908859
+            },
+            {
+              "label": "no",
+              "prob": 0.08764837682247162
+            }
+          ],
+          "delta_over_base": 2.8108721307614983
+        },
+        {
+          "target": "no",
+          "pred": "suitcase",
+          "top3": [
+            {
+              "label": "suitcase",
+              "prob": 0.20165039598941803
+            },
+            {
+              "label": "no",
+              "prob": 0.15381714701652527
+            },
+            {
+              "label": "yes",
+              "prob": 0.11367488652467728
+            }
+          ],
+          "delta_over_base": 2.8639335249276234
+        },
+        {
+          "target": "yes",
+          "pred": "suitcase",
+          "top3": [
+            {
+              "label": "suitcase",
+              "prob": 0.19471287727355957
+            },
+            {
+              "label": "no",
+              "prob": 0.16597965359687805
+            },
+            {
+              "label": "yes",
+              "prob": 0.12915630638599396
+            }
+          ],
+          "delta_over_base": 2.855980860105171
+        },
+        {
+          "target": "shelf",
+          "pred": "suitcase",
+          "top3": [
+            {
+              "label": "suitcase",
+              "prob": 0.23480737209320068
+            },
+            {
+              "label": "shelf",
+              "prob": 0.13812386989593506
+            },
+            {
+              "label": "drawer",
+              "prob": 0.09207092225551605
+            }
+          ],
+          "delta_over_base": 2.898743106538474
+        }
+      ]
+    },
+    {
+      "mode": "alpha_1e-2",
+      "alpha": 0.01,
+      "accuracy": 0.15,
+      "pred_counts": {
+        "suitcase": 18,
+        "no": 2
+      },
+      "avg_margin_top1_top2": 0.14494313783943652,
+      "avg_entropy": 2.328828439116478,
+      "avg_delta_over_base": 24.308261795535156,
+      "examples": [
+        {
+          "target": "no",
+          "pred": "suitcase",
+          "top3": [
+            {
+              "label": "suitcase",
+              "prob": 0.1952972114086151
+            },
+            {
+              "label": "shelf",
+              "prob": 0.09096796810626984
+            },
+            {
+              "label": "trophy",
+              "prob": 0.08881926536560059
+            }
+          ],
+          "delta_over_base": 27.972203161554788
+        },
+        {
+          "target": "a=knight,b=knight,c=knave",
+          "pred": "suitcase",
+          "top3": [
+            {
+              "label": "suitcase",
+              "prob": 0.19281508028507233
+            },
+            {
+              "label": "shelf",
+              "prob": 0.09032224863767624
+            },
+            {
+              "label": "trophy",
+              "prob": 0.08924643695354462
+            }
+          ],
+          "delta_over_base": 27.546437983872387
+        },
+        {
+          "target": "no",
+          "pred": "suitcase",
+          "top3": [
+            {
+              "label": "suitcase",
+              "prob": 0.19494032859802246
+            },
+            {
+              "label": "shelf",
+              "prob": 0.09066704660654068
+            },
+            {
+              "label": "trophy",
+              "prob": 0.08890344947576523
+            }
+          ],
+          "delta_over_base": 28.288121309056283
+        },
+        {
+          "target": "yes",
+          "pred": "suitcase",
+          "top3": [
+            {
+              "label": "suitcase",
+              "prob": 0.19516567885875702
+            },
+            {
+              "label": "shelf",
+              "prob": 0.09055133163928986
+            },
+            {
+              "label": "trophy",
+              "prob": 0.08894471079111099
+            }
+          ],
+          "delta_over_base": 29.324300451215436
+        },
+        {
+          "target": "shelf",
+          "pred": "suitcase",
+          "top3": [
+            {
+              "label": "suitcase",
+              "prob": 0.19598686695098877
+            },
+            {
+              "label": "shelf",
+              "prob": 0.09274262934923172
+            },
+            {
+              "label": "trophy",
+              "prob": 0.0904163122177124
+            }
+          ],
+          "delta_over_base": 30.461779254285126
+        }
+      ]
+    },
+    {
+      "mode": "alpha_trained",
+      "alpha": 0.12915518879890442,
+      "accuracy": 0.05,
+      "pred_counts": {
+        "suitcase": 20
+      },
+      "avg_margin_top1_top2": 0.10366844460368156,
+      "avg_entropy": 2.5519782304763794,
+      "avg_delta_over_base": 314.2829124146324,
+      "examples": [
+        {
+          "target": "no",
+          "pred": "suitcase",
+          "top3": [
+            {
+              "label": "suitcase",
+              "prob": 0.19266363978385925
+            },
+            {
+              "label": "shelf",
+              "prob": 0.09070710837841034
+            },
+            {
+              "label": "trophy",
+              "prob": 0.09010019898414612
+            }
+          ],
+          "delta_over_base": 356.30231303508555
+        },
+        {
+          "target": "a=knight,b=knight,c=knave",
+          "pred": "suitcase",
+          "top3": [
+            {
+              "label": "suitcase",
+              "prob": 0.19247585535049438
+            },
+            {
+              "label": "shelf",
+              "prob": 0.09067174792289734
+            },
+            {
+              "label": "trophy",
+              "prob": 0.09011942148208618
+            }
+          ],
+          "delta_over_base": 380.5631105713395
+        },
+        {
+          "target": "no",
+          "pred": "suitcase",
+          "top3": [
+            {
+              "label": "suitcase",
+              "prob": 0.1926342397928238
+            },
+            {
+              "label": "shelf",
+              "prob": 0.09068673104047775
+            },
+            {
+              "label": "trophy",
+              "prob": 0.09008802473545074
+            }
+          ],
+          "delta_over_base": 363.28133519179664
+        },
+        {
+          "target": "yes",
+          "pred": "suitcase",
+          "top3": [
+            {
+              "label": "suitcase",
+              "prob": 0.1926136463880539
+            },
+            {
+              "label": "shelf",
+              "prob": 0.09070782363414764
+            },
+            {
+              "label": "trophy",
+              "prob": 0.0900820791721344
+            }
+          ],
+          "delta_over_base": 360.5740395917058
+        },
+        {
+          "target": "shelf",
+          "pred": "suitcase",
+          "top3": [
+            {
+              "label": "suitcase",
+              "prob": 0.19268222153186798
+            },
+            {
+              "label": "shelf",
+              "prob": 0.0908658504486084
+            },
+            {
+              "label": "trophy",
+              "prob": 0.09020140022039413
+            }
+          ],
+          "delta_over_base": 383.30221565438757
+        }
+      ]
+    }
+  ]
+}

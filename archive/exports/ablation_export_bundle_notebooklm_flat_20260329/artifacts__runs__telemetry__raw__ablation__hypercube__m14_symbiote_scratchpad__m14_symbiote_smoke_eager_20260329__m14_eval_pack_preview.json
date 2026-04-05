@@ -1,0 +1,34 @@
+[
+  {
+    "prompt": "The lawyer questioned the witness after they contradicted prior testimony.",
+    "answer": "witness",
+    "target_text": "witness",
+    "family": "lawyer_witness",
+    "bucket": "noun_phrase",
+    "polarity": "candidate_1",
+    "pair_id": "m3_19_pair_00003",
+    "variant_id": "v1",
+    "candidates": [
+      "lawyer",
+      "witness"
+    ],
+    "gold_index": 1,
+    "target_kind": "answer_span"
+  },
+  {
+    "prompt": "The manager monitored the intern, so they learned the process.",
+    "answer": "intern",
+    "target_text": "intern, because they learned the process",
+    "family": "manager_intern",
+    "bucket": "explanatory",
+    "polarity": "candidate_1",
+    "pair_id": "m3_19_pair_00029",
+    "variant_id": "v1",
+    "candidates": [
+      "manager",
+      "intern"
+    ],
+    "gold_index": 1,
+    "target_kind": "rich_resumption"
+  }
+]

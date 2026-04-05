@@ -1,0 +1,37 @@
+{
+  "generated_utc": "2026-03-11T01:09:58.820338+00:00",
+  "report_type": "m3_9_primitive_probe",
+  "series": {
+    "series_contract_version": "1.0",
+    "series_id": "M",
+    "track": "M3.9",
+    "script": "scripts/run_m3_9_primitive_probe.py"
+  },
+  "track": "M3.9",
+  "lineage": {
+    "mode": "eval_only",
+    "checkpoint_in": "runs/l_series/m3_8_diversification/refactor_clean/20260310_230139/hard/m3_8_c/20260310_232919/l_series_checkpoint.pt",
+    "checkpoint_out": null,
+    "dataset_profile": "diverse_v2",
+    "difficulty_tier": "hard"
+  },
+  "inputs": {
+    "base_model": "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+    "adapter": "runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+    "checkpoint": "runs/l_series/m3_8_diversification/refactor_clean/20260310_230139/hard/m3_8_c/20260310_232919/l_series_checkpoint.pt",
+    "baseline_manifest": "docs/baselines/m_series_baseline_manifest.json",
+    "baseline_id": "M_BASE_20260310_REFAC",
+    "dataset_size": 120,
+    "dataset_profile": "diverse_v2",
+    "difficulty_tier": "hard",
+    "candidate_topk": 12,
+    "causal_samples": 12
+  },
+  "summary": {
+    "active_token_count": 19,
+    "primitive_candidate_count": 12,
+    "mean_baseline_ce_loss": 0.7849796439210573,
+    "mean_baseline_scope": 0.3676648284429053,
+    "mean_baseline_arity": 0.0
+  }
+}

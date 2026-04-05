@@ -1,0 +1,24 @@
+{
+  "project": "Lojban Hypothesis",
+  "series": "M11 Hyper-Modulated",
+  "artifact_id": "m11_discriminative_v1",
+  "timestamp_verified": "2026-03-27T19:49:04Z",
+  "metrics": {
+    "mean_accuracy": 0.85916,
+    "macro_f1": 0.6287,
+    "n_samples": 1200,
+    "seeds": [42, 7, 123]
+  },
+  "lock_configuration": {
+    "base_model": "RESULTS_M9_SYNCED/synced_model",
+    "forge_ckpt": "RESULTS_M9_PHASE3/m11_s1_final.pt",
+    "adapter_ckpt": "RESULTS_M10_DEEP_TRANSLATOR/m11_native_adapter.pt",
+    "head_ckpt": "RESULTS_M10_ENGLISH_HEAD/m11_native_head.pt",
+    "bridge_type": "SwiGLU-Expanded Cross-Attention",
+    "stochastic_noise": 0.05
+  },
+  "provenance": {
+    "branch": "m9_contrastive_nli_engine",
+    "script": "scripts/m10/final_audit.py"
+  }
+}

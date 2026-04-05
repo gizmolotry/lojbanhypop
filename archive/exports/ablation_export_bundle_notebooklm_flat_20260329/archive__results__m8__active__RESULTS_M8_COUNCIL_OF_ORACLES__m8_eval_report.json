@@ -1,0 +1,249 @@
+{
+  "timestamp": "2026-03-16T20:29:14.565666+00:00",
+  "accuracy": 0.55,
+  "correct_count": 11,
+  "total_evaluated": 20,
+  "num_oracles": 4,
+  "details": [
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "target_answer": "no",
+      "predicted": "No\nExplanation: If all regions are healthy, then, there exists a serviceX depends onY, then there is",
+      "correct": true,
+      "council_divergence": [
+        1223,
+        1223,
+        1223,
+        1223
+      ]
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "target_answer": "no",
+      "predicted": "No\nExplanation: If all regions are healthy, then, there exists a serviceX depends onY, then there is",
+      "correct": true,
+      "council_divergence": [
+        1223,
+        1223,
+        1223,
+        1223
+      ]
+    },
+    {
+      "prompt": "The engineer sent the analyst the report since they needed feedback before launch. Who needed feedback?",
+      "target_answer": "engineer",
+      "predicted": "Analyst\nExplanation: The engineer sent the report to the analyst\nAnswer:Answer:Answer:Answer:Answer\nAnswer",
+      "correct": true,
+      "council_divergence": [
+        713,
+        713,
+        713,
+        713
+      ]
+    },
+    {
+      "prompt": "The engineer sent the analyst the report because they needed feedback before launch. Who needed feedback?",
+      "target_answer": "engineer",
+      "predicted": "Analyst\nExplanation: The engineer sent the report to the analyst\nAnswer:Answer:Answer:Answer:Answer\nAnswer",
+      "correct": true,
+      "council_divergence": [
+        713,
+        713,
+        713,
+        713
+      ]
+    },
+    {
+      "prompt": "Bob puts the red ball in the box. Eve moves it to the cabinet while Bob is outside. Alice takes the blue ball. Where does Bob think the red ball is?",
+      "target_answer": "box",
+      "predicted": "box\nExplanation: Eve moves the red ball\nAnswer:Bob puts the red ball\nHuman beings the human",
+      "correct": true,
+      "council_divergence": [
+        1223,
+        1223,
+        1223,
+        1223
+      ]
+    },
+    {
+      "prompt": "Test happens before design. Design happens before document. Does test happen before document?",
+      "target_answer": "yes",
+      "predicted": "No\nExplanation: Test happens before document happens before\nAnswer:Answer:Answer:Answer:Answer:Answer:Answer",
+      "correct": false,
+      "council_divergence": [
+        1223,
+        1223,
+        1223,
+        1223
+      ]
+    },
+    {
+      "prompt": "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. Action P handles personal data and has no waiver. Is P permitted without approval?",
+      "target_answer": "no",
+      "predicted": "No\nExplanation: The action handles personal data. The waiver is required. The waiver is not required. TheAnswer:",
+      "correct": true,
+      "council_divergence": [
+        713,
+        713,
+        713,
+        713
+      ]
+    },
+    {
+      "prompt": "Morgan did never forward the memo to Casey because they were confidential. What was confidential?",
+      "target_answer": "memo",
+      "predicted": "Confidential\nExplanation: The answer is referring to the confidential\nAnswer:Answer:Answer:Answer:Answer\nAnswer:",
+      "correct": false,
+      "council_divergence": [
+        1721,
+        1721,
+        1721,
+        1721
+      ]
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "target_answer": "demonstrators",
+      "predicted": "demonstrators\nExplanation: The demonstrators advocate revolution\nAnswer:Answer:Answer:Answer:Answer:Answer:Answer\nAnswer",
+      "correct": true,
+      "council_divergence": [
+        1276,
+        1276,
+        1276,
+        1276
+      ]
+    },
+    {
+      "prompt": "If A > B and B > C, with A=4, B=6, C=7, is A > C?",
+      "target_answer": "no",
+      "predicted": "Yes\nExplanation: Since A > B >C >A >C\nAnswer:Answer:Answer:Answer\nAnswer",
+      "correct": false,
+      "council_divergence": [
+        1223,
+        1223,
+        1223,
+        1223
+      ]
+    },
+    {
+      "prompt": "Morgan did never forward the memo to Casey because they were confidential. What was confidential?",
+      "target_answer": "memo",
+      "predicted": "Confidential\nExplanation: The answer is referring to the confidential\nAnswer:Answer:Answer:Answer:Answer\nAnswer:",
+      "correct": false,
+      "council_divergence": [
+        1721,
+        1721,
+        1721,
+        1721
+      ]
+    },
+    {
+      "prompt": "If A > B and B > C, with A=2, B=8, C=7, is A > C?",
+      "target_answer": "no",
+      "predicted": "Yes\nExplanation: Since A > B >C >A >C\nAnswer:Answer:Answer:Answer\nAnswer",
+      "correct": false,
+      "council_divergence": [
+        1223,
+        1223,
+        1223,
+        1223
+      ]
+    },
+    {
+      "prompt": "The red box is inside the blue box. The blue box is inside the amber chest. Is the red box inside the amber chest?",
+      "target_answer": "yes",
+      "predicted": "No answer: NoAnswer:Answer:Answer:Answer:Answer:Answer:Answer:Answer:Answer:Answer:",
+      "correct": false,
+      "council_divergence": [
+        1223,
+        1223,
+        1223,
+        1223
+      ]
+    },
+    {
+      "prompt": "The lawyer questioned the witness after they reviewed the affidavit. Who reviewed the affidavit?",
+      "target_answer": "lawyer",
+      "predicted": "witness\nExplanation: The lawyer questioned the witness\nAnswer:Answer:Answer:Answer\nAnswer:AnswerAnswer:Answer",
+      "correct": true,
+      "council_divergence": [
+        1276,
+        1721,
+        1721,
+        1276
+      ]
+    },
+    {
+      "prompt": "Alex criticized Riley because they missed the delivery date. Who missed the delivery date?",
+      "target_answer": "Riley",
+      "predicted": "Riley\nExplanation: Alex is the one who missed the delivery date.\nAnswer:Alex missed the delivery date. Answer:",
+      "correct": true,
+      "council_divergence": [
+        713,
+        713,
+        713,
+        713
+      ]
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit since they feared violence. Who feared violence?",
+      "target_answer": "councilmen",
+      "predicted": "The city councilmen\nAnswer: The cityAnswer:cityAnswer:cityAnswer:city\nAnswer:CityAnswer:",
+      "correct": true,
+      "council_divergence": [
+        1276,
+        1721,
+        1276,
+        1721
+      ]
+    },
+    {
+      "prompt": "Morgan did not forward the memo to Casey since they were confidential. What was confidential?",
+      "target_answer": "memo",
+      "predicted": "Confidential\nExplanation: This question is asking about the purpose of the question.\nAnswer: Confidentiality is the purpose ofthe",
+      "correct": false,
+      "council_divergence": [
+        1721,
+        1721,
+        1721,
+        1721
+      ]
+    },
+    {
+      "prompt": "Sam tried to call Jordan on the phone, but they had no signal. Who had no signal?",
+      "target_answer": "Sam",
+      "predicted": "Jordan\nExplanation: The answer is the signal. The signal is the signal. The answer is the signal. Answer:",
+      "correct": false,
+      "council_divergence": [
+        1223,
+        1223,
+        1223,
+        1223
+      ]
+    },
+    {
+      "prompt": "Some analyst approved every report. Every report was approved by some analyst. Are these equivalent?",
+      "target_answer": "no",
+      "predicted": "No\nExplanation: The first line is the line\nAnswer:Answer:Answer:Answer:Answer:Answer\nAnswer",
+      "correct": true,
+      "council_divergence": [
+        1223,
+        1223,
+        1223,
+        1223
+      ]
+    },
+    {
+      "prompt": "No tester missed a build. Every tester did not miss a build. Are these equivalent?",
+      "target_answer": "yes",
+      "predicted": "No tester missed\nAnswer: No testerNo testerNoAnswer:NoAnswer:NoAnswer:NoAnswer:No",
+      "correct": false,
+      "council_divergence": [
+        1223,
+        1223,
+        1223,
+        1223
+      ]
+    }
+  ]
+}

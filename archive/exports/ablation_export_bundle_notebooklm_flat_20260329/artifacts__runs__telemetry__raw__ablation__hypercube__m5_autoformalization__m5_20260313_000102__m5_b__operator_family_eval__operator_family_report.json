@@ -1,0 +1,24 @@
+{
+  "generated_utc": "2026-03-13T00:47:17.106699+00:00",
+  "report_type": "operator_family_report",
+  "active_op_count": 2,
+  "top1_op_share": 0.9490740740740741,
+  "paraphrase_operator_consistency": 0.9490740740740741,
+  "paraphrase_consistency_by_family": {
+    "equality": 0.9722222222222222,
+    "comparison": 0.8055555555555556,
+    "containment": 1.0,
+    "causal": 1.0,
+    "transfer": 0.9166666666666666,
+    "connectivity": 1.0
+  },
+  "per_op_swap_invariant_rate": {
+    "1": 1.0,
+    "15": 1.0
+  },
+  "per_op_swap_foil_change_rate": {
+    "1": 0.007462686567164179,
+    "15": 0.3
+  },
+  "predicate_family_score": 0.7736910146238505
+}

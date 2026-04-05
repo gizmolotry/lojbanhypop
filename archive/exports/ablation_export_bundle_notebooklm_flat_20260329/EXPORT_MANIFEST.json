@@ -1,0 +1,1995 @@
+{
+  "generated_utc": "2026-03-30T02:40:30.453081+00:00",
+  "bundle_root": "archive/exports/ablation_export_bundle_notebooklm_flat_20260329",
+  "file_count": 496,
+  "included_files": [
+    {
+      "source": "airflow/dags/lojban_ablation_history_backfill_dag.py",
+      "flat_name": "airflow__dags__lojban_ablation_history_backfill_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_ablation_hypercube_report_dag.py",
+      "flat_name": "airflow__dags__lojban_ablation_hypercube_report_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_ablation_matrix_dag.py",
+      "flat_name": "airflow__dags__lojban_ablation_matrix_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_airflow_utils.py",
+      "flat_name": "airflow__dags__lojban_airflow_utils.py"
+    },
+    {
+      "source": "airflow/dags/lojban_experiment_dag.py",
+      "flat_name": "airflow__dags__lojban_experiment_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_j_series_dag.py",
+      "flat_name": "airflow__dags__lojban_j_series_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_l_series_dag.py",
+      "flat_name": "airflow__dags__lojban_l_series_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m11_discriminative_suite_dag.py",
+      "flat_name": "airflow__dags__lojban_m11_discriminative_suite_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m14_symbiote_scratchpad_dag.py",
+      "flat_name": "airflow__dags__lojban_m14_symbiote_scratchpad_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_10_ood_accuracy_probe_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_10_ood_accuracy_probe_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_11_winograd_failure_anatomy_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_11_winograd_failure_anatomy_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_12_geometric_return_stream_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_12_geometric_return_stream_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_14_structural_alignment_bridge_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_14_structural_alignment_bridge_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_15_rotary_coconut_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_15_rotary_coconut_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_15_rotary_coconut_seven_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_15_rotary_coconut_seven_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_15b_relation_local_rotary_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_15b_relation_local_rotary_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_15c_family_conditioned_bridge_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_15c_family_conditioned_bridge_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_15d_answer_path_forcing_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_15d_answer_path_forcing_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_16_continuous_graph_bias_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_16_continuous_graph_bias_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_17_advisor_reentry_bridge_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_17_advisor_reentry_bridge_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_18_decoder_reentry_resume_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_18_decoder_reentry_resume_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_19_d_mainline_grid_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_19_d_mainline_grid_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_5_symmetry_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_5_symmetry_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_6_symmetry_oracle_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_6_symmetry_oracle_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_7_shadow_alignment_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_7_shadow_alignment_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_8_operator_diversification_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_8_operator_diversification_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_9_primitive_probe_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_9_primitive_probe_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m3_plus_dag.py",
+      "flat_name": "airflow__dags__lojban_m3_plus_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m4_0_semantic_probe_dag.py",
+      "flat_name": "airflow__dags__lojban_m4_0_semantic_probe_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m4_2_predicate_grounding_dag.py",
+      "flat_name": "airflow__dags__lojban_m4_2_predicate_grounding_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m4_series_dag.py",
+      "flat_name": "airflow__dags__lojban_m4_series_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m5_2_autoregressive_chain_dag.py",
+      "flat_name": "airflow__dags__lojban_m5_2_autoregressive_chain_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m5_3_masked_pair_chain_dag.py",
+      "flat_name": "airflow__dags__lojban_m5_3_masked_pair_chain_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m5_autoformalization_dag.py",
+      "flat_name": "airflow__dags__lojban_m5_autoformalization_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m5_padded_nary_dag.py",
+      "flat_name": "airflow__dags__lojban_m5_padded_nary_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_m_bridge_ablation_test_suite_dag.py",
+      "flat_name": "airflow__dags__lojban_m_bridge_ablation_test_suite_dag.py"
+    },
+    {
+      "source": "airflow/dags/lojban_phase_ablation_dag.py",
+      "flat_name": "airflow__dags__lojban_phase_ablation_dag.py"
+    },
+    {
+      "source": "airflow/dags/m6/m6_neuro_symbolic_dag.py",
+      "flat_name": "airflow__dags__m6__m6_neuro_symbolic_dag.py"
+    },
+    {
+      "source": "archive/reports/relevant/REPORTS_RELEVANT/ablation_hypercube_report.md",
+      "flat_name": "archive__reports__relevant__REPORTS_RELEVANT__ablation_hypercube_report.md"
+    },
+    {
+      "source": "archive/reports/relevant/REPORTS_RELEVANT/l6_ablation_manifest.md",
+      "flat_name": "archive__reports__relevant__REPORTS_RELEVANT__l6_ablation_manifest.md"
+    },
+    {
+      "source": "archive/reports/relevant/REPORTS_RELEVANT/m3_plus_report.md",
+      "flat_name": "archive__reports__relevant__REPORTS_RELEVANT__m3_plus_report.md"
+    },
+    {
+      "source": "archive/reports/relevant/REPORTS_RELEVANT/token_glossary.md",
+      "flat_name": "archive__reports__relevant__REPORTS_RELEVANT__token_glossary.md"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_AUDIT/m10_audit_report.json",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_AUDIT__m10_audit_report.json"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_AUDIT/m11_alpha_ablation.json",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_AUDIT__m11_alpha_ablation.json"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_AUDIT/m11_tensor_probe.json",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_AUDIT__m11_tensor_probe.json"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_DEEP_TRANSLATOR/m10f_aligned_model/README.md",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_DEEP_TRANSLATOR__m10f_aligned_model__README.md"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_DEEP_TRANSLATOR/m10f_aligned_model/adapter_config.json",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_DEEP_TRANSLATOR__m10f_aligned_model__adapter_config.json"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_DEEP_TRANSLATOR/m10f_aligned_model_step_100/README.md",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_DEEP_TRANSLATOR__m10f_aligned_model_step_100__README.md"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_DEEP_TRANSLATOR/m10f_aligned_model_step_100/adapter_config.json",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_DEEP_TRANSLATOR__m10f_aligned_model_step_100__adapter_config.json"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_DEEP_TRANSLATOR/m10f_aligned_model_step_200/README.md",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_DEEP_TRANSLATOR__m10f_aligned_model_step_200__README.md"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_DEEP_TRANSLATOR/m10f_aligned_model_step_200/adapter_config.json",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_DEEP_TRANSLATOR__m10f_aligned_model_step_200__adapter_config.json"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_DEEP_TRANSLATOR/m10f_aligned_model_step_300/README.md",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_DEEP_TRANSLATOR__m10f_aligned_model_step_300__README.md"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_DEEP_TRANSLATOR/m10f_aligned_model_step_300/adapter_config.json",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_DEEP_TRANSLATOR__m10f_aligned_model_step_300__adapter_config.json"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_DEEP_TRANSLATOR/m10f_aligned_model_step_400/README.md",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_DEEP_TRANSLATOR__m10f_aligned_model_step_400__README.md"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_DEEP_TRANSLATOR/m10f_aligned_model_step_400/adapter_config.json",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_DEEP_TRANSLATOR__m10f_aligned_model_step_400__adapter_config.json"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_DEEP_TRANSLATOR/m10f_aligned_model_step_500/README.md",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_DEEP_TRANSLATOR__m10f_aligned_model_step_500__README.md"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_DEEP_TRANSLATOR/m10f_aligned_model_step_500/adapter_config.json",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_DEEP_TRANSLATOR__m10f_aligned_model_step_500__adapter_config.json"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_FINAL_AUDIT/final_audit_report.json",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_FINAL_AUDIT__final_audit_report.json"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_FINAL_AUDIT/final_bridge_audit.json",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_FINAL_AUDIT__final_bridge_audit.json"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_FINAL_AUDIT/final_floor_lock.json",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_FINAL_AUDIT__final_floor_lock.json"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_FINAL_AUDIT/final_publication_metrics.json",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_FINAL_AUDIT__final_publication_metrics.json"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_FINAL_AUDIT/m11_discriminative_manifest.json",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_FINAL_AUDIT__m11_discriminative_manifest.json"
+    },
+    {
+      "source": "archive/results/m10/active/RESULTS_M10_PROBE/manifold_terrain_20260328/terrain_summary.json",
+      "flat_name": "archive__results__m10__active__RESULTS_M10_PROBE__manifold_terrain_20260328__terrain_summary.json"
+    },
+    {
+      "source": "archive/results/m6/20260314/RESULTS_M6_SEVERED_BRIDGE_20260314/m6_eval_report.json",
+      "flat_name": "archive__results__m6__20260314__RESULTS_M6_SEVERED_BRIDGE_20260314__m6_eval_report.json"
+    },
+    {
+      "source": "archive/results/m7/active/RESULTS_M7_INTERLEAVED_COPROCESSOR/m7_eval_report.json",
+      "flat_name": "archive__results__m7__active__RESULTS_M7_INTERLEAVED_COPROCESSOR__m7_eval_report.json"
+    },
+    {
+      "source": "archive/results/m8/active/RESULTS_M8_COUNCIL_OF_ORACLES/m8_eval_report.json",
+      "flat_name": "archive__results__m8__active__RESULTS_M8_COUNCIL_OF_ORACLES__m8_eval_report.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_AUDIT/m9_audit_report.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_AUDIT__m9_audit_report.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_CONTROL/vanilla_lora/adapter_config.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_CONTROL__vanilla_lora__adapter_config.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_CONTROL/vanilla_lora/added_tokens.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_CONTROL__vanilla_lora__added_tokens.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_CONTROL/vanilla_lora/special_tokens_map.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_CONTROL__vanilla_lora__special_tokens_map.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_CONTROL/vanilla_lora/tokenizer.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_CONTROL__vanilla_lora__tokenizer.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_CONTROL/vanilla_lora/tokenizer_config.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_CONTROL__vanilla_lora__tokenizer_config.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_CONTROL/vanilla_lora/vocab.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_CONTROL__vanilla_lora__vocab.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_HYPERCUBE/duel_report.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_HYPERCUBE__duel_report.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/full_body_dark_transplant/adapter_config.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__full_body_dark_transplant__adapter_config.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/full_body_dark_transplant/added_tokens.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__full_body_dark_transplant__added_tokens.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/full_body_dark_transplant/backbone/added_tokens.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__full_body_dark_transplant__backbone__added_tokens.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/full_body_dark_transplant/backbone/config.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__full_body_dark_transplant__backbone__config.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/full_body_dark_transplant/backbone/generation_config.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__full_body_dark_transplant__backbone__generation_config.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/full_body_dark_transplant/backbone/special_tokens_map.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__full_body_dark_transplant__backbone__special_tokens_map.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/full_body_dark_transplant/backbone/tokenizer.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__full_body_dark_transplant__backbone__tokenizer.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/full_body_dark_transplant/backbone/tokenizer_config.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__full_body_dark_transplant__backbone__tokenizer_config.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/full_body_dark_transplant/backbone/vocab.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__full_body_dark_transplant__backbone__vocab.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/full_body_dark_transplant/special_tokens_map.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__full_body_dark_transplant__special_tokens_map.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/full_body_dark_transplant/tokenizer.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__full_body_dark_transplant__tokenizer.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/full_body_dark_transplant/tokenizer_config.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__full_body_dark_transplant__tokenizer_config.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/full_body_dark_transplant/vocab.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__full_body_dark_transplant__vocab.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/synced_model/adapter_config.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__synced_model__adapter_config.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/synced_model/added_tokens.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__synced_model__added_tokens.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/synced_model/special_tokens_map.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__synced_model__special_tokens_map.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/synced_model/tokenizer.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__synced_model__tokenizer.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/synced_model/tokenizer_config.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__synced_model__tokenizer_config.json"
+    },
+    {
+      "source": "archive/results/m9/active/RESULTS_M9_SYNCED/synced_model/vocab.json",
+      "flat_name": "archive__results__m9__active__RESULTS_M9_SYNCED__synced_model__vocab.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/ablation_history_backfill_smoke_20260329/ablation_history_ledger.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__ablation_history_backfill__ablation_history_backfill_smoke_20260329__ablation_history_ledger.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/ablation_history_backfill_smoke_20260329/ablation_history_manifest.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__ablation_history_backfill__ablation_history_backfill_smoke_20260329__ablation_history_manifest.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/ablation_history_backfill_smoke_20260329/ablation_history_rows_all.csv",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__ablation_history_backfill__ablation_history_backfill_smoke_20260329__ablation_history_rows_all.csv"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/ablation_history_backfill_smoke_20260329/ablation_history_rows_artifact_only.csv",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__ablation_history_backfill__ablation_history_backfill_smoke_20260329__ablation_history_rows_artifact_only.csv"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/ablation_history_backfill_smoke_20260329/ablation_history_rows_runnable_only.csv",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__ablation_history_backfill__ablation_history_backfill_smoke_20260329__ablation_history_rows_runnable_only.csv"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_map/ablation_program_map_20260329/ablation_program_manifest.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__ablation_program_map__ablation_program_map_20260329__ablation_program_manifest.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_A_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_A_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_A_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_A_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_B_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_B_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_B_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_B_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_B_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_B_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_C_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_C_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_C_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_C_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_C_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_C_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_D_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_D_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_D_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_D_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_D_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_D_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_E_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_E_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_E_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_E_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_E_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_E_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_eval_pack_preview.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_eval_pack_preview.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_rich_resumption_pack.jsonl",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_rich_resumption_pack.jsonl"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_rich_resumption_pack.summary.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m14_symbiote_scratchpad__m14_symbiote_smoke_eager_20260329__m14_rich_resumption_pack.summary.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_10_ood_accuracy/refactor_clean_small/m3_10_20260310_refactor_small/m3_10_bucket_predictions.jsonl",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_10_ood_accuracy__refactor_clean_small__m3_10_20260310_refactor_small__m3_10_bucket_predictions.jsonl"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_10_ood_accuracy/refactor_clean_small/m3_10_20260310_refactor_small/m3_10_ood_accuracy_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_10_ood_accuracy__refactor_clean_small__m3_10_20260310_refactor_small__m3_10_ood_accuracy_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_10_ood_accuracy/refactor_clean_small/m3_10_20260310_refactor_small/m3_10_ood_accuracy_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_10_ood_accuracy__refactor_clean_small__m3_10_20260310_refactor_small__m3_10_ood_accuracy_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_11_winograd_failure_anatomy/refactor_clean_v2/m3_11_20260310_refactor_v2/m3_11_winograd_controlled_variants.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_11_winograd_failure_anatomy__refactor_clean_v2__m3_11_20260310_refactor_v2__m3_11_winograd_controlled_variants.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_11_winograd_failure_anatomy/refactor_clean_v2/m3_11_20260310_refactor_v2/m3_11_winograd_failure_anatomy_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_11_winograd_failure_anatomy__refactor_clean_v2__m3_11_20260310_refactor_v2__m3_11_winograd_failure_anatomy_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_11_winograd_failure_anatomy/refactor_clean_v2/m3_11_20260310_refactor_v2/m3_11_winograd_failure_anatomy_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_11_winograd_failure_anatomy__refactor_clean_v2__m3_11_20260310_refactor_v2__m3_11_winograd_failure_anatomy_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_11_winograd_failure_anatomy/refactor_clean_v2/m3_11_20260310_refactor_v2/m3_11_winograd_slice.jsonl",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_11_winograd_failure_anatomy__refactor_clean_v2__m3_11_20260310_refactor_v2__m3_11_winograd_slice.jsonl"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_17_advisor_reentry_bridge/m3_17_contract_smoke_20260328/m3_17_A_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_17_advisor_reentry_bridge__m3_17_contract_smoke_20260328__m3_17_A_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_17_advisor_reentry_bridge/m3_17_contract_smoke_20260328/m3_17_B_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_17_advisor_reentry_bridge__m3_17_contract_smoke_20260328__m3_17_B_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_17_advisor_reentry_bridge/m3_17_contract_smoke_20260328/m3_17_B_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_17_advisor_reentry_bridge__m3_17_contract_smoke_20260328__m3_17_B_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_17_advisor_reentry_bridge/m3_17_contract_smoke_20260328/m3_17_C_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_17_advisor_reentry_bridge__m3_17_contract_smoke_20260328__m3_17_C_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_17_advisor_reentry_bridge/m3_17_contract_smoke_20260328/m3_17_C_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_17_advisor_reentry_bridge__m3_17_contract_smoke_20260328__m3_17_C_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_17_advisor_reentry_bridge/m3_17_contract_smoke_20260328/m3_17_D_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_17_advisor_reentry_bridge__m3_17_contract_smoke_20260328__m3_17_D_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_17_advisor_reentry_bridge/m3_17_contract_smoke_20260328/m3_17_D_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_17_advisor_reentry_bridge__m3_17_contract_smoke_20260328__m3_17_D_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_17_advisor_reentry_bridge/m3_17_contract_smoke_20260328/m3_17_eval_pack_preview.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_17_advisor_reentry_bridge__m3_17_contract_smoke_20260328__m3_17_eval_pack_preview.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_17_advisor_reentry_bridge/m3_17_contract_smoke_20260328/m3_17_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_17_advisor_reentry_bridge__m3_17_contract_smoke_20260328__m3_17_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_17_advisor_reentry_bridge/m3_17_contract_smoke_20260328/m3_17_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_17_advisor_reentry_bridge__m3_17_contract_smoke_20260328__m3_17_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_A_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_A_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_A_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_A_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_B_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_B_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_B_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_B_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_B_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_B_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_C_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_C_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_C_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_C_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_C_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_C_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_D_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_D_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_D_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_D_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_D_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_D_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_E_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_E_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_E_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_E_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_E_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_E_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_eval_pack_preview.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_eval_pack_preview.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_resume_smoke_small_20260328/m3_18_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_18_decoder_reentry_resume__m3_18_resume_smoke_small_20260328__m3_18_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_A_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_A_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_A_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_A_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_B_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_B_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_B_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_B_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_B_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_B_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_C_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_C_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_C_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_C_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_C_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_C_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_D_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_D_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_D_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_D_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_D_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_D_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_E_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_E_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_E_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_E_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_E_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_E_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_eval_pack_preview.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_eval_pack_preview.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D0/m3_19_grid_smoke_v2_20260329_d0/m3_18_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D0__m3_19_grid_smoke_v2_20260329_d0__m3_18_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_A_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_A_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_A_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_A_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_B_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_B_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_B_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_B_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_B_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_B_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_C_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_C_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_C_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_C_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_C_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_C_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_D_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_D_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_D_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_D_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_D_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_D_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_E_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_E_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_E_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_E_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_E_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_E_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_eval_pack_preview.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_eval_pack_preview.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D1/m3_19_grid_smoke_v2_20260329_d1/m3_18_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D1__m3_19_grid_smoke_v2_20260329_d1__m3_18_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_A_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_A_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_A_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_A_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_B_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_B_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_B_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_B_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_B_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_B_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_C_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_C_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_C_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_C_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_C_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_C_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_D_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_D_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_D_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_D_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_D_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_D_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_E_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_E_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_E_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_E_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_E_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_E_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_eval_pack_preview.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_eval_pack_preview.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D2/m3_19_grid_smoke_v2_20260329_d2/m3_18_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D2__m3_19_grid_smoke_v2_20260329_d2__m3_18_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_A_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_A_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_A_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_A_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_B_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_B_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_B_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_B_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_B_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_B_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_C_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_C_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_C_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_C_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_C_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_C_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_D_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_D_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_D_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_D_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_D_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_D_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_E_continuation_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_E_continuation_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_E_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_E_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_E_seed2_eval.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_E_seed2_eval.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_eval_pack_preview.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_eval_pack_preview.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/D3/m3_19_grid_smoke_v2_20260329_d3/m3_18_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__D3__m3_19_grid_smoke_v2_20260329_d3__m3_18_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/m3_19_grid_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__m3_19_grid_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/m3_19_grid_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__m3_19_grid_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/m3_19_resumption_pack.jsonl",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__m3_19_resumption_pack.jsonl"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/m3_19_resumption_pack.summary.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_19_d_mainline_grid__m3_19_grid_smoke_v2_20260329__m3_19_resumption_pack.summary.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_9_primitive_probe/refactor_clean_v2/m3_9_20260310_refactor_v2/grammatical_cluster_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_9_primitive_probe__refactor_clean_v2__m3_9_20260310_refactor_v2__grammatical_cluster_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_9_primitive_probe/refactor_clean_v2/m3_9_20260310_refactor_v2/m3_9_primitive_probe_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_9_primitive_probe__refactor_clean_v2__m3_9_20260310_refactor_v2__m3_9_primitive_probe_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_9_primitive_probe/refactor_clean_v2/m3_9_20260310_refactor_v2/m3_9_primitive_probe_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_9_primitive_probe__refactor_clean_v2__m3_9_20260310_refactor_v2__m3_9_primitive_probe_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_9_primitive_probe/refactor_clean_v2/m3_9_20260310_refactor_v2/primitive_candidate_list.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_9_primitive_probe__refactor_clean_v2__m3_9_20260310_refactor_v2__primitive_candidate_list.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_9_primitive_probe/refactor_clean_v2/m3_9_20260310_refactor_v2/primitive_token_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_9_primitive_probe__refactor_clean_v2__m3_9_20260310_refactor_v2__primitive_token_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_9_primitive_probe/refactor_clean_v2/m3_9_20260310_refactor_v2/token_position_entropy.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_9_primitive_probe__refactor_clean_v2__m3_9_20260310_refactor_v2__token_position_entropy.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_9_primitive_probe/refactor_clean_v2/m3_9_20260310_refactor_v2/token_role_matrix.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_9_primitive_probe__refactor_clean_v2__m3_9_20260310_refactor_v2__token_role_matrix.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_plus/manual_20260305/m3_plus_20260305_172403/m3_plus_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_plus__manual_20260305__m3_plus_20260305_172403__m3_plus_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_plus/manual_20260305/m3_plus_20260305_172403/m3_plus_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m3_plus__manual_20260305__m3_plus_20260305_172403__m3_plus_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4/manual_20260305/manual_20260305_181349/m3_plus_20260305_183211/m3_plus_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4__manual_20260305__manual_20260305_181349__m3_plus_20260305_183211__m3_plus_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4/manual_20260305/manual_20260305_181349/m3_plus_20260305_183211/m3_plus_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4__manual_20260305__manual_20260305_181349__m3_plus_20260305_183211__m3_plus_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4/manual_20260305/manual_20260305_181349/m3_plus_20260305_183211/m4_operator_family_eval/lexical_leakage_probe.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4__manual_20260305__manual_20260305_181349__m3_plus_20260305_183211__m4_operator_family_eval__lexical_leakage_probe.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4/manual_20260305/manual_20260305_181349/m3_plus_20260305_183211/m4_operator_family_eval/operator_cluster_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4__manual_20260305__manual_20260305_181349__m3_plus_20260305_183211__m4_operator_family_eval__operator_cluster_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4/manual_20260305/manual_20260305_181349/m3_plus_20260305_183211/m4_operator_family_eval/operator_domain_matrix.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4__manual_20260305__manual_20260305_181349__m3_plus_20260305_183211__m4_operator_family_eval__operator_domain_matrix.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4/manual_20260305/manual_20260305_181349/m3_plus_20260305_183211/m4_operator_family_eval/operator_family_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4__manual_20260305__manual_20260305_181349__m3_plus_20260305_183211__m4_operator_family_eval__operator_family_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4/manual_20260305/manual_20260305_181349/m3_plus_20260305_183211/m4_operator_family_eval_20260306/lexical_leakage_probe.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4__manual_20260305__manual_20260305_181349__m3_plus_20260305_183211__m4_operator_family_eval_20260306__lexical_leakage_probe.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4/manual_20260305/manual_20260305_181349/m3_plus_20260305_183211/m4_operator_family_eval_20260306/operator_cluster_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4__manual_20260305__manual_20260305_181349__m3_plus_20260305_183211__m4_operator_family_eval_20260306__operator_cluster_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4/manual_20260305/manual_20260305_181349/m3_plus_20260305_183211/m4_operator_family_eval_20260306/operator_domain_matrix.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4__manual_20260305__manual_20260305_181349__m3_plus_20260305_183211__m4_operator_family_eval_20260306__operator_domain_matrix.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4/manual_20260305/manual_20260305_181349/m3_plus_20260305_183211/m4_operator_family_eval_20260306/operator_family_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4__manual_20260305__manual_20260305_181349__m3_plus_20260305_183211__m4_operator_family_eval_20260306__operator_family_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4/manual_20260305/manual_20260305_181349/m3_plus_20260305_183211/m4_operator_family_eval_20260306_rerun/lexical_leakage_probe.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4__manual_20260305__manual_20260305_181349__m3_plus_20260305_183211__m4_operator_family_eval_20260306_rerun__lexical_leakage_probe.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4/manual_20260305/manual_20260305_181349/m3_plus_20260305_183211/m4_operator_family_eval_20260306_rerun/operator_cluster_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4__manual_20260305__manual_20260305_181349__m3_plus_20260305_183211__m4_operator_family_eval_20260306_rerun__operator_cluster_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4/manual_20260305/manual_20260305_181349/m3_plus_20260305_183211/m4_operator_family_eval_20260306_rerun/operator_domain_matrix.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4__manual_20260305__manual_20260305_181349__m3_plus_20260305_183211__m4_operator_family_eval_20260306_rerun__operator_domain_matrix.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4/manual_20260305/manual_20260305_181349/m3_plus_20260305_183211/m4_operator_family_eval_20260306_rerun/operator_family_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4__manual_20260305__manual_20260305_181349__m3_plus_20260305_183211__m4_operator_family_eval_20260306_rerun__operator_family_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4/manual_20260305/manual_20260305_181349/m4_series_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4__manual_20260305__manual_20260305_181349__m4_series_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4_0_semantic_probe/bridge_base_v1/m4_0_20260312_bridge_base_v1/m4_0_semantic_probe_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4_0_semantic_probe__bridge_base_v1__m4_0_20260312_bridge_base_v1__m4_0_semantic_probe_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4_0_semantic_probe/bridge_base_v1/m4_0_20260312_bridge_base_v1/m4_0_semantic_probe_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4_0_semantic_probe__bridge_base_v1__m4_0_20260312_bridge_base_v1__m4_0_semantic_probe_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4_0_semantic_probe/bridge_base_v1/m4_0_20260312_bridge_base_v1/m4_0_semantic_probe_rows_bag.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4_0_semantic_probe__bridge_base_v1__m4_0_20260312_bridge_base_v1__m4_0_semantic_probe_rows_bag.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4_0_semantic_probe/bridge_base_v1/m4_0_20260312_bridge_base_v1/m4_0_semantic_probe_rows_positional.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4_0_semantic_probe__bridge_base_v1__m4_0_20260312_bridge_base_v1__m4_0_semantic_probe_rows_positional.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4_2_predicate_grounding/bridge_base_v1/m4_2_20260312_bridge_base_v1/m4_2_predicate_grounding_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4_2_predicate_grounding__bridge_base_v1__m4_2_20260312_bridge_base_v1__m4_2_predicate_grounding_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m4_2_predicate_grounding/bridge_base_v1/m4_2_20260312_bridge_base_v1/m4_2_predicate_grounding_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m4_2_predicate_grounding__bridge_base_v1__m4_2_20260312_bridge_base_v1__m4_2_predicate_grounding_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_2_autoregressive_chain/m5_2_20260313_133612/m5_2_autoregressive_chain_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_2_autoregressive_chain__m5_2_20260313_133612__m5_2_autoregressive_chain_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_2_autoregressive_chain/m5_2_20260313_133612/m5_2_autoregressive_chain_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_2_autoregressive_chain__m5_2_20260313_133612__m5_2_autoregressive_chain_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_3_masked_pair_chain/m5_3_20260313_155835/m5_3_masked_pair_chain_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_3_masked_pair_chain__m5_3_20260313_155835__m5_3_masked_pair_chain_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_3_masked_pair_chain/m5_3_20260313_155835/m5_3_masked_pair_chain_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_3_masked_pair_chain__m5_3_20260313_155835__m5_3_masked_pair_chain_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260313_000102/m5_a/operator_family_eval/lexical_leakage_probe.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_autoformalization__m5_20260313_000102__m5_a__operator_family_eval__lexical_leakage_probe.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260313_000102/m5_a/operator_family_eval/operator_cluster_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_autoformalization__m5_20260313_000102__m5_a__operator_family_eval__operator_cluster_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260313_000102/m5_a/operator_family_eval/operator_domain_matrix.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_autoformalization__m5_20260313_000102__m5_a__operator_family_eval__operator_domain_matrix.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260313_000102/m5_a/operator_family_eval/operator_family_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_autoformalization__m5_20260313_000102__m5_a__operator_family_eval__operator_family_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260313_000102/m5_autoformalization_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_autoformalization__m5_20260313_000102__m5_autoformalization_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260313_000102/m5_autoformalization_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_autoformalization__m5_20260313_000102__m5_autoformalization_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260313_000102/m5_b/operator_family_eval/lexical_leakage_probe.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_autoformalization__m5_20260313_000102__m5_b__operator_family_eval__lexical_leakage_probe.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260313_000102/m5_b/operator_family_eval/operator_cluster_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_autoformalization__m5_20260313_000102__m5_b__operator_family_eval__operator_cluster_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260313_000102/m5_b/operator_family_eval/operator_domain_matrix.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_autoformalization__m5_20260313_000102__m5_b__operator_family_eval__operator_domain_matrix.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260313_000102/m5_b/operator_family_eval/operator_family_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_autoformalization__m5_20260313_000102__m5_b__operator_family_eval__operator_family_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260313_000102/m5_c/operator_family_eval/lexical_leakage_probe.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_autoformalization__m5_20260313_000102__m5_c__operator_family_eval__lexical_leakage_probe.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260313_000102/m5_c/operator_family_eval/operator_cluster_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_autoformalization__m5_20260313_000102__m5_c__operator_family_eval__operator_cluster_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260313_000102/m5_c/operator_family_eval/operator_domain_matrix.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_autoformalization__m5_20260313_000102__m5_c__operator_family_eval__operator_domain_matrix.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260313_000102/m5_c/operator_family_eval/operator_family_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_autoformalization__m5_20260313_000102__m5_c__operator_family_eval__operator_family_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_padded_nary/m5_padded_nary_20260313_015132/m5_padded_nary_family_report.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_padded_nary__m5_padded_nary_20260313_015132__m5_padded_nary_family_report.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m5_padded_nary/m5_padded_nary_20260313_015132/m5_padded_nary_family_report.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m5_padded_nary__m5_padded_nary_20260313_015132__m5_padded_nary_family_report.md"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m_bridge_ablation_test_suite/m_bridge_suite_m_excavation_refresh_20260329/m_bridge_ablation_cell_metrics.csv",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m_bridge_ablation_test_suite__m_bridge_suite_m_excavation_refresh_20260329__m_bridge_ablation_cell_metrics.csv"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m_bridge_ablation_test_suite/m_bridge_suite_m_excavation_refresh_20260329/m_bridge_ablation_suite_manifest.json",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m_bridge_ablation_test_suite__m_bridge_suite_m_excavation_refresh_20260329__m_bridge_ablation_suite_manifest.json"
+    },
+    {
+      "source": "artifacts/runs/telemetry/raw/ablation/hypercube/m_bridge_ablation_test_suite/m_bridge_suite_m_excavation_refresh_20260329/m_bridge_ablation_suite_summary.md",
+      "flat_name": "artifacts__runs__telemetry__raw__ablation__hypercube__m_bridge_ablation_test_suite__m_bridge_suite_m_excavation_refresh_20260329__m_bridge_ablation_suite_summary.md"
+    },
+    {
+      "source": "configs/experiment_taxonomy.json",
+      "flat_name": "configs__experiment_taxonomy.json"
+    },
+    {
+      "source": "configs/operator_arity_registry_nary.json",
+      "flat_name": "configs__operator_arity_registry_nary.json"
+    },
+    {
+      "source": "docs/ABLATION_HISTORY_FULL.md",
+      "flat_name": "docs__ABLATION_HISTORY_FULL.md"
+    },
+    {
+      "source": "docs/ABLATION_PROGRAM_MAP.md",
+      "flat_name": "docs__ABLATION_PROGRAM_MAP.md"
+    },
+    {
+      "source": "docs/AIRFLOW_ORCHESTRATION.md",
+      "flat_name": "docs__AIRFLOW_ORCHESTRATION.md"
+    },
+    {
+      "source": "docs/CAUSAL_PROBE_PROTOCOL.md",
+      "flat_name": "docs__CAUSAL_PROBE_PROTOCOL.md"
+    },
+    {
+      "source": "docs/Core Concept_ Self-Optimizing Language Evolution.txt",
+      "flat_name": "docs__Core__Concept___Self-Optimizing__Language__Evolution.txt"
+    },
+    {
+      "source": "docs/DECISIONS.md",
+      "flat_name": "docs__DECISIONS.md"
+    },
+    {
+      "source": "docs/EXPERIMENT_TAXONOMY.md",
+      "flat_name": "docs__EXPERIMENT_TAXONOMY.md"
+    },
+    {
+      "source": "docs/H5_ABLATION_EXTENSION.md",
+      "flat_name": "docs__H5_ABLATION_EXTENSION.md"
+    },
+    {
+      "source": "docs/LINEAGE_POLICY.md",
+      "flat_name": "docs__LINEAGE_POLICY.md"
+    },
+    {
+      "source": "docs/L_SERIES.md",
+      "flat_name": "docs__L_SERIES.md"
+    },
+    {
+      "source": "docs/M3_11_WINOGRAD_BENCHMARK_SOURCES.md",
+      "flat_name": "docs__M3_11_WINOGRAD_BENCHMARK_SOURCES.md"
+    },
+    {
+      "source": "docs/M3_18_REENTRY_REBOOT.md",
+      "flat_name": "docs__M3_18_REENTRY_REBOOT.md"
+    },
+    {
+      "source": "docs/M_SERIES_TRAIN_EVAL_LINEAGE.md",
+      "flat_name": "docs__M_SERIES_TRAIN_EVAL_LINEAGE.md"
+    },
+    {
+      "source": "docs/REPO_LAYOUT.md",
+      "flat_name": "docs__REPO_LAYOUT.md"
+    },
+    {
+      "source": "docs/SERIES_CHARTER.md",
+      "flat_name": "docs__SERIES_CHARTER.md"
+    },
+    {
+      "source": "docs/archive/ARCHIVE_INDEX.md",
+      "flat_name": "docs__archive__ARCHIVE_INDEX.md"
+    },
+    {
+      "source": "docs/artifact_contract_v1.schema.json",
+      "flat_name": "docs__artifact_contract_v1.schema.json"
+    },
+    {
+      "source": "docs/baselines/m1_series_baseline_manifest.json",
+      "flat_name": "docs__baselines__m1_series_baseline_manifest.json"
+    },
+    {
+      "source": "docs/baselines/m2_series_baseline_manifest.json",
+      "flat_name": "docs__baselines__m2_series_baseline_manifest.json"
+    },
+    {
+      "source": "docs/baselines/m_series_baseline_manifest.json",
+      "flat_name": "docs__baselines__m_series_baseline_manifest.json"
+    },
+    {
+      "source": "docs/baselines/m_series_bridge_baseline_manifest.json",
+      "flat_name": "docs__baselines__m_series_bridge_baseline_manifest.json"
+    },
+    {
+      "source": "docs/baselines/test_m_series_baseline_2ac9fff52fa446809e4a5d7caa841567.json",
+      "flat_name": "docs__baselines__test_m_series_baseline_2ac9fff52fa446809e4a5d7caa841567.json"
+    },
+    {
+      "source": "docs/baselines/test_m_series_baseline_32e723f06d98480088a8d0aefd037107.json",
+      "flat_name": "docs__baselines__test_m_series_baseline_32e723f06d98480088a8d0aefd037107.json"
+    },
+    {
+      "source": "docs/history/data/GRANULAR_DATAPACK.json",
+      "flat_name": "docs__history__data__GRANULAR_DATAPACK.json"
+    },
+    {
+      "source": "docs/history/data/H5_DATA_MANIFEST.json",
+      "flat_name": "docs__history__data__H5_DATA_MANIFEST.json"
+    },
+    {
+      "source": "docs/history/notes/Core Concept_ Self-Optimizing Language Evolution.txt",
+      "flat_name": "docs__history__notes__Core__Concept___Self-Optimizing__Language__Evolution.txt"
+    },
+    {
+      "source": "docs/history/reports/AUDIT_REPORT.md",
+      "flat_name": "docs__history__reports__AUDIT_REPORT.md"
+    },
+    {
+      "source": "docs/history/reports/FINAL_THESIS_REPORT.md",
+      "flat_name": "docs__history__reports__FINAL_THESIS_REPORT.md"
+    },
+    {
+      "source": "docs/history/reports/H5_ABLATION_REPORT.md",
+      "flat_name": "docs__history__reports__H5_ABLATION_REPORT.md"
+    },
+    {
+      "source": "docs/history/reports/H5_SUMMARY.md",
+      "flat_name": "docs__history__reports__H5_SUMMARY.md"
+    },
+    {
+      "source": "docs/history/reports/NUMERICAL_AUDIT.md",
+      "flat_name": "docs__history__reports__NUMERICAL_AUDIT.md"
+    },
+    {
+      "source": "docs/history/reports/PROJECT_EVOLUTION_AND_CURRENT_STATE.md",
+      "flat_name": "docs__history__reports__PROJECT_EVOLUTION_AND_CURRENT_STATE.md"
+    },
+    {
+      "source": "docs/history/reports/ROOT_RECENT_M_DISCOVERIES_20260311.md",
+      "flat_name": "docs__history__reports__ROOT_RECENT_M_DISCOVERIES_20260311.md"
+    },
+    {
+      "source": "docs/history/reports/TECHNICAL_APPENDIX.md",
+      "flat_name": "docs__history__reports__TECHNICAL_APPENDIX.md"
+    },
+    {
+      "source": "docs/ledger/CANONICAL_LEDGER.json",
+      "flat_name": "docs__ledger__CANONICAL_LEDGER.json"
+    },
+    {
+      "source": "docs/ledger/CANONICAL_LEDGER.md",
+      "flat_name": "docs__ledger__CANONICAL_LEDGER.md"
+    },
+    {
+      "source": "docs/specs/M6_EXHAUSTIVE_SPEC.md",
+      "flat_name": "docs__specs__M6_EXHAUSTIVE_SPEC.md"
+    },
+    {
+      "source": "docs/specs/M7_EXHAUSTIVE_SPEC.md",
+      "flat_name": "docs__specs__M7_EXHAUSTIVE_SPEC.md"
+    },
+    {
+      "source": "docs/specs/M8_EXHAUSTIVE_SPEC.md",
+      "flat_name": "docs__specs__M8_EXHAUSTIVE_SPEC.md"
+    },
+    {
+      "source": "docs/specs/M9_EXHAUSTIVE_SPEC.md",
+      "flat_name": "docs__specs__M9_EXHAUSTIVE_SPEC.md"
+    },
+    {
+      "source": "docs/variable_token_distribution_1995.example.json",
+      "flat_name": "docs__variable_token_distribution_1995.example.json"
+    },
+    {
+      "source": "scripts/build_ablation_export_bundle.py",
+      "flat_name": "scripts__build_ablation_export_bundle.py"
+    },
+    {
+      "source": "scripts/build_ablation_program_map.py",
+      "flat_name": "scripts__build_ablation_program_map.py"
+    },
+    {
+      "source": "scripts/build_airflow_ablation_hypercube_report.py",
+      "flat_name": "scripts__build_airflow_ablation_hypercube_report.py"
+    },
+    {
+      "source": "scripts/build_english_cot_control_dataset.py",
+      "flat_name": "scripts__build_english_cot_control_dataset.py"
+    },
+    {
+      "source": "scripts/build_full_coconut_report.py",
+      "flat_name": "scripts__build_full_coconut_report.py"
+    },
+    {
+      "source": "scripts/build_gguf_pack.py",
+      "flat_name": "scripts__build_gguf_pack.py"
+    },
+    {
+      "source": "scripts/build_lora_dataset.py",
+      "flat_name": "scripts__build_lora_dataset.py"
+    },
+    {
+      "source": "scripts/build_m3_15_winograd_pack.py",
+      "flat_name": "scripts__build_m3_15_winograd_pack.py"
+    },
+    {
+      "source": "scripts/build_m3_19_resumption_pack.py",
+      "flat_name": "scripts__build_m3_19_resumption_pack.py"
+    },
+    {
+      "source": "scripts/build_mixed_curriculum_dataset.py",
+      "flat_name": "scripts__build_mixed_curriculum_dataset.py"
+    },
+    {
+      "source": "scripts/build_science_metrics_pack.py",
+      "flat_name": "scripts__build_science_metrics_pack.py"
+    },
+    {
+      "source": "scripts/build_synthetic_lora_dataset.py",
+      "flat_name": "scripts__build_synthetic_lora_dataset.py"
+    },
+    {
+      "source": "scripts/coconut_handoff.py",
+      "flat_name": "scripts__coconut_handoff.py"
+    },
+    {
+      "source": "scripts/eval_h5_dynamic_pointer_refactor.py",
+      "flat_name": "scripts__eval_h5_dynamic_pointer_refactor.py"
+    },
+    {
+      "source": "scripts/eval_h5_ood_stress.py",
+      "flat_name": "scripts__eval_h5_ood_stress.py"
+    },
+    {
+      "source": "scripts/eval_hf_adapter.py",
+      "flat_name": "scripts__eval_hf_adapter.py"
+    },
+    {
+      "source": "scripts/eval_hf_dual_mode_gate.py",
+      "flat_name": "scripts__eval_hf_dual_mode_gate.py"
+    },
+    {
+      "source": "scripts/eval_hf_dual_mode_handoff.py",
+      "flat_name": "scripts__eval_hf_dual_mode_handoff.py"
+    },
+    {
+      "source": "scripts/eval_j_1.py",
+      "flat_name": "scripts__eval_j_1.py"
+    },
+    {
+      "source": "scripts/eval_j_2.py",
+      "flat_name": "scripts__eval_j_2.py"
+    },
+    {
+      "source": "scripts/eval_j_3.py",
+      "flat_name": "scripts__eval_j_3.py"
+    },
+    {
+      "source": "scripts/eval_j_4.py",
+      "flat_name": "scripts__eval_j_4.py"
+    },
+    {
+      "source": "scripts/eval_j_5.py",
+      "flat_name": "scripts__eval_j_5.py"
+    },
+    {
+      "source": "scripts/eval_m6_logic_engine.py",
+      "flat_name": "scripts__eval_m6_logic_engine.py"
+    },
+    {
+      "source": "scripts/eval_m7_interleaved.py",
+      "flat_name": "scripts__eval_m7_interleaved.py"
+    },
+    {
+      "source": "scripts/eval_m8_council.py",
+      "flat_name": "scripts__eval_m8_council.py"
+    },
+    {
+      "source": "scripts/eval_with_lms.py",
+      "flat_name": "scripts__eval_with_lms.py"
+    },
+    {
+      "source": "scripts/h_series_h5_metrics.py",
+      "flat_name": "scripts__h_series_h5_metrics.py"
+    },
+    {
+      "source": "scripts/latent_handoff_eval.py",
+      "flat_name": "scripts__latent_handoff_eval.py"
+    },
+    {
+      "source": "scripts/m10/analyze_m11_manifold.py",
+      "flat_name": "scripts__m10__analyze_m11_manifold.py"
+    },
+    {
+      "source": "scripts/m10/causal_manifold_tests.py",
+      "flat_name": "scripts__m10__causal_manifold_tests.py"
+    },
+    {
+      "source": "scripts/m10/diagnostic_shift_test.py",
+      "flat_name": "scripts__m10__diagnostic_shift_test.py"
+    },
+    {
+      "source": "scripts/m10/final_audit.py",
+      "flat_name": "scripts__m10__final_audit.py"
+    },
+    {
+      "source": "scripts/m10/m10a_recoverability_test.py",
+      "flat_name": "scripts__m10__m10a_recoverability_test.py"
+    },
+    {
+      "source": "scripts/m10/m11_kill_tests.py",
+      "flat_name": "scripts__m10__m11_kill_tests.py"
+    },
+    {
+      "source": "scripts/m10/train_m10b_translator.py",
+      "flat_name": "scripts__m10__train_m10b_translator.py"
+    },
+    {
+      "source": "scripts/m10/train_m10c_head.py",
+      "flat_name": "scripts__m10__train_m10c_head.py"
+    },
+    {
+      "source": "scripts/m10/train_m10e_deep_translator.py",
+      "flat_name": "scripts__m10__train_m10e_deep_translator.py"
+    },
+    {
+      "source": "scripts/m10/train_m10f_joint_alignment.py",
+      "flat_name": "scripts__m10__train_m10f_joint_alignment.py"
+    },
+    {
+      "source": "scripts/m10/train_m11_discriminative_bridge.py",
+      "flat_name": "scripts__m10__train_m11_discriminative_bridge.py"
+    },
+    {
+      "source": "scripts/m9/check_vocab_indices.py",
+      "flat_name": "scripts__m9__check_vocab_indices.py"
+    },
+    {
+      "source": "scripts/m9/eval_m9.py",
+      "flat_name": "scripts__m9__eval_m9.py"
+    },
+    {
+      "source": "scripts/m9/extract_anchors.py",
+      "flat_name": "scripts__m9__extract_anchors.py"
+    },
+    {
+      "source": "scripts/m9/extract_cmavo.py",
+      "flat_name": "scripts__m9__extract_cmavo.py"
+    },
+    {
+      "source": "scripts/m9/extract_roles.py",
+      "flat_name": "scripts__m9__extract_roles.py"
+    },
+    {
+      "source": "scripts/m9/forge.py",
+      "flat_name": "scripts__m9__forge.py"
+    },
+    {
+      "source": "scripts/m9/h5_autopsy_harness.py",
+      "flat_name": "scripts__m9__h5_autopsy_harness.py"
+    },
+    {
+      "source": "scripts/m9/harvester.py",
+      "flat_name": "scripts__m9__harvester.py"
+    },
+    {
+      "source": "scripts/m9/health_check_codebook.py",
+      "flat_name": "scripts__m9__health_check_codebook.py"
+    },
+    {
+      "source": "scripts/m9/hypercube_duel.py",
+      "flat_name": "scripts__m9__hypercube_duel.py"
+    },
+    {
+      "source": "scripts/m9/phase1_syntax_sft.py",
+      "flat_name": "scripts__m9__phase1_syntax_sft.py"
+    },
+    {
+      "source": "scripts/m9/phase2_curriculum.py",
+      "flat_name": "scripts__m9__phase2_curriculum.py"
+    },
+    {
+      "source": "scripts/m9/phase2_forge.py",
+      "flat_name": "scripts__m9__phase2_forge.py"
+    },
+    {
+      "source": "scripts/m9/phase3_forge.py",
+      "flat_name": "scripts__m9__phase3_forge.py"
+    },
+    {
+      "source": "scripts/m9/reconstruct_h5_adapter.py",
+      "flat_name": "scripts__m9__reconstruct_h5_adapter.py"
+    },
+    {
+      "source": "scripts/m9/sync_tokenizer.py",
+      "flat_name": "scripts__m9__sync_tokenizer.py"
+    },
+    {
+      "source": "scripts/m9/train_mov_gate.py",
+      "flat_name": "scripts__m9__train_mov_gate.py"
+    },
+    {
+      "source": "scripts/m9/train_vanilla_lora.py",
+      "flat_name": "scripts__m9__train_vanilla_lora.py"
+    },
+    {
+      "source": "scripts/m9/transplant_h5_brain.py",
+      "flat_name": "scripts__m9__transplant_h5_brain.py"
+    },
+    {
+      "source": "scripts/m9/vanilla_utils.py",
+      "flat_name": "scripts__m9__vanilla_utils.py"
+    },
+    {
+      "source": "scripts/mine_compositional_anchors.py",
+      "flat_name": "scripts__mine_compositional_anchors.py"
+    },
+    {
+      "source": "scripts/multi_stage_cot.py",
+      "flat_name": "scripts__multi_stage_cot.py"
+    },
+    {
+      "source": "scripts/pipeline_eval_manifold.py",
+      "flat_name": "scripts__pipeline_eval_manifold.py"
+    },
+    {
+      "source": "scripts/pipeline_train_grounded_reasoner.py",
+      "flat_name": "scripts__pipeline_train_grounded_reasoner.py"
+    },
+    {
+      "source": "scripts/probe_m7_semantics.py",
+      "flat_name": "scripts__probe_m7_semantics.py"
+    },
+    {
+      "source": "scripts/quick_baseline_test.py",
+      "flat_name": "scripts__quick_baseline_test.py"
+    },
+    {
+      "source": "scripts/reality_check.py",
+      "flat_name": "scripts__reality_check.py"
+    },
+    {
+      "source": "scripts/reconstruct_lora_dataset.py",
+      "flat_name": "scripts__reconstruct_lora_dataset.py"
+    },
+    {
+      "source": "scripts/render_ablation_history_catalog.py",
+      "flat_name": "scripts__render_ablation_history_catalog.py"
+    },
+    {
+      "source": "scripts/run_ablation_history_backfill.py",
+      "flat_name": "scripts__run_ablation_history_backfill.py"
+    },
+    {
+      "source": "scripts/run_causal_probe_matrix.py",
+      "flat_name": "scripts__run_causal_probe_matrix.py"
+    },
+    {
+      "source": "scripts/run_coconut_ablation_matrix.py",
+      "flat_name": "scripts__run_coconut_ablation_matrix.py"
+    },
+    {
+      "source": "scripts/run_drope_recalibration.py",
+      "flat_name": "scripts__run_drope_recalibration.py"
+    },
+    {
+      "source": "scripts/run_english_cot_control_duel.py",
+      "flat_name": "scripts__run_english_cot_control_duel.py"
+    },
+    {
+      "source": "scripts/run_experiment.py",
+      "flat_name": "scripts__run_experiment.py"
+    },
+    {
+      "source": "scripts/run_l6_ablation_branch.py",
+      "flat_name": "scripts__run_l6_ablation_branch.py"
+    },
+    {
+      "source": "scripts/run_m11_discriminative_suite.py",
+      "flat_name": "scripts__run_m11_discriminative_suite.py"
+    },
+    {
+      "source": "scripts/run_m14_symbiote_scratchpad.py",
+      "flat_name": "scripts__run_m14_symbiote_scratchpad.py"
+    },
+    {
+      "source": "scripts/run_m3_10_ood_accuracy_probe.py",
+      "flat_name": "scripts__run_m3_10_ood_accuracy_probe.py"
+    },
+    {
+      "source": "scripts/run_m3_11_winograd_failure_anatomy.py",
+      "flat_name": "scripts__run_m3_11_winograd_failure_anatomy.py"
+    },
+    {
+      "source": "scripts/run_m3_12_geometric_return_stream.py",
+      "flat_name": "scripts__run_m3_12_geometric_return_stream.py"
+    },
+    {
+      "source": "scripts/run_m3_13_geometric_ablation_grid.py",
+      "flat_name": "scripts__run_m3_13_geometric_ablation_grid.py"
+    },
+    {
+      "source": "scripts/run_m3_14_structural_alignment_bridge.py",
+      "flat_name": "scripts__run_m3_14_structural_alignment_bridge.py"
+    },
+    {
+      "source": "scripts/run_m3_15_rotary_coconut.py",
+      "flat_name": "scripts__run_m3_15_rotary_coconut.py"
+    },
+    {
+      "source": "scripts/run_m3_15_rotary_coconut_seven.py",
+      "flat_name": "scripts__run_m3_15_rotary_coconut_seven.py"
+    },
+    {
+      "source": "scripts/run_m3_15b_relation_local_rotary.py",
+      "flat_name": "scripts__run_m3_15b_relation_local_rotary.py"
+    },
+    {
+      "source": "scripts/run_m3_15c_family_conditioned_bridge.py",
+      "flat_name": "scripts__run_m3_15c_family_conditioned_bridge.py"
+    },
+    {
+      "source": "scripts/run_m3_15d_answer_path_forcing.py",
+      "flat_name": "scripts__run_m3_15d_answer_path_forcing.py"
+    },
+    {
+      "source": "scripts/run_m3_16_continuous_graph_bias.py",
+      "flat_name": "scripts__run_m3_16_continuous_graph_bias.py"
+    },
+    {
+      "source": "scripts/run_m3_17_advisor_reentry_bridge.py",
+      "flat_name": "scripts__run_m3_17_advisor_reentry_bridge.py"
+    },
+    {
+      "source": "scripts/run_m3_18_decoder_reentry_resume.py",
+      "flat_name": "scripts__run_m3_18_decoder_reentry_resume.py"
+    },
+    {
+      "source": "scripts/run_m3_19_d_mainline_grid.py",
+      "flat_name": "scripts__run_m3_19_d_mainline_grid.py"
+    },
+    {
+      "source": "scripts/run_m3_5_symmetry.py",
+      "flat_name": "scripts__run_m3_5_symmetry.py"
+    },
+    {
+      "source": "scripts/run_m3_6_symmetry_oracle.py",
+      "flat_name": "scripts__run_m3_6_symmetry_oracle.py"
+    },
+    {
+      "source": "scripts/run_m3_7_shadow_alignment.py",
+      "flat_name": "scripts__run_m3_7_shadow_alignment.py"
+    },
+    {
+      "source": "scripts/run_m3_8_operator_diversification.py",
+      "flat_name": "scripts__run_m3_8_operator_diversification.py"
+    },
+    {
+      "source": "scripts/run_m3_9_primitive_probe.py",
+      "flat_name": "scripts__run_m3_9_primitive_probe.py"
+    },
+    {
+      "source": "scripts/run_m3_plus_family.py",
+      "flat_name": "scripts__run_m3_plus_family.py"
+    },
+    {
+      "source": "scripts/run_m4_0_semantic_probe.py",
+      "flat_name": "scripts__run_m4_0_semantic_probe.py"
+    },
+    {
+      "source": "scripts/run_m4_2_predicate_grounding.py",
+      "flat_name": "scripts__run_m4_2_predicate_grounding.py"
+    },
+    {
+      "source": "scripts/run_m4_operator_family_eval.py",
+      "flat_name": "scripts__run_m4_operator_family_eval.py"
+    },
+    {
+      "source": "scripts/run_m4_series.py",
+      "flat_name": "scripts__run_m4_series.py"
+    },
+    {
+      "source": "scripts/run_m5_2_autoregressive_chain.py",
+      "flat_name": "scripts__run_m5_2_autoregressive_chain.py"
+    },
+    {
+      "source": "scripts/run_m5_3_masked_pair_chain.py",
+      "flat_name": "scripts__run_m5_3_masked_pair_chain.py"
+    },
+    {
+      "source": "scripts/run_m5_autoformalization.py",
+      "flat_name": "scripts__run_m5_autoformalization.py"
+    },
+    {
+      "source": "scripts/run_m5_padded_nary_family.py",
+      "flat_name": "scripts__run_m5_padded_nary_family.py"
+    },
+    {
+      "source": "scripts/run_m_bridge_ablation_test_suite.py",
+      "flat_name": "scripts__run_m_bridge_ablation_test_suite.py"
+    },
+    {
+      "source": "scripts/run_phase5_objective_ablation.py",
+      "flat_name": "scripts__run_phase5_objective_ablation.py"
+    },
+    {
+      "source": "scripts/run_phase5_train_ablation.py",
+      "flat_name": "scripts__run_phase5_train_ablation.py"
+    },
+    {
+      "source": "scripts/run_phase5_two_stage_recovery.py",
+      "flat_name": "scripts__run_phase5_two_stage_recovery.py"
+    },
+    {
+      "source": "scripts/run_phase_ablation.py",
+      "flat_name": "scripts__run_phase_ablation.py"
+    },
+    {
+      "source": "scripts/run_three_engine_comparison.py",
+      "flat_name": "scripts__run_three_engine_comparison.py"
+    },
+    {
+      "source": "scripts/run_true_coconut_h_series.py",
+      "flat_name": "scripts__run_true_coconut_h_series.py"
+    },
+    {
+      "source": "scripts/tasks.ps1",
+      "flat_name": "scripts__tasks.ps1"
+    },
+    {
+      "source": "scripts/trace_h5_provenance.py",
+      "flat_name": "scripts__trace_h5_provenance.py"
+    },
+    {
+      "source": "scripts/train_babel.py",
+      "flat_name": "scripts__train_babel.py"
+    },
+    {
+      "source": "scripts/train_cpu_hf.ps1",
+      "flat_name": "scripts__train_cpu_hf.ps1"
+    },
+    {
+      "source": "scripts/train_h5_persistent_vq_advisor.py",
+      "flat_name": "scripts__train_h5_persistent_vq_advisor.py"
+    },
+    {
+      "source": "scripts/train_h5_slice2_bridge.py",
+      "flat_name": "scripts__train_h5_slice2_bridge.py"
+    },
+    {
+      "source": "scripts/train_l_series_mvs.py",
+      "flat_name": "scripts__train_l_series_mvs.py"
+    },
+    {
+      "source": "scripts/train_lora.py",
+      "flat_name": "scripts__train_lora.py"
+    },
+    {
+      "source": "scripts/train_m5_2_autoregressive_chain.py",
+      "flat_name": "scripts__train_m5_2_autoregressive_chain.py"
+    },
+    {
+      "source": "scripts/train_m5_3_masked_pair_chain.py",
+      "flat_name": "scripts__train_m5_3_masked_pair_chain.py"
+    },
+    {
+      "source": "scripts/train_m5_padded_nary.py",
+      "flat_name": "scripts__train_m5_padded_nary.py"
+    },
+    {
+      "source": "scripts/train_m6_logic_engine.py",
+      "flat_name": "scripts__train_m6_logic_engine.py"
+    },
+    {
+      "source": "scripts/train_m7_interleaved.py",
+      "flat_name": "scripts__train_m7_interleaved.py"
+    },
+    {
+      "source": "scripts/train_m8_council.py",
+      "flat_name": "scripts__train_m8_council.py"
+    },
+    {
+      "source": "scripts/train_mixed_curriculum_cpu.ps1",
+      "flat_name": "scripts__train_mixed_curriculum_cpu.ps1"
+    },
+    {
+      "source": "scripts/train_swiglu_bridge.py",
+      "flat_name": "scripts__train_swiglu_bridge.py"
+    },
+    {
+      "source": "scripts/train_vq_reasoning_pilot.py",
+      "flat_name": "scripts__train_vq_reasoning_pilot.py"
+    },
+    {
+      "source": "scripts/true_coconut.py",
+      "flat_name": "scripts__true_coconut.py"
+    },
+    {
+      "source": "scripts/verify_h5_ablation.py",
+      "flat_name": "scripts__verify_h5_ablation.py"
+    },
+    {
+      "source": "scripts/visualize_shock.py",
+      "flat_name": "scripts__visualize_shock.py"
+    },
+    {
+      "source": "src/lojban_evolution/__init__.py",
+      "flat_name": "src__lojban_evolution____init__.py"
+    },
+    {
+      "source": "src/lojban_evolution/ablation_history_registry.py",
+      "flat_name": "src__lojban_evolution__ablation_history_registry.py"
+    },
+    {
+      "source": "src/lojban_evolution/artifact_contract.py",
+      "flat_name": "src__lojban_evolution__artifact_contract.py"
+    },
+    {
+      "source": "src/lojban_evolution/experiment.py",
+      "flat_name": "src__lojban_evolution__experiment.py"
+    },
+    {
+      "source": "src/lojban_evolution/experiment_taxonomy.py",
+      "flat_name": "src__lojban_evolution__experiment_taxonomy.py"
+    },
+    {
+      "source": "src/lojban_evolution/j_series_eval.py",
+      "flat_name": "src__lojban_evolution__j_series_eval.py"
+    },
+    {
+      "source": "src/lojban_evolution/l_series.py",
+      "flat_name": "src__lojban_evolution__l_series.py"
+    },
+    {
+      "source": "src/lojban_evolution/m10/adapter.py",
+      "flat_name": "src__lojban_evolution__m10__adapter.py"
+    },
+    {
+      "source": "src/lojban_evolution/m10/deep_adapter.py",
+      "flat_name": "src__lojban_evolution__m10__deep_adapter.py"
+    },
+    {
+      "source": "src/lojban_evolution/m10/english_head.py",
+      "flat_name": "src__lojban_evolution__m10__english_head.py"
+    },
+    {
+      "source": "src/lojban_evolution/m10/probe.py",
+      "flat_name": "src__lojban_evolution__m10__probe.py"
+    },
+    {
+      "source": "src/lojban_evolution/m6/data.py",
+      "flat_name": "src__lojban_evolution__m6__data.py"
+    },
+    {
+      "source": "src/lojban_evolution/m6/engine.py",
+      "flat_name": "src__lojban_evolution__m6__engine.py"
+    },
+    {
+      "source": "src/lojban_evolution/m6/matrix_core.py",
+      "flat_name": "src__lojban_evolution__m6__matrix_core.py"
+    },
+    {
+      "source": "src/lojban_evolution/m7/engine.py",
+      "flat_name": "src__lojban_evolution__m7__engine.py"
+    },
+    {
+      "source": "src/lojban_evolution/m8/engine.py",
+      "flat_name": "src__lojban_evolution__m8__engine.py"
+    },
+    {
+      "source": "src/lojban_evolution/m9/engine.py",
+      "flat_name": "src__lojban_evolution__m9__engine.py"
+    },
+    {
+      "source": "src/lojban_evolution/m9/optimizer.py",
+      "flat_name": "src__lojban_evolution__m9__optimizer.py"
+    },
+    {
+      "source": "src/lojban_evolution/m_bridge_ablation_family.py",
+      "flat_name": "src__lojban_evolution__m_bridge_ablation_family.py"
+    },
+    {
+      "source": "src/lojban_evolution/m_reentry_reboot_family.py",
+      "flat_name": "src__lojban_evolution__m_reentry_reboot_family.py"
+    },
+    {
+      "source": "src/lojban_evolution/m_symbiote_scratchpad_family.py",
+      "flat_name": "src__lojban_evolution__m_symbiote_scratchpad_family.py"
+    },
+    {
+      "source": "src/lojban_evolution/repo_paths.py",
+      "flat_name": "src__lojban_evolution__repo_paths.py"
+    },
+    {
+      "source": "src/lojban_evolution/repro.py",
+      "flat_name": "src__lojban_evolution__repro.py"
+    },
+    {
+      "source": "src/lojban_evolution/safety_assertions.py",
+      "flat_name": "src__lojban_evolution__safety_assertions.py"
+    },
+    {
+      "source": "src/lojban_evolution/series_contract.py",
+      "flat_name": "src__lojban_evolution__series_contract.py"
+    },
+    {
+      "source": "src/lojban_evolution/storage.py",
+      "flat_name": "src__lojban_evolution__storage.py"
+    },
+    {
+      "source": "tests/conftest.py",
+      "flat_name": "tests__conftest.py"
+    },
+    {
+      "source": "tests/test_artifact_contract.py",
+      "flat_name": "tests__test_artifact_contract.py"
+    },
+    {
+      "source": "tests/test_build_mixed_curriculum_dataset.py",
+      "flat_name": "tests__test_build_mixed_curriculum_dataset.py"
+    },
+    {
+      "source": "tests/test_cli_smoke.py",
+      "flat_name": "tests__test_cli_smoke.py"
+    },
+    {
+      "source": "tests/test_coconut_handoff.py",
+      "flat_name": "tests__test_coconut_handoff.py"
+    },
+    {
+      "source": "tests/test_eval_hf_dual_mode_gate.py",
+      "flat_name": "tests__test_eval_hf_dual_mode_gate.py"
+    },
+    {
+      "source": "tests/test_h5_ablation_extension_contract.py",
+      "flat_name": "tests__test_h5_ablation_extension_contract.py"
+    },
+    {
+      "source": "tests/test_j_series_eval.py",
+      "flat_name": "tests__test_j_series_eval.py"
+    },
+    {
+      "source": "tests/test_l_series.py",
+      "flat_name": "tests__test_l_series.py"
+    },
+    {
+      "source": "tests/test_m3_plus_family_integration.py",
+      "flat_name": "tests__test_m3_plus_family_integration.py"
+    },
+    {
+      "source": "tests/test_repro.py",
+      "flat_name": "tests__test_repro.py"
+    },
+    {
+      "source": "tests/test_run_true_coconut_h_series.py",
+      "flat_name": "tests__test_run_true_coconut_h_series.py"
+    },
+    {
+      "source": "tests/test_safety_assertions.py",
+      "flat_name": "tests__test_safety_assertions.py"
+    },
+    {
+      "source": "tests/test_series_contract.py",
+      "flat_name": "tests__test_series_contract.py"
+    },
+    {
+      "source": "tests/test_storage.py",
+      "flat_name": "tests__test_storage.py"
+    },
+    {
+      "source": "tests/test_train_lora_weighting.py",
+      "flat_name": "tests__test_train_lora_weighting.py"
+    },
+    {
+      "source": "tests/test_true_coconut.py",
+      "flat_name": "tests__test_true_coconut.py"
+    }
+  ],
+  "notes": [
+    "This bundle is flattened for direct multi-file upload.",
+    "Filenames are path-encoded so NotebookLM-style upload can be done from one directory."
+  ]
+}

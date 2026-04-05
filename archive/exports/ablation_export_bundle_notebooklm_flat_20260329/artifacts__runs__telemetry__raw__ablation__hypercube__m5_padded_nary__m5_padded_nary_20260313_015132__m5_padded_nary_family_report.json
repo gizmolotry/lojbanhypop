@@ -1,0 +1,177 @@
+{
+  "timestamp": "2026-03-13T01:56:28.873279+00:00",
+  "series": {
+    "series_contract_version": "1.0",
+    "series_id": "M",
+    "track": "M5.padded_nary_family",
+    "script": "scripts/run_m5_padded_nary_family.py"
+  },
+  "args": {
+    "base_model": "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+    "adapter": "D:\\lojbanhypop\\runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+    "train_steps": 2,
+    "semantic_dataset_size": 24,
+    "winograd_pack_size": 32,
+    "seed": 7,
+    "dataset_profile": "semantic_bench_v1",
+    "difficulty_tier": "all",
+    "layer_index": 12,
+    "l_output_root": "runs\\l_series\\m5_padded_nary",
+    "report_output_root": "artifacts\\runs\\telemetry\\raw\\ablation\\hypercube\\m5_padded_nary",
+    "local_files_only": true
+  },
+  "cells": [
+    {
+      "run_id": "M5.N0",
+      "name": "Padded core only",
+      "status": "ok",
+      "run_dir": "runs/l_series/m5_padded_nary/20260313_015132/m5_n0/20260313_015134",
+      "checkpoint": "runs/l_series/m5_padded_nary/20260313_015132/m5_n0/20260313_015134/m5_padded_nary_checkpoint.pt",
+      "final_step": {
+        "step": 2,
+        "total_loss": 2.3679842948913574,
+        "task_loss": 2.1829943656921387,
+        "semantic_ce": 0.3188355565071106,
+        "winograd_ce": 1.8641588687896729,
+        "slot_l1_loss": 0.7399601340293884,
+        "uniformity_loss": 0.3508966565132141,
+        "grl_loss": 0.0,
+        "invariance_loss": 0.000244071168708615,
+        "cpc_loss": 0.7306748628616333,
+        "slot_usage_mean": 0.04318397119641304,
+        "operator_entropy_batch": 4.933771133422852,
+        "top1_op_share_batch": 0.22915129363536835,
+        "winograd_accuracy_batch": 1.0
+      },
+      "eval": {
+        "winograd_val": {
+          "n": 4,
+          "accuracy": 0.5
+        },
+        "winograd_eval": {
+          "n": 10,
+          "accuracy": 0.5
+        },
+        "semantic_val": {
+          "n": 5,
+          "accuracy": 0.0,
+          "mean_ce": 1.8985406324267387
+        }
+      }
+    },
+    {
+      "run_id": "M5.N1",
+      "name": "Core + uniformity + GRL",
+      "status": "ok",
+      "run_dir": "runs/l_series/m5_padded_nary/20260313_015132/m5_n1/20260313_015253",
+      "checkpoint": "runs/l_series/m5_padded_nary/20260313_015132/m5_n1/20260313_015253/m5_padded_nary_checkpoint.pt",
+      "final_step": {
+        "step": 2,
+        "total_loss": 3.1336562633514404,
+        "task_loss": 2.459362506866455,
+        "semantic_ce": 0.3313378095626831,
+        "winograd_ce": 2.1280245780944824,
+        "slot_l1_loss": 0.9860759377479553,
+        "uniformity_loss": 0.2512902021408081,
+        "grl_loss": 4.026454925537109,
+        "invariance_loss": 0.00026552172494120896,
+        "cpc_loss": 0.6963371634483337,
+        "slot_usage_mean": 0.002297499915584922,
+        "operator_entropy_batch": 5.69087028503418,
+        "top1_op_share_batch": 0.04146381467580795,
+        "winograd_accuracy_batch": 1.0
+      },
+      "eval": {
+        "winograd_val": {
+          "n": 4,
+          "accuracy": 0.5
+        },
+        "winograd_eval": {
+          "n": 10,
+          "accuracy": 0.4
+        },
+        "semantic_val": {
+          "n": 5,
+          "accuracy": 0.0,
+          "mean_ce": 1.134319943934679
+        }
+      }
+    },
+    {
+      "run_id": "M5.N2",
+      "name": "Add counterfactual invariance",
+      "status": "ok",
+      "run_dir": "runs/l_series/m5_padded_nary/20260313_015132/m5_n2/20260313_015411",
+      "checkpoint": "runs/l_series/m5_padded_nary/20260313_015132/m5_n2/20260313_015411/m5_padded_nary_checkpoint.pt",
+      "final_step": {
+        "step": 2,
+        "total_loss": 2.6061935424804688,
+        "task_loss": 1.901073932647705,
+        "semantic_ce": 0.33033287525177,
+        "winograd_ce": 1.570741057395935,
+        "slot_l1_loss": 1.1145662069320679,
+        "uniformity_loss": 0.2322663962841034,
+        "grl_loss": 4.031984806060791,
+        "invariance_loss": 0.00026502806576900184,
+        "cpc_loss": 0.7043460011482239,
+        "slot_usage_mean": 0.27138638496398926,
+        "operator_entropy_batch": 5.835468292236328,
+        "top1_op_share_batch": 0.0433652400970459,
+        "winograd_accuracy_batch": 1.0
+      },
+      "eval": {
+        "winograd_val": {
+          "n": 4,
+          "accuracy": 0.5
+        },
+        "winograd_eval": {
+          "n": 10,
+          "accuracy": 0.5
+        },
+        "semantic_val": {
+          "n": 5,
+          "accuracy": 0.0,
+          "mean_ce": 1.7930350601673126
+        }
+      }
+    },
+    {
+      "run_id": "M5.N3",
+      "name": "Full padded crucible",
+      "status": "ok",
+      "run_dir": "runs/l_series/m5_padded_nary/20260313_015132/m5_n3/20260313_015521",
+      "checkpoint": "runs/l_series/m5_padded_nary/20260313_015132/m5_n3/20260313_015521/m5_padded_nary_checkpoint.pt",
+      "final_step": {
+        "step": 2,
+        "total_loss": 2.67618989944458,
+        "task_loss": 1.8907291889190674,
+        "semantic_ce": 0.29297131299972534,
+        "winograd_ce": 1.5977578163146973,
+        "slot_l1_loss": 0.8461579084396362,
+        "uniformity_loss": 0.24798189103603363,
+        "grl_loss": 4.082674026489258,
+        "invariance_loss": 0.00032640298013575375,
+        "cpc_loss": 0.7039514780044556,
+        "slot_usage_mean": 0.02527879737317562,
+        "operator_entropy_batch": 5.7160162925720215,
+        "top1_op_share_batch": 0.02995295077562332,
+        "winograd_accuracy_batch": 1.0
+      },
+      "eval": {
+        "winograd_val": {
+          "n": 4,
+          "accuracy": 0.5
+        },
+        "winograd_eval": {
+          "n": 10,
+          "accuracy": 0.5
+        },
+        "semantic_val": {
+          "n": 5,
+          "accuracy": 0.0,
+          "mean_ce": 1.165930162370205
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "item_id": "m3_15d_eval_000000",
+    "pair_id": "size_01",
+    "prompt": "Stone did not fit in Box since it was too big. What was too big?",
+    "target_text": "Stone",
+    "generated_text": "Answer: Box",
+    "generated_token_ids": [
+      271,
+      16141,
+      25,
+      8261,
+      198
+    ],
+    "resume_first_token_accuracy": 0.0,
+    "continuation_overlap_f1": 0.0,
+    "gold_mention_rate": 0.0,
+    "exact_match_rate": 0.0,
+    "contamination_rate": 0.0,
+    "loop_rate": 0.0,
+    "english_stays_english_rate": 1.0,
+    "english_fluency_score": 1.0
+  },
+  {
+    "item_id": "m3_15d_eval_000001",
+    "pair_id": "size_01",
+    "prompt": "Stone did not fit in Box since it was too small. What was too small?",
+    "target_text": "Box",
+    "generated_text": "Answer: Box",
+    "generated_token_ids": [
+      271,
+      16141,
+      25,
+      8261,
+      198
+    ],
+    "resume_first_token_accuracy": 0.0,
+    "continuation_overlap_f1": 0.6666666666666666,
+    "gold_mention_rate": 1.0,
+    "exact_match_rate": 0.0,
+    "contamination_rate": 0.0,
+    "loop_rate": 0.0,
+    "english_stays_english_rate": 1.0,
+    "english_fluency_score": 1.0
+  }
+]

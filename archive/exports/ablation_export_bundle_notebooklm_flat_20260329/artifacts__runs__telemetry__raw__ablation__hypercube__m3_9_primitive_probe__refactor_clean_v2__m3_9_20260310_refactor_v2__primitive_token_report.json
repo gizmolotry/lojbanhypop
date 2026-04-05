@@ -1,0 +1,501 @@
+{
+  "1": {
+    "token_id": 1,
+    "frequency": 1152,
+    "frequency_share": 0.3333333333333333,
+    "role_distribution": {
+      "start_of_trace": 0.02040816326530612,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.9795918367346939,
+      "arg_slot_1": 0.0,
+      "arg_slot_2": 0.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 396,
+        "count": 398
+      },
+      {
+        "token_id": 1360,
+        "count": 377
+      },
+      {
+        "token_id": 1188,
+        "count": 266
+      },
+      {
+        "token_id": 1611,
+        "count": 263
+      },
+      {
+        "token_id": 441,
+        "count": 185
+      },
+      {
+        "token_id": 940,
+        "count": 185
+      },
+      {
+        "token_id": 498,
+        "count": 106
+      },
+      {
+        "token_id": 1214,
+        "count": 106
+      }
+    ]
+  },
+  "1710": {
+    "token_id": 1710,
+    "frequency": 38,
+    "frequency_share": 0.01099537037037037,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.0,
+      "arg_slot_1": 1.0,
+      "arg_slot_2": 0.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 1,
+        "count": 38
+      },
+      {
+        "token_id": 1625,
+        "count": 38
+      }
+    ]
+  },
+  "1625": {
+    "token_id": 1625,
+    "frequency": 38,
+    "frequency_share": 0.01099537037037037,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.0,
+      "arg_slot_1": 0.0,
+      "arg_slot_2": 1.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 1710,
+        "count": 38
+      },
+      {
+        "token_id": 1,
+        "count": 38
+      }
+    ]
+  },
+  "1188": {
+    "token_id": 1188,
+    "frequency": 266,
+    "frequency_share": 0.07696759259259259,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.0,
+      "arg_slot_1": 1.0,
+      "arg_slot_2": 0.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 1,
+        "count": 266
+      },
+      {
+        "token_id": 1611,
+        "count": 266
+      }
+    ]
+  },
+  "1611": {
+    "token_id": 1611,
+    "frequency": 266,
+    "frequency_share": 0.07696759259259259,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.011152416356877323,
+      "predicate_head": 0.0,
+      "arg_slot_1": 0.0,
+      "arg_slot_2": 0.9888475836431226
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 1188,
+        "count": 266
+      },
+      {
+        "token_id": 1,
+        "count": 263
+      }
+    ]
+  },
+  "498": {
+    "token_id": 498,
+    "frequency": 106,
+    "frequency_share": 0.030671296296296297,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.0,
+      "arg_slot_1": 1.0,
+      "arg_slot_2": 0.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 1,
+        "count": 106
+      },
+      {
+        "token_id": 1214,
+        "count": 106
+      }
+    ]
+  },
+  "1214": {
+    "token_id": 1214,
+    "frequency": 106,
+    "frequency_share": 0.030671296296296297,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.0,
+      "arg_slot_1": 0.0,
+      "arg_slot_2": 1.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 498,
+        "count": 106
+      },
+      {
+        "token_id": 1,
+        "count": 106
+      }
+    ]
+  },
+  "441": {
+    "token_id": 441,
+    "frequency": 185,
+    "frequency_share": 0.053530092592592594,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.0,
+      "arg_slot_1": 1.0,
+      "arg_slot_2": 0.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 1,
+        "count": 185
+      },
+      {
+        "token_id": 940,
+        "count": 185
+      }
+    ]
+  },
+  "940": {
+    "token_id": 940,
+    "frequency": 185,
+    "frequency_share": 0.053530092592592594,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.0,
+      "arg_slot_1": 0.0,
+      "arg_slot_2": 1.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 441,
+        "count": 185
+      },
+      {
+        "token_id": 1,
+        "count": 185
+      }
+    ]
+  },
+  "1735": {
+    "token_id": 1735,
+    "frequency": 94,
+    "frequency_share": 0.027199074074074073,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.0,
+      "arg_slot_1": 1.0,
+      "arg_slot_2": 0.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 1,
+        "count": 94
+      },
+      {
+        "token_id": 462,
+        "count": 94
+      }
+    ]
+  },
+  "462": {
+    "token_id": 462,
+    "frequency": 94,
+    "frequency_share": 0.027199074074074073,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.0,
+      "arg_slot_1": 0.0,
+      "arg_slot_2": 1.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 1735,
+        "count": 94
+      },
+      {
+        "token_id": 1,
+        "count": 94
+      }
+    ]
+  },
+  "1940": {
+    "token_id": 1940,
+    "frequency": 24,
+    "frequency_share": 0.006944444444444444,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.0,
+      "arg_slot_1": 1.0,
+      "arg_slot_2": 0.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 1,
+        "count": 24
+      },
+      {
+        "token_id": 285,
+        "count": 24
+      }
+    ]
+  },
+  "285": {
+    "token_id": 285,
+    "frequency": 24,
+    "frequency_share": 0.006944444444444444,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.0,
+      "arg_slot_1": 0.0,
+      "arg_slot_2": 1.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 1940,
+        "count": 24
+      },
+      {
+        "token_id": 1,
+        "count": 24
+      }
+    ]
+  },
+  "396": {
+    "token_id": 396,
+    "frequency": 398,
+    "frequency_share": 0.11516203703703703,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.0,
+      "arg_slot_1": 1.0,
+      "arg_slot_2": 0.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 1,
+        "count": 398
+      },
+      {
+        "token_id": 1360,
+        "count": 398
+      }
+    ]
+  },
+  "1360": {
+    "token_id": 1360,
+    "frequency": 398,
+    "frequency_share": 0.11516203703703703,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.050119331742243436,
+      "predicate_head": 0.0,
+      "arg_slot_1": 0.0,
+      "arg_slot_2": 0.9498806682577565
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 396,
+        "count": 398
+      },
+      {
+        "token_id": 1,
+        "count": 377
+      }
+    ]
+  },
+  "1459": {
+    "token_id": 1459,
+    "frequency": 21,
+    "frequency_share": 0.006076388888888889,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.0,
+      "arg_slot_1": 1.0,
+      "arg_slot_2": 0.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 1,
+        "count": 21
+      },
+      {
+        "token_id": 1519,
+        "count": 21
+      }
+    ]
+  },
+  "1519": {
+    "token_id": 1519,
+    "frequency": 21,
+    "frequency_share": 0.006076388888888889,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.0,
+      "arg_slot_1": 0.0,
+      "arg_slot_2": 1.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 1459,
+        "count": 21
+      },
+      {
+        "token_id": 1,
+        "count": 21
+      }
+    ]
+  },
+  "893": {
+    "token_id": 893,
+    "frequency": 20,
+    "frequency_share": 0.005787037037037037,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.0,
+      "arg_slot_1": 1.0,
+      "arg_slot_2": 0.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 1,
+        "count": 20
+      },
+      {
+        "token_id": 1388,
+        "count": 20
+      }
+    ]
+  },
+  "1388": {
+    "token_id": 1388,
+    "frequency": 20,
+    "frequency_share": 0.005787037037037037,
+    "role_distribution": {
+      "start_of_trace": 0.0,
+      "end_of_trace": 0.0,
+      "predicate_head": 0.0,
+      "arg_slot_1": 0.0,
+      "arg_slot_2": 1.0
+    },
+    "domain_distribution": {
+      "other": 1.0
+    },
+    "top_neighbors": [
+      {
+        "token_id": 893,
+        "count": 20
+      },
+      {
+        "token_id": 1,
+        "count": 20
+      }
+    ]
+  }
+}

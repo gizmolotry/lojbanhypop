@@ -1,0 +1,62 @@
+[
+  {
+    "item_id": "",
+    "pair_id": "m3_19_pair_00001",
+    "family": "councilmen_demonstrators",
+    "bucket": "noun_phrase",
+    "prompt": "The councilmen refused the permit to the demonstrators because they feared violence.",
+    "candidates": [
+      "councilmen",
+      "demonstrators"
+    ],
+    "gold_answer": "councilmen",
+    "model_answer": "demonstrators",
+    "correct": false,
+    "active_token_count": 13.0,
+    "active_op_count": 3.0,
+    "operator_entropy": 0.9222208985694438,
+    "operator_top1_share": 0.4583333333333333,
+    "scope": 0.4067796610169492,
+    "score_on_gold": -9.225729942321777,
+    "score_on_foil": -4.734189033508301,
+    "score_off_gold": -9.226771354675293,
+    "answer_delta": -4.491540908813477,
+    "gold_delta_on_off": 0.001041412353515625,
+    "scratchpad_attention_mass": 0.03559537806237737,
+    "scratchpad_residual_norm": 0.0068961251527071,
+    "scratchpad_gate_mean": 0.11923493444919586,
+    "scratchpad_gate_overflow": 0.0,
+    "scratchpad_attn_entropy": 4.969729423522949,
+    "cell_mode": "severance_threshold_residual_scratchpad"
+  },
+  {
+    "item_id": "",
+    "pair_id": "m3_19_pair_00002",
+    "family": "engineer_analyst",
+    "bucket": "noun_phrase",
+    "prompt": "The engineer sent the report to the analyst because they had deeper context.",
+    "candidates": [
+      "engineer",
+      "analyst"
+    ],
+    "gold_answer": "analyst",
+    "model_answer": "analyst",
+    "correct": true,
+    "active_token_count": 13.0,
+    "active_op_count": 3.0,
+    "operator_entropy": 1.0892080913644198,
+    "operator_top1_share": 0.375,
+    "scope": 0.4067796610169492,
+    "score_on_gold": -1.1541508436203003,
+    "score_on_foil": -5.80551815032959,
+    "score_off_gold": -1.1541508436203003,
+    "answer_delta": 4.6513671875,
+    "gold_delta_on_off": 0.0,
+    "scratchpad_attention_mass": 0.039469309306393065,
+    "scratchpad_residual_norm": 0.005618837662041187,
+    "scratchpad_gate_mean": 0.11923493444919586,
+    "scratchpad_gate_overflow": 0.0,
+    "scratchpad_attn_entropy": 4.9697442054748535,
+    "cell_mode": "severance_threshold_residual_scratchpad"
+  }
+]

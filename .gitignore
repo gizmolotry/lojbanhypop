@@ -21,5 +21,14 @@ src/runs/
 *.gguf
 
 # Local scratch dirs created by pytest on this machine
+cachepytest/
 pytest-cache-files-*/
 src/pytest-cache-files-*/
+src/.pytest_tmp/
+src/.tmp_pytest/
+src/pytest-cache-files-*/
+
+# Prevent top-level output clutter from reappearing
+RESULTS_*/
+ROOT_*/
+REPORTS_RELEVANT/

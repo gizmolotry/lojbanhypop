@@ -1,0 +1,60 @@
+[
+  {
+    "item_id": "",
+    "pair_id": "m3_19_pair_00022",
+    "variant_id": 0,
+    "family": "morgan_casey",
+    "prompt": "Morgan did not forward the memo to Casey because they were confidential.",
+    "candidates": [
+      "memo",
+      "Casey"
+    ],
+    "gold_answer": "memo",
+    "model_answer": "Casey",
+    "correct": false,
+    "active_token_count": 15,
+    "active_op_count": 3,
+    "operator_entropy": 1.0810375265209315,
+    "operator_top1_share": 0.3958333333333333,
+    "scope": 0.39344262295081966,
+    "score_on_gold": -13.51150131225586,
+    "score_on_foil": -7.750680923461914,
+    "score_off_gold": -8.57136344909668,
+    "answer_delta": -5.760820388793945,
+    "gold_delta_on_off": -4.94013786315918,
+    "return_norm": 0.006992304231971502,
+    "residual_norm": 0.0,
+    "return_gate": 0.11923506110906601,
+    "return_attn_entropy": 4.9697184562683105,
+    "cell_mode": "frozen_multi_return_tokens"
+  },
+  {
+    "item_id": "",
+    "pair_id": "m3_19_pair_00001",
+    "variant_id": 0,
+    "family": "councilmen_demonstrators",
+    "prompt": "The councilmen refused the permit to the demonstrators because they feared violence.",
+    "candidates": [
+      "councilmen",
+      "demonstrators"
+    ],
+    "gold_answer": "councilmen",
+    "model_answer": "demonstrators",
+    "correct": false,
+    "active_token_count": 13,
+    "active_op_count": 3,
+    "operator_entropy": 0.9222208985694438,
+    "operator_top1_share": 0.4583333333333333,
+    "scope": 0.4067796610169492,
+    "score_on_gold": -19.88811683654785,
+    "score_on_foil": -13.358280181884766,
+    "score_off_gold": -7.44480562210083,
+    "answer_delta": -6.529836654663086,
+    "gold_delta_on_off": -12.44331169128418,
+    "return_norm": 0.007473033852875233,
+    "residual_norm": 0.0,
+    "return_gate": 0.11923506110906601,
+    "return_attn_entropy": 4.969672679901123,
+    "cell_mode": "frozen_multi_return_tokens"
+  }
+]

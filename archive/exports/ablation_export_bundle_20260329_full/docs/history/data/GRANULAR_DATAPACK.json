@@ -1,0 +1,1767 @@
+﻿{
+    "phase5_ablation_results":  {
+                                    "baseline_no_phase5":  {
+                                                               "timestamp":  "2026-02-22T18:08:24.127951+00:00",
+                                                               "base_model":  "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+                                                               "adapter":  "runs\\phase5_train_ablation\\20260222_162541\\baseline_no_phase5",
+                                                               "sample_size":  48,
+                                                               "seeds":  [
+                                                                             7,
+                                                                             11
+                                                                         ],
+                                                               "thresholds":  {
+                                                                                  "min_final_lift":  0.0,
+                                                                                  "min_symbolic_lift":  0.0
+                                                                              },
+                                                               "use_mode_tags":  false,
+                                                               "mean_lifts":  {
+                                                                                  "final_answer":  0.33333333333333337,
+                                                                                  "symbolic":  1.0
+                                                                              },
+                                                               "gate_pass":  true,
+                                                               "per_seed":  [
+                                                                                {
+                                                                                    "seed":  7,
+                                                                                    "final_answer":  {
+                                                                                                         "total":  48,
+                                                                                                         "base_correct":  9,
+                                                                                                         "adapter_correct":  23,
+                                                                                                         "base_acc":  0.1875,
+                                                                                                         "adapter_acc":  0.4791666666666667,
+                                                                                                         "lift":  0.2916666666666667
+                                                                                                     },
+                                                                                    "symbolic":  {
+                                                                                                     "total":  48,
+                                                                                                     "base_correct":  0,
+                                                                                                     "adapter_correct":  48,
+                                                                                                     "base_acc":  0.0,
+                                                                                                     "adapter_acc":  1.0,
+                                                                                                     "lift":  1.0
+                                                                                                 }
+                                                                                },
+                                                                                {
+                                                                                    "seed":  11,
+                                                                                    "final_answer":  {
+                                                                                                         "total":  48,
+                                                                                                         "base_correct":  8,
+                                                                                                         "adapter_correct":  26,
+                                                                                                         "base_acc":  0.16666666666666666,
+                                                                                                         "adapter_acc":  0.5416666666666666,
+                                                                                                         "lift":  0.375
+                                                                                                     },
+                                                                                    "symbolic":  {
+                                                                                                     "total":  48,
+                                                                                                     "base_correct":  0,
+                                                                                                     "adapter_correct":  48,
+                                                                                                     "base_acc":  0.0,
+                                                                                                     "adapter_acc":  1.0,
+                                                                                                     "lift":  1.0
+                                                                                                 }
+                                                                                }
+                                                                            ]
+                                                           },
+                                    "ablate_compression_regularization_weight":  {
+                                                                                     "timestamp":  "2026-02-22T20:40:18.697239+00:00",
+                                                                                     "base_model":  "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+                                                                                     "adapter":  "runs\\phase5_train_ablation\\20260222_162541\\ablate_compression_regularization_weight",
+                                                                                     "sample_size":  24,
+                                                                                     "seeds":  [
+                                                                                                   7,
+                                                                                                   11
+                                                                                               ],
+                                                                                     "thresholds":  {
+                                                                                                        "min_final_lift":  0.0,
+                                                                                                        "min_symbolic_lift":  0.0
+                                                                                                    },
+                                                                                     "use_mode_tags":  false,
+                                                                                     "mean_lifts":  {
+                                                                                                        "final_answer":  0.35416666666666663,
+                                                                                                        "symbolic":  0.625
+                                                                                                    },
+                                                                                     "gate_pass":  true,
+                                                                                     "per_seed":  [
+                                                                                                      {
+                                                                                                          "seed":  7,
+                                                                                                          "final_answer":  {
+                                                                                                                               "total":  24,
+                                                                                                                               "base_correct":  6,
+                                                                                                                               "adapter_correct":  13,
+                                                                                                                               "base_acc":  0.25,
+                                                                                                                               "adapter_acc":  0.5416666666666666,
+                                                                                                                               "lift":  0.29166666666666663
+                                                                                                                           },
+                                                                                                          "symbolic":  {
+                                                                                                                           "total":  24,
+                                                                                                                           "base_correct":  0,
+                                                                                                                           "adapter_correct":  14,
+                                                                                                                           "base_acc":  0.0,
+                                                                                                                           "adapter_acc":  0.5833333333333334,
+                                                                                                                           "lift":  0.5833333333333334
+                                                                                                                       }
+                                                                                                      },
+                                                                                                      {
+                                                                                                          "seed":  11,
+                                                                                                          "final_answer":  {
+                                                                                                                               "total":  24,
+                                                                                                                               "base_correct":  2,
+                                                                                                                               "adapter_correct":  12,
+                                                                                                                               "base_acc":  0.08333333333333333,
+                                                                                                                               "adapter_acc":  0.5,
+                                                                                                                               "lift":  0.4166666666666667
+                                                                                                                           },
+                                                                                                          "symbolic":  {
+                                                                                                                           "total":  24,
+                                                                                                                           "base_correct":  0,
+                                                                                                                           "adapter_correct":  16,
+                                                                                                                           "base_acc":  0.0,
+                                                                                                                           "adapter_acc":  0.6666666666666666,
+                                                                                                                           "lift":  0.6666666666666666
+                                                                                                                       }
+                                                                                                      }
+                                                                                                  ]
+                                                                                 },
+                                    "ablate_roundtrip_consistency_weight":  {
+                                                                                "timestamp":  "2026-02-22T20:08:13.404970+00:00",
+                                                                                "base_model":  "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+                                                                                "adapter":  "runs\\phase5_train_ablation\\20260222_162541\\ablate_roundtrip_consistency_weight",
+                                                                                "sample_size":  24,
+                                                                                "seeds":  [
+                                                                                              7,
+                                                                                              11
+                                                                                          ],
+                                                                                "thresholds":  {
+                                                                                                   "min_final_lift":  0.0,
+                                                                                                   "min_symbolic_lift":  0.0
+                                                                                               },
+                                                                                "use_mode_tags":  false,
+                                                                                "mean_lifts":  {
+                                                                                                   "final_answer":  0.6875,
+                                                                                                   "symbolic":  0.8541666666666667
+                                                                                               },
+                                                                                "gate_pass":  true,
+                                                                                "per_seed":  [
+                                                                                                 {
+                                                                                                     "seed":  7,
+                                                                                                     "final_answer":  {
+                                                                                                                          "total":  24,
+                                                                                                                          "base_correct":  6,
+                                                                                                                          "adapter_correct":  18,
+                                                                                                                          "base_acc":  0.25,
+                                                                                                                          "adapter_acc":  0.75,
+                                                                                                                          "lift":  0.5
+                                                                                                                      },
+                                                                                                     "symbolic":  {
+                                                                                                                      "total":  24,
+                                                                                                                      "base_correct":  0,
+                                                                                                                      "adapter_correct":  18,
+                                                                                                                      "base_acc":  0.0,
+                                                                                                                      "adapter_acc":  0.75,
+                                                                                                                      "lift":  0.75
+                                                                                                                  }
+                                                                                                 },
+                                                                                                 {
+                                                                                                     "seed":  11,
+                                                                                                     "final_answer":  {
+                                                                                                                          "total":  24,
+                                                                                                                          "base_correct":  2,
+                                                                                                                          "adapter_correct":  23,
+                                                                                                                          "base_acc":  0.08333333333333333,
+                                                                                                                          "adapter_acc":  0.9583333333333334,
+                                                                                                                          "lift":  0.875
+                                                                                                                      },
+                                                                                                     "symbolic":  {
+                                                                                                                      "total":  24,
+                                                                                                                      "base_correct":  0,
+                                                                                                                      "adapter_correct":  23,
+                                                                                                                      "base_acc":  0.0,
+                                                                                                                      "adapter_acc":  0.9583333333333334,
+                                                                                                                      "lift":  0.9583333333333334
+                                                                                                                  }
+                                                                                                 }
+                                                                                             ]
+                                                                            },
+                                    "ablate_semantic_unambiguity_weight":  {
+                                                                               "timestamp":  "2026-02-22T19:17:03.989864+00:00",
+                                                                               "base_model":  "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+                                                                               "adapter":  "runs\\phase5_train_ablation\\20260222_162541\\ablate_semantic_unambiguity_weight",
+                                                                               "sample_size":  48,
+                                                                               "seeds":  [
+                                                                                             7,
+                                                                                             11
+                                                                                         ],
+                                                                               "thresholds":  {
+                                                                                                  "min_final_lift":  0.0,
+                                                                                                  "min_symbolic_lift":  0.0
+                                                                                              },
+                                                                               "use_mode_tags":  false,
+                                                                               "mean_lifts":  {
+                                                                                                  "final_answer":  0.07291666666666667,
+                                                                                                  "symbolic":  1.0
+                                                                                              },
+                                                                               "gate_pass":  true,
+                                                                               "per_seed":  [
+                                                                                                {
+                                                                                                    "seed":  7,
+                                                                                                    "final_answer":  {
+                                                                                                                         "total":  48,
+                                                                                                                         "base_correct":  9,
+                                                                                                                         "adapter_correct":  12,
+                                                                                                                         "base_acc":  0.1875,
+                                                                                                                         "adapter_acc":  0.25,
+                                                                                                                         "lift":  0.0625
+                                                                                                                     },
+                                                                                                    "symbolic":  {
+                                                                                                                     "total":  48,
+                                                                                                                     "base_correct":  0,
+                                                                                                                     "adapter_correct":  48,
+                                                                                                                     "base_acc":  0.0,
+                                                                                                                     "adapter_acc":  1.0,
+                                                                                                                     "lift":  1.0
+                                                                                                                 }
+                                                                                                },
+                                                                                                {
+                                                                                                    "seed":  11,
+                                                                                                    "final_answer":  {
+                                                                                                                         "total":  48,
+                                                                                                                         "base_correct":  8,
+                                                                                                                         "adapter_correct":  12,
+                                                                                                                         "base_acc":  0.16666666666666666,
+                                                                                                                         "adapter_acc":  0.25,
+                                                                                                                         "lift":  0.08333333333333334
+                                                                                                                     },
+                                                                                                    "symbolic":  {
+                                                                                                                     "total":  48,
+                                                                                                                     "base_correct":  0,
+                                                                                                                     "adapter_correct":  48,
+                                                                                                                     "base_acc":  0.0,
+                                                                                                                     "adapter_acc":  1.0,
+                                                                                                                     "lift":  1.0
+                                                                                                                 }
+                                                                                                }
+                                                                                            ]
+                                                                           },
+                                    "phase5_full":  {
+                                                        "timestamp":  "2026-02-22T18:43:49.060139+00:00",
+                                                        "base_model":  "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+                                                        "adapter":  "runs\\phase5_train_ablation\\20260222_162541\\phase5_full",
+                                                        "sample_size":  48,
+                                                        "seeds":  [
+                                                                      7,
+                                                                      11
+                                                                  ],
+                                                        "thresholds":  {
+                                                                           "min_final_lift":  0.0,
+                                                                           "min_symbolic_lift":  0.0
+                                                                       },
+                                                        "use_mode_tags":  false,
+                                                        "mean_lifts":  {
+                                                                           "final_answer":  -0.06249999999999999,
+                                                                           "symbolic":  1.0
+                                                                       },
+                                                        "gate_pass":  false,
+                                                        "per_seed":  [
+                                                                         {
+                                                                             "seed":  7,
+                                                                             "final_answer":  {
+                                                                                                  "total":  48,
+                                                                                                  "base_correct":  9,
+                                                                                                  "adapter_correct":  5,
+                                                                                                  "base_acc":  0.1875,
+                                                                                                  "adapter_acc":  0.10416666666666667,
+                                                                                                  "lift":  -0.08333333333333333
+                                                                                              },
+                                                                             "symbolic":  {
+                                                                                              "total":  48,
+                                                                                              "base_correct":  0,
+                                                                                              "adapter_correct":  48,
+                                                                                              "base_acc":  0.0,
+                                                                                              "adapter_acc":  1.0,
+                                                                                              "lift":  1.0
+                                                                                          }
+                                                                         },
+                                                                         {
+                                                                             "seed":  11,
+                                                                             "final_answer":  {
+                                                                                                  "total":  48,
+                                                                                                  "base_correct":  8,
+                                                                                                  "adapter_correct":  6,
+                                                                                                  "base_acc":  0.16666666666666666,
+                                                                                                  "adapter_acc":  0.125,
+                                                                                                  "lift":  -0.04166666666666666
+                                                                                              },
+                                                                             "symbolic":  {
+                                                                                              "total":  48,
+                                                                                              "base_correct":  0,
+                                                                                              "adapter_correct":  48,
+                                                                                              "base_acc":  0.0,
+                                                                                              "adapter_acc":  1.0,
+                                                                                              "lift":  1.0
+                                                                                          }
+                                                                         }
+                                                                     ]
+                                                    },
+                                    "ablate_coverage_regularization_weight":  {
+                                                                                  "timestamp":  "2026-02-22T20:24:29.237017+00:00",
+                                                                                  "base_model":  "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+                                                                                  "adapter":  "runs\\phase5_train_ablation\\20260222_162541\\ablate_coverage_regularization_weight",
+                                                                                  "sample_size":  24,
+                                                                                  "seeds":  [
+                                                                                                7,
+                                                                                                11
+                                                                                            ],
+                                                                                  "thresholds":  {
+                                                                                                     "min_final_lift":  0.0,
+                                                                                                     "min_symbolic_lift":  0.0
+                                                                                                 },
+                                                                                  "use_mode_tags":  false,
+                                                                                  "mean_lifts":  {
+                                                                                                     "final_answer":  0.22916666666666666,
+                                                                                                     "symbolic":  1.0
+                                                                                                 },
+                                                                                  "gate_pass":  true,
+                                                                                  "per_seed":  [
+                                                                                                   {
+                                                                                                       "seed":  7,
+                                                                                                       "final_answer":  {
+                                                                                                                            "total":  24,
+                                                                                                                            "base_correct":  6,
+                                                                                                                            "adapter_correct":  11,
+                                                                                                                            "base_acc":  0.25,
+                                                                                                                            "adapter_acc":  0.4583333333333333,
+                                                                                                                            "lift":  0.20833333333333331
+                                                                                                                        },
+                                                                                                       "symbolic":  {
+                                                                                                                        "total":  24,
+                                                                                                                        "base_correct":  0,
+                                                                                                                        "adapter_correct":  24,
+                                                                                                                        "base_acc":  0.0,
+                                                                                                                        "adapter_acc":  1.0,
+                                                                                                                        "lift":  1.0
+                                                                                                                    }
+                                                                                                   },
+                                                                                                   {
+                                                                                                       "seed":  11,
+                                                                                                       "final_answer":  {
+                                                                                                                            "total":  24,
+                                                                                                                            "base_correct":  2,
+                                                                                                                            "adapter_correct":  8,
+                                                                                                                            "base_acc":  0.08333333333333333,
+                                                                                                                            "adapter_acc":  0.3333333333333333,
+                                                                                                                            "lift":  0.25
+                                                                                                                        },
+                                                                                                       "symbolic":  {
+                                                                                                                        "total":  24,
+                                                                                                                        "base_correct":  0,
+                                                                                                                        "adapter_correct":  24,
+                                                                                                                        "base_acc":  0.0,
+                                                                                                                        "adapter_acc":  1.0,
+                                                                                                                        "lift":  1.0
+                                                                                                                    }
+                                                                                                   }
+                                                                                               ]
+                                                                              },
+                                    "ablate_compositional_consistency_weight":  {
+                                                                                    "timestamp":  "2026-02-22T19:53:02.718282+00:00",
+                                                                                    "base_model":  "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+                                                                                    "adapter":  "runs\\phase5_train_ablation\\20260222_162541\\ablate_compositional_consistency_weight",
+                                                                                    "sample_size":  24,
+                                                                                    "seeds":  [
+                                                                                                  7,
+                                                                                                  11
+                                                                                              ],
+                                                                                    "thresholds":  {
+                                                                                                       "min_final_lift":  0.0,
+                                                                                                       "min_symbolic_lift":  0.0
+                                                                                                   },
+                                                                                    "use_mode_tags":  false,
+                                                                                    "mean_lifts":  {
+                                                                                                       "final_answer":  0.45833333333333337,
+                                                                                                       "symbolic":  0.8333333333333333
+                                                                                                   },
+                                                                                    "gate_pass":  true,
+                                                                                    "per_seed":  [
+                                                                                                     {
+                                                                                                         "seed":  7,
+                                                                                                         "final_answer":  {
+                                                                                                                              "total":  24,
+                                                                                                                              "base_correct":  6,
+                                                                                                                              "adapter_correct":  17,
+                                                                                                                              "base_acc":  0.25,
+                                                                                                                              "adapter_acc":  0.7083333333333334,
+                                                                                                                              "lift":  0.45833333333333337
+                                                                                                                          },
+                                                                                                         "symbolic":  {
+                                                                                                                          "total":  24,
+                                                                                                                          "base_correct":  0,
+                                                                                                                          "adapter_correct":  19,
+                                                                                                                          "base_acc":  0.0,
+                                                                                                                          "adapter_acc":  0.7916666666666666,
+                                                                                                                          "lift":  0.7916666666666666
+                                                                                                                      }
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "seed":  11,
+                                                                                                         "final_answer":  {
+                                                                                                                              "total":  24,
+                                                                                                                              "base_correct":  2,
+                                                                                                                              "adapter_correct":  13,
+                                                                                                                              "base_acc":  0.08333333333333333,
+                                                                                                                              "adapter_acc":  0.5416666666666666,
+                                                                                                                              "lift":  0.4583333333333333
+                                                                                                                          },
+                                                                                                         "symbolic":  {
+                                                                                                                          "total":  24,
+                                                                                                                          "base_correct":  0,
+                                                                                                                          "adapter_correct":  21,
+                                                                                                                          "base_acc":  0.0,
+                                                                                                                          "adapter_acc":  0.875,
+                                                                                                                          "lift":  0.875
+                                                                                                                      }
+                                                                                                     }
+                                                                                                 ]
+                                                                                }
+                                },
+    "final_comprehensive_report":  {
+                                       "generated_at":  "2026-03-01T23:47:34.174943+00:00",
+                                       "inputs":  {
+                                                      "science_pack":  "runs\\coconut_ablation_matrix\\20260226_090029\\science_metrics_pack.json",
+                                                      "run_g_summary":  "runs\\true_coconut_run_g_summary_s24_s7s11.json",
+                                                      "h_series_files":  [
+                                                                             "runs\\true_coconut_h_series\\20260228_031421\\run_h_series.json",
+                                                                             "runs\\true_coconut_h_series\\20260228_190640\\run_h_series.json",
+                                                                             "runs\\true_coconut_h_series\\20260301_132657\\run_h_series.json"
+                                                                         ],
+                                                      "h3_sweep_root":  "runs\\true_coconut_h3_sweep",
+                                                      "swiglu_reports":  [
+                                                                             "runs\\swiglu_bridge_report_h3.json",
+                                                                             "runs\\swiglu_bridge_report_h3_exp4.json"
+                                                                         ],
+                                                      "english_control_comparison":  "runs\\english_cot_control_duel\\20260301_205229\\control_duel_comparison.json",
+                                                      "vq_pilot_report":  "runs\\vq_reasoning_pilot_report_k200.json"
+                                                  },
+                                       "core":  {
+                                                    "run_a_base_final":  0.16666666666666666,
+                                                    "run_b_rigid_final":  0.39583333333333337,
+                                                    "run_c_kv_final":  0.10416666666666666,
+                                                    "run_e_babel_final":  0.16666666666666669,
+                                                    "run_f_final":  0.3125,
+                                                    "run_g_true_coconut_final":  0.10416666666666667
+                                                },
+                                       "h_series":  {
+                                                        "H1":  {
+                                                                   "run_id":  "H1",
+                                                                   "name":  "Multi-Vector Injection (Bandwidth)",
+                                                                   "status":  "ok",
+                                                                   "return_code":  0,
+                                                                   "output":  "runs\\true_coconut_h_series\\20260228_031421\\h1_seed*.json",
+                                                                   "metrics":  {
+                                                                                   "base_acc":  0.16666666666666666,
+                                                                                   "handoff_acc":  0.0,
+                                                                                   "handoff_lift":  -0.16666666666666666,
+                                                                                   "mean_step_cosine":  0.455878812905414,
+                                                                                   "errors":  0.0
+                                                                               },
+                                                                   "command":  [
+                                                                                   "C:\\Users\\Andrew\\miniconda3\\envs\\belief\\python.exe",
+                                                                                   "D:\\lojbanhypop\\scripts\\true_coconut.py",
+                                                                                   "--base-model",
+                                                                                   "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+                                                                                   "--adapter",
+                                                                                   "runs\\phase5_two_stage_recovery_anchors\\20260224_225142\\stage2_phase5",
+                                                                                   "--sample-size",
+                                                                                   "24",
+                                                                                   "--seed",
+                                                                                   "7",
+                                                                                   "--dataset-size",
+                                                                                   "1000",
+                                                                                   "--max-logic-new-tokens",
+                                                                                   "48",
+                                                                                   "--max-final-new-tokens",
+                                                                                   "48",
+                                                                                   "--virtual-token-window",
+                                                                                   "4",
+                                                                                   "--injection-mode",
+                                                                                   "input",
+                                                                                   "--log-step-cosine",
+                                                                                   "--output",
+                                                                                   "runs\\true_coconut_h_series\\20260228_031421\\h1_seed7.json"
+                                                                               ]
+                                                               },
+                                                        "H2":  {
+                                                                   "run_id":  "H2",
+                                                                   "name":  "Mid-Layer Injection (Depth)",
+                                                                   "status":  "ok",
+                                                                   "return_code":  0,
+                                                                   "output":  "runs\\true_coconut_h_series\\20260228_031421\\h2_seed*.json",
+                                                                   "metrics":  {
+                                                                                   "base_acc":  0.16666666666666666,
+                                                                                   "handoff_acc":  0.041666666666666664,
+                                                                                   "handoff_lift":  -0.125,
+                                                                                   "mean_step_cosine":  0.9234032248302051,
+                                                                                   "errors":  0.0
+                                                                               },
+                                                                   "command":  [
+                                                                                   "C:\\Users\\Andrew\\miniconda3\\envs\\belief\\python.exe",
+                                                                                   "D:\\lojbanhypop\\scripts\\true_coconut.py",
+                                                                                   "--base-model",
+                                                                                   "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+                                                                                   "--adapter",
+                                                                                   "runs\\phase5_two_stage_recovery_anchors\\20260224_225142\\stage2_phase5",
+                                                                                   "--sample-size",
+                                                                                   "24",
+                                                                                   "--seed",
+                                                                                   "7",
+                                                                                   "--dataset-size",
+                                                                                   "1000",
+                                                                                   "--max-logic-new-tokens",
+                                                                                   "48",
+                                                                                   "--max-final-new-tokens",
+                                                                                   "48",
+                                                                                   "--virtual-token-window",
+                                                                                   "1",
+                                                                                   "--injection-mode",
+                                                                                   "midlayer",
+                                                                                   "--log-step-cosine",
+                                                                                   "--output",
+                                                                                   "runs\\true_coconut_h_series\\20260228_031421\\h2_seed7.json",
+                                                                                   "--mid-layer-index",
+                                                                                   "12",
+                                                                                   "--mid-layer-scale",
+                                                                                   "1.0"
+                                                                               ]
+                                                               },
+                                                        "H3":  {
+                                                                   "run_id":  "H3",
+                                                                   "name":  "SwiGLU Mid-Layer Bridge (Non-Linear Alignment)",
+                                                                   "status":  "ok",
+                                                                   "return_code":  0,
+                                                                   "output":  "runs\\true_coconut_h_series\\20260228_190640\\h3_seed*.json",
+                                                                   "metrics":  {
+                                                                                   "base_acc":  0.16666666666666666,
+                                                                                   "handoff_acc":  0.0,
+                                                                                   "handoff_lift":  -0.16666666666666666,
+                                                                                   "mean_step_cosine":  0.9340984901516802,
+                                                                                   "errors":  0.0
+                                                                               },
+                                                                   "command":  [
+                                                                                   "C:\\Users\\Andrew\\miniconda3\\envs\\belief\\python.exe",
+                                                                                   "D:\\lojbanhypop\\scripts\\true_coconut.py",
+                                                                                   "--base-model",
+                                                                                   "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+                                                                                   "--adapter",
+                                                                                   "runs\\phase5_two_stage_recovery_anchors\\20260224_225142\\stage2_phase5",
+                                                                                   "--sample-size",
+                                                                                   "24",
+                                                                                   "--seed",
+                                                                                   "7",
+                                                                                   "--dataset-size",
+                                                                                   "1000",
+                                                                                   "--max-logic-new-tokens",
+                                                                                   "48",
+                                                                                   "--max-final-new-tokens",
+                                                                                   "48",
+                                                                                   "--virtual-token-window",
+                                                                                   "1",
+                                                                                   "--injection-mode",
+                                                                                   "midlayer",
+                                                                                   "--log-step-cosine",
+                                                                                   "--output",
+                                                                                   "runs\\true_coconut_h_series\\20260228_190640\\h3_seed7.json",
+                                                                                   "--mid-layer-index",
+                                                                                   "12",
+                                                                                   "--mid-layer-scale",
+                                                                                   "1.0",
+                                                                                   "--swiglu-bridge",
+                                                                                   "runs\\projections\\swiglu_midlayer_bridge_h3.pt"
+                                                                               ]
+                                                               },
+                                                        "H4":  {
+                                                                   "run_id":  "H4",
+                                                                   "name":  "Persistent SwiGLU Injection (Continuous Anchor)",
+                                                                   "status":  "ok",
+                                                                   "return_code":  0,
+                                                                   "output":  "runs\\true_coconut_h_series\\20260301_132657\\h4_seed*.json",
+                                                                   "metrics":  {
+                                                                                   "base_acc":  0.16666666666666666,
+                                                                                   "handoff_acc":  0.08333333333333333,
+                                                                                   "handoff_lift":  -0.08333333333333333,
+                                                                                   "mean_step_cosine":  0.9245374569048485,
+                                                                                   "errors":  0.0
+                                                                               },
+                                                                   "command":  [
+                                                                                   "C:\\Users\\Andrew\\miniconda3\\envs\\belief\\python.exe",
+                                                                                   "D:\\lojbanhypop\\scripts\\true_coconut.py",
+                                                                                   "--base-model",
+                                                                                   "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+                                                                                   "--adapter",
+                                                                                   "runs\\phase5_two_stage_recovery_anchors\\20260224_225142\\stage2_phase5",
+                                                                                   "--sample-size",
+                                                                                   "24",
+                                                                                   "--seed",
+                                                                                   "7",
+                                                                                   "--dataset-size",
+                                                                                   "1000",
+                                                                                   "--max-logic-new-tokens",
+                                                                                   "48",
+                                                                                   "--max-final-new-tokens",
+                                                                                   "48",
+                                                                                   "--virtual-token-window",
+                                                                                   "1",
+                                                                                   "--injection-mode",
+                                                                                   "midlayer_persistent",
+                                                                                   "--log-step-cosine",
+                                                                                   "--output",
+                                                                                   "runs\\true_coconut_h_series\\20260301_132657\\h4_seed7.json",
+                                                                                   "--mid-layer-index",
+                                                                                   "12",
+                                                                                   "--mid-layer-scale",
+                                                                                   "1.0",
+                                                                                   "--swiglu-bridge",
+                                                                                   "runs\\projections\\swiglu_midlayer_bridge_h3_exp4.pt",
+                                                                                   "--contrastive-alpha",
+                                                                                   "1.0"
+                                                                               ]
+                                                               }
+                                                    },
+                                       "h3_sweep":  [
+                                                        {
+                                                            "source":  "runs\\true_coconut_h3_sweep\\20260228_231006\\exp4\\scale_0.25\\20260228_231006\\run_h_series.json",
+                                                            "scale":  0.25,
+                                                            "bridge":  "runs\\projections\\swiglu_midlayer_bridge_h3_exp4.pt",
+                                                            "expansion_factor":  4,
+                                                            "base_acc":  0.16666666666666666,
+                                                            "handoff_acc":  0.08333333333333333,
+                                                            "lift":  -0.08333333333333333,
+                                                            "mean_step_cosine":  0.924480204185885,
+                                                            "errors":  0.0
+                                                        },
+                                                        {
+                                                            "source":  "runs\\true_coconut_h3_sweep\\20260228_231006\\exp4\\scale_0.5\\20260228_232430\\run_h_series.json",
+                                                            "scale":  0.5,
+                                                            "bridge":  "runs\\projections\\swiglu_midlayer_bridge_h3_exp4.pt",
+                                                            "expansion_factor":  4,
+                                                            "base_acc":  0.16666666666666666,
+                                                            "handoff_acc":  0.08333333333333333,
+                                                            "lift":  -0.08333333333333333,
+                                                            "mean_step_cosine":  0.9245178286865768,
+                                                            "errors":  0.0
+                                                        },
+                                                        {
+                                                            "source":  "runs\\true_coconut_h3_sweep\\20260228_231006\\exp4\\scale_1\\20260228_233843\\run_h_series.json",
+                                                            "scale":  1.0,
+                                                            "bridge":  "runs\\projections\\swiglu_midlayer_bridge_h3_exp4.pt",
+                                                            "expansion_factor":  4,
+                                                            "base_acc":  0.16666666666666666,
+                                                            "handoff_acc":  0.08333333333333333,
+                                                            "lift":  -0.08333333333333333,
+                                                            "mean_step_cosine":  0.9245359295875661,
+                                                            "errors":  0.0
+                                                        },
+                                                        {
+                                                            "source":  "runs\\true_coconut_h3_sweep\\20260228_231006\\exp4\\scale_1.5\\20260301_000013\\run_h_series.json",
+                                                            "scale":  1.5,
+                                                            "bridge":  "runs\\projections\\swiglu_midlayer_bridge_h3_exp4.pt",
+                                                            "expansion_factor":  4,
+                                                            "base_acc":  0.16666666666666666,
+                                                            "handoff_acc":  0.08333333333333333,
+                                                            "lift":  -0.08333333333333333,
+                                                            "mean_step_cosine":  0.9245418618536658,
+                                                            "errors":  0.0
+                                                        },
+                                                        {
+                                                            "source":  "runs\\true_coconut_h3_sweep\\20260228_205313\\exp2\\scale_0.25\\20260228_205313\\run_h_series.json",
+                                                            "scale":  0.25,
+                                                            "bridge":  "runs\\projections\\swiglu_midlayer_bridge_h3.pt",
+                                                            "expansion_factor":  2,
+                                                            "base_acc":  0.16666666666666666,
+                                                            "handoff_acc":  0.0,
+                                                            "lift":  -0.16666666666666666,
+                                                            "mean_step_cosine":  0.9315896614765127,
+                                                            "errors":  0.0
+                                                        },
+                                                        {
+                                                            "source":  "runs\\true_coconut_h3_sweep\\20260228_205313\\exp2\\scale_0.5\\20260228_211012\\run_h_series.json",
+                                                            "scale":  0.5,
+                                                            "bridge":  "runs\\projections\\swiglu_midlayer_bridge_h3.pt",
+                                                            "expansion_factor":  2,
+                                                            "base_acc":  0.16666666666666666,
+                                                            "handoff_acc":  0.0,
+                                                            "lift":  -0.16666666666666666,
+                                                            "mean_step_cosine":  0.9337081209135553,
+                                                            "errors":  0.0
+                                                        },
+                                                        {
+                                                            "source":  "runs\\true_coconut_h3_sweep\\20260228_205313\\exp2\\scale_1\\20260228_212626\\run_h_series.json",
+                                                            "scale":  1.0,
+                                                            "bridge":  "runs\\projections\\swiglu_midlayer_bridge_h3.pt",
+                                                            "expansion_factor":  2,
+                                                            "base_acc":  0.16666666666666666,
+                                                            "handoff_acc":  0.0,
+                                                            "lift":  -0.16666666666666666,
+                                                            "mean_step_cosine":  0.9340984901516802,
+                                                            "errors":  0.0
+                                                        },
+                                                        {
+                                                            "source":  "runs\\true_coconut_h3_sweep\\20260228_205313\\exp2\\scale_1.5\\20260228_214232\\run_h_series.json",
+                                                            "scale":  1.5,
+                                                            "bridge":  "runs\\projections\\swiglu_midlayer_bridge_h3.pt",
+                                                            "expansion_factor":  2,
+                                                            "base_acc":  0.16666666666666666,
+                                                            "handoff_acc":  0.0,
+                                                            "lift":  -0.16666666666666666,
+                                                            "mean_step_cosine":  0.9341265764087439,
+                                                            "errors":  0.0
+                                                        }
+                                                    ],
+                                       "swiglu_train_runs":  [
+                                                                 {
+                                                                     "timestamp":  "2026-02-28T19:06:40.642419+00:00",
+                                                                     "base_model":  "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+                                                                     "adapter":  "runs\\phase5_two_stage_recovery_anchors\\20260224_225142\\stage2_phase5",
+                                                                     "train_examples":  19,
+                                                                     "train_steps":  500,
+                                                                     "lr":  0.0005,
+                                                                     "weight_decay":  0.01,
+                                                                     "expansion_factor":  2,
+                                                                     "layer_index":  12,
+                                                                     "layer_scale":  1.0,
+                                                                     "loss_history":  [
+                                                                                          11.13483057498932,
+                                                                                          8.640710682868958,
+                                                                                          6.792719869613648,
+                                                                                          3.8930187606811524,
+                                                                                          3.770675930976868,
+                                                                                          2.1308714938163758,
+                                                                                          3.143690347671509,
+                                                                                          2.5789966130256654,
+                                                                                          2.0533534145355223,
+                                                                                          1.9645712161064148,
+                                                                                          2.5364675426483156,
+                                                                                          1.6938082909584045,
+                                                                                          1.9817000365257262,
+                                                                                          1.8966966462135315,
+                                                                                          1.6636060667037964,
+                                                                                          1.6552165913581849,
+                                                                                          2.232166328430176,
+                                                                                          1.9466620516777038,
+                                                                                          1.9717737746238708,
+                                                                                          1.6946573400497436
+                                                                                      ],
+                                                                     "bridge_path":  "runs\\projections\\swiglu_midlayer_bridge_h3.pt"
+                                                                 },
+                                                                 {
+                                                                     "timestamp":  "2026-02-28T23:10:05.403499+00:00",
+                                                                     "base_model":  "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+                                                                     "adapter":  "runs\\phase5_two_stage_recovery_anchors\\20260224_225142\\stage2_phase5",
+                                                                     "train_examples":  19,
+                                                                     "train_steps":  500,
+                                                                     "lr":  0.0005,
+                                                                     "weight_decay":  0.01,
+                                                                     "expansion_factor":  4,
+                                                                     "layer_index":  12,
+                                                                     "layer_scale":  1.0,
+                                                                     "loss_history":  [
+                                                                                          16.2978617477417,
+                                                                                          8.783697681427002,
+                                                                                          5.359331064224243,
+                                                                                          3.979233021736145,
+                                                                                          2.6756733798980714,
+                                                                                          2.992355046272278,
+                                                                                          3.2215058851242064,
+                                                                                          2.1983223724365235,
+                                                                                          2.3626287984848022,
+                                                                                          2.7404120421409606,
+                                                                                          2.3170497012138367,
+                                                                                          1.740238244533539,
+                                                                                          1.6983947134017945,
+                                                                                          1.9671456503868103,
+                                                                                          1.5789894914627076,
+                                                                                          1.8501550841331482,
+                                                                                          1.7844862484931945,
+                                                                                          1.890294771194458,
+                                                                                          1.9256378889083863,
+                                                                                          1.5636126041412353
+                                                                                      ],
+                                                                     "bridge_path":  "runs\\projections\\swiglu_midlayer_bridge_h3_exp4.pt"
+                                                                 }
+                                                             ],
+                                       "english_control_duel":  {
+                                                                    "timestamp":  "2026-03-01T23:03:49.1434588Z",
+                                                                    "base_acc":  0.25,
+                                                                    "english_cot_acc":  0,
+                                                                    "lojban_adapter_acc":  0.4166666666666667,
+                                                                    "english_lift_vs_base":  -0.25,
+                                                                    "lojban_lift_vs_base":  0.16666666666666669,
+                                                                    "english_minus_lojban":  -0.4166666666666667,
+                                                                    "source":  {
+                                                                                   "english_eval":  "runs/english_cot_control_duel/20260301_205229/english_cot_eval.json",
+                                                                                   "lojban_eval":  "runs/english_cot_control_duel/20260301_205229/lojban_reference_eval.json"
+                                                                               }
+                                                                },
+                                       "vq_pilot":  {
+                                                        "timestamp":  "2026-03-01T23:47:20.279295+00:00",
+                                                        "base_model":  "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+                                                        "adapter":  "runs\\phase5_two_stage_recovery_anchors\\20260224_225142\\stage2_phase5",
+                                                        "codebook_size":  200,
+                                                        "codes_used":  9,
+                                                        "usage_ratio":  0.045,
+                                                        "train_steps":  500,
+                                                        "loss_start":  135.01617431640625,
+                                                        "loss_end":  108.62223052978516,
+                                                        "loss_history_tail":  [
+                                                                                  120.53294372558594,
+                                                                                  115.91707611083984,
+                                                                                  110.53740692138672,
+                                                                                  104.42881774902344,
+                                                                                  112.75376892089844,
+                                                                                  134.78086853027344,
+                                                                                  132.92832946777344,
+                                                                                  115.910888671875,
+                                                                                  108.64170837402344,
+                                                                                  124.07350158691406,
+                                                                                  132.91912841796875,
+                                                                                  119.03878021240234,
+                                                                                  110.5185775756836,
+                                                                                  112.88484954833984,
+                                                                                  112.74044799804688,
+                                                                                  111.03475189208984,
+                                                                                  108.62842559814453,
+                                                                                  87.54473876953125,
+                                                                                  110.50715637207031,
+                                                                                  108.62223052978516
+                                                                              ],
+                                                        "output_codebook":  "runs\\projections\\vq_codebook_pilot_k200.pt"
+                                                    }
+                                   },
+    "h5_slices":  {
+                      "slice1":  {
+                                     "timestamp":  "2026-03-02T04:18:29.210213+00:00",
+                                     "base_model":  "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+                                     "adapter":  "runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+                                     "train_steps":  1000,
+                                     "codebook_size":  2000,
+                                     "boolean_frozen_count":  5,
+                                     "dead_code_steps":  100,
+                                     "mdl_warmup_steps":  100,
+                                     "mdl_max_lambda":  0.02,
+                                     "metrics":  {
+                                                     "codes_used":  1291,
+                                                     "usage_ratio":  0.6471177944862155,
+                                                     "arity_violation_rate":  0.0,
+                                                     "advisor_len_mean":  144.0,
+                                                     "dead_code_revivals":  14762,
+                                                     "loss_start":  783.8545532226562,
+                                                     "loss_end":  132.07516479492188,
+                                                     "ce_start":  1.9445908069610596,
+                                                     "ce_end":  2.021329402923584
+                                                 },
+                                     "checkpoint":  "runs\\true_coconut_h5\\20260302_033728\\h5_codebook_advisor.pt",
+                                     "loss_history_tail":  [
+                                                               704.9507446289062,
+                                                               130.53155517578125,
+                                                               194.4593048095703,
+                                                               672.4522705078125,
+                                                               185.67041015625,
+                                                               242.87399291992188,
+                                                               148.81419372558594,
+                                                               407.7302551269531,
+                                                               167.1690673828125,
+                                                               140.41481018066406,
+                                                               210.8338623046875,
+                                                               519.1732177734375,
+                                                               147.5146484375,
+                                                               186.26528930664062,
+                                                               178.37391662597656,
+                                                               533.8834838867188,
+                                                               154.21604919433594,
+                                                               140.33157348632812,
+                                                               272.0032653808594,
+                                                               132.07516479492188
+                                                           ],
+                                     "ce_history_tail":  [
+                                                             3.6832737922668457,
+                                                             2.2048733234405518,
+                                                             9.787115097045898,
+                                                             3.374821424484253,
+                                                             9.294346809387207,
+                                                             2.4758806228637695,
+                                                             1.2484859228134155,
+                                                             2.3315112590789795,
+                                                             15.602510452270508,
+                                                             3.4294722080230713,
+                                                             2.216093063354492,
+                                                             2.6634111404418945,
+                                                             2.8802521228790283,
+                                                             1.4501408338546753,
+                                                             10.31098461151123,
+                                                             1.9875320196151733,
+                                                             1.5091406106948853,
+                                                             15.217321395874023,
+                                                             2.190180778503418,
+                                                             2.021329402923584
+                                                         ]
+                                 }
+                  },
+    "training_histories":  {
+                               "baseline_ce":  {
+                                                   "timestamp":  "2026-02-19T21:34:48.559165Z",
+                                                   "config":  {
+                                                                  "iterations":  6,
+                                                                  "seed":  7,
+                                                                  "dataset_size":  1000,
+                                                                  "train_size":  600,
+                                                                  "val_size":  200,
+                                                                  "test_size":  200,
+                                                                  "max_accept_per_iteration":  3
+                                                              },
+                                                   "final_language":  {
+                                                                          "base_token_count":  21,
+                                                                          "macro_count":  11,
+                                                                          "total_token_count":  32,
+                                                                          "macros":  {
+                                                                                         "M001":  [
+                                                                                                      "TASK_WINOGRAD",
+                                                                                                      "BIND_E1",
+                                                                                                      "BIND_E2",
+                                                                                                      "LINK_CAUSAL"
+                                                                                                  ],
+                                                                                         "M010":  [
+                                                                                                      "TASK_KNIGHTS",
+                                                                                                      "BIND_A",
+                                                                                                      "BIND_B",
+                                                                                                      "BIND_C"
+                                                                                                  ],
+                                                                                         "M011":  [
+                                                                                                      "CLAIM_GRAPH",
+                                                                                                      "ASSUME_BRANCH",
+                                                                                                      "CONSISTENCY_CHECK"
+                                                                                                  ],
+                                                                                         "M014":  [
+                                                                                                      "VERIFY_ID",
+                                                                                                      "ANS_ROLE_MAP"
+                                                                                                  ],
+                                                                                         "M015":  [
+                                                                                                      "TASK_MULTI_AGENT",
+                                                                                                      "BIND_AGENT_E1",
+                                                                                                      "BIND_AGENT_E2",
+                                                                                                      "BIND_OBJ_O1"
+                                                                                                  ],
+                                                                                         "M021":  [
+                                                                                                      "STATE_OBJ_LOC1",
+                                                                                                      "EVENT_MOVE_LOC2"
+                                                                                                  ],
+                                                                                         "M022":  [
+                                                                                                      "STATE_OBJ_LOC1",
+                                                                                                      "EVENT_MOVE_LOC2",
+                                                                                                      "OBS_ABSENT",
+                                                                                                      "MENTAL_STATE_E1_LOC1"
+                                                                                                  ],
+                                                                                         "M031":  [
+                                                                                                      "VERIFY_ID",
+                                                                                                      "ANS_LOC1"
+                                                                                                  ],
+                                                                                         "M032":  [
+                                                                                                      "PRONOUN_REF",
+                                                                                                      "RESOLVE_PRON_E1",
+                                                                                                      "VERIFY_ID",
+                                                                                                      "ANS_E1"
+                                                                                                  ],
+                                                                                         "M038":  [
+                                                                                                      "PRONOUN_REF",
+                                                                                                      "RESOLVE_PRON_E2",
+                                                                                                      "VERIFY_ID",
+                                                                                                      "ANS_E2"
+                                                                                                  ],
+                                                                                         "M041":  [
+                                                                                                      "OBS_PRESENT",
+                                                                                                      "MENTAL_STATE_E1_LOC2",
+                                                                                                      "VERIFY_ID",
+                                                                                                      "ANS_LOC2"
+                                                                                                  ]
+                                                                                     }
+                                                                      },
+                                                   "history":  [
+                                                                   {
+                                                                       "iteration":  0,
+                                                                       "before":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  9.41,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                       "after":  {
+                                                                                     "accuracy":  1.0,
+                                                                                     "avg_tokens":  7.565,
+                                                                                     "parse_success_rate":  1.0
+                                                                                 },
+                                                                       "accepted":  [
+                                                                                        {
+                                                                                            "macro_name":  "M001",
+                                                                                            "pattern":  [
+                                                                                                            "TASK_WINOGRAD",
+                                                                                                            "BIND_E1",
+                                                                                                            "BIND_E2",
+                                                                                                            "LINK_CAUSAL"
+                                                                                                        ],
+                                                                                            "support":  213
+                                                                                        },
+                                                                                        {
+                                                                                            "macro_name":  "M010",
+                                                                                            "pattern":  [
+                                                                                                            "TASK_KNIGHTS",
+                                                                                                            "BIND_A",
+                                                                                                            "BIND_B",
+                                                                                                            "BIND_C"
+                                                                                                        ],
+                                                                                            "support":  201
+                                                                                        }
+                                                                                    ],
+                                                                       "language_size":  23
+                                                                   },
+                                                                   {
+                                                                       "iteration":  1,
+                                                                       "before":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  7.565,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                       "after":  {
+                                                                                     "accuracy":  1.0,
+                                                                                     "avg_tokens":  5.45,
+                                                                                     "parse_success_rate":  1.0
+                                                                                 },
+                                                                       "accepted":  [
+                                                                                        {
+                                                                                            "macro_name":  "M011",
+                                                                                            "pattern":  [
+                                                                                                            "CLAIM_GRAPH",
+                                                                                                            "ASSUME_BRANCH",
+                                                                                                            "CONSISTENCY_CHECK"
+                                                                                                        ],
+                                                                                            "support":  201
+                                                                                        },
+                                                                                        {
+                                                                                            "macro_name":  "M014",
+                                                                                            "pattern":  [
+                                                                                                            "VERIFY_ID",
+                                                                                                            "ANS_ROLE_MAP"
+                                                                                                        ],
+                                                                                            "support":  201
+                                                                                        },
+                                                                                        {
+                                                                                            "macro_name":  "M015",
+                                                                                            "pattern":  [
+                                                                                                            "TASK_MULTI_AGENT",
+                                                                                                            "BIND_AGENT_E1",
+                                                                                                            "BIND_AGENT_E2",
+                                                                                                            "BIND_OBJ_O1"
+                                                                                                        ],
+                                                                                            "support":  186
+                                                                                        }
+                                                                                    ],
+                                                                       "language_size":  26
+                                                                   },
+                                                                   {
+                                                                       "iteration":  2,
+                                                                       "before":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  5.45,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                       "after":  {
+                                                                                     "accuracy":  1.0,
+                                                                                     "avg_tokens":  4.515,
+                                                                                     "parse_success_rate":  1.0
+                                                                                 },
+                                                                       "accepted":  [
+                                                                                        {
+                                                                                            "macro_name":  "M021",
+                                                                                            "pattern":  [
+                                                                                                            "STATE_OBJ_LOC1",
+                                                                                                            "EVENT_MOVE_LOC2"
+                                                                                                        ],
+                                                                                            "support":  186
+                                                                                        },
+                                                                                        {
+                                                                                            "macro_name":  "M022",
+                                                                                            "pattern":  [
+                                                                                                            "STATE_OBJ_LOC1",
+                                                                                                            "EVENT_MOVE_LOC2",
+                                                                                                            "OBS_ABSENT",
+                                                                                                            "MENTAL_STATE_E1_LOC1"
+                                                                                                        ],
+                                                                                            "support":  117
+                                                                                        }
+                                                                                    ],
+                                                                       "language_size":  28
+                                                                   },
+                                                                   {
+                                                                       "iteration":  3,
+                                                                       "before":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  4.515,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                       "after":  {
+                                                                                     "accuracy":  1.0,
+                                                                                     "avg_tokens":  3.355,
+                                                                                     "parse_success_rate":  1.0
+                                                                                 },
+                                                                       "accepted":  [
+                                                                                        {
+                                                                                            "macro_name":  "M031",
+                                                                                            "pattern":  [
+                                                                                                            "VERIFY_ID",
+                                                                                                            "ANS_LOC1"
+                                                                                                        ],
+                                                                                            "support":  117
+                                                                                        },
+                                                                                        {
+                                                                                            "macro_name":  "M032",
+                                                                                            "pattern":  [
+                                                                                                            "PRONOUN_REF",
+                                                                                                            "RESOLVE_PRON_E1",
+                                                                                                            "VERIFY_ID",
+                                                                                                            "ANS_E1"
+                                                                                                        ],
+                                                                                            "support":  114
+                                                                                        },
+                                                                                        {
+                                                                                            "macro_name":  "M038",
+                                                                                            "pattern":  [
+                                                                                                            "PRONOUN_REF",
+                                                                                                            "RESOLVE_PRON_E2",
+                                                                                                            "VERIFY_ID",
+                                                                                                            "ANS_E2"
+                                                                                                        ],
+                                                                                            "support":  99
+                                                                                        }
+                                                                                    ],
+                                                                       "language_size":  31
+                                                                   },
+                                                                   {
+                                                                       "iteration":  4,
+                                                                       "before":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.355,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                       "after":  {
+                                                                                     "accuracy":  1.0,
+                                                                                     "avg_tokens":  3.025,
+                                                                                     "parse_success_rate":  1.0
+                                                                                 },
+                                                                       "accepted":  [
+                                                                                        {
+                                                                                            "macro_name":  "M041",
+                                                                                            "pattern":  [
+                                                                                                            "OBS_PRESENT",
+                                                                                                            "MENTAL_STATE_E1_LOC2",
+                                                                                                            "VERIFY_ID",
+                                                                                                            "ANS_LOC2"
+                                                                                                        ],
+                                                                                            "support":  69
+                                                                                        }
+                                                                                    ],
+                                                                       "language_size":  32
+                                                                   },
+                                                                   {
+                                                                       "iteration":  5,
+                                                                       "before":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                       "after":  {
+                                                                                     "accuracy":  1.0,
+                                                                                     "avg_tokens":  3.025,
+                                                                                     "parse_success_rate":  1.0
+                                                                                 },
+                                                                       "accepted":  [
+
+                                                                                    ],
+                                                                       "language_size":  32
+                                                                   }
+                                                               ],
+                                                   "test_metrics":  {
+                                                                        "accuracy":  1.0,
+                                                                        "avg_tokens":  2.985,
+                                                                        "parse_success_rate":  1.0
+                                                                    }
+                                               },
+                               "phase5_early":  {
+                                                    "timestamp":  "2026-02-22T12:25:50.173692Z",
+                                                    "config":  {
+                                                                   "iterations":  20,
+                                                                   "seed":  7,
+                                                                   "dataset_size":  1000,
+                                                                   "train_size":  600,
+                                                                   "val_size":  200,
+                                                                   "test_size":  200,
+                                                                   "max_accept_per_iteration":  10
+                                                               },
+                                                    "final_language":  {
+                                                                           "base_token_count":  21,
+                                                                           "macro_count":  11,
+                                                                           "total_token_count":  32,
+                                                                           "macros":  {
+                                                                                          "M001":  [
+                                                                                                       "TASK_WINOGRAD",
+                                                                                                       "BIND_E1",
+                                                                                                       "BIND_E2",
+                                                                                                       "LINK_CAUSAL"
+                                                                                                   ],
+                                                                                          "M010":  [
+                                                                                                       "TASK_KNIGHTS",
+                                                                                                       "BIND_A",
+                                                                                                       "BIND_B",
+                                                                                                       "BIND_C"
+                                                                                                   ],
+                                                                                          "M011":  [
+                                                                                                       "CLAIM_GRAPH",
+                                                                                                       "ASSUME_BRANCH",
+                                                                                                       "CONSISTENCY_CHECK"
+                                                                                                   ],
+                                                                                          "M014":  [
+                                                                                                       "VERIFY_ID",
+                                                                                                       "ANS_ROLE_MAP"
+                                                                                                   ],
+                                                                                          "M015":  [
+                                                                                                       "TASK_MULTI_AGENT",
+                                                                                                       "BIND_AGENT_E1",
+                                                                                                       "BIND_AGENT_E2",
+                                                                                                       "BIND_OBJ_O1"
+                                                                                                   ],
+                                                                                          "M021":  [
+                                                                                                       "STATE_OBJ_LOC1",
+                                                                                                       "EVENT_MOVE_LOC2"
+                                                                                                   ],
+                                                                                          "M022":  [
+                                                                                                       "STATE_OBJ_LOC1",
+                                                                                                       "EVENT_MOVE_LOC2",
+                                                                                                       "OBS_ABSENT",
+                                                                                                       "MENTAL_STATE_E1_LOC1"
+                                                                                                   ],
+                                                                                          "M031":  [
+                                                                                                       "VERIFY_ID",
+                                                                                                       "ANS_LOC1"
+                                                                                                   ],
+                                                                                          "M032":  [
+                                                                                                       "PRONOUN_REF",
+                                                                                                       "RESOLVE_PRON_E1",
+                                                                                                       "VERIFY_ID",
+                                                                                                       "ANS_E1"
+                                                                                                   ],
+                                                                                          "M038":  [
+                                                                                                       "PRONOUN_REF",
+                                                                                                       "RESOLVE_PRON_E2",
+                                                                                                       "VERIFY_ID",
+                                                                                                       "ANS_E2"
+                                                                                                   ],
+                                                                                          "M041":  [
+                                                                                                       "OBS_PRESENT",
+                                                                                                       "MENTAL_STATE_E1_LOC2",
+                                                                                                       "VERIFY_ID",
+                                                                                                       "ANS_LOC2"
+                                                                                                   ]
+                                                                                      }
+                                                                       },
+                                                    "history":  [
+                                                                    {
+                                                                        "iteration":  0,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  9.41,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  7.565,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+                                                                                         {
+                                                                                             "macro_name":  "M001",
+                                                                                             "pattern":  [
+                                                                                                             "TASK_WINOGRAD",
+                                                                                                             "BIND_E1",
+                                                                                                             "BIND_E2",
+                                                                                                             "LINK_CAUSAL"
+                                                                                                         ],
+                                                                                             "support":  213
+                                                                                         },
+                                                                                         {
+                                                                                             "macro_name":  "M010",
+                                                                                             "pattern":  [
+                                                                                                             "TASK_KNIGHTS",
+                                                                                                             "BIND_A",
+                                                                                                             "BIND_B",
+                                                                                                             "BIND_C"
+                                                                                                         ],
+                                                                                             "support":  201
+                                                                                         }
+                                                                                     ],
+                                                                        "language_size":  23
+                                                                    },
+                                                                    {
+                                                                        "iteration":  1,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  7.565,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  5.45,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+                                                                                         {
+                                                                                             "macro_name":  "M011",
+                                                                                             "pattern":  [
+                                                                                                             "CLAIM_GRAPH",
+                                                                                                             "ASSUME_BRANCH",
+                                                                                                             "CONSISTENCY_CHECK"
+                                                                                                         ],
+                                                                                             "support":  201
+                                                                                         },
+                                                                                         {
+                                                                                             "macro_name":  "M014",
+                                                                                             "pattern":  [
+                                                                                                             "VERIFY_ID",
+                                                                                                             "ANS_ROLE_MAP"
+                                                                                                         ],
+                                                                                             "support":  201
+                                                                                         },
+                                                                                         {
+                                                                                             "macro_name":  "M015",
+                                                                                             "pattern":  [
+                                                                                                             "TASK_MULTI_AGENT",
+                                                                                                             "BIND_AGENT_E1",
+                                                                                                             "BIND_AGENT_E2",
+                                                                                                             "BIND_OBJ_O1"
+                                                                                                         ],
+                                                                                             "support":  186
+                                                                                         }
+                                                                                     ],
+                                                                        "language_size":  26
+                                                                    },
+                                                                    {
+                                                                        "iteration":  2,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  5.45,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  4.515,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+                                                                                         {
+                                                                                             "macro_name":  "M021",
+                                                                                             "pattern":  [
+                                                                                                             "STATE_OBJ_LOC1",
+                                                                                                             "EVENT_MOVE_LOC2"
+                                                                                                         ],
+                                                                                             "support":  186
+                                                                                         },
+                                                                                         {
+                                                                                             "macro_name":  "M022",
+                                                                                             "pattern":  [
+                                                                                                             "STATE_OBJ_LOC1",
+                                                                                                             "EVENT_MOVE_LOC2",
+                                                                                                             "OBS_ABSENT",
+                                                                                                             "MENTAL_STATE_E1_LOC1"
+                                                                                                         ],
+                                                                                             "support":  117
+                                                                                         }
+                                                                                     ],
+                                                                        "language_size":  28
+                                                                    },
+                                                                    {
+                                                                        "iteration":  3,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  4.515,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.355,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+                                                                                         {
+                                                                                             "macro_name":  "M031",
+                                                                                             "pattern":  [
+                                                                                                             "VERIFY_ID",
+                                                                                                             "ANS_LOC1"
+                                                                                                         ],
+                                                                                             "support":  117
+                                                                                         },
+                                                                                         {
+                                                                                             "macro_name":  "M032",
+                                                                                             "pattern":  [
+                                                                                                             "PRONOUN_REF",
+                                                                                                             "RESOLVE_PRON_E1",
+                                                                                                             "VERIFY_ID",
+                                                                                                             "ANS_E1"
+                                                                                                         ],
+                                                                                             "support":  114
+                                                                                         },
+                                                                                         {
+                                                                                             "macro_name":  "M038",
+                                                                                             "pattern":  [
+                                                                                                             "PRONOUN_REF",
+                                                                                                             "RESOLVE_PRON_E2",
+                                                                                                             "VERIFY_ID",
+                                                                                                             "ANS_E2"
+                                                                                                         ],
+                                                                                             "support":  99
+                                                                                         }
+                                                                                     ],
+                                                                        "language_size":  31
+                                                                    },
+                                                                    {
+                                                                        "iteration":  4,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  3.355,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+                                                                                         {
+                                                                                             "macro_name":  "M041",
+                                                                                             "pattern":  [
+                                                                                                             "OBS_PRESENT",
+                                                                                                             "MENTAL_STATE_E1_LOC2",
+                                                                                                             "VERIFY_ID",
+                                                                                                             "ANS_LOC2"
+                                                                                                         ],
+                                                                                             "support":  69
+                                                                                         }
+                                                                                     ],
+                                                                        "language_size":  32
+                                                                    },
+                                                                    {
+                                                                        "iteration":  5,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  3.025,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+
+                                                                                     ],
+                                                                        "language_size":  32
+                                                                    },
+                                                                    {
+                                                                        "iteration":  6,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  3.025,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+
+                                                                                     ],
+                                                                        "language_size":  32
+                                                                    },
+                                                                    {
+                                                                        "iteration":  7,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  3.025,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+
+                                                                                     ],
+                                                                        "language_size":  32
+                                                                    },
+                                                                    {
+                                                                        "iteration":  8,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  3.025,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+
+                                                                                     ],
+                                                                        "language_size":  32
+                                                                    },
+                                                                    {
+                                                                        "iteration":  9,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  3.025,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+
+                                                                                     ],
+                                                                        "language_size":  32
+                                                                    },
+                                                                    {
+                                                                        "iteration":  10,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  3.025,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+
+                                                                                     ],
+                                                                        "language_size":  32
+                                                                    },
+                                                                    {
+                                                                        "iteration":  11,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  3.025,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+
+                                                                                     ],
+                                                                        "language_size":  32
+                                                                    },
+                                                                    {
+                                                                        "iteration":  12,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  3.025,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+
+                                                                                     ],
+                                                                        "language_size":  32
+                                                                    },
+                                                                    {
+                                                                        "iteration":  13,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  3.025,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+
+                                                                                     ],
+                                                                        "language_size":  32
+                                                                    },
+                                                                    {
+                                                                        "iteration":  14,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  3.025,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+
+                                                                                     ],
+                                                                        "language_size":  32
+                                                                    },
+                                                                    {
+                                                                        "iteration":  15,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  3.025,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+
+                                                                                     ],
+                                                                        "language_size":  32
+                                                                    },
+                                                                    {
+                                                                        "iteration":  16,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  3.025,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+
+                                                                                     ],
+                                                                        "language_size":  32
+                                                                    },
+                                                                    {
+                                                                        "iteration":  17,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  3.025,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+
+                                                                                     ],
+                                                                        "language_size":  32
+                                                                    },
+                                                                    {
+                                                                        "iteration":  18,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  3.025,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+
+                                                                                     ],
+                                                                        "language_size":  32
+                                                                    },
+                                                                    {
+                                                                        "iteration":  19,
+                                                                        "before":  {
+                                                                                       "accuracy":  1.0,
+                                                                                       "avg_tokens":  3.025,
+                                                                                       "parse_success_rate":  1.0
+                                                                                   },
+                                                                        "after":  {
+                                                                                      "accuracy":  1.0,
+                                                                                      "avg_tokens":  3.025,
+                                                                                      "parse_success_rate":  1.0
+                                                                                  },
+                                                                        "accepted":  [
+
+                                                                                     ],
+                                                                        "language_size":  32
+                                                                    }
+                                                                ],
+                                                    "test_metrics":  {
+                                                                         "accuracy":  1.0,
+                                                                         "avg_tokens":  2.985,
+                                                                         "parse_success_rate":  1.0
+                                                                     }
+                                                }
+                           },
+    "h5_summary_manifest":  {
+                                "project":  "H5 Emergent Predicate Advisor",
+                                "runs":  [
+                                             {
+                                                 "id":  "H5.1",
+                                                 "name":  "Grounded Dictionary Incubation",
+                                                 "steps":  1000,
+                                                 "dir":  "runs/true_coconut_h5/20260302_053614",
+                                                 "final_loss":  327.96,
+                                                 "final_ce":  13.71,
+                                                 "ptr":  3,
+                                                 "surgery":  "active_bias_only"
+                                             },
+                                             {
+                                                 "id":  "H5.2a",
+                                                 "name":  "Gearbox Control (Standard Attention)",
+                                                 "steps":  1000,
+                                                 "dir":  "runs/true_coconut_h5/20260302_062528",
+                                                 "final_loss":  293.88,
+                                                 "final_ce":  13.24,
+                                                 "ptr":  3,
+                                                 "surgery":  false,
+                                                 "accuracy":  0.375
+                                             },
+                                             {
+                                                 "id":  "H5.2b",
+                                                 "name":  "Neuro-Symbolic (Surgery Enabled)",
+                                                 "steps":  1000,
+                                                 "dir":  "runs/true_coconut_h5/20260302_070646",
+                                                 "final_loss":  293.88,
+                                                 "final_ce":  13.24,
+                                                 "ptr":  3,
+                                                 "surgery":  true,
+                                                 "surgery_hits":  0,
+                                                 "accuracy":  0.375
+                                             },
+                                             {
+                                                 "id":  "H5.3",
+                                                 "name":  "Joint RD Optimization (Dark Reasoner)",
+                                                 "steps":  1000,
+                                                 "dir":  "runs/true_coconut_h5/20260302_172603",
+                                                 "final_loss":  368.69,
+                                                 "final_ce":  12.34,
+                                                 "ptr":  3,
+                                                 "surgery":  true,
+                                                 "surgery_hits":  0,
+                                                 "accuracy":  1.000,
+                                                 "finding":  "Looping cured. Accuracy recovered to 100% on test set. Language remains emergent/opaque."
+                                             }
+                                         ],
+                                "verification_script":  "scripts/verify_h5_ablation.py"
+                            }
+}

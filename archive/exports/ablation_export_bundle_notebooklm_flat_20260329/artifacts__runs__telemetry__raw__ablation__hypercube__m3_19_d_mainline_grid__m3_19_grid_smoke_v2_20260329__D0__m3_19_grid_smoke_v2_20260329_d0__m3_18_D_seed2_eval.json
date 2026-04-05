@@ -1,0 +1,60 @@
+[
+  {
+    "item_id": "m3_15d_000000",
+    "pair_id": "size_01",
+    "variant_id": 0,
+    "family": "adjective_property",
+    "prompt": "Stone did not fit in Box since it was too big. What was too big?",
+    "candidates": [
+      "Stone",
+      "Box"
+    ],
+    "gold_answer": "Stone",
+    "model_answer": "Box",
+    "correct": false,
+    "active_token_count": 18,
+    "active_op_count": 3,
+    "operator_entropy": 1.0868238899287483,
+    "operator_top1_share": 0.3958333333333333,
+    "scope": 0.38095238095238093,
+    "score_on_gold": -3.8301093578338623,
+    "score_on_foil": -0.2206561416387558,
+    "score_off_gold": -3.830155372619629,
+    "answer_delta": -3.6094532012939453,
+    "gold_delta_on_off": 4.601478576660156e-05,
+    "return_norm": 0.0012922895839437842,
+    "residual_norm": 0.0012922895839437842,
+    "return_gate": 0.11917205899953842,
+    "return_attn_entropy": 4.969805717468262,
+    "cell_mode": "learned_residual_vector"
+  },
+  {
+    "item_id": "m3_15d_000001",
+    "pair_id": "size_01",
+    "variant_id": 1,
+    "family": "adjective_property",
+    "prompt": "Stone did not fit in Box because it was too small. What was too small?",
+    "candidates": [
+      "Stone",
+      "Box"
+    ],
+    "gold_answer": "Box",
+    "model_answer": "Box",
+    "correct": true,
+    "active_token_count": 18,
+    "active_op_count": 3,
+    "operator_entropy": 1.0820397581034544,
+    "operator_top1_share": 0.4166666666666667,
+    "scope": 0.38095238095238093,
+    "score_on_gold": -0.4001779854297638,
+    "score_on_foil": -3.2835865020751953,
+    "score_off_gold": -0.40017399191856384,
+    "answer_delta": 2.883408546447754,
+    "gold_delta_on_off": -3.993511199951172e-06,
+    "return_norm": 0.0012311175232753158,
+    "residual_norm": 0.0012311175232753158,
+    "return_gate": 0.11917205899953842,
+    "return_attn_entropy": 4.9698052406311035,
+    "cell_mode": "learned_residual_vector"
+  }
+]

@@ -1,0 +1,187 @@
+{
+  "timestamp": "2026-03-13T15:58:52.395781+00:00",
+  "series": {
+    "series_contract_version": "1.0",
+    "series_id": "M",
+    "track": "M5.3.masked_pair_chain.run",
+    "script": "scripts/run_m5_3_masked_pair_chain.py"
+  },
+  "args": {
+    "base_model": "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+    "adapter": "D:\\lojbanhypop\\runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+    "train_steps": 2,
+    "semantic_dataset_size": 24,
+    "winograd_pack_size": 32,
+    "seed": 7,
+    "dataset_profile": "semantic_bench_v1",
+    "difficulty_tier": "all",
+    "layer_index": 12,
+    "max_chain_steps": 4,
+    "brivi_gate_alpha": 4.0,
+    "brivi_gate_tau": 0.25,
+    "l_output_root": "runs\\l_series\\m5_3_masked_pair_chain",
+    "report_output_root": "artifacts\\runs\\telemetry\\raw\\ablation\\hypercube\\m5_3_masked_pair_chain",
+    "local_files_only": true
+  },
+  "status": "ok",
+  "return_code": 0,
+  "summary_path": "runs/l_series/m5_3_masked_pair_chain/20260313_155835/m5_3_smoke/20260313_155837/m5_3_masked_pair_chain_summary.json",
+  "summary": {
+    "timestamp": "2026-03-13T15:58:46.261860+00:00",
+    "series": {
+      "series_contract_version": "1.0",
+      "series_id": "M",
+      "track": "M5.3.masked_pair_chain",
+      "script": "scripts/train_m5_3_masked_pair_chain.py"
+    },
+    "args": {
+      "base_model": "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+      "adapter": "D:\\lojbanhypop\\runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+      "output_root": "runs\\l_series\\m5_3_masked_pair_chain\\20260313_155835\\m5_3_smoke",
+      "train_steps": 2,
+      "semantic_dataset_size": 24,
+      "winograd_pack_size": 32,
+      "seed": 7,
+      "lr": 0.0002,
+      "layer_index": 12,
+      "max_logic_new_tokens": 48,
+      "max_answer_tokens": 8,
+      "max_slots": 10,
+      "codebook_size": 2000,
+      "max_chain_steps": 4,
+      "slot_sparsity_weight": 0.25,
+      "stop_weight": 0.2,
+      "pair_contrast_weight": 1.0,
+      "graph_class_weight": 0.5,
+      "brivi_gate_alpha": 4.0,
+      "brivi_gate_tau": 0.25,
+      "dataset_profile": "semantic_bench_v1",
+      "difficulty_tier": "all",
+      "local_files_only": true
+    },
+    "dataset": {
+      "semantic_profile": "semantic_bench_v1",
+      "semantic_train": 14,
+      "semantic_val": 5,
+      "semantic_test": 5,
+      "winograd_train": 18,
+      "winograd_val": 4,
+      "winograd_eval": 10,
+      "winograd_pair_ids": {
+        "train_pair_ids": [
+          "pair_00003",
+          "pair_00004",
+          "pair_00005",
+          "pair_00007",
+          "pair_00009",
+          "pair_00011",
+          "pair_00012",
+          "pair_00013",
+          "pair_00014"
+        ],
+        "val_pair_ids": [
+          "pair_00001",
+          "pair_00008"
+        ],
+        "eval_pair_ids": [
+          "pair_00000",
+          "pair_00002",
+          "pair_00006",
+          "pair_00010",
+          "pair_00015"
+        ]
+      }
+    },
+    "final_step": {
+      "step": 2,
+      "total_loss": 8.088921546936035,
+      "task_loss": 6.964734077453613,
+      "semantic_ce": 0.32919934391975403,
+      "pair_contrast_loss": 5.499712944030762,
+      "graph_class_loss": 2.27164363861084,
+      "slot_loss": 2.3217854499816895,
+      "stop_loss": 2.7187039852142334,
+      "operator_entropy_batch": 2.6737232208251953,
+      "top1_op_share_batch": 0.34892377257347107,
+      "slot_usage_mean": 0.10596022754907608,
+      "mean_chain_length": 2.0,
+      "mean_stop_prob": 0.5947810411453247,
+      "mean_step_grounding_score": 0.15079085528850555,
+      "mean_slot_grounding_score": 0.10355804860591888,
+      "mean_brivi_gate": 0.4048879146575928,
+      "grounded_active_slots_mean": 0.1666666716337204,
+      "ungrounded_op_rate": 0.8333333333333334,
+      "pad_only_step_rate": 0.0,
+      "winograd_accuracy_batch": 0.5
+    },
+    "eval": {
+      "winograd_val": {
+        "n_pairs": 2,
+        "n_rows": 4,
+        "accuracy": 0.5,
+        "mean_chain_length": 4.0,
+        "mean_step_grounding_score": 0.15309440836426802,
+        "mean_brivi_gate": 0.41112789884209633
+      },
+      "winograd_eval": {
+        "n_pairs": 5,
+        "n_rows": 10,
+        "accuracy": 0.4,
+        "mean_chain_length": 4.0,
+        "mean_step_grounding_score": 0.11785356547916308,
+        "mean_brivi_gate": 0.37522241100668907
+      },
+      "semantic_val": {
+        "n": 5,
+        "accuracy": 0.0,
+        "mean_chain_length": 3.4
+      }
+    },
+    "steps": [
+      {
+        "step": 1,
+        "total_loss": 7.194963455200195,
+        "task_loss": 4.046548843383789,
+        "semantic_ce": 0.9613319635391235,
+        "pair_contrast_loss": 2.5806922912597656,
+        "graph_class_loss": 1.009049415588379,
+        "slot_loss": 7.803093910217285,
+        "stop_loss": 5.9882073402404785,
+        "operator_entropy_batch": 3.5669641494750977,
+        "top1_op_share_batch": 0.23577766120433807,
+        "slot_usage_mean": 0.6504867672920227,
+        "mean_chain_length": 1.0,
+        "mean_stop_prob": 0.8928134441375732,
+        "mean_step_grounding_score": 0.4502438008785248,
+        "mean_slot_grounding_score": 0.5620372295379639,
+        "mean_brivi_gate": 0.6800424456596375,
+        "grounded_active_slots_mean": 6.333333492279053,
+        "ungrounded_op_rate": 0.0,
+        "pad_only_step_rate": 0.0,
+        "winograd_accuracy_batch": 0.5
+      },
+      {
+        "step": 2,
+        "total_loss": 8.088921546936035,
+        "task_loss": 6.964734077453613,
+        "semantic_ce": 0.32919934391975403,
+        "pair_contrast_loss": 5.499712944030762,
+        "graph_class_loss": 2.27164363861084,
+        "slot_loss": 2.3217854499816895,
+        "stop_loss": 2.7187039852142334,
+        "operator_entropy_batch": 2.6737232208251953,
+        "top1_op_share_batch": 0.34892377257347107,
+        "slot_usage_mean": 0.10596022754907608,
+        "mean_chain_length": 2.0,
+        "mean_stop_prob": 0.5947810411453247,
+        "mean_step_grounding_score": 0.15079085528850555,
+        "mean_slot_grounding_score": 0.10355804860591888,
+        "mean_brivi_gate": 0.4048879146575928,
+        "grounded_active_slots_mean": 0.1666666716337204,
+        "ungrounded_op_rate": 0.8333333333333334,
+        "pad_only_step_rate": 0.0,
+        "winograd_accuracy_batch": 0.5
+      }
+    ]
+  }
+}

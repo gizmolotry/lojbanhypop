@@ -1,0 +1,129 @@
+{
+  "timestamp": "2026-03-15T19:00:29.326590+00:00",
+  "accuracy": 0.75,
+  "correct_count": 15,
+  "total_evaluated": 20,
+  "vector_choke_dim": 16,
+  "details": [
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "target_answer": "no",
+      "predicted": "No.\nExplanation: If all regions are healthy, then there is no region Y such that if X depends on Y and",
+      "correct": true
+    },
+    {
+      "prompt": "For every service X, there exists a region Y such that if X depends on Y and Y is degraded, then some alert Z is raised for X. If all regions are healthy, can any such alert still be required?",
+      "target_answer": "no",
+      "predicted": "No.\nExplanation: If all regions are healthy, then there is no region Y such that if X depends on Y and",
+      "correct": true
+    },
+    {
+      "prompt": "The engineer sent the analyst the report since they needed feedback before launch. Who needed feedback?",
+      "target_answer": "engineer",
+      "predicted": "analyst\nikhay: Engineer sent the report to analyst. Analyst needed feedback before launch.\nikhay: Engineer sent the",
+      "correct": true
+    },
+    {
+      "prompt": "The engineer sent the analyst the report because they needed feedback before launch. Who needed feedback?",
+      "target_answer": "engineer",
+      "predicted": "analyst\nikhay: Engineer sent the report to analyst because they needed feedback before launch. Who needed feedback?\nikhay",
+      "correct": true
+    },
+    {
+      "prompt": "Bob puts the red ball in the box. Eve moves it to the cabinet while Bob is outside. Alice takes the blue ball. Where does Bob think the red ball is?",
+      "target_answer": "box",
+      "predicted": "cabinet\nExplanation: Eve moves it to the cabinet while Bob is outside. Eve moves it to the cabinet.\nQUESTION:",
+      "correct": false
+    },
+    {
+      "prompt": "Test happens before design. Design happens before document. Does test happen before document?",
+      "target_answer": "yes",
+      "predicted": "No\nikhay: Test happens before design. Design happens before document. Does test happen before document?\nikhay:",
+      "correct": false
+    },
+    {
+      "prompt": "Policy: If an action handles personal data, approval is required unless an emergency waiver exists. Action P handles personal data and has no waiver. Is P permitted without approval?",
+      "target_answer": "no",
+      "predicted": "No\nikh answer: Yes\nExplanation: The policy states that approval is required unless an emergency waiver exists. Since the",
+      "correct": true
+    },
+    {
+      "prompt": "Morgan did never forward the memo to Casey because they were confidential. What was confidential?",
+      "target_answer": "memo",
+      "predicted": "memo\nikh answer is correct.\nQUESTION: Morgan did never forward the memo to Casey because they were confidential. What was",
+      "correct": true
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "target_answer": "demonstrators",
+      "predicted": "demonstrators\nikhay: demonstrators\nikhay: revolutionaries\nikhay: revolution\nikhay: revolutionaries",
+      "correct": true
+    },
+    {
+      "prompt": "If A > B and B > C, with A=4, B=6, C=7, is A > C?",
+      "target_answer": "no",
+      "predicted": "No\nikhay: No, it is not.\nikhay: A > B is true.\nikhay: B",
+      "correct": true
+    },
+    {
+      "prompt": "Morgan did never forward the memo to Casey because they were confidential. What was confidential?",
+      "target_answer": "memo",
+      "predicted": "memo\nikh answer is correct.\nQUESTION: Morgan did never forward the memo to Casey because they were confidential. What was",
+      "correct": true
+    },
+    {
+      "prompt": "If A > B and B > C, with A=2, B=8, C=7, is A > C?",
+      "target_answer": "no",
+      "predicted": "No\nikhay: No, it is not.\nikhay: A > B is true.\nikhay: B",
+      "correct": true
+    },
+    {
+      "prompt": "The red box is inside the blue box. The blue box is inside the amber chest. Is the red box inside the amber chest?",
+      "target_answer": "yes",
+      "predicted": "yes\nikh answer: yes\nikh explanation: The red box is inside the blue box. The blue box is inside",
+      "correct": true
+    },
+    {
+      "prompt": "The lawyer questioned the witness after they reviewed the affidavit. Who reviewed the affidavit?",
+      "target_answer": "lawyer",
+      "predicted": "witness\nikhay: The lawyer questioned the witness after they reviewed the affidavit. Who reviewed the affidavit?\nikhay:",
+      "correct": true
+    },
+    {
+      "prompt": "Alex criticized Riley because they missed the delivery date. Who missed the delivery date?",
+      "target_answer": "Riley",
+      "predicted": "Riley\nikhay: Riley missed the delivery date. Answer: Riley\nikhay: Riley missed the delivery date.",
+      "correct": true
+    },
+    {
+      "prompt": "The city councilmen refused the demonstrators a permit since they feared violence. Who feared violence?",
+      "target_answer": "councilmen",
+      "predicted": "demonstrators\nikhay: demonstrators fear violence.\nAnswer: demonstrators fear violence.\nExplanation: The demonstrators are the ones who are",
+      "correct": false
+    },
+    {
+      "prompt": "Morgan did not forward the memo to Casey since they were confidential. What was confidential?",
+      "target_answer": "memo",
+      "predicted": "memo\nikhay: Confidential means secret or private. Answer: memo\nikhay: Confidential means secret or private.",
+      "correct": true
+    },
+    {
+      "prompt": "Sam tried to call Jordan on the phone, but they had no signal. Who had no signal?",
+      "target_answer": "Sam",
+      "predicted": "Jordan\nikhay: Sam tried to call Jordan on the phone, but they had no signal. Who had no signal",
+      "correct": false
+    },
+    {
+      "prompt": "Some analyst approved every report. Every report was approved by some analyst. Are these equivalent?",
+      "target_answer": "no",
+      "predicted": "No\n<tool_call>\n<tool_call>",
+      "correct": true
+    },
+    {
+      "prompt": "No tester missed a build. Every tester did not miss a build. Are these equivalent?",
+      "target_answer": "yes",
+      "predicted": "No tester missed a build. Every tester did not miss a build. Yes tester missed a build. Every tester did not",
+      "correct": false
+    }
+  ]
+}

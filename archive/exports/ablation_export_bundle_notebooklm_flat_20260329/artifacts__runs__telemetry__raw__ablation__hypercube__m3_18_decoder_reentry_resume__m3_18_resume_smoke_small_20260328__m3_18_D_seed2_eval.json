@@ -1,0 +1,60 @@
+[
+  {
+    "item_id": "m3_15d_eval_000000",
+    "pair_id": "speed_01",
+    "variant_id": 0,
+    "family": "causal_direction",
+    "prompt": "Truck passed Bus because it was very fast. What was fast?",
+    "candidates": [
+      "Truck",
+      "Bus"
+    ],
+    "gold_answer": "Truck",
+    "model_answer": "Bus",
+    "correct": false,
+    "active_token_count": 17,
+    "active_op_count": 3,
+    "operator_entropy": 1.0892080913644198,
+    "operator_top1_share": 0.375,
+    "scope": 0.38095238095238093,
+    "score_on_gold": -1.3268070220947266,
+    "score_on_foil": -0.9060802459716797,
+    "score_off_gold": -1.3268089294433594,
+    "answer_delta": -0.4207267761230469,
+    "gold_delta_on_off": 1.9073486328125e-06,
+    "return_norm": 0.005773261655122042,
+    "residual_norm": 0.005773261655122042,
+    "return_gate": 0.11917205899953842,
+    "return_attn_entropy": 4.969758987426758,
+    "cell_mode": "learned_residual_vector"
+  },
+  {
+    "item_id": "m3_15d_eval_000001",
+    "pair_id": "speed_01",
+    "variant_id": 1,
+    "family": "causal_direction",
+    "prompt": "Truck passed Bus since it was very slow. What was slow?",
+    "candidates": [
+      "Truck",
+      "Bus"
+    ],
+    "gold_answer": "Bus",
+    "model_answer": "Bus",
+    "correct": true,
+    "active_token_count": 15,
+    "active_op_count": 3,
+    "operator_entropy": 1.0933903064791184,
+    "operator_top1_share": 0.375,
+    "scope": 0.39344262295081966,
+    "score_on_gold": -0.3342209756374359,
+    "score_on_foil": -2.0819320678710938,
+    "score_off_gold": -0.3342190086841583,
+    "answer_delta": 1.7477110624313354,
+    "gold_delta_on_off": -1.9669532775878906e-06,
+    "return_norm": 0.005730841774493456,
+    "residual_norm": 0.005730841774493456,
+    "return_gate": 0.11917205899953842,
+    "return_attn_entropy": 4.969756126403809,
+    "cell_mode": "learned_residual_vector"
+  }
+]

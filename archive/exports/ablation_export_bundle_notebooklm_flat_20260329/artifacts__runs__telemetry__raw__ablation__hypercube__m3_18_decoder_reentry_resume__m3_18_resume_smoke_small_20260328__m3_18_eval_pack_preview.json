@@ -1,0 +1,30 @@
+[
+  {
+    "pair_id": "size_01",
+    "variant_id": 0,
+    "family": "adjective_property",
+    "prompt": "Stone did not fit in Box since it was too big. What was too big?",
+    "candidates": [
+      "Stone",
+      "Box"
+    ],
+    "gold_index": 0,
+    "polarity": "positive",
+    "causal_direction": false,
+    "item_id": "m3_15d_eval_000000"
+  },
+  {
+    "pair_id": "size_01",
+    "variant_id": 1,
+    "family": "adjective_property",
+    "prompt": "Stone did not fit in Box since it was too small. What was too small?",
+    "candidates": [
+      "Stone",
+      "Box"
+    ],
+    "gold_index": 1,
+    "polarity": "negative",
+    "causal_direction": false,
+    "item_id": "m3_15d_eval_000001"
+  }
+]

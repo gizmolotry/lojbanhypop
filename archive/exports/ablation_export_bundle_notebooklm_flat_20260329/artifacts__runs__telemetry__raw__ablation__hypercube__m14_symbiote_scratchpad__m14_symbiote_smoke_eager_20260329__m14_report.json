@@ -1,0 +1,744 @@
+{
+  "track": "M14",
+  "run_id": "m14_symbiote_smoke_eager_20260329",
+  "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json",
+  "baseline_id": "M_BRIDGE_BASE_20260311_DEC",
+  "family_contract": {
+    "family_version": "1.0",
+    "family_name": "symbiote_scratchpad",
+    "implementation_label": "hybrid_symbiote_scratchpad",
+    "runner_script": "scripts/run_m14_symbiote_scratchpad.py",
+    "dag": "airflow/dags/lojban_m14_symbiote_scratchpad_dag.py",
+    "architecture": {
+      "stage_1": "english_prompt_encoding",
+      "stage_2": "advisor_reasoning_space",
+      "stage_3": "symbiote_scratchpad_injection",
+      "stage_4": "english_continuation"
+    },
+    "tensor_flow": {
+      "carrier": "advisor summary projected into scratchpad token hidden states",
+      "exposure": "layer-selective residual injection over bounded scratchpad positions only",
+      "reentry": "four-token compute horizon before final answer continuation",
+      "scoring_surface": "language_model_answer_logits_and_short_continuation_rollout"
+    },
+    "parameter_axes": {
+      "shared": [
+        "base_model",
+        "adapter",
+        "checkpoint",
+        "train_steps",
+        "eval_size",
+        "lr",
+        "bottleneck_dim",
+        "max_logic_new_tokens",
+        "layer_index",
+        "relation_vocab",
+        "var_min_id",
+        "answer_weight",
+        "return_norm_weight",
+        "continuation_target_max_tokens",
+        "continuation_eval_tokens",
+        "scratchpad_length",
+        "scratchpad_alpha",
+        "seed",
+        "strict_balance"
+      ],
+      "track_specific": [
+        "scratchpad_token",
+        "b_guard_threshold",
+        "c_guard_threshold",
+        "d_guard_threshold",
+        "residual_guard_weight"
+      ]
+    },
+    "loss_profile": {
+      "primary": "continuation_cross_entropy",
+      "regularizers": [
+        "scratchpad_residual_norm_penalty",
+        "scratchpad_guard_overflow_penalty"
+      ]
+    },
+    "continuation_metrics": [
+      "held_out_accuracy",
+      "english_fluency_score",
+      "contamination_rate",
+      "loop_rate",
+      "continuation_overlap_f1",
+      "gold_mention_rate",
+      "exact_match_rate",
+      "english_stays_english_rate",
+      "resume_first_token_accuracy",
+      "mean_intervention_delta_gold",
+      "mean_answer_delta",
+      "mean_scope",
+      "scratchpad_attention_mass",
+      "scratchpad_residual_norm",
+      "scratchpad_gate_mean",
+      "scratchpad_gate_overflow_rate",
+      "scratchpad_bleed_rate",
+      "seed_stability"
+    ],
+    "promotion_requirements": [
+      "mean_intervention_delta_gold_positive",
+      "resume_first_token_accuracy_gain",
+      "fluency_preserved",
+      "contamination_below_threshold",
+      "loop_rate_below_threshold",
+      "scratchpad_bleed_below_threshold"
+    ],
+    "comparison_targets": [
+      "M3.18.D",
+      "M3.19.D0",
+      "M3.19.D1",
+      "M3.19.D2",
+      "M3.19.D3",
+      "M11.discriminative"
+    ],
+    "cells": {
+      "A": {
+        "label": "scratchpad-only control",
+        "scratchpad_policy": "four_real_tokens_no_injection",
+        "advisor_policy": "none",
+        "reentry_policy": "baseline_decoder_with_blank_scratchpad",
+        "guard_threshold": null
+      },
+      "B": {
+        "label": "strict residual scratchpad",
+        "scratchpad_policy": "advisor_residual_injection",
+        "advisor_policy": "continuous_summary",
+        "reentry_policy": "layer_injection_into_symbiote_positions",
+        "guard_threshold": 0.01
+      },
+      "C": {
+        "label": "relaxed residual scratchpad",
+        "scratchpad_policy": "advisor_residual_injection",
+        "advisor_policy": "continuous_summary",
+        "reentry_policy": "layer_injection_into_symbiote_positions",
+        "guard_threshold": 0.05
+      },
+      "D": {
+        "label": "severance-threshold residual scratchpad",
+        "scratchpad_policy": "advisor_residual_injection",
+        "advisor_policy": "continuous_summary",
+        "reentry_policy": "layer_injection_into_symbiote_positions",
+        "guard_threshold": 0.1
+      },
+      "E": {
+        "label": "token-only scratchpad baseline",
+        "scratchpad_policy": "trainable_token_offsets_only",
+        "advisor_policy": "none",
+        "reentry_policy": "scratchpad_token_baseline_without_continuous_injection",
+        "guard_threshold": null
+      }
+    }
+  },
+  "upstream_evidence": {
+    "m3_18_report": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_d_sft_smoke_20260328/m3_18_report.json",
+    "m3_19_report": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/m3_19_grid_report.json",
+    "m11_manifest": "RESULTS_M10_FINAL_AUDIT/m11_discriminative_manifest.json"
+  },
+  "config": {
+    "base_model": "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+    "adapter": "D:/lojbanhypop/runs/phase5_two_stage_recovery_anchors/20260302_030738/stage2_phase5",
+    "checkpoint": "D:\\lojbanhypop\\runs\\l_series\\m3_8_diversification\\decollapse_small\\20260311_103934\\hard\\m3_8_b\\20260311_104736\\l_series_checkpoint.pt",
+    "train_steps": "1",
+    "eval_size": "2",
+    "lr": "0.0003",
+    "bottleneck_dim": "64",
+    "max_logic_new_tokens": "48",
+    "layer_index": "12",
+    "relation_vocab": "5",
+    "var_min_id": "5",
+    "answer_weight": "1.0",
+    "margin": "0.2",
+    "return_norm_weight": "0.01",
+    "continuation_target_max_tokens": "5",
+    "continuation_eval_tokens": "5",
+    "scratchpad_token": "<symbiote>",
+    "scratchpad_length": "4",
+    "scratchpad_alpha": "1.0",
+    "b_guard_threshold": "0.01",
+    "c_guard_threshold": "0.05",
+    "d_guard_threshold": "0.1",
+    "residual_guard_weight": "5.0",
+    "seed": "42",
+    "baseline_manifest": "docs\\baselines\\m_series_bridge_baseline_manifest.json",
+    "upstream_m3_18_report": "None",
+    "upstream_m3_19_report": "None",
+    "upstream_m11_manifest": "None",
+    "pack_jsonl": "None",
+    "strict_balance": "True",
+    "run_id": "m14_symbiote_smoke_eager_20260329",
+    "output_root": "artifacts\\runs\\telemetry\\raw\\ablation\\hypercube\\m14_symbiote_scratchpad",
+    "local_files_only": "True"
+  },
+  "timestamp": "2026-03-29T21:54:03.328558+00:00",
+  "series": {
+    "series_contract_version": "1.0",
+    "series_id": "M",
+    "track": "M14",
+    "script": "scripts/run_m14_symbiote_scratchpad.py"
+  },
+  "lineage": {
+    "mode": "train",
+    "checkpoint_in": "D:/lojbanhypop/runs/l_series/m3_8_diversification/decollapse_small/20260311_103934/hard/m3_8_b/20260311_104736/l_series_checkpoint.pt",
+    "checkpoint_out": null,
+    "dataset_profile": "m3_19_rich_resumption_split",
+    "difficulty_tier": "mixed"
+  },
+  "data_split": {
+    "train_pair_ids": [
+      "m3_19_pair_00005",
+      "m3_19_pair_00006",
+      "m3_19_pair_00009",
+      "m3_19_pair_00010",
+      "m3_19_pair_00011",
+      "m3_19_pair_00012",
+      "m3_19_pair_00014",
+      "m3_19_pair_00015",
+      "m3_19_pair_00016",
+      "m3_19_pair_00019",
+      "m3_19_pair_00020",
+      "m3_19_pair_00022",
+      "m3_19_pair_00024",
+      "m3_19_pair_00025",
+      "m3_19_pair_00026",
+      "m3_19_pair_00028",
+      "m3_19_pair_00030"
+    ],
+    "val_pair_ids": [
+      "m3_19_pair_00001",
+      "m3_19_pair_00002",
+      "m3_19_pair_00013",
+      "m3_19_pair_00017",
+      "m3_19_pair_00018"
+    ],
+    "eval_pair_ids": [
+      "m3_19_pair_00000",
+      "m3_19_pair_00003",
+      "m3_19_pair_00004",
+      "m3_19_pair_00007",
+      "m3_19_pair_00008",
+      "m3_19_pair_00021",
+      "m3_19_pair_00023",
+      "m3_19_pair_00027",
+      "m3_19_pair_00029",
+      "m3_19_pair_00031"
+    ],
+    "seed2_eval_meta": {
+      "seed": 43
+    },
+    "runtime_policy_source": "validation_metrics",
+    "final_metrics_source": "eval_pack"
+  },
+  "pack_path": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad/m14_symbiote_smoke_eager_20260329/m14_rich_resumption_pack.jsonl",
+  "comparison_references": {
+    "M3.18.D": {
+      "report": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume/m3_18_d_sft_smoke_20260328/m3_18_report.json",
+      "overall_accuracy": 0.5,
+      "resume_first_token_accuracy": 0.0,
+      "english_fluency_score": 1.0,
+      "loop_rate": 0.0,
+      "mean_intervention_delta_gold": -4.251301288604736e-05
+    },
+    "M3.19": {
+      "report": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/m3_19_grid_report.json",
+      "cells": {
+        "D0": {
+          "overall_accuracy": 0.0,
+          "resume_first_token_accuracy": 0.0,
+          "english_fluency_score": 1.0,
+          "loop_rate": 0.0,
+          "mean_intervention_delta_gold": 1.0251998901367188e-05
+        },
+        "D1": {
+          "overall_accuracy": 0.0,
+          "resume_first_token_accuracy": 0.0,
+          "english_fluency_score": 1.0,
+          "loop_rate": 0.0,
+          "mean_intervention_delta_gold": -2.1457672119140625e-06
+        },
+        "D2": {
+          "overall_accuracy": 0.0,
+          "resume_first_token_accuracy": 0.0,
+          "english_fluency_score": 1.0,
+          "loop_rate": 0.0,
+          "mean_intervention_delta_gold": -2.1457672119140625e-06
+        },
+        "D3": {
+          "overall_accuracy": 0.0,
+          "resume_first_token_accuracy": 0.0,
+          "english_fluency_score": 1.0,
+          "loop_rate": 0.0,
+          "mean_intervention_delta_gold": -2.1457672119140625e-06
+        }
+      }
+    },
+    "M11.discriminative": {
+      "manifest": "RESULTS_M10_FINAL_AUDIT/m11_discriminative_manifest.json",
+      "headline_accuracy": 0.85916,
+      "headline_macro_f1": 0.6287,
+      "num_samples": 1200
+    }
+  },
+  "cells": {
+    "A": {
+      "train": {
+        "answer_path_loss": 0.0,
+        "continuation_ce_loss": 0.0,
+        "answer_delta": 0.0,
+        "scratchpad_residual_norm": 0.0,
+        "scratchpad_gate_mean": 0.0,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "scratchpad_attention_mass": 0.0,
+        "train_objective": "none"
+      },
+      "metrics": {
+        "overall_accuracy": 1.0,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.0,
+        "mean_answer_delta": 4.324726104736328,
+        "mean_scope": 0.0,
+        "mean_intervention_delta_gold": 0.0,
+        "mean_active_tokens": 0.0,
+        "mean_active_op_count": 0.0,
+        "mean_operator_entropy": 0.0,
+        "mean_top1_op_share": 0.0,
+        "scratchpad_attention_mass": 0.04326473593634243,
+        "scratchpad_residual_norm": 0.0,
+        "scratchpad_gate_mean": 0.0,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "mean_return_attn_entropy": 0.0,
+        "first_token_accuracy": 1.0,
+        "english_fluency_score": 1.0,
+        "contamination_rate": 0.0,
+        "loop_rate": 0.0,
+        "continuation_overlap_f1": 0.4722222222222222,
+        "gold_mention_rate": 0.5,
+        "exact_match_rate": 0.0,
+        "english_stays_english_rate": 1.0,
+        "resume_first_token_accuracy": 0.0,
+        "scratchpad_bleed_rate": 0.0
+      },
+      "validation_metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.0,
+        "mean_answer_delta": 0.9236061573028564,
+        "mean_scope": 0.0,
+        "mean_intervention_delta_gold": 0.0,
+        "mean_active_tokens": 0.0,
+        "mean_active_op_count": 0.0,
+        "mean_operator_entropy": 0.0,
+        "mean_top1_op_share": 0.0,
+        "scratchpad_attention_mass": 0.036205688278035573,
+        "scratchpad_residual_norm": 0.0,
+        "scratchpad_gate_mean": 0.0,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "mean_return_attn_entropy": 0.0,
+        "first_token_accuracy": 0.5
+      },
+      "variant_spec": {
+        "label": "scratchpad-only control",
+        "scratchpad_policy": "four_real_tokens_no_injection",
+        "advisor_policy": "none",
+        "reentry_policy": "baseline_decoder_with_blank_scratchpad",
+        "guard_threshold": null
+      }
+    },
+    "B": {
+      "train": {
+        "answer_path_loss": 0.0,
+        "continuation_ce_loss": 7.483249664306641,
+        "answer_delta": 3.7557811737060547,
+        "scratchpad_residual_norm": 0.004688619635999203,
+        "scratchpad_gate_mean": 0.11920291930437088,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "scratchpad_attention_mass": 0.04594083731838813,
+        "train_objective": "continuation_ce"
+      },
+      "metrics": {
+        "overall_accuracy": 1.0,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.0,
+        "mean_answer_delta": 4.324510097503662,
+        "mean_scope": 0.4067796610169492,
+        "mean_intervention_delta_gold": -0.00014981627464294434,
+        "mean_active_tokens": 13.0,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 1.0059620356208638,
+        "mean_top1_op_share": 0.4270833333333333,
+        "scratchpad_attention_mass": 0.04326473593634243,
+        "scratchpad_residual_norm": 0.006315488368272781,
+        "scratchpad_gate_mean": 0.11917205899953842,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "mean_return_attn_entropy": 4.969757080078125,
+        "first_token_accuracy": 1.0,
+        "english_fluency_score": 1.0,
+        "contamination_rate": 0.0,
+        "loop_rate": 0.0,
+        "continuation_overlap_f1": 0.4722222222222222,
+        "gold_mention_rate": 0.5,
+        "exact_match_rate": 0.0,
+        "english_stays_english_rate": 1.0,
+        "resume_first_token_accuracy": 0.0,
+        "scratchpad_bleed_rate": 0.0
+      },
+      "validation_metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.0,
+        "mean_answer_delta": 0.9235780239105225,
+        "mean_scope": 0.4001111419838844,
+        "mean_intervention_delta_gold": 0.00027680397033691406,
+        "mean_active_tokens": 14.0,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 0.9865444063082361,
+        "mean_top1_op_share": 0.4375,
+        "scratchpad_attention_mass": 0.036205688278035573,
+        "scratchpad_residual_norm": 0.006267052376642823,
+        "scratchpad_gate_mean": 0.11917205899953842,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "mean_return_attn_entropy": 4.969754934310913,
+        "first_token_accuracy": 0.5
+      },
+      "variant_spec": {
+        "label": "strict residual scratchpad",
+        "scratchpad_policy": "advisor_residual_injection",
+        "advisor_policy": "continuous_summary",
+        "reentry_policy": "layer_injection_into_symbiote_positions",
+        "guard_threshold": 0.01,
+        "scratchpad_length": 4,
+        "layer_index": 12,
+        "scratchpad_alpha": 1.0,
+        "scratchpad_token": "<symbiote>"
+      }
+    },
+    "B_seed2_eval": {
+      "metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.0,
+        "mean_answer_delta": 0.0799551010131836,
+        "mean_scope": 0.4067796610169492,
+        "mean_intervention_delta_gold": 0.00025665760040283203,
+        "mean_active_tokens": 13.0,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 1.0057144949669317,
+        "mean_top1_op_share": 0.41666666666666663,
+        "scratchpad_attention_mass": 0.03753234368438522,
+        "scratchpad_residual_norm": 0.006208335980772972,
+        "scratchpad_gate_mean": 0.11917205899953842,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "mean_return_attn_entropy": 4.969758749008179,
+        "first_token_accuracy": 0.5
+      }
+    },
+    "C": {
+      "train": {
+        "answer_path_loss": 0.0,
+        "continuation_ce_loss": 7.4832587242126465,
+        "answer_delta": 3.7556965351104736,
+        "scratchpad_residual_norm": 0.004500198643654585,
+        "scratchpad_gate_mean": 0.11920291930437088,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "scratchpad_attention_mass": 0.04594083731838813,
+        "train_objective": "continuation_ce"
+      },
+      "metrics": {
+        "overall_accuracy": 1.0,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.0,
+        "mean_answer_delta": 4.325063228607178,
+        "mean_scope": 0.4067796610169492,
+        "mean_intervention_delta_gold": 0.00026151537895202637,
+        "mean_active_tokens": 13.0,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 1.0059620356208638,
+        "mean_top1_op_share": 0.4270833333333333,
+        "scratchpad_attention_mass": 0.04326473593634243,
+        "scratchpad_residual_norm": 0.007204614346846938,
+        "scratchpad_gate_mean": 0.11917205899953842,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "mean_return_attn_entropy": 4.96968674659729,
+        "first_token_accuracy": 1.0,
+        "english_fluency_score": 1.0,
+        "contamination_rate": 0.0,
+        "loop_rate": 0.0,
+        "continuation_overlap_f1": 0.4722222222222222,
+        "gold_mention_rate": 0.5,
+        "exact_match_rate": 0.0,
+        "english_stays_english_rate": 1.0,
+        "resume_first_token_accuracy": 0.0,
+        "scratchpad_bleed_rate": 0.0
+      },
+      "validation_metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.0,
+        "mean_answer_delta": 0.9238125085830688,
+        "mean_scope": 0.4001111419838844,
+        "mean_intervention_delta_gold": 0.0010194778442382812,
+        "mean_active_tokens": 14.0,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 0.9865444063082361,
+        "mean_top1_op_share": 0.4375,
+        "scratchpad_attention_mass": 0.036205688278035573,
+        "scratchpad_residual_norm": 0.007159647764638066,
+        "scratchpad_gate_mean": 0.11917205899953842,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "mean_return_attn_entropy": 4.969684839248657,
+        "first_token_accuracy": 0.5
+      },
+      "variant_spec": {
+        "label": "relaxed residual scratchpad",
+        "scratchpad_policy": "advisor_residual_injection",
+        "advisor_policy": "continuous_summary",
+        "reentry_policy": "layer_injection_into_symbiote_positions",
+        "guard_threshold": 0.05,
+        "scratchpad_length": 4,
+        "layer_index": 12,
+        "scratchpad_alpha": 1.0,
+        "scratchpad_token": "<symbiote>"
+      }
+    },
+    "C_seed2_eval": {
+      "metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.0,
+        "mean_answer_delta": 0.0799250602722168,
+        "mean_scope": 0.4067796610169492,
+        "mean_intervention_delta_gold": 0.0010254979133605957,
+        "mean_active_tokens": 13.0,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 1.0057144949669317,
+        "mean_top1_op_share": 0.41666666666666663,
+        "scratchpad_attention_mass": 0.03753234368438522,
+        "scratchpad_residual_norm": 0.007044623838737607,
+        "scratchpad_gate_mean": 0.11917205899953842,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "mean_return_attn_entropy": 4.969692707061768,
+        "first_token_accuracy": 0.5
+      }
+    },
+    "D": {
+      "train": {
+        "answer_path_loss": 0.0,
+        "continuation_ce_loss": 7.483211517333984,
+        "answer_delta": 3.755809783935547,
+        "scratchpad_residual_norm": 0.003910237457603216,
+        "scratchpad_gate_mean": 0.11920291930437088,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "scratchpad_attention_mass": 0.04594083731838813,
+        "train_objective": "continuation_ce"
+      },
+      "metrics": {
+        "overall_accuracy": 1.0,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.0,
+        "mean_answer_delta": 4.324681282043457,
+        "mean_scope": 0.4067796610169492,
+        "mean_intervention_delta_gold": 0.00026163458824157715,
+        "mean_active_tokens": 13.0,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 1.0059620356208638,
+        "mean_top1_op_share": 0.4270833333333333,
+        "scratchpad_attention_mass": 0.04326473593634243,
+        "scratchpad_residual_norm": 0.006410479778423905,
+        "scratchpad_gate_mean": 0.11923493444919586,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "mean_return_attn_entropy": 4.969734191894531,
+        "first_token_accuracy": 1.0,
+        "english_fluency_score": 1.0,
+        "contamination_rate": 0.0,
+        "loop_rate": 0.0,
+        "continuation_overlap_f1": 0.4722222222222222,
+        "gold_mention_rate": 0.5,
+        "exact_match_rate": 0.0,
+        "english_stays_english_rate": 1.0,
+        "resume_first_token_accuracy": 0.0,
+        "scratchpad_bleed_rate": 0.0
+      },
+      "validation_metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.0,
+        "mean_answer_delta": 0.9236845970153809,
+        "mean_scope": 0.4001111419838844,
+        "mean_intervention_delta_gold": 0.00046825408935546875,
+        "mean_active_tokens": 14.0,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 0.9865444063082361,
+        "mean_top1_op_share": 0.4375,
+        "scratchpad_attention_mass": 0.036205688278035573,
+        "scratchpad_residual_norm": 0.006395506439730525,
+        "scratchpad_gate_mean": 0.11923493444919586,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "mean_return_attn_entropy": 4.969735145568848,
+        "first_token_accuracy": 0.5
+      },
+      "variant_spec": {
+        "label": "severance-threshold residual scratchpad",
+        "scratchpad_policy": "advisor_residual_injection",
+        "advisor_policy": "continuous_summary",
+        "reentry_policy": "layer_injection_into_symbiote_positions",
+        "guard_threshold": 0.1,
+        "scratchpad_length": 4,
+        "layer_index": 12,
+        "scratchpad_alpha": 1.0,
+        "scratchpad_token": "<symbiote>"
+      }
+    },
+    "D_seed2_eval": {
+      "metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.0,
+        "mean_answer_delta": 0.07991313934326172,
+        "mean_scope": 0.4067796610169492,
+        "mean_intervention_delta_gold": 0.0005207061767578125,
+        "mean_active_tokens": 13.0,
+        "mean_active_op_count": 3.0,
+        "mean_operator_entropy": 1.0057144949669317,
+        "mean_top1_op_share": 0.41666666666666663,
+        "scratchpad_attention_mass": 0.03753234368438522,
+        "scratchpad_residual_norm": 0.006257481407374144,
+        "scratchpad_gate_mean": 0.11923493444919586,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "mean_return_attn_entropy": 4.969736814498901,
+        "first_token_accuracy": 0.5
+      }
+    },
+    "E": {
+      "train": {
+        "answer_path_loss": 0.0,
+        "continuation_ce_loss": 7.484654903411865,
+        "answer_delta": 3.7537851333618164,
+        "scratchpad_residual_norm": 0.07110416144132614,
+        "scratchpad_gate_mean": 0.11920291930437088,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "scratchpad_attention_mass": 0.04594083731838813,
+        "train_objective": "continuation_ce"
+      },
+      "metrics": {
+        "overall_accuracy": 1.0,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.0,
+        "mean_answer_delta": 4.322476029396057,
+        "mean_scope": 0.0,
+        "mean_intervention_delta_gold": -0.0002815723419189453,
+        "mean_active_tokens": 0.0,
+        "mean_active_op_count": 0.0,
+        "mean_operator_entropy": 0.0,
+        "mean_top1_op_share": 0.0,
+        "scratchpad_attention_mass": 0.04326473593634243,
+        "scratchpad_residual_norm": 0.07107234001159668,
+        "scratchpad_gate_mean": 0.11917205899953842,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "mean_return_attn_entropy": 0.0,
+        "first_token_accuracy": 1.0,
+        "english_fluency_score": 1.0,
+        "contamination_rate": 0.0,
+        "loop_rate": 0.0,
+        "continuation_overlap_f1": 0.4722222222222222,
+        "gold_mention_rate": 0.5,
+        "exact_match_rate": 0.0,
+        "english_stays_english_rate": 1.0,
+        "resume_first_token_accuracy": 0.0,
+        "scratchpad_bleed_rate": 0.0
+      },
+      "validation_metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.0,
+        "mean_answer_delta": 0.922760009765625,
+        "mean_scope": 0.0,
+        "mean_intervention_delta_gold": -0.000982522964477539,
+        "mean_active_tokens": 0.0,
+        "mean_active_op_count": 0.0,
+        "mean_operator_entropy": 0.0,
+        "mean_top1_op_share": 0.0,
+        "scratchpad_attention_mass": 0.036205688278035573,
+        "scratchpad_residual_norm": 0.07107234001159668,
+        "scratchpad_gate_mean": 0.11917205899953842,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "mean_return_attn_entropy": 0.0,
+        "first_token_accuracy": 0.5
+      },
+      "variant_spec": {
+        "label": "token-only scratchpad baseline",
+        "scratchpad_policy": "trainable_token_offsets_only",
+        "advisor_policy": "none",
+        "reentry_policy": "scratchpad_token_baseline_without_continuous_injection",
+        "guard_threshold": null,
+        "scratchpad_length": 4,
+        "layer_index": 12,
+        "scratchpad_alpha": 1.0,
+        "scratchpad_token": "<symbiote>"
+      }
+    },
+    "E_seed2_eval": {
+      "metrics": {
+        "overall_accuracy": 0.5,
+        "adjective_accuracy": 0.0,
+        "causal_accuracy": 0.0,
+        "mean_answer_delta": 0.08063840866088867,
+        "mean_scope": 0.0,
+        "mean_intervention_delta_gold": -0.0007762908935546875,
+        "mean_active_tokens": 0.0,
+        "mean_active_op_count": 0.0,
+        "mean_operator_entropy": 0.0,
+        "mean_top1_op_share": 0.0,
+        "scratchpad_attention_mass": 0.03753234368438522,
+        "scratchpad_residual_norm": 0.07107234001159668,
+        "scratchpad_gate_mean": 0.11917205899953842,
+        "scratchpad_gate_overflow_rate": 0.0,
+        "mean_return_attn_entropy": 0.0,
+        "first_token_accuracy": 0.5
+      }
+    }
+  },
+  "promotion_gates": {
+    "B": {
+      "positive_intervention_delta": false,
+      "resume_first_token_gain": true,
+      "fluency_preserved": true,
+      "contamination_below_threshold": true,
+      "loop_rate_below_threshold": true,
+      "scratchpad_bleed_below_threshold": true,
+      "seed_stability": false,
+      "promote_to_next": false
+    },
+    "C": {
+      "positive_intervention_delta": false,
+      "resume_first_token_gain": true,
+      "fluency_preserved": true,
+      "contamination_below_threshold": true,
+      "loop_rate_below_threshold": true,
+      "scratchpad_bleed_below_threshold": true,
+      "seed_stability": false,
+      "promote_to_next": false
+    },
+    "D": {
+      "positive_intervention_delta": false,
+      "resume_first_token_gain": true,
+      "fluency_preserved": true,
+      "contamination_below_threshold": true,
+      "loop_rate_below_threshold": true,
+      "scratchpad_bleed_below_threshold": true,
+      "seed_stability": false,
+      "promote_to_next": false
+    },
+    "E": {
+      "positive_intervention_delta": false,
+      "resume_first_token_gain": true,
+      "fluency_preserved": true,
+      "contamination_below_threshold": true,
+      "loop_rate_below_threshold": true,
+      "scratchpad_bleed_below_threshold": true,
+      "seed_stability": false,
+      "promote_to_next": false
+    }
+  }
+}

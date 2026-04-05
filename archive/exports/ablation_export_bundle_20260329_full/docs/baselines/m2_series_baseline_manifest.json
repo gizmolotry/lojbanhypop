@@ -1,0 +1,8 @@
+{
+  "baseline_id": "m2_series_lagrangian_training",
+  "series_major": "M2",
+  "purpose": "Constraint-optimized Lagrangian training baseline for normalized L6 to M2.x remapping.",
+  "notes": [
+    "L6-A/B/C are preserved as aliases while M2.1/M2.2/M2.3 become the canonical normalized IDs."
+  ]
+}

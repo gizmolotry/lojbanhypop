@@ -2,6 +2,8 @@
 
 Airflow DAGs in this repository are thin wrappers around canonical scripts only:
 
+- `airflow/dags/lojban_ablation_master_spine_dag.py` -> canonical overview DAG spanning letter-era foundations, normalized M-series progression, and control-plane refresh
+- `airflow/dags/lojban_ablation_program_spine_dag.py` -> `scripts/run_ablation_history_backfill.py`, `scripts/build_ablation_program_map.py`, `scripts/build_ablation_program_spine.py`, `scripts/run_m_bridge_ablation_test_suite.py`
 - `airflow/dags/lojban_experiment_dag.py` -> `scripts/pipeline_train_grounded_reasoner.py`
 - `airflow/dags/lojban_phase_ablation_dag.py` -> `scripts/pipeline_eval_manifold.py`
 - `airflow/dags/lojban_ablation_matrix_dag.py` -> `scripts/run_coconut_ablation_matrix.py`
@@ -15,6 +17,35 @@ Airflow DAGs in this repository are thin wrappers around canonical scripts only:
 
 No training/eval business logic is implemented in DAG code.
 Series semantics are governed by `docs/SERIES_CHARTER.md` and enforced in script runtime via `series_contract.py`.
+
+## Master Control Plane
+
+The canonical top-level orchestration surfaces are now:
+
+- `lojban_ablation_master_spine`
+- `lojban_ablation_program_spine`
+
+`lojban_ablation_master_spine` is the senior-dev view: one Airflow graph that shows the whole research program in order:
+
+1. letter-era foundation
+2. normalized M-series progression
+3. control-plane refresh
+
+Historical-only families remain visible as archival checkpoints so the graph preserves the intellectual progression instead of hiding it behind missing executables.
+
+`lojban_ablation_program_spine` is the control-plane executor. It does not pretend every historical family is rerunnable. Instead it does the thing a senior engineer actually needs:
+
+1. backfill the full ablation history into one canonical manifest
+2. render the concentrated family map
+3. render the ordered program spine across letter-era and M-era families
+4. refresh the modern unified M-series suite
+
+That gives one auditable control plane for:
+
+- historical excavation
+- family-level lineage
+- normalized M-major progression
+- current runnable-suite diagnosis
 
 ## Contract-First Artifact Flow
 

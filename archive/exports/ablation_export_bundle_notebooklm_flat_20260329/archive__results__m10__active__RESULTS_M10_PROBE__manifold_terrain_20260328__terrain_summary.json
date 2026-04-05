@@ -1,0 +1,35 @@
+{
+  "generated_utc": "2026-03-29T02:13:49.918893Z",
+  "corpus_file_count": 120,
+  "corpus_summary_count": 240,
+  "requested_500_articles_available": false,
+  "mean_gismu_pairwise_cosine": 0.9732964038848877,
+  "mean_gismu_projected_radius": 0.39291948080062866,
+  "sizes": [
+    25,
+    50,
+    75,
+    100,
+    120
+  ],
+  "area_means": [
+    0.002050999304628931,
+    0.0020323692879173905,
+    0.00214834968210198,
+    0.001966520314454101,
+    0.0020001125521957874
+  ],
+  "distance_means": [
+    0.07534118462353945,
+    0.07715035323053598,
+    0.08064229227602482,
+    0.07539932709187269,
+    0.07560776174068451
+  ],
+  "artifacts": {
+    "codebook_png": "D:\\lojbanhypop\\RESULTS_M10_PROBE\\manifold_terrain_20260328\\m11_codebook_terrain.png",
+    "corpus_png": "D:\\lojbanhypop\\RESULTS_M10_PROBE\\manifold_terrain_20260328\\corpus_data_space_terrain.png",
+    "area_png": "D:\\lojbanhypop\\RESULTS_M10_PROBE\\manifold_terrain_20260328\\corpus_scaling_area.png",
+    "distance_png": "D:\\lojbanhypop\\RESULTS_M10_PROBE\\manifold_terrain_20260328\\corpus_scaling_distance.png"
+  }
+}
