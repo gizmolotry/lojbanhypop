@@ -29,7 +29,7 @@ class M18TwoPassOrchestrator:
         self.config = config
         self.device = next(model.parameters()).device
 
-    def execute(self, prompt: str, intervention_active: bool = True) -> Dict[str, Any]:
+    def execute(self, prompt: str, intervention_active: bool = True, max_new_tokens: int = 20) -> Dict[str, Any]:
         """
         Executes the Two-Pass Protocol.
         """
@@ -60,7 +60,7 @@ class M18TwoPassOrchestrator:
             with torch.no_grad():
                 out_p2 = self.model.generate(
                     **inputs,
-                    max_new_tokens=20,
+                    max_new_tokens=max_new_tokens,
                     do_sample=False,
                     pad_token_id=self.tokenizer.eos_token_id,
                     return_dict_in_generate=True
@@ -70,7 +70,8 @@ class M18TwoPassOrchestrator:
                 "prediction": prediction,
                 "top_k_indices": top_k_indices.tolist(),
                 "top_k_tokens": [self.tokenizer.decode([inputs.input_ids[0, idx]]) for idx in top_k_indices[0]],
-                "telemetry": [{"bias_active": False}]
+                "telemetry": [{"bias_active": False}],
+                "token_ids": out_p2.sequences[0][seq_l:].tolist()
             }
 
         # --- PASS 2: BIASED EXECUTION ---
@@ -91,7 +92,7 @@ class M18TwoPassOrchestrator:
                 # MANDATORY: output_attentions=True to activate the hooks
                 out_p2 = self.model.generate(
                     **inputs,
-                    max_new_tokens=20,
+                    max_new_tokens=max_new_tokens,
                     do_sample=False,
                     pad_token_id=self.tokenizer.eos_token_id,
                     output_attentions=True,
@@ -106,5 +107,6 @@ class M18TwoPassOrchestrator:
             "prediction": prediction,
             "top_k_indices": top_k_indices.tolist(),
             "top_k_tokens": [self.tokenizer.decode([inputs.input_ids[0, idx]]) for idx in top_k_indices[0]],
-            "telemetry": telemetry
+            "telemetry": telemetry,
+            "token_ids": out_p2.sequences[0][seq_l:].tolist()
         }
