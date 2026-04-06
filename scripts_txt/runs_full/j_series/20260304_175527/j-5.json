@@ -1,0 +1,1020 @@
+{
+  "summary": {
+    "run_id": "J-5",
+    "name": "Adversarial Problem Synthesis",
+    "generated_utc": "2026-03-04T17:55:41.154847+00:00",
+    "dataset_output": "runs\\j_series\\20260304_175527\\j-5_adversarial.jsonl",
+    "series_contract_version": "1.0",
+    "series_id": "J",
+    "track": "invariance_data",
+    "script": "scripts/eval_j_5.py"
+  },
+  "metrics": {
+    "problem_count": 512.0,
+    "accepted_count": 110.0,
+    "generator_accept_rate": 0.21484375,
+    "schema_valid_rate": 1.0,
+    "solver_consistency_rate": 0.21484375,
+    "novelty_mean": 1.0,
+    "novelty_threshold": 0.3,
+    "dedupe_reject_count": 0.0,
+    "scope_by_depth": {
+      "1": 0.37610619469026546,
+      "2": 0.16129032258064516,
+      "3": 0.0,
+      "4": 0.0
+    },
+    "scope_components_mean": {
+      "scope_unbalanced": 0.0,
+      "scope_lifetime": 0.0,
+      "scope_unbound": 0.07356770833333334,
+      "scope_quantifier_assoc": 0.0,
+      "scope_shadowing": 0.0
+    },
+    "scope_components_by_depth": {
+      "1": {
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.16666666666666669,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      },
+      "2": {
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.0,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      },
+      "3": {
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.0,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      },
+      "4": {
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.0,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    },
+    "foil_minimal_edit_rate": 1.0,
+    "foil_auc": 0.310546875,
+    "domain_coverage": 3.0
+  },
+  "samples": [
+    {
+      "domain": "kinship",
+      "depth": 1,
+      "prompt": "parent0 is parent of child0.",
+      "foil_prompt": "child0 is parent of parent0.",
+      "factor_graph": {
+        "entities": [
+          "child0",
+          "guardian0",
+          "parent0",
+          "sibling0"
+        ],
+        "edges": [
+          {
+            "src": "parent0",
+            "rel": "parent_of",
+            "dst": "child0"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "child0",
+          "guardian0",
+          "parent0",
+          "sibling0"
+        ],
+        "edges": [
+          {
+            "src": "child0",
+            "rel": "parent_of",
+            "dst": "parent0"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0,
+      "scope_trace": [
+        "FORALL",
+        "VAR_child0",
+        "SCOPE_OPEN",
+        "VAR_child0",
+        "VAR_guardian0",
+        "SCOPE_CLOSE"
+      ],
+      "scope_components": {
+        "scope_total": 0.16666666666666666,
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.16666666666666666,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    },
+    {
+      "domain": "temporal",
+      "depth": 1,
+      "prompt": "event1 is before milestone1.",
+      "foil_prompt": "milestone1 is before event1.",
+      "factor_graph": {
+        "entities": [
+          "deadline1",
+          "event1",
+          "milestone1",
+          "review1"
+        ],
+        "edges": [
+          {
+            "src": "event1",
+            "rel": "before",
+            "dst": "milestone1"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "deadline1",
+          "event1",
+          "milestone1",
+          "review1"
+        ],
+        "edges": [
+          {
+            "src": "milestone1",
+            "rel": "before",
+            "dst": "event1"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0,
+      "scope_trace": [
+        "FORALL",
+        "VAR_deadline1",
+        "SCOPE_OPEN",
+        "VAR_deadline1",
+        "VAR_event1",
+        "SCOPE_CLOSE"
+      ],
+      "scope_components": {
+        "scope_total": 0.16666666666666666,
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.16666666666666666,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    },
+    {
+      "domain": "legal_permission",
+      "depth": 1,
+      "prompt": "actor5 permits role5.",
+      "foil_prompt": "role5 permits actor5.",
+      "factor_graph": {
+        "entities": [
+          "actor5",
+          "permit5",
+          "policy5",
+          "role5"
+        ],
+        "edges": [
+          {
+            "src": "actor5",
+            "rel": "permits",
+            "dst": "role5"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "actor5",
+          "permit5",
+          "policy5",
+          "role5"
+        ],
+        "edges": [
+          {
+            "src": "role5",
+            "rel": "permits",
+            "dst": "actor5"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0,
+      "scope_trace": [
+        "FORALL",
+        "VAR_actor5",
+        "SCOPE_OPEN",
+        "VAR_actor5",
+        "VAR_permit5",
+        "SCOPE_CLOSE"
+      ],
+      "scope_components": {
+        "scope_total": 0.16666666666666666,
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.16666666666666666,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    },
+    {
+      "domain": "kinship",
+      "depth": 2,
+      "prompt": "if child6 then sibling6. parent6 is parent of child6.",
+      "foil_prompt": "if sibling6 then child6. parent6 is parent of child6.",
+      "factor_graph": {
+        "entities": [
+          "child6",
+          "guardian6",
+          "parent6",
+          "sibling6"
+        ],
+        "edges": [
+          {
+            "src": "parent6",
+            "rel": "parent_of",
+            "dst": "child6"
+          },
+          {
+            "src": "child6",
+            "rel": "implies",
+            "dst": "sibling6"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "child6",
+          "guardian6",
+          "parent6",
+          "sibling6"
+        ],
+        "edges": [
+          {
+            "src": "sibling6",
+            "rel": "implies",
+            "dst": "child6"
+          },
+          {
+            "src": "parent6",
+            "rel": "parent_of",
+            "dst": "child6"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.3333333333333333,
+      "scope_trace": [
+        "FORALL",
+        "VAR_child6",
+        "SCOPE_OPEN",
+        "EXISTS",
+        "VAR_guardian6",
+        "SCOPE_OPEN",
+        "VAR_child6",
+        "VAR_guardian6",
+        "SCOPE_CLOSE",
+        "SCOPE_CLOSE"
+      ],
+      "scope_components": {
+        "scope_total": 0.0,
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.0,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    },
+    {
+      "domain": "kinship",
+      "depth": 1,
+      "prompt": "parent9 is parent of child9.",
+      "foil_prompt": "child9 is parent of parent9.",
+      "factor_graph": {
+        "entities": [
+          "child9",
+          "guardian9",
+          "parent9",
+          "sibling9"
+        ],
+        "edges": [
+          {
+            "src": "parent9",
+            "rel": "parent_of",
+            "dst": "child9"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "child9",
+          "guardian9",
+          "parent9",
+          "sibling9"
+        ],
+        "edges": [
+          {
+            "src": "child9",
+            "rel": "parent_of",
+            "dst": "parent9"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0,
+      "scope_trace": [
+        "FORALL",
+        "VAR_child9",
+        "SCOPE_OPEN",
+        "VAR_child9",
+        "VAR_guardian9",
+        "SCOPE_CLOSE"
+      ],
+      "scope_components": {
+        "scope_total": 0.16666666666666666,
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.16666666666666666,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    },
+    {
+      "domain": "kinship",
+      "depth": 1,
+      "prompt": "parent18 is parent of child18.",
+      "foil_prompt": "child18 is parent of parent18.",
+      "factor_graph": {
+        "entities": [
+          "child18",
+          "guardian18",
+          "parent18",
+          "sibling18"
+        ],
+        "edges": [
+          {
+            "src": "parent18",
+            "rel": "parent_of",
+            "dst": "child18"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "child18",
+          "guardian18",
+          "parent18",
+          "sibling18"
+        ],
+        "edges": [
+          {
+            "src": "child18",
+            "rel": "parent_of",
+            "dst": "parent18"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0,
+      "scope_trace": [
+        "FORALL",
+        "VAR_child18",
+        "SCOPE_OPEN",
+        "VAR_child18",
+        "VAR_guardian18",
+        "SCOPE_CLOSE"
+      ],
+      "scope_components": {
+        "scope_total": 0.16666666666666666,
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.16666666666666666,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    },
+    {
+      "domain": "temporal",
+      "depth": 1,
+      "prompt": "event22 is before milestone22.",
+      "foil_prompt": "milestone22 is before event22.",
+      "factor_graph": {
+        "entities": [
+          "deadline22",
+          "event22",
+          "milestone22",
+          "review22"
+        ],
+        "edges": [
+          {
+            "src": "event22",
+            "rel": "before",
+            "dst": "milestone22"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "deadline22",
+          "event22",
+          "milestone22",
+          "review22"
+        ],
+        "edges": [
+          {
+            "src": "milestone22",
+            "rel": "before",
+            "dst": "event22"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0,
+      "scope_trace": [
+        "FORALL",
+        "VAR_deadline22",
+        "SCOPE_OPEN",
+        "VAR_deadline22",
+        "VAR_event22",
+        "SCOPE_CLOSE"
+      ],
+      "scope_components": {
+        "scope_total": 0.16666666666666666,
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.16666666666666666,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    },
+    {
+      "domain": "legal_permission",
+      "depth": 2,
+      "prompt": "actor23 permits role23. if role23 then permit23.",
+      "foil_prompt": "role23 permits actor23. if role23 then permit23.",
+      "factor_graph": {
+        "entities": [
+          "actor23",
+          "permit23",
+          "policy23",
+          "role23"
+        ],
+        "edges": [
+          {
+            "src": "actor23",
+            "rel": "permits",
+            "dst": "role23"
+          },
+          {
+            "src": "role23",
+            "rel": "implies",
+            "dst": "permit23"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "actor23",
+          "permit23",
+          "policy23",
+          "role23"
+        ],
+        "edges": [
+          {
+            "src": "role23",
+            "rel": "permits",
+            "dst": "actor23"
+          },
+          {
+            "src": "role23",
+            "rel": "implies",
+            "dst": "permit23"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.3333333333333333,
+      "scope_trace": [
+        "FORALL",
+        "VAR_actor23",
+        "SCOPE_OPEN",
+        "EXISTS",
+        "VAR_permit23",
+        "SCOPE_OPEN",
+        "VAR_actor23",
+        "VAR_permit23",
+        "SCOPE_CLOSE",
+        "SCOPE_CLOSE"
+      ],
+      "scope_components": {
+        "scope_total": 0.0,
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.0,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    },
+    {
+      "domain": "legal_permission",
+      "depth": 2,
+      "prompt": "actor26 permits role26. if role26 then permit26.",
+      "foil_prompt": "role26 permits actor26. if role26 then permit26.",
+      "factor_graph": {
+        "entities": [
+          "actor26",
+          "permit26",
+          "policy26",
+          "role26"
+        ],
+        "edges": [
+          {
+            "src": "actor26",
+            "rel": "permits",
+            "dst": "role26"
+          },
+          {
+            "src": "role26",
+            "rel": "implies",
+            "dst": "permit26"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "actor26",
+          "permit26",
+          "policy26",
+          "role26"
+        ],
+        "edges": [
+          {
+            "src": "role26",
+            "rel": "permits",
+            "dst": "actor26"
+          },
+          {
+            "src": "role26",
+            "rel": "implies",
+            "dst": "permit26"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.3333333333333333,
+      "scope_trace": [
+        "FORALL",
+        "VAR_actor26",
+        "SCOPE_OPEN",
+        "EXISTS",
+        "VAR_permit26",
+        "SCOPE_OPEN",
+        "VAR_actor26",
+        "VAR_permit26",
+        "SCOPE_CLOSE",
+        "SCOPE_CLOSE"
+      ],
+      "scope_components": {
+        "scope_total": 0.0,
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.0,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    },
+    {
+      "domain": "kinship",
+      "depth": 1,
+      "prompt": "parent39 is parent of child39.",
+      "foil_prompt": "child39 is parent of parent39.",
+      "factor_graph": {
+        "entities": [
+          "child39",
+          "guardian39",
+          "parent39",
+          "sibling39"
+        ],
+        "edges": [
+          {
+            "src": "parent39",
+            "rel": "parent_of",
+            "dst": "child39"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "child39",
+          "guardian39",
+          "parent39",
+          "sibling39"
+        ],
+        "edges": [
+          {
+            "src": "child39",
+            "rel": "parent_of",
+            "dst": "parent39"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0,
+      "scope_trace": [
+        "FORALL",
+        "VAR_child39",
+        "SCOPE_OPEN",
+        "VAR_child39",
+        "VAR_guardian39",
+        "SCOPE_CLOSE"
+      ],
+      "scope_components": {
+        "scope_total": 0.16666666666666666,
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.16666666666666666,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    },
+    {
+      "domain": "legal_permission",
+      "depth": 1,
+      "prompt": "actor41 permits role41.",
+      "foil_prompt": "role41 permits actor41.",
+      "factor_graph": {
+        "entities": [
+          "actor41",
+          "permit41",
+          "policy41",
+          "role41"
+        ],
+        "edges": [
+          {
+            "src": "actor41",
+            "rel": "permits",
+            "dst": "role41"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "actor41",
+          "permit41",
+          "policy41",
+          "role41"
+        ],
+        "edges": [
+          {
+            "src": "role41",
+            "rel": "permits",
+            "dst": "actor41"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0,
+      "scope_trace": [
+        "FORALL",
+        "VAR_actor41",
+        "SCOPE_OPEN",
+        "VAR_actor41",
+        "VAR_permit41",
+        "SCOPE_CLOSE"
+      ],
+      "scope_components": {
+        "scope_total": 0.16666666666666666,
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.16666666666666666,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    },
+    {
+      "domain": "kinship",
+      "depth": 1,
+      "prompt": "parent48 is parent of child48.",
+      "foil_prompt": "child48 is parent of parent48.",
+      "factor_graph": {
+        "entities": [
+          "child48",
+          "guardian48",
+          "parent48",
+          "sibling48"
+        ],
+        "edges": [
+          {
+            "src": "parent48",
+            "rel": "parent_of",
+            "dst": "child48"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "child48",
+          "guardian48",
+          "parent48",
+          "sibling48"
+        ],
+        "edges": [
+          {
+            "src": "child48",
+            "rel": "parent_of",
+            "dst": "parent48"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0,
+      "scope_trace": [
+        "FORALL",
+        "VAR_child48",
+        "SCOPE_OPEN",
+        "VAR_child48",
+        "VAR_guardian48",
+        "SCOPE_CLOSE"
+      ],
+      "scope_components": {
+        "scope_total": 0.16666666666666666,
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.16666666666666666,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    },
+    {
+      "domain": "legal_permission",
+      "depth": 1,
+      "prompt": "actor53 permits role53.",
+      "foil_prompt": "role53 permits actor53.",
+      "factor_graph": {
+        "entities": [
+          "actor53",
+          "permit53",
+          "policy53",
+          "role53"
+        ],
+        "edges": [
+          {
+            "src": "actor53",
+            "rel": "permits",
+            "dst": "role53"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "actor53",
+          "permit53",
+          "policy53",
+          "role53"
+        ],
+        "edges": [
+          {
+            "src": "role53",
+            "rel": "permits",
+            "dst": "actor53"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0,
+      "scope_trace": [
+        "FORALL",
+        "VAR_actor53",
+        "SCOPE_OPEN",
+        "VAR_actor53",
+        "VAR_permit53",
+        "SCOPE_CLOSE"
+      ],
+      "scope_components": {
+        "scope_total": 0.16666666666666666,
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.16666666666666666,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    },
+    {
+      "domain": "legal_permission",
+      "depth": 2,
+      "prompt": "actor59 permits role59. if role59 then permit59.",
+      "foil_prompt": "role59 permits actor59. if role59 then permit59.",
+      "factor_graph": {
+        "entities": [
+          "actor59",
+          "permit59",
+          "policy59",
+          "role59"
+        ],
+        "edges": [
+          {
+            "src": "actor59",
+            "rel": "permits",
+            "dst": "role59"
+          },
+          {
+            "src": "role59",
+            "rel": "implies",
+            "dst": "permit59"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "actor59",
+          "permit59",
+          "policy59",
+          "role59"
+        ],
+        "edges": [
+          {
+            "src": "role59",
+            "rel": "permits",
+            "dst": "actor59"
+          },
+          {
+            "src": "role59",
+            "rel": "implies",
+            "dst": "permit59"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.3333333333333333,
+      "scope_trace": [
+        "FORALL",
+        "VAR_actor59",
+        "SCOPE_OPEN",
+        "EXISTS",
+        "VAR_permit59",
+        "SCOPE_OPEN",
+        "VAR_actor59",
+        "VAR_permit59",
+        "SCOPE_CLOSE",
+        "SCOPE_CLOSE"
+      ],
+      "scope_components": {
+        "scope_total": 0.0,
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.0,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    },
+    {
+      "domain": "kinship",
+      "depth": 1,
+      "prompt": "parent60 is parent of child60.",
+      "foil_prompt": "child60 is parent of parent60.",
+      "factor_graph": {
+        "entities": [
+          "child60",
+          "guardian60",
+          "parent60",
+          "sibling60"
+        ],
+        "edges": [
+          {
+            "src": "parent60",
+            "rel": "parent_of",
+            "dst": "child60"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "child60",
+          "guardian60",
+          "parent60",
+          "sibling60"
+        ],
+        "edges": [
+          {
+            "src": "child60",
+            "rel": "parent_of",
+            "dst": "parent60"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0,
+      "scope_trace": [
+        "FORALL",
+        "VAR_child60",
+        "SCOPE_OPEN",
+        "VAR_child60",
+        "VAR_guardian60",
+        "SCOPE_CLOSE"
+      ],
+      "scope_components": {
+        "scope_total": 0.16666666666666666,
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.16666666666666666,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    },
+    {
+      "domain": "legal_permission",
+      "depth": 2,
+      "prompt": "actor62 permits role62. if role62 then permit62.",
+      "foil_prompt": "role62 permits actor62. if role62 then permit62.",
+      "factor_graph": {
+        "entities": [
+          "actor62",
+          "permit62",
+          "policy62",
+          "role62"
+        ],
+        "edges": [
+          {
+            "src": "actor62",
+            "rel": "permits",
+            "dst": "role62"
+          },
+          {
+            "src": "role62",
+            "rel": "implies",
+            "dst": "permit62"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "actor62",
+          "permit62",
+          "policy62",
+          "role62"
+        ],
+        "edges": [
+          {
+            "src": "role62",
+            "rel": "permits",
+            "dst": "actor62"
+          },
+          {
+            "src": "role62",
+            "rel": "implies",
+            "dst": "permit62"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.3333333333333333,
+      "scope_trace": [
+        "FORALL",
+        "VAR_actor62",
+        "SCOPE_OPEN",
+        "EXISTS",
+        "VAR_permit62",
+        "SCOPE_OPEN",
+        "VAR_actor62",
+        "VAR_permit62",
+        "SCOPE_CLOSE",
+        "SCOPE_CLOSE"
+      ],
+      "scope_components": {
+        "scope_total": 0.0,
+        "scope_unbalanced": 0.0,
+        "scope_lifetime": 0.0,
+        "scope_unbound": 0.0,
+        "scope_quantifier_assoc": 0.0,
+        "scope_shadowing": 0.0
+      }
+    }
+  ]
+}

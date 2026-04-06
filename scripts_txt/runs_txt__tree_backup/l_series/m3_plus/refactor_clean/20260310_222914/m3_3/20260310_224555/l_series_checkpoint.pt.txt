@@ -1,0 +1,6 @@
+BINARY ARTIFACT SUMMARY
+Original path: l_series/m3_plus/refactor_clean/20260310_222914/m3_3/20260310_224555/l_series_checkpoint.pt
+Original extension: .pt
+Size bytes: 58367885
+SHA256: e82ae08974ebd0eabd53dba505d364c7d934015aa5517a4ffdc4dd7b16e5c495
+Note: binary payload omitted from txt export; this stub preserves identity and provenance.

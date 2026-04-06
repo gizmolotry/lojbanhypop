@@ -3,7 +3,7 @@
 Airflow DAGs in this repository are thin wrappers around canonical scripts only:
 
 - `airflow/dags/lojban_ablation_master_spine_dag.py` -> canonical overview DAG spanning letter-era foundations, normalized M-series progression, and control-plane refresh
-- `airflow/dags/lojban_ablation_program_spine_dag.py` -> `scripts/run_ablation_history_backfill.py`, `scripts/build_ablation_program_map.py`, `scripts/build_ablation_program_spine.py`, `scripts/run_m_bridge_ablation_test_suite.py`
+- `airflow/dags/lojban_ablation_program_spine_dag.py` -> `scripts/run_ablation_history_backfill.py`, `scripts/build_ablation_program_map.py`, `scripts/build_ablation_program_spine.py`, `scripts/render_ablation_history_catalog.py`, `scripts/run_m_bridge_ablation_test_suite.py`
 - `airflow/dags/lojban_experiment_dag.py` -> `scripts/pipeline_train_grounded_reasoner.py`
 - `airflow/dags/lojban_phase_ablation_dag.py` -> `scripts/pipeline_eval_manifold.py`
 - `airflow/dags/lojban_ablation_matrix_dag.py` -> `scripts/run_coconut_ablation_matrix.py`
@@ -38,7 +38,8 @@ Historical-only families remain visible as archival checkpoints so the graph pre
 1. backfill the full ablation history into one canonical manifest
 2. render the concentrated family map
 3. render the ordered program spine across letter-era and M-era families
-4. refresh the modern unified M-series suite
+4. render the human-readable ablation catalog
+5. refresh the modern unified M-series suite
 
 That gives one auditable control plane for:
 

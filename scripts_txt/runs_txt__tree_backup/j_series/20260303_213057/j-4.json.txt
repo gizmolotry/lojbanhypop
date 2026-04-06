@@ -1,0 +1,21 @@
+{
+  "summary": {
+    "run_id": "J-4",
+    "name": "Operator Curriculum",
+    "generated_utc": "2026-03-04T05:30:58.544732+00:00",
+    "dataset_output": "runs\\j_series\\20260303_213057\\j-4_curriculum.jsonl"
+  },
+  "metrics": {
+    "sample_count": 640.0,
+    "operator_count": 5.0,
+    "min_operator_coverage": 128.0,
+    "max_operator_coverage": 128.0
+  },
+  "operator_histogram": {
+    "equality": 128,
+    "coreference": 128,
+    "containment": 128,
+    "transitivity": 128,
+    "negation": 128
+  }
+}

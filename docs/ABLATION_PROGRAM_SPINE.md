@@ -1,7 +1,7 @@
 # Ablation Program Spine
 
-- Generated UTC: `2026-03-30T16:02:54.714883+00:00`
-- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/ablation_history_backfill_letter_series_refined_20260330/ablation_history_manifest.json`
+- Generated UTC: `2026-04-06T01:01:17.295591+00:00`
+- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/ablation_history_backfill_github_control_plane_20260405/ablation_history_manifest.json`
 - Source taxonomy config: `configs/experiment_taxonomy.json`
 - Stage count: `22`
 
@@ -47,7 +47,7 @@ This is the ordered research spine of the project: legacy letter-series families
 - Doc-only rows: `4`
 - IDs: `h.series.h5_dptr, h.series.h5_ood, h.series.h5_prov, legacy.h5.h5_2a, legacy.h5.h5_2b, legacy.h5.h5_4, legacy.h5.h5_5`
 - Aliases: `Gearbox Control, H5-DPTR, H5-OOD, H5-PROV, H5.2a, H5.2b, H5.4, H5.5, Iron Collar, True Neuro-Symbolic`
-- Docs: `docs/history/reports/H5_ABLATION_REPORT.md, docs/history/reports/H5_SUMMARY.md, docs/H5_ABLATION_EXTENSION.md`
+- Docs: `docs/history/reports/H5_ABLATION_REPORT.md, docs/history/reports/H5_SUMMARY.md`
 - Scripts: `scripts/train_h5_persistent_vq_advisor.py, scripts/eval_h5_dynamic_pointer_refactor.py, scripts/eval_h5_ood_stress.py, scripts/trace_h5_provenance.py`
 
 ## 4. J
@@ -74,7 +74,7 @@ This is the ordered research spine of the project: legacy letter-series families
 - Doc-only rows: `1`
 - IDs: `M2.1, M2.2, M2.3, M3.0, M3.1, M3.2, M3.3, M3.4, l.branch.m3_5.m3_5_a, l.branch.m3_5.m3_5_b, l.branch.m3_5.m3_5_c, l.branch.m3_6.m3_6_a, l.branch.m3_6.m3_6_b, l.branch.m3_6.m3_6_c, l.branch.m3_7.m3_7_a, l.branch.m3_7.m3_7_b, l.branch.m3_7.m3_7_c, l.branch.m3_8.m3_8_a, l.branch.m3_8.m3_8_b, l.branch.m3_8.m3_8_c, l.series.charter`
 - Aliases: `L-Series, L6-A, L6-B, L6-C, Lagrangian Series, M2.1, M2.2, M2.3, M2.A, M2.B, M2.C, M3.0, M3.1, M3.2, M3.3, M3.4, M3.5.A, M3.5.B, M3.5.C, M3.6.A, M3.6.B, M3.6.C, M3.6.M3.6.A, M3.6.M3.6.B, M3.6.M3.6.C, M3.7.A, M3.7.B, M3.7.C, M3.8.A, M3.8.B, M3.8.C`
-- Docs: `docs/L_SERIES.md, docs/SERIES_CHARTER.md, archive/reports/relevant/REPORTS_RELEVANT/l6_ablation_manifest.md`
+- Docs: `docs/SERIES_CHARTER.md, archive/reports/relevant/REPORTS_RELEVANT/l6_ablation_manifest.md`
 - Scripts: `scripts/train_l_series_mvs.py, scripts/run_l6_ablation_branch.py`
 - DAGs: `airflow/dags/lojban_l_series_dag.py`
 
@@ -97,7 +97,7 @@ This is the ordered research spine of the project: legacy letter-series families
 - Runnable rows: `14`
 - IDs: `phase5.objective.ablate_compositional_consistency_loss, phase5.objective.ablate_compression_regularization_loss, phase5.objective.ablate_coverage_regularization_loss, phase5.objective.ablate_roundtrip_consistency_loss, phase5.objective.ablate_semantic_unambiguity_loss, phase5.objective.baseline_no_phase5, phase5.objective.phase5_full, phase5.train.ablate_compositional_consistency_weight, phase5.train.ablate_compression_regularization_weight, phase5.train.ablate_coverage_regularization_weight, phase5.train.ablate_roundtrip_consistency_weight, phase5.train.ablate_semantic_unambiguity_weight, phase5.train.baseline_no_phase5, phase5.train.phase5_full`
 - Aliases: `ablate_compositional_consistency_loss, ablate_compositional_consistency_weight, ablate_compression_regularization_loss, ablate_compression_regularization_weight, ablate_coverage_regularization_loss, ablate_coverage_regularization_weight, ablate_roundtrip_consistency_loss, ablate_roundtrip_consistency_weight, ablate_semantic_unambiguity_loss, ablate_semantic_unambiguity_weight, baseline_no_phase5, phase5_full`
-- Docs: `docs/SERIES_CHARTER.md, docs/CAUSAL_PROBE_PROTOCOL.md`
+- Docs: `docs/SERIES_CHARTER.md`
 - Scripts: `scripts/run_phase5_train_ablation.py, scripts/run_phase5_objective_ablation.py`
 - DAGs: `airflow/dags/lojban_phase_ablation_dag.py`
 
@@ -377,16 +377,14 @@ This is the ordered research spine of the project: legacy letter-series families
 - Kind: `major_series`
 - Layer: `manifold_and_return_path`
 - Objective: use bounded scratchpad tokens as a compute horizon while injecting continuous advisor math only into scratchpad states before English resumption.
-- Entry count: `5`
-- Runnable rows: `5`
+- Entry count: `0`
+- Runnable rows: `0`
 - Question boundary: symbiote scratchpad re-entry
 - Thesis: use bounded scratchpad tokens as a compute horizon while injecting continuous advisor math only into scratchpad states before English resumption.
 - Selected upstream: `M11`
 - Inherits: `manifold oracle signal, M11 discriminative head as cognition proof`
 - Reopens: `generative return path, scratchpad compute horizon, residual injection locality`
 - Rejects: `raw direct sidecar exposure during answer rollout`
-- IDs: `M14.A, M14.B, M14.C, M14.D, M14.E`
-- Aliases: `A, B, C, D, E, M14.A, M14.B, M14.C, M14.D, M14.E`
 - Allowed axes: `scratchpad length, scratchpad gate threshold, injection layer, residual scratchpad alpha`
 - Frozen/forbidden drift: `direct raw sidecar exposure to answer token, token-only return path as mainline`
 - Promotion basis: `mean_intervention_delta_gold, resume_first_token_accuracy, scratchpad_bleed_rate`

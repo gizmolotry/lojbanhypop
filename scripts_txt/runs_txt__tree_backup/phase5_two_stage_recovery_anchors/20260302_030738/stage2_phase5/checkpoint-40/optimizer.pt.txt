@@ -1,0 +1,6 @@
+BINARY ARTIFACT SUMMARY
+Original path: phase5_two_stage_recovery_anchors/20260302_030738/stage2_phase5/checkpoint-40/optimizer.pt
+Original extension: .pt
+Size bytes: 70672915
+SHA256: c9a9deafd8803ad7c359be139ad7121a460944f9e8a53b797005a252bec5f755
+Note: binary payload omitted from txt export; this stub preserves identity and provenance.

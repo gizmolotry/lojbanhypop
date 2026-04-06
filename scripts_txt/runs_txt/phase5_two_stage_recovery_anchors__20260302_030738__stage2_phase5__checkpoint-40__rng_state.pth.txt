@@ -1,0 +1,6 @@
+BINARY ARTIFACT SUMMARY
+Original path: phase5_two_stage_recovery_anchors/20260302_030738/stage2_phase5/checkpoint-40/rng_state.pth
+Original extension: .pth
+Size bytes: 14645
+SHA256: 39c040df0194680720f7e2b30a1792264ebdf89ad1aac5d4a6614d5e2f7c30cd
+Note: binary payload omitted from txt export; this stub preserves identity and provenance.

@@ -1,0 +1,6 @@
+BINARY ARTIFACT SUMMARY
+Original path: phase5_two_stage_recovery_anchors/20260302_030738/stage2_phase5/checkpoint-40/adapter_model.safetensors
+Original extension: .safetensors
+Size bytes: 578933712
+SHA256: a0d13ad1b07cc5594ac5e868bfacac9fb2e55582bf8cd841049669c778bc87d0
+Note: binary payload omitted from txt export; this stub preserves identity and provenance.

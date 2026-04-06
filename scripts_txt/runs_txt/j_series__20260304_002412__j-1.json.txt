@@ -1,0 +1,89 @@
+{
+  "summary": {
+    "run_id": "J-1",
+    "name": "Graph Target",
+    "generated_utc": "2026-03-04T00:24:12.554720+00:00",
+    "input_artifact": null
+  },
+  "metrics": {
+    "graph_count": 4,
+    "schema_valid_count": 4,
+    "schema_valid_rate": 1.0,
+    "mean_entities": 2.5,
+    "mean_edges": 1.5,
+    "unique_relation_count": 5.0
+  },
+  "graphs": [
+    {
+      "entities": [
+        "box",
+        "red",
+        "the"
+      ],
+      "edges": [
+        {
+          "src": "box",
+          "rel": "inside",
+          "dst": "red"
+        },
+        {
+          "src": "box",
+          "rel": "inside",
+          "dst": "the"
+        }
+      ]
+    },
+    {
+      "entities": [
+        "a",
+        "b",
+        "c"
+      ],
+      "edges": [
+        {
+          "src": "a",
+          "rel": "north_of",
+          "dst": "b"
+        },
+        {
+          "src": "b",
+          "rel": "east_of",
+          "dst": "c"
+        }
+      ]
+    },
+    {
+      "entities": [
+        "p",
+        "q"
+      ],
+      "edges": [
+        {
+          "src": "p",
+          "rel": "implies",
+          "dst": "q"
+        }
+      ]
+    },
+    {
+      "entities": [
+        "alice",
+        "witnessa"
+      ],
+      "edges": [
+        {
+          "src": "alice",
+          "rel": "equals",
+          "dst": "witnessa"
+        }
+      ]
+    }
+  ],
+  "relation_histogram": {
+    "inside": 2,
+    "north_of": 1,
+    "east_of": 1,
+    "implies": 1,
+    "equals": 1
+  }
+}

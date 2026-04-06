@@ -1,0 +1,501 @@
+{
+  "timestamp": "2026-03-02T03:19:51.134149+00:00",
+  "base_model": "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+  "adapter": "runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+  "sample_size": 24,
+  "seed": 11,
+  "summary": {
+    "base": {
+      "total": 24,
+      "correct": 2,
+      "accuracy": 0.08333333333333333
+    },
+    "adapter": {
+      "total": 24,
+      "correct": 0,
+      "accuracy": 0.0
+    }
+  },
+  "rows": [
+    {
+      "problem_id": 800,
+      "mode": "base",
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knight,C=knave",
+      "predicted": "The statement \"B is a knight\" means that B is telling the",
+      "normalized_expected": "a=knight,b=knight,c=knave",
+      "normalized_predicted": "statementbisaknightmeansthatbistellingthe",
+      "correct": false
+    },
+    {
+      "problem_id": 800,
+      "mode": "adapter",
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knight,C=knave",
+      "predicted": "Step 1: Analyze the statements made",
+      "normalized_expected": "a=knight,b=knight,c=knave",
+      "normalized_predicted": "step1analyzestatementsmade",
+      "correct": false
+    },
+    {
+      "problem_id": 801,
+      "mode": "base",
+      "prompt": "Frank puts the red ball in the cabinet. Eve moves it to the desk while Frank is outside. Dana takes the blue ball. Where does Frank think the red ball is?",
+      "expected": "cabinet",
+      "predicted": "on the desk. Explanation: The logical reasoning involved here is understanding the sequence of events and determining where Frank would expect the red ball to be based on the actions described. Since Frank moved the red ball to the desk, he would likely believe",
+      "normalized_expected": "cabinet",
+      "normalized_predicted": "ondeskexplanationlogicalreasoninginvolvedhereisunderstandingsequenceofeventsanddeterminingwherefrankwouldexpectredballtobebasedonactionsdescribedsincefrankmovedredballtodesk,hewouldlikelybelieve",
+      "correct": false
+    },
+    {
+      "problem_id": 801,
+      "mode": "adapter",
+      "prompt": "Frank puts the red ball in the cabinet. Eve moves it to the desk while Frank is outside. Dana takes the blue ball. Where does Frank think the red ball is?",
+      "expected": "cabinet",
+      "predicted": "Explanation: Eve moves the red ball to the desk, so Frank thinks it's still in the cabinet. Eve then moves it to the desk while Frank is outside, so Frank thinks it's still in the cabinet. Finally, Dana",
+      "normalized_expected": "cabinet",
+      "normalized_predicted": "explanationevemovesredballtodesk,sofrankthinksitsstillcabinetevethenmovesittodeskwhilefrankisoutside,sofrankthinksitsstillcabinetfinally,dana",
+      "correct": false
+    },
+    {
+      "problem_id": 802,
+      "mode": "base",
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "expected": "demonstrators",
+      "predicted": "Demonstrators. Explanation: The question asks who advocated revolution, and it is stated that the city councilmen refused the demonstrators a permit because they advocated revolution. Therefore, the demonstrators were the ones who advocated revolution. The other option, \"Demon",
+      "normalized_expected": "demonstrators",
+      "normalized_predicted": "demonstratorsexplanationquestionaskswhoadvocatedrevolution,anditisstatedthatcitycouncilmenrefuseddemonstratorsapermitbecausetheyadvocatedrevolutiontherefore,demonstratorswereoneswhoadvocatedrevolutionotheroption,demon",
+      "correct": true
+    },
+    {
+      "problem_id": 802,
+      "mode": "adapter",
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "expected": "demonstrators",
+      "predicted": "Explanation: The city councilmen refused the demonstrators a permit because they advocated revolution. Therefore, the demonstrators advocated revolution. Answer: demonstrators. Explanation: The city councilmen refused the demonstrators a permit because they advocated revolution. Therefore, the",
+      "normalized_expected": "demonstrators",
+      "normalized_predicted": "explanationcitycouncilmenrefuseddemonstratorsapermitbecausetheyadvocatedrevolutiontherefore,demonstratorsadvocatedrevolutionanswerdemonstratorsexplanationcitycouncilmenrefuseddemonstratorsapermitbecausetheyadvocatedrevolutiontherefore,the",
+      "correct": false
+    },
+    {
+      "problem_id": 803,
+      "mode": "base",
+      "prompt": "Frank puts the red ball in the drawer. Eve moves it to the cabinet while Frank is watching. Charlie takes the blue ball. Where does Frank think the red ball is?",
+      "expected": "cabinet",
+      "predicted": "Frank thinks the red ball is in the drawer. Explanation: The question states that Frank put the red ball in the drawer, and then Eve moved it to the cabinet while Frank was watching. Therefore, Frank would logically assume that the red ball",
+      "normalized_expected": "cabinet",
+      "normalized_predicted": "frankthinksredballisdrawerexplanationquestionstatesthatfrankputredballdrawer,andthenevemovedittocabinetwhilefrankwaswatchingtherefore,frankwouldlogicallyassumethatredball",
+      "correct": false
+    },
+    {
+      "problem_id": 803,
+      "mode": "adapter",
+      "prompt": "Frank puts the red ball in the drawer. Eve moves it to the cabinet while Frank is watching. Charlie takes the blue ball. Where does Frank think the red ball is?",
+      "expected": "cabinet",
+      "predicted": "Explanation: Eve moves the red ball to the cabinet while Frank watches, so Frank thinks the red ball is in the cabinet.",
+      "normalized_expected": "cabinet",
+      "normalized_predicted": "explanationevemovesredballtocabinetwhilefrankwatches,sofrankthinksredballiscabinet",
+      "correct": false
+    },
+    {
+      "problem_id": 804,
+      "mode": "base",
+      "prompt": "A says: 'B is a knave.' B says: 'C is a knight.' C says: 'A is a knight.' Who is what?",
+      "expected": "A=knight,B=knave,C=knight",
+      "predicted": "1. A says: \"B is a knave.\"",
+      "normalized_expected": "a=knight,b=knave,c=knight",
+      "normalized_predicted": "1asaysbisaknave",
+      "correct": false
+    },
+    {
+      "problem_id": 804,
+      "mode": "adapter",
+      "prompt": "A says: 'B is a knave.' B says: 'C is a knight.' C says: 'A is a knight.' Who is what?",
+      "expected": "A=knight,B=knave,C=knight",
+      "predicted": "- A",
+      "normalized_expected": "a=knight,b=knave,c=knight",
+      "normalized_predicted": "a",
+      "correct": false
+    },
+    {
+      "problem_id": 805,
+      "mode": "base",
+      "prompt": "Charlie puts the red ball in the box. Bob moves it to the desk while Charlie is outside. Eve takes the blue ball. Where does Charlie think the red ball is?",
+      "expected": "box",
+      "predicted": "on the desk. Explanation: The logical reasoning involved here is understanding the sequence of events and determining where a specific object would be located based on the actions taken by other characters. In this scenario, Charlie initially places the red ball in the box",
+      "normalized_expected": "box",
+      "normalized_predicted": "ondeskexplanationlogicalreasoninginvolvedhereisunderstandingsequenceofeventsanddeterminingwhereaspecificobjectwouldbelocatedbasedonactionstakenbyothercharactersinthisscenario,charlieinitiallyplacesredballbox",
+      "correct": false
+    },
+    {
+      "problem_id": 805,
+      "mode": "adapter",
+      "prompt": "Charlie puts the red ball in the box. Bob moves it to the desk while Charlie is outside. Eve takes the blue ball. Where does Charlie think the red ball is?",
+      "expected": "box",
+      "predicted": "Explanation: Charlie thinks the red ball is outside because he leaves it there when Bob moves it to the desk. Eve takes the blue ball, so Charlie can't see it anymore. Therefore, Charlie believes the red ball is inside the",
+      "normalized_expected": "box",
+      "normalized_predicted": "explanationcharliethinksredballisoutsidebecauseheleavesittherewhenbobmovesittodeskevetakesblueball,socharliecantseeitanymoretherefore,charliebelievesredballisinsidethe",
+      "correct": false
+    },
+    {
+      "problem_id": 806,
+      "mode": "base",
+      "prompt": "Alice puts the red ball in the desk. Eve moves it to the shelf while Alice is outside. Dana takes the blue ball. Where does Alice think the red ball is?",
+      "expected": "desk",
+      "predicted": "Explanation: The logical reasoning involved here is understanding the sequence of events and determining where a specific object would be located based on its initial position and subsequent actions. In this scenario, Alice initially places the",
+      "normalized_expected": "desk",
+      "normalized_predicted": "explanationlogicalreasoninginvolvedhereisunderstandingsequenceofeventsanddeterminingwhereaspecificobjectwouldbelocatedbasedonitsinitialpositionandsubsequentactionsinthisscenario,aliceinitiallyplacesthe",
+      "correct": false
+    },
+    {
+      "problem_id": 806,
+      "mode": "adapter",
+      "prompt": "Alice puts the red ball in the desk. Eve moves it to the shelf while Alice is outside. Dana takes the blue ball. Where does Alice think the red ball is?",
+      "expected": "desk",
+      "predicted": "Explanation: Alice puts the red ball",
+      "normalized_expected": "desk",
+      "normalized_predicted": "explanationaliceputsredball",
+      "correct": false
+    },
+    {
+      "problem_id": 807,
+      "mode": "base",
+      "prompt": "The trophy does not fit in the suitcase because it is too small. What is too small?",
+      "expected": "suitcase",
+      "predicted": "The trophy. Explanation: The question asks for an object that is \"too small\" and is described as fitting in a suitcase, which implies that it must be larger than what would fit inside the suitcase. Therefore, the trophy cannot be too",
+      "normalized_expected": "suitcase",
+      "normalized_predicted": "trophyexplanationquestionasksforanobjectthatistoosmallandisdescribedasfittinginasuitcase,whichimpliesthatitmustbelargerthanwhatwouldfitinsidesuitcasetherefore,trophycannotbetoo",
+      "correct": false
+    },
+    {
+      "problem_id": 807,
+      "mode": "adapter",
+      "prompt": "The trophy does not fit in the suitcase because it is too small. What is too small?",
+      "expected": "suitcase",
+      "predicted": "Explanation: The trophy fits inside the suitcase when it is 1 inch wide and 2 inches tall. Therefore, the trophy must be smaller than this size to fit inside the suitcase. Since the trophy cannot be too small",
+      "normalized_expected": "suitcase",
+      "normalized_predicted": "explanationtrophyfitsinsidesuitcasewhenitis1inchwideand2inchestalltherefore,trophymustbesmallerthanthissizetofitinsidesuitcasesincetrophycannotbetoosmall",
+      "correct": false
+    },
+    {
+      "problem_id": 808,
+      "mode": "base",
+      "prompt": "Dana puts the red ball in the box. Charlie moves it to the desk while Dana is outside. Eve takes the blue ball. Where does Dana think the red ball is?",
+      "expected": "box",
+      "predicted": "2",
+      "normalized_expected": "box",
+      "normalized_predicted": "2",
+      "correct": false
+    },
+    {
+      "problem_id": 808,
+      "mode": "adapter",
+      "prompt": "Dana puts the red ball in the box. Charlie moves it to the desk while Dana is outside. Eve takes the blue ball. Where does Dana think the red ball is?",
+      "expected": "box",
+      "predicted": "Explanation: Dana thinks the red ball is in the box because Charlie moved it there while Dana was outside. Therefore, the final answer is \"box\".",
+      "normalized_expected": "box",
+      "normalized_predicted": "explanationdanathinksredballisboxbecausecharliemovedittherewhiledanawasoutsidetherefore,finalanswerisbox",
+      "correct": false
+    },
+    {
+      "problem_id": 809,
+      "mode": "base",
+      "prompt": "Dana puts the red ball in the drawer. Frank moves it to the box while Dana is outside. Alice takes the blue ball. Where does Dana think the red ball is?",
+      "expected": "drawer",
+      "predicted": "1",
+      "normalized_expected": "drawer",
+      "normalized_predicted": "1",
+      "correct": false
+    },
+    {
+      "problem_id": 809,
+      "mode": "adapter",
+      "prompt": "Dana puts the red ball in the drawer. Frank moves it to the box while Dana is outside. Alice takes the blue ball. Where does Dana think the red ball is?",
+      "expected": "drawer",
+      "predicted": "Explanation: Dana thinks the red ball",
+      "normalized_expected": "drawer",
+      "normalized_predicted": "explanationdanathinksredball",
+      "correct": false
+    },
+    {
+      "problem_id": 810,
+      "mode": "base",
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knight,C=knave",
+      "predicted": "The statement \"B is a knight\" means that B is telling the",
+      "normalized_expected": "a=knight,b=knight,c=knave",
+      "normalized_predicted": "statementbisaknightmeansthatbistellingthe",
+      "correct": false
+    },
+    {
+      "problem_id": 810,
+      "mode": "adapter",
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knight,C=knave",
+      "predicted": "Step 1: Analyze the statements made",
+      "normalized_expected": "a=knight,b=knight,c=knave",
+      "normalized_predicted": "step1analyzestatementsmade",
+      "correct": false
+    },
+    {
+      "problem_id": 811,
+      "mode": "base",
+      "prompt": "The city councilmen refused the demonstrators a permit because they feared violence. Who feared violence?",
+      "expected": "councilmen",
+      "predicted": "Demonstrators.",
+      "normalized_expected": "councilmen",
+      "normalized_predicted": "demonstrators",
+      "correct": false
+    },
+    {
+      "problem_id": 811,
+      "mode": "adapter",
+      "prompt": "The city councilmen refused the demonstrators a permit because they feared violence. Who feared violence?",
+      "expected": "councilmen",
+      "predicted": "Explanation: The city councilmen fear violence, so they refuse the demonstrators a permit. Therefore, the demonstrators are the ones who fear violence. Answer: demonstrators. Explanation: The city councilmen fear violence, so they refuse the demonstrators",
+      "normalized_expected": "councilmen",
+      "normalized_predicted": "explanationcitycouncilmenfearviolence,sotheyrefusedemonstratorsapermittherefore,demonstratorsareoneswhofearviolenceanswerdemonstratorsexplanationcitycouncilmenfearviolence,sotheyrefusedemonstrators",
+      "correct": false
+    },
+    {
+      "problem_id": 812,
+      "mode": "base",
+      "prompt": "Bob puts the red ball in the box. Alice moves it to the cabinet while Bob is watching. Dana takes the blue ball. Where does Bob think the red ball is?",
+      "expected": "cabinet",
+      "predicted": "cabinet. Explanation: The logical reasoning involved here is understanding the sequence of events and determining where a specific object would be located after certain actions have been taken. In this scenario, Bob initially places the red ball in the box. When Alice moves",
+      "normalized_expected": "cabinet",
+      "normalized_predicted": "cabinetexplanationlogicalreasoninginvolvedhereisunderstandingsequenceofeventsanddeterminingwhereaspecificobjectwouldbelocatedaftercertainactionshavebeentakeninthisscenario,bobinitiallyplacesredballboxwhenalicemoves",
+      "correct": true
+    },
+    {
+      "problem_id": 812,
+      "mode": "adapter",
+      "prompt": "Bob puts the red ball in the box. Alice moves it to the cabinet while Bob is watching. Dana takes the blue ball. Where does Bob think the red ball is?",
+      "expected": "cabinet",
+      "predicted": "Explanation: Alice moves the red ball to the cabinet while Bob watches, so Bob thinks the red ball is in the cabinet.",
+      "normalized_expected": "cabinet",
+      "normalized_predicted": "explanationalicemovesredballtocabinetwhilebobwatches,sobobthinksredballiscabinet",
+      "correct": false
+    },
+    {
+      "problem_id": 813,
+      "mode": "base",
+      "prompt": "A says: 'B is a knave.' B says: 'C is a knight.' C says: 'A is a knight.' Who is what?",
+      "expected": "A=knight,B=knave,C=knight",
+      "predicted": "1. A says: \"B is a knave.\"",
+      "normalized_expected": "a=knight,b=knave,c=knight",
+      "normalized_predicted": "1asaysbisaknave",
+      "correct": false
+    },
+    {
+      "problem_id": 813,
+      "mode": "adapter",
+      "prompt": "A says: 'B is a knave.' B says: 'C is a knight.' C says: 'A is a knight.' Who is what?",
+      "expected": "A=knight,B=knave,C=knight",
+      "predicted": "- A",
+      "normalized_expected": "a=knight,b=knave,c=knight",
+      "normalized_predicted": "a",
+      "correct": false
+    },
+    {
+      "problem_id": 814,
+      "mode": "base",
+      "prompt": "The trophy does not fit in the suitcase because it is too small. What is too small?",
+      "expected": "suitcase",
+      "predicted": "The trophy. Explanation: The question asks for an object that is \"too small\" and is described as fitting in a suitcase, which implies that it must be larger than what would fit inside the suitcase. Therefore, the trophy cannot be too",
+      "normalized_expected": "suitcase",
+      "normalized_predicted": "trophyexplanationquestionasksforanobjectthatistoosmallandisdescribedasfittinginasuitcase,whichimpliesthatitmustbelargerthanwhatwouldfitinsidesuitcasetherefore,trophycannotbetoo",
+      "correct": false
+    },
+    {
+      "problem_id": 814,
+      "mode": "adapter",
+      "prompt": "The trophy does not fit in the suitcase because it is too small. What is too small?",
+      "expected": "suitcase",
+      "predicted": "Explanation: The trophy fits inside the suitcase when it is 1 inch wide and 2 inches tall. Therefore, the trophy must be smaller than this size to fit inside the suitcase. Since the trophy cannot be too small",
+      "normalized_expected": "suitcase",
+      "normalized_predicted": "explanationtrophyfitsinsidesuitcasewhenitis1inchwideand2inchestalltherefore,trophymustbesmallerthanthissizetofitinsidesuitcasesincetrophycannotbetoosmall",
+      "correct": false
+    },
+    {
+      "problem_id": 815,
+      "mode": "base",
+      "prompt": "Alice puts the red ball in the shelf. Eve moves it to the desk while Alice is watching. Frank takes the blue ball. Where does Alice think the red ball is?",
+      "expected": "desk",
+      "predicted": "On the desk. Explanation: The logical reasoning involved here is understanding the sequence of events and where objects are typically placed when someone is observing them. In this scenario, Alice sees the red ball being moved from the shelf to the desk by Eve",
+      "normalized_expected": "desk",
+      "normalized_predicted": "ondeskexplanationlogicalreasoninginvolvedhereisunderstandingsequenceofeventsandwhereobjectsaretypicallyplacedwhensomeoneisobservingtheminthisscenario,aliceseesredballbeingmovedfromshelftodeskbyeve",
+      "correct": false
+    },
+    {
+      "problem_id": 815,
+      "mode": "adapter",
+      "prompt": "Alice puts the red ball in the shelf. Eve moves it to the desk while Alice is watching. Frank takes the blue ball. Where does Alice think the red ball is?",
+      "expected": "desk",
+      "predicted": "Explanation: Alice thinks the red ball is on the shelf because she put it there when Eve moved it. Eve moved it to the desk while Alice was watching, so Alice believes it's still in the shelf. Frank took the blue",
+      "normalized_expected": "desk",
+      "normalized_predicted": "explanationalicethinksredballisonshelfbecausesheputittherewhenevemoveditevemovedittodeskwhilealicewaswatching,soalicebelievesitsstillshelffranktookblue",
+      "correct": false
+    },
+    {
+      "problem_id": 816,
+      "mode": "base",
+      "prompt": "Eve puts the red ball in the drawer. Charlie moves it to the desk while Eve is outside. Frank takes the blue ball. Where does Eve think the red ball is?",
+      "expected": "drawer",
+      "predicted": "on the desk. Explanation: The logical reasoning involved here is understanding the sequence of events and determining where something would be if it were moved according to those events. In this case, since Charlie moved the red ball to the desk while Eve was",
+      "normalized_expected": "drawer",
+      "normalized_predicted": "ondeskexplanationlogicalreasoninginvolvedhereisunderstandingsequenceofeventsanddeterminingwheresomethingwouldbeifitweremovedaccordingtothoseeventsinthiscase,sincecharliemovedredballtodeskwhileevewas",
+      "correct": false
+    },
+    {
+      "problem_id": 816,
+      "mode": "adapter",
+      "prompt": "Eve puts the red ball in the drawer. Charlie moves it to the desk while Eve is outside. Frank takes the blue ball. Where does Eve think the red ball is?",
+      "expected": "drawer",
+      "predicted": "Explanation: Eve thinks the red ball is in the drawer because Charlie moved it there while she was outside. Therefore, the red ball must be in the drawer.",
+      "normalized_expected": "drawer",
+      "normalized_predicted": "explanationevethinksredballisdrawerbecausecharliemovedittherewhileshewasoutsidetherefore,redballmustbedrawer",
+      "correct": false
+    },
+    {
+      "problem_id": 817,
+      "mode": "base",
+      "prompt": "Bob puts the red ball in the cabinet. Charlie moves it to the desk while Bob is watching. Eve takes the blue ball. Where does Bob think the red ball is?",
+      "expected": "desk",
+      "predicted": "on the desk. Explanation: The logical reasoning involved here is understanding the sequence of events and determining where something would be if someone were to move it according to that sequence. In this case, since Bob moved the red ball from the cabinet to",
+      "normalized_expected": "desk",
+      "normalized_predicted": "ondeskexplanationlogicalreasoninginvolvedhereisunderstandingsequenceofeventsanddeterminingwheresomethingwouldbeifsomeoneweretomoveitaccordingtothatsequenceinthiscase,sincebobmovedredballfromcabinetto",
+      "correct": false
+    },
+    {
+      "problem_id": 817,
+      "mode": "adapter",
+      "prompt": "Bob puts the red ball in the cabinet. Charlie moves it to the desk while Bob is watching. Eve takes the blue ball. Where does Bob think the red ball is?",
+      "expected": "desk",
+      "predicted": "Explanation: Charlie moves the red ball to the desk before Bob sees it, so Bob thinks it's still in the cabinet. Eve takes the blue ball instead of moving the red ball, so Bob believes it's still in the cabinet",
+      "normalized_expected": "desk",
+      "normalized_predicted": "explanationcharliemovesredballtodeskbeforebobseesit,sobobthinksitsstillcabinetevetakesblueballinsteadofmovingredball,sobobbelievesitsstillcabinet",
+      "correct": false
+    },
+    {
+      "problem_id": 818,
+      "mode": "base",
+      "prompt": "The trophy does not fit in the suitcase because it is too small. What is too small?",
+      "expected": "suitcase",
+      "predicted": "The trophy. Explanation: The question asks for an object that is \"too small\" and is described as fitting in a suitcase, which implies that it must be larger than what would fit inside the suitcase. Therefore, the trophy cannot be too",
+      "normalized_expected": "suitcase",
+      "normalized_predicted": "trophyexplanationquestionasksforanobjectthatistoosmallandisdescribedasfittinginasuitcase,whichimpliesthatitmustbelargerthanwhatwouldfitinsidesuitcasetherefore,trophycannotbetoo",
+      "correct": false
+    },
+    {
+      "problem_id": 818,
+      "mode": "adapter",
+      "prompt": "The trophy does not fit in the suitcase because it is too small. What is too small?",
+      "expected": "suitcase",
+      "predicted": "Explanation: The trophy fits inside the suitcase when it is 1 inch wide and 2 inches tall. Therefore, the trophy must be smaller than this size to fit inside the suitcase. Since the trophy cannot be too small",
+      "normalized_expected": "suitcase",
+      "normalized_predicted": "explanationtrophyfitsinsidesuitcasewhenitis1inchwideand2inchestalltherefore,trophymustbesmallerthanthissizetofitinsidesuitcasesincetrophycannotbetoosmall",
+      "correct": false
+    },
+    {
+      "problem_id": 819,
+      "mode": "base",
+      "prompt": "Bob puts the red ball in the box. Frank moves it to the cabinet while Bob is outside. Alice takes the blue ball. Where does Bob think the red ball is?",
+      "expected": "box",
+      "predicted": "1. **Bob puts",
+      "normalized_expected": "box",
+      "normalized_predicted": "1bobputs",
+      "correct": false
+    },
+    {
+      "problem_id": 819,
+      "mode": "adapter",
+      "prompt": "Bob puts the red ball in the box. Frank moves it to the cabinet while Bob is outside. Alice takes the blue ball. Where does Bob think the red ball is?",
+      "expected": "box",
+      "predicted": "Explanation: Bob thinks the red ball",
+      "normalized_expected": "box",
+      "normalized_predicted": "explanationbobthinksredball",
+      "correct": false
+    },
+    {
+      "problem_id": 820,
+      "mode": "base",
+      "prompt": "A says: 'B is a knave.' B says: 'C is a knight.' C says: 'A is a knight.' Who is what?",
+      "expected": "A=knight,B=knave,C=knight",
+      "predicted": "1. A says: \"B is a knave.\"",
+      "normalized_expected": "a=knight,b=knave,c=knight",
+      "normalized_predicted": "1asaysbisaknave",
+      "correct": false
+    },
+    {
+      "problem_id": 820,
+      "mode": "adapter",
+      "prompt": "A says: 'B is a knave.' B says: 'C is a knight.' C says: 'A is a knight.' Who is what?",
+      "expected": "A=knight,B=knave,C=knight",
+      "predicted": "- A",
+      "normalized_expected": "a=knight,b=knave,c=knight",
+      "normalized_predicted": "a",
+      "correct": false
+    },
+    {
+      "problem_id": 821,
+      "mode": "base",
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knight,C=knave",
+      "predicted": "The statement \"B is a knight\" means that B is telling the",
+      "normalized_expected": "a=knight,b=knight,c=knave",
+      "normalized_predicted": "statementbisaknightmeansthatbistellingthe",
+      "correct": false
+    },
+    {
+      "problem_id": 821,
+      "mode": "adapter",
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knight,C=knave",
+      "predicted": "Step 1: Analyze the statements made",
+      "normalized_expected": "a=knight,b=knight,c=knave",
+      "normalized_predicted": "step1analyzestatementsmade",
+      "correct": false
+    },
+    {
+      "problem_id": 822,
+      "mode": "base",
+      "prompt": "A says: 'B is a knave.' B says: 'A and C are both knights.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knave,C=knight",
+      "predicted": "C.",
+      "normalized_expected": "a=knight,b=knave,c=knight",
+      "normalized_predicted": "c",
+      "correct": false
+    },
+    {
+      "problem_id": 822,
+      "mode": "adapter",
+      "prompt": "A says: 'B is a knave.' B says: 'A and C are both knights.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knave,C=knight",
+      "predicted": "The knight",
+      "normalized_expected": "a=knight,b=knave,c=knight",
+      "normalized_predicted": "knight",
+      "correct": false
+    },
+    {
+      "problem_id": 823,
+      "mode": "base",
+      "prompt": "A says: 'B is a knave.' B says: 'A and C are both knights.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knave,C=knight",
+      "predicted": "C.",
+      "normalized_expected": "a=knight,b=knave,c=knight",
+      "normalized_predicted": "c",
+      "correct": false
+    },
+    {
+      "problem_id": 823,
+      "mode": "adapter",
+      "prompt": "A says: 'B is a knave.' B says: 'A and C are both knights.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knave,C=knight",
+      "predicted": "The knight",
+      "normalized_expected": "a=knight,b=knave,c=knight",
+      "normalized_predicted": "knight",
+      "correct": false
+    }
+  ]
+}

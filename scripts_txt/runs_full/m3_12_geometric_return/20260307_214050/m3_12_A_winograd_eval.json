@@ -1,0 +1,72 @@
+[
+  {
+    "problem_id": 0,
+    "prompt": "The city councilmen refused the demonstrators a permit because they feared violence. Who feared violence?",
+    "family": "causal_direction",
+    "gold_answer": "councilmen",
+    "model_answer": "demonstrators\nExplanation: The city councilmen feared violence because they refused the demonstrators a",
+    "correct": false,
+    "active_token_count": 24,
+    "operator_entropy": 0.9191738293819783,
+    "operator_top1_share": 0.625,
+    "scope": 0.3380281690140845,
+    "advisor_trace_state": "articulated",
+    "failure_taxonomy": "causal_direction_failure"
+  },
+  {
+    "problem_id": 1,
+    "prompt": "Morgan did never forward the memo to Casey because they were unauthorized. Who was unauthorized?",
+    "family": "causal_direction",
+    "gold_answer": "Casey",
+    "model_answer": "Morgan.\nExplanation: Morgan never forwarded the memo to Casey because they were unauthorized.",
+    "correct": false,
+    "active_token_count": 24,
+    "operator_entropy": 0.8899338169002413,
+    "operator_top1_share": 0.6458333333333334,
+    "scope": 0.3380281690140845,
+    "advisor_trace_state": "articulated",
+    "failure_taxonomy": "causal_direction_failure"
+  },
+  {
+    "problem_id": 2,
+    "prompt": "The lawyer questioned the witness after they reviewed the affidavit. Who reviewed the affidavit?",
+    "family": "referent_query",
+    "gold_answer": "lawyer",
+    "model_answer": "witness\nExplanation: The lawyer questioned the witness after they reviewed the affidavit. Therefore",
+    "correct": false,
+    "active_token_count": 12,
+    "operator_entropy": 0.10126481756679193,
+    "operator_top1_share": 0.9791666666666666,
+    "scope": 0.39344262295081966,
+    "advisor_trace_state": "collapsed",
+    "failure_taxonomy": "advisor_under_articulation"
+  },
+  {
+    "problem_id": 3,
+    "prompt": "The delivery truck passed the school bus because it was going so slow. What was going slow?",
+    "family": "causal_direction",
+    "gold_answer": "school bus",
+    "model_answer": "The delivery truck.\nExplanation: The delivery truck was going so slow that it passed",
+    "correct": false,
+    "active_token_count": 26,
+    "operator_entropy": 0.8899338169002413,
+    "operator_top1_share": 0.6458333333333334,
+    "scope": 0.3287671232876712,
+    "advisor_trace_state": "articulated",
+    "failure_taxonomy": "causal_direction_failure"
+  },
+  {
+    "problem_id": 4,
+    "prompt": "The delivery truck passed the school bus because it was going so slow. What was going slow?",
+    "family": "causal_direction",
+    "gold_answer": "school bus",
+    "model_answer": "The delivery truck.\nExplanation: The delivery truck was going so slow that it passed",
+    "correct": false,
+    "active_token_count": 26,
+    "operator_entropy": 0.8899338169002413,
+    "operator_top1_share": 0.6458333333333334,
+    "scope": 0.3287671232876712,
+    "advisor_trace_state": "articulated",
+    "failure_taxonomy": "causal_direction_failure"
+  }
+]

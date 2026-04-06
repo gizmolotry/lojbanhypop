@@ -1,0 +1,134 @@
+{
+  "timestamp": "2026-03-13T15:11:38.905116+00:00",
+  "series": {
+    "series_contract_version": "1.0",
+    "series_id": "M",
+    "track": "M5.3.masked_pair_chain",
+    "script": "scripts/train_m5_3_masked_pair_chain.py"
+  },
+  "args": {
+    "base_model": "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+    "adapter": "D:\\lojbanhypop\\runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+    "output_root": "runs\\l_series\\m5_3_masked_pair_chain\\20260313_151121\\m5_3_smoke",
+    "train_steps": 2,
+    "semantic_dataset_size": 24,
+    "winograd_pack_size": 32,
+    "seed": 7,
+    "lr": 0.0002,
+    "layer_index": 12,
+    "max_logic_new_tokens": 48,
+    "max_answer_tokens": 8,
+    "max_slots": 10,
+    "codebook_size": 2000,
+    "max_chain_steps": 4,
+    "slot_sparsity_weight": 0.25,
+    "stop_weight": 0.2,
+    "pair_contrast_weight": 1.0,
+    "graph_class_weight": 0.5,
+    "dataset_profile": "semantic_bench_v1",
+    "difficulty_tier": "all",
+    "local_files_only": true
+  },
+  "dataset": {
+    "semantic_profile": "semantic_bench_v1",
+    "semantic_train": 14,
+    "semantic_val": 5,
+    "semantic_test": 5,
+    "winograd_train": 18,
+    "winograd_val": 4,
+    "winograd_eval": 10,
+    "winograd_pair_ids": {
+      "train_pair_ids": [
+        "pair_00003",
+        "pair_00004",
+        "pair_00005",
+        "pair_00007",
+        "pair_00009",
+        "pair_00011",
+        "pair_00012",
+        "pair_00013",
+        "pair_00014"
+      ],
+      "val_pair_ids": [
+        "pair_00001",
+        "pair_00008"
+      ],
+      "eval_pair_ids": [
+        "pair_00000",
+        "pair_00002",
+        "pair_00006",
+        "pair_00010",
+        "pair_00015"
+      ]
+    }
+  },
+  "final_step": {
+    "step": 2,
+    "total_loss": 8.47846794128418,
+    "task_loss": 6.8209333419799805,
+    "semantic_ce": 0.3954732120037079,
+    "pair_contrast_loss": 6.067837715148926,
+    "graph_class_loss": 0.7152454853057861,
+    "slot_loss": 2.9922702312469482,
+    "stop_loss": 4.547337532043457,
+    "operator_entropy_batch": 4.128802299499512,
+    "top1_op_share_batch": 0.1496795266866684,
+    "slot_usage_mean": 0.0005164117901585996,
+    "mean_chain_length": 1.6666667461395264,
+    "mean_stop_prob": 0.781747579574585,
+    "winograd_accuracy_batch": 0.5
+  },
+  "eval": {
+    "winograd_val": {
+      "n_pairs": 2,
+      "n_rows": 4,
+      "accuracy": 0.5,
+      "mean_chain_length": 4.0
+    },
+    "winograd_eval": {
+      "n_pairs": 5,
+      "n_rows": 10,
+      "accuracy": 0.5,
+      "mean_chain_length": 4.0
+    },
+    "semantic_val": {
+      "n": 5,
+      "accuracy": 0.0,
+      "mean_chain_length": 3.4
+    }
+  },
+  "steps": [
+    {
+      "step": 1,
+      "total_loss": 7.481400489807129,
+      "task_loss": 3.8731226921081543,
+      "semantic_ce": 0.9832354784011841,
+      "pair_contrast_loss": 2.397516965866089,
+      "graph_class_loss": 0.9847404956817627,
+      "slot_loss": 7.952259063720703,
+      "stop_loss": 8.101064682006836,
+      "operator_entropy_batch": 4.75255012512207,
+      "top1_op_share_batch": 0.0672706589102745,
+      "slot_usage_mean": 0.6619874238967896,
+      "mean_chain_length": 1.0,
+      "mean_stop_prob": 0.9616568088531494,
+      "winograd_accuracy_batch": 0.5
+    },
+    {
+      "step": 2,
+      "total_loss": 8.47846794128418,
+      "task_loss": 6.8209333419799805,
+      "semantic_ce": 0.3954732120037079,
+      "pair_contrast_loss": 6.067837715148926,
+      "graph_class_loss": 0.7152454853057861,
+      "slot_loss": 2.9922702312469482,
+      "stop_loss": 4.547337532043457,
+      "operator_entropy_batch": 4.128802299499512,
+      "top1_op_share_batch": 0.1496795266866684,
+      "slot_usage_mean": 0.0005164117901585996,
+      "mean_chain_length": 1.6666667461395264,
+      "mean_stop_prob": 0.781747579574585,
+      "winograd_accuracy_batch": 0.5
+    }
+  ]
+}

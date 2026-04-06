@@ -1,0 +1,10 @@
+{
+  "final_step": {
+    "constraint_arity_strict": 0.0,
+    "constraint_scope": 0.25,
+    "constraint_scope_unbound": 0.08,
+    "constraint_identity": 0.0
+  },
+  "tier_b_enabled": true,
+  "tier_c_enabled": true
+}

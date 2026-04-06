@@ -1,0 +1,63 @@
+{
+  "timestamp": "2026-03-03T18:03:39.917781+00:00",
+  "base_model": "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+  "adapter": "runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+  "checkpoint": "runs\\true_coconut_h5\\20260302_172603\\h5_checkpoint.pt",
+  "config": {
+    "sample_size": 2,
+    "pointer_window": 16,
+    "max_logic_new_tokens": 16,
+    "max_final_new_tokens": 12,
+    "layer_index": 12,
+    "inject_scale": 1.0,
+    "relation_bias": 0.0,
+    "use_iron_collar": false
+  },
+  "summary": {
+    "total": 2,
+    "standard_correct": 0,
+    "dynamic_correct": 0,
+    "standard_accuracy": 0.0,
+    "dynamic_accuracy": 0.0,
+    "dynamic_minus_standard_accuracy": 0.0
+  },
+  "dynamic_pointer_metrics": {
+    "avg_pointer_slot": 2.9375,
+    "max_pointer_slot": 8.0,
+    "self_ref_rate": 0.15625,
+    "cold_start_oob_ratio": 0.0625,
+    "unique_slots_used": 9.0
+  },
+  "samples": [
+    {
+      "prompt": "A is left of B. B is left of C. Which is leftmost?",
+      "expected_answer": "A",
+      "standard_prediction": "C\nExplanation: The logic question asks which is leftmost",
+      "dynamic_prediction": "C\nExplanation: The final answer is C because it is",
+      "standard_correct": false,
+      "dynamic_correct": false,
+      "dynamic_pointer_stats": {
+        "avg_pointer_slot": 2.9375,
+        "max_pointer_slot": 8.0,
+        "self_ref_rate": 0.15625,
+        "cold_start_oob_ratio": 0.0625,
+        "unique_slots_used": 9
+      }
+    },
+    {
+      "prompt": "D is north of E. E is north of F. Which is farthest north?",
+      "expected_answer": "D",
+      "standard_prediction": "F\nExplanation: Since D is north of E and E",
+      "dynamic_prediction": "F\nExplanation: The final answer is F because it is",
+      "standard_correct": false,
+      "dynamic_correct": false,
+      "dynamic_pointer_stats": {
+        "avg_pointer_slot": 2.9375,
+        "max_pointer_slot": 8.0,
+        "self_ref_rate": 0.15625,
+        "cold_start_oob_ratio": 0.0625,
+        "unique_slots_used": 9
+      }
+    }
+  ]
+}

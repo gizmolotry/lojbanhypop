@@ -1,0 +1,6 @@
+BINARY ARTIFACT SUMMARY
+Original path: i_series/20260302_033728/h5_codebook_advisor.pt
+Original extension: .pt
+Size bytes: 34725161
+SHA256: 0b05d547be6cc64bb2f8ced6a026764b951972954663e526a5841105700535ae
+Note: binary payload omitted from txt export; this stub preserves identity and provenance.

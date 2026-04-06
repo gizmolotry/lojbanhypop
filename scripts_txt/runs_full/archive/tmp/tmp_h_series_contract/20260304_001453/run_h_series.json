@@ -1,0 +1,132 @@
+{
+  "timestamp": "2026-03-04T00:14:53.962004+00:00",
+  "base_model": "dummy-base",
+  "adapter": "runs\\dummy-adapter",
+  "sample_size": 24,
+  "seeds": [
+    7,
+    11
+  ],
+  "dataset_size": 1000,
+  "execute": false,
+  "h5": {
+    "base_model": null,
+    "adapter": null,
+    "checkpoint": null
+  },
+  "runs": [
+    {
+      "run_id": "H1",
+      "name": "Multi-Vector Injection (Bandwidth)",
+      "status": "planned",
+      "return_code": null,
+      "output": "runs\\tmp_h_series_contract\\20260304_001453\\h1_seed*.json",
+      "output_files": [
+        "runs\\tmp_h_series_contract\\20260304_001453\\h1_seed7.json",
+        "runs\\tmp_h_series_contract\\20260304_001453\\h1_seed11.json"
+      ],
+      "metrics": null,
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\true_coconut.py",
+        "--base-model",
+        "dummy-base",
+        "--adapter",
+        "runs\\dummy-adapter",
+        "--sample-size",
+        "24",
+        "--seed",
+        "7",
+        "--dataset-size",
+        "1000",
+        "--max-logic-new-tokens",
+        "48",
+        "--max-final-new-tokens",
+        "48",
+        "--virtual-token-window",
+        "4",
+        "--injection-mode",
+        "input",
+        "--output",
+        "runs\\tmp_h_series_contract\\20260304_001453\\h1_seed7.json",
+        "--log-step-cosine"
+      ],
+      "config": {
+        "base_model": "dummy-base",
+        "adapter": "runs\\dummy-adapter",
+        "seeds": [
+          7,
+          11
+        ],
+        "sample_size": 24,
+        "dataset_size": 1000,
+        "max_logic_new_tokens": 48,
+        "max_final_new_tokens": 48,
+        "injection_mode": "input",
+        "virtual_token_window": 4
+      }
+    },
+    {
+      "run_id": "H5-PROV",
+      "name": "Provenance Trace",
+      "status": "skipped",
+      "return_code": null,
+      "output": "runs\\tmp_h_series_contract\\20260304_001453\\h5-prov.json",
+      "output_files": [
+        "runs\\tmp_h_series_contract\\20260304_001453\\h5-prov.json"
+      ],
+      "metrics": null,
+      "command": [],
+      "config": {
+        "reason": "missing_h53_or_slice1_checkpoint"
+      }
+    },
+    {
+      "run_id": "J-1",
+      "name": "Artifact Validation: H1-H4 Seed Outputs",
+      "status": "planned",
+      "return_code": null,
+      "output": null,
+      "output_files": [
+        "runs\\tmp_h_series_contract\\20260304_001453\\h1_seed7.json",
+        "runs\\tmp_h_series_contract\\20260304_001453\\h1_seed11.json"
+      ],
+      "metrics": null,
+      "command": [
+        "validate-artifacts",
+        "J-1"
+      ],
+      "config": {
+        "required_keys": [
+          "summary",
+          "rows"
+        ],
+        "upstream_ids": [
+          "H1"
+        ]
+      }
+    },
+    {
+      "run_id": "J-2",
+      "name": "Artifact Validation: H5-PROV",
+      "status": "skipped",
+      "return_code": null,
+      "output": null,
+      "output_files": [
+        "runs\\tmp_h_series_contract\\20260304_001453\\h5-prov.json"
+      ],
+      "metrics": null,
+      "command": [],
+      "config": {
+        "reason": "upstream_skipped",
+        "required_keys": [
+          "provenance_metrics",
+          "provenance_map_topk"
+        ],
+        "upstream_ids": [
+          "H5-PROV"
+        ]
+      }
+    }
+  ]
+}

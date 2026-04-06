@@ -1,0 +1,274 @@
+{
+  "timestamp": "2026-03-03T17:49:31.073722+00:00",
+  "base_model": "dummy-base",
+  "adapter": "runs\\dummy_adapter",
+  "sample_size": 24,
+  "seeds": [
+    7,
+    11
+  ],
+  "dataset_size": 1000,
+  "execute": false,
+  "h5": {
+    "base_model": null,
+    "adapter": null,
+    "checkpoint": null
+  },
+  "runs": [
+    {
+      "run_id": "H1",
+      "name": "Multi-Vector Injection (Bandwidth)",
+      "status": "planned",
+      "return_code": null,
+      "output": "runs\\_tmp_h_series_check\\20260303_174931\\h1_seed*.json",
+      "output_files": [
+        "runs\\_tmp_h_series_check\\20260303_174931\\h1_seed7.json"
+      ],
+      "metrics": null,
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\true_coconut.py",
+        "--base-model",
+        "dummy-base",
+        "--adapter",
+        "runs\\dummy_adapter",
+        "--sample-size",
+        "24",
+        "--seed",
+        "7",
+        "--dataset-size",
+        "1000",
+        "--max-logic-new-tokens",
+        "48",
+        "--max-final-new-tokens",
+        "48",
+        "--virtual-token-window",
+        "4",
+        "--injection-mode",
+        "input",
+        "--output",
+        "runs\\_tmp_h_series_check\\20260303_174931\\h1_seed7.json",
+        "--log-step-cosine"
+      ],
+      "config": {
+        "base_model": "dummy-base",
+        "adapter": "runs\\dummy_adapter",
+        "seeds": [
+          7,
+          11
+        ],
+        "sample_size": 24,
+        "dataset_size": 1000,
+        "max_logic_new_tokens": 48,
+        "max_final_new_tokens": 48,
+        "injection_mode": "input",
+        "virtual_token_window": 4
+      }
+    },
+    {
+      "run_id": "H2",
+      "name": "Mid-Layer Injection (Depth)",
+      "status": "planned",
+      "return_code": null,
+      "output": "runs\\_tmp_h_series_check\\20260303_174931\\h2_seed*.json",
+      "output_files": [
+        "runs\\_tmp_h_series_check\\20260303_174931\\h2_seed7.json"
+      ],
+      "metrics": null,
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\true_coconut.py",
+        "--base-model",
+        "dummy-base",
+        "--adapter",
+        "runs\\dummy_adapter",
+        "--sample-size",
+        "24",
+        "--seed",
+        "7",
+        "--dataset-size",
+        "1000",
+        "--max-logic-new-tokens",
+        "48",
+        "--max-final-new-tokens",
+        "48",
+        "--virtual-token-window",
+        "1",
+        "--injection-mode",
+        "midlayer",
+        "--output",
+        "runs\\_tmp_h_series_check\\20260303_174931\\h2_seed7.json",
+        "--log-step-cosine",
+        "--mid-layer-index",
+        "12",
+        "--mid-layer-scale",
+        "1.0"
+      ],
+      "config": {
+        "base_model": "dummy-base",
+        "adapter": "runs\\dummy_adapter",
+        "seeds": [
+          7,
+          11
+        ],
+        "sample_size": 24,
+        "dataset_size": 1000,
+        "max_logic_new_tokens": 48,
+        "max_final_new_tokens": 48,
+        "injection_mode": "midlayer",
+        "virtual_token_window": 1
+      }
+    },
+    {
+      "run_id": "H3",
+      "name": "SwiGLU Mid-Layer Bridge (Non-Linear Alignment)",
+      "status": "skipped",
+      "return_code": null,
+      "output": null,
+      "output_files": [],
+      "metrics": null,
+      "command": [],
+      "config": {}
+    },
+    {
+      "run_id": "H4",
+      "name": "Persistent SwiGLU Injection (Continuous Anchor)",
+      "status": "skipped",
+      "return_code": null,
+      "output": null,
+      "output_files": [],
+      "metrics": null,
+      "command": [],
+      "config": {}
+    },
+    {
+      "run_id": "H5-PROV",
+      "name": "Provenance Trace",
+      "status": "planned",
+      "return_code": null,
+      "output": "runs\\_tmp_h_series_check\\20260303_174931\\h5-prov_seed*.json",
+      "output_files": [
+        "runs\\_tmp_h_series_check\\20260303_174931\\h5-prov_seed7.json"
+      ],
+      "metrics": null,
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\true_coconut.py",
+        "--base-model",
+        "dummy-base",
+        "--adapter",
+        "runs\\dummy_adapter",
+        "--sample-size",
+        "24",
+        "--seed",
+        "7",
+        "--dataset-size",
+        "1000",
+        "--max-logic-new-tokens",
+        "48",
+        "--max-final-new-tokens",
+        "48",
+        "--virtual-token-window",
+        "1",
+        "--injection-mode",
+        "midlayer_persistent",
+        "--output",
+        "runs\\_tmp_h_series_check\\20260303_174931\\h5-prov_seed7.json",
+        "--log-step-cosine",
+        "--mid-layer-index",
+        "12",
+        "--mid-layer-scale",
+        "1.0",
+        "--contrastive-alpha",
+        "0.0",
+        "--swiglu-bridge"
+      ],
+      "config": {
+        "base_model": "dummy-base",
+        "adapter": "runs\\dummy_adapter",
+        "seeds": [
+          7,
+          11
+        ],
+        "sample_size": 24,
+        "dataset_size": 1000,
+        "max_logic_new_tokens": 48,
+        "max_final_new_tokens": 48,
+        "injection_mode": "midlayer_persistent",
+        "virtual_token_window": 1,
+        "checkpoint": ""
+      }
+    },
+    {
+      "run_id": "H5-OOD",
+      "name": "OOD Stress Test",
+      "status": "planned",
+      "return_code": null,
+      "output": "runs\\_tmp_h_series_check\\20260303_174931\\h5-ood_seed*.json",
+      "output_files": [
+        "runs\\_tmp_h_series_check\\20260303_174931\\h5-ood_seed7.json"
+      ],
+      "metrics": null,
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\true_coconut.py",
+        "--base-model",
+        "dummy-base",
+        "--adapter",
+        "runs\\dummy_adapter",
+        "--sample-size",
+        "24",
+        "--seed",
+        "7",
+        "--dataset-size",
+        "1000",
+        "--max-logic-new-tokens",
+        "48",
+        "--max-final-new-tokens",
+        "48",
+        "--virtual-token-window",
+        "1",
+        "--injection-mode",
+        "midlayer_persistent",
+        "--output",
+        "runs\\_tmp_h_series_check\\20260303_174931\\h5-ood_seed7.json",
+        "--log-step-cosine",
+        "--mid-layer-index",
+        "12",
+        "--mid-layer-scale",
+        "1.0",
+        "--contrastive-alpha",
+        "0.0",
+        "--swiglu-bridge"
+      ],
+      "config": {
+        "base_model": "dummy-base",
+        "adapter": "runs\\dummy_adapter",
+        "seeds": [
+          7,
+          11
+        ],
+        "sample_size": 24,
+        "dataset_size": 1000,
+        "max_logic_new_tokens": 48,
+        "max_final_new_tokens": 48,
+        "injection_mode": "midlayer_persistent",
+        "virtual_token_window": 1,
+        "checkpoint": ""
+      }
+    },
+    {
+      "run_id": "H5-DPTR",
+      "name": "Dynamic Pointer Refactor Eval",
+      "status": "skipped",
+      "return_code": null,
+      "output": null,
+      "output_files": [],
+      "metrics": null,
+      "command": [],
+      "config": {
+        "reason": "missing_h5_dptr_checkpoint"
+      }
+    }
+  ]
+}

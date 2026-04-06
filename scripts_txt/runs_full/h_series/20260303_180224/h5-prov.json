@@ -1,0 +1,758 @@
+{
+  "timestamp": "2026-03-03T18:02:26.125210+00:00",
+  "h53_checkpoint": "runs\\true_coconut_h5\\20260302_172603\\h5_checkpoint.pt",
+  "slice1_checkpoint": "runs\\true_coconut_h5\\20260302_053614\\h5_checkpoint.pt",
+  "shapes": {
+    "h53_codebook": [
+      2000,
+      896
+    ],
+    "slice1_codebook": [
+      2000,
+      896
+    ],
+    "compared_rows": 2000
+  },
+  "provenance_metrics": {
+    "mean_l2_delta": 225.2937469482422,
+    "max_l2_delta": 366.6496887207031,
+    "min_l2_delta": 0.0,
+    "exact_match_ratio_eps": 0.0024999999441206455,
+    "anchor_mean_l2_delta": 0.0
+  },
+  "usage_proxy_summary": {
+    "nonzero_ratio": 1.0,
+    "top_usage_token_ids": [
+      1585,
+      1276,
+      1979,
+      53,
+      273,
+      242,
+      278,
+      231,
+      548,
+      1685
+    ],
+    "top_usage_values": [
+      0.0005327226826921105,
+      0.0005248609813861549,
+      0.0005247953813523054,
+      0.0005233340198174119,
+      0.0005228890804573894,
+      0.0005224304040893912,
+      0.0005217920988798141,
+      0.0005216728895902634,
+      0.0005208567017689347,
+      0.0005206934874877334
+    ]
+  },
+  "largest_delta_tokens": [
+    {
+      "token_id": 928,
+      "l2_delta": 366.6496887207031
+    },
+    {
+      "token_id": 1280,
+      "l2_delta": 366.4439697265625
+    },
+    {
+      "token_id": 1998,
+      "l2_delta": 365.9682922363281
+    },
+    {
+      "token_id": 1274,
+      "l2_delta": 365.9126281738281
+    },
+    {
+      "token_id": 990,
+      "l2_delta": 365.7552185058594
+    },
+    {
+      "token_id": 1418,
+      "l2_delta": 365.6445617675781
+    },
+    {
+      "token_id": 530,
+      "l2_delta": 365.1556091308594
+    },
+    {
+      "token_id": 1420,
+      "l2_delta": 364.3962097167969
+    },
+    {
+      "token_id": 114,
+      "l2_delta": 362.2555236816406
+    },
+    {
+      "token_id": 687,
+      "l2_delta": 359.446044921875
+    },
+    {
+      "token_id": 306,
+      "l2_delta": 358.2543029785156
+    },
+    {
+      "token_id": 572,
+      "l2_delta": 358.03485107421875
+    },
+    {
+      "token_id": 1366,
+      "l2_delta": 356.70172119140625
+    },
+    {
+      "token_id": 504,
+      "l2_delta": 356.59112548828125
+    },
+    {
+      "token_id": 230,
+      "l2_delta": 356.2781677246094
+    },
+    {
+      "token_id": 17,
+      "l2_delta": 355.8755187988281
+    },
+    {
+      "token_id": 940,
+      "l2_delta": 355.8157043457031
+    },
+    {
+      "token_id": 722,
+      "l2_delta": 355.5868225097656
+    },
+    {
+      "token_id": 219,
+      "l2_delta": 353.5909729003906
+    },
+    {
+      "token_id": 38,
+      "l2_delta": 353.4576416015625
+    },
+    {
+      "token_id": 1955,
+      "l2_delta": 352.8553466796875
+    },
+    {
+      "token_id": 1971,
+      "l2_delta": 351.7683410644531
+    },
+    {
+      "token_id": 137,
+      "l2_delta": 351.2348937988281
+    },
+    {
+      "token_id": 961,
+      "l2_delta": 350.5587158203125
+    },
+    {
+      "token_id": 760,
+      "l2_delta": 347.78997802734375
+    },
+    {
+      "token_id": 1837,
+      "l2_delta": 346.7739562988281
+    },
+    {
+      "token_id": 1339,
+      "l2_delta": 345.9721984863281
+    },
+    {
+      "token_id": 548,
+      "l2_delta": 345.6969909667969
+    },
+    {
+      "token_id": 1887,
+      "l2_delta": 344.86474609375
+    },
+    {
+      "token_id": 282,
+      "l2_delta": 343.7255554199219
+    },
+    {
+      "token_id": 1997,
+      "l2_delta": 343.5943603515625
+    },
+    {
+      "token_id": 343,
+      "l2_delta": 342.3126525878906
+    },
+    {
+      "token_id": 1359,
+      "l2_delta": 341.9387512207031
+    },
+    {
+      "token_id": 665,
+      "l2_delta": 341.0547180175781
+    },
+    {
+      "token_id": 423,
+      "l2_delta": 340.1536560058594
+    },
+    {
+      "token_id": 86,
+      "l2_delta": 340.0099792480469
+    },
+    {
+      "token_id": 1424,
+      "l2_delta": 339.524169921875
+    },
+    {
+      "token_id": 407,
+      "l2_delta": 339.3928527832031
+    },
+    {
+      "token_id": 1068,
+      "l2_delta": 338.923828125
+    },
+    {
+      "token_id": 143,
+      "l2_delta": 338.654296875
+    },
+    {
+      "token_id": 1935,
+      "l2_delta": 338.0602111816406
+    },
+    {
+      "token_id": 1328,
+      "l2_delta": 338.0514221191406
+    },
+    {
+      "token_id": 324,
+      "l2_delta": 337.8535461425781
+    },
+    {
+      "token_id": 1616,
+      "l2_delta": 336.98016357421875
+    },
+    {
+      "token_id": 1291,
+      "l2_delta": 336.36785888671875
+    },
+    {
+      "token_id": 1157,
+      "l2_delta": 336.2464904785156
+    },
+    {
+      "token_id": 1135,
+      "l2_delta": 336.1777648925781
+    },
+    {
+      "token_id": 167,
+      "l2_delta": 336.06085205078125
+    },
+    {
+      "token_id": 839,
+      "l2_delta": 336.0551452636719
+    },
+    {
+      "token_id": 1533,
+      "l2_delta": 335.761474609375
+    },
+    {
+      "token_id": 87,
+      "l2_delta": 335.6517333984375
+    },
+    {
+      "token_id": 984,
+      "l2_delta": 335.15826416015625
+    },
+    {
+      "token_id": 1430,
+      "l2_delta": 335.07861328125
+    },
+    {
+      "token_id": 1485,
+      "l2_delta": 334.7789306640625
+    },
+    {
+      "token_id": 341,
+      "l2_delta": 334.1683044433594
+    },
+    {
+      "token_id": 575,
+      "l2_delta": 334.1496887207031
+    },
+    {
+      "token_id": 1633,
+      "l2_delta": 333.80181884765625
+    },
+    {
+      "token_id": 1008,
+      "l2_delta": 333.7176513671875
+    },
+    {
+      "token_id": 1003,
+      "l2_delta": 333.5541076660156
+    },
+    {
+      "token_id": 963,
+      "l2_delta": 333.5136413574219
+    },
+    {
+      "token_id": 154,
+      "l2_delta": 333.01348876953125
+    },
+    {
+      "token_id": 179,
+      "l2_delta": 332.50372314453125
+    },
+    {
+      "token_id": 134,
+      "l2_delta": 332.4899597167969
+    },
+    {
+      "token_id": 774,
+      "l2_delta": 332.3709411621094
+    }
+  ],
+  "provenance_map_topk": [
+    {
+      "h53_token_id": 944,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9510697722434998,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 638,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9508938789367676,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 956,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9508864283561707,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 462,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9508625268936157,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1822,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9508625864982605,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1965,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9508625864982605,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1419,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9508076906204224,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 130,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9506401419639587,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 325,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.950617253780365,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 91,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9506072998046875,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 81,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.950552761554718,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 15,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9505202770233154,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 894,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9504489302635193,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1588,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9503292441368103,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 679,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9503240585327148,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 878,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9502491354942322,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 413,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9500313997268677,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 568,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9499731063842773,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 241,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9499729871749878,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1276,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.94988614320755,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1599,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9498860836029053,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1209,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9496060013771057,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 648,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9495015740394592,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1340,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9494768381118774,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 885,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9494747519493103,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 696,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.949425220489502,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 569,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9493997693061829,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1311,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9493629336357117,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1927,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9493517875671387,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1995,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9493517875671387,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 266,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9492641687393188,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 70,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9492413401603699,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 210,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9491919279098511,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 169,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9491328001022339,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 163,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9491283893585205,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 372,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.949051022529602,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1773,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.949037492275238,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1943,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9490373134613037,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1894,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9490372538566589,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1991,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9490371942520142,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 460,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9490289092063904,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1620,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9490249752998352,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 935,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9490053057670593,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1626,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9489631056785583,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1699,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9488545060157776,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1807,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9488203525543213,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1014,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9488173127174377,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1760,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9486287236213684,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1711,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9486269354820251,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 313,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9483853578567505,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1841,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9483366012573242,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1793,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9483362436294556,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1483,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9482004642486572,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1781,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9479866027832031,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1848,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9479857087135315,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1898,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9479853510856628,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1947,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9479849934577942,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1134,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9479198455810547,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1736,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9477537870407104,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1784,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9477506279945374,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1102,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9476957321166992,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1072,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9472945332527161,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1104,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9472070932388306,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    },
+    {
+      "h53_token_id": 1278,
+      "slice1_token_id": 639,
+      "cosine_similarity": 0.9471882581710815,
+      "slice1_usage_proxy": 0.0004913852899335325,
+      "slice1_inbound_map_mass": 0.1014999970793724
+    }
+  ]
+}

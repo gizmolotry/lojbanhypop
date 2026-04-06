@@ -1,0 +1,21 @@
+{
+  "summary": {
+    "run_id": "J-4",
+    "name": "Operator Curriculum",
+    "generated_utc": "2026-03-04T00:19:43.802203+00:00",
+    "dataset_output": "runs\\true_coconut_h_series\\20260304_001943\\j-4_curriculum.jsonl"
+  },
+  "metrics": {
+    "sample_count": 1280.0,
+    "operator_count": 5.0,
+    "min_operator_coverage": 256.0,
+    "max_operator_coverage": 256.0
+  },
+  "operator_histogram": {
+    "equality": 256,
+    "coreference": 256,
+    "containment": 256,
+    "transitivity": 256,
+    "negation": 256
+  }
+}

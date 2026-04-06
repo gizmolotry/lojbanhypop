@@ -1,0 +1,134 @@
+{
+  "timestamp": "2026-03-04T00:19:43.821927+00:00",
+  "base_model": "dummy-base",
+  "adapter": "runs\\dummy-adapter",
+  "sample_size": 24,
+  "seeds": [
+    7,
+    11
+  ],
+  "dataset_size": 1000,
+  "execute": true,
+  "h5": {
+    "base_model": null,
+    "adapter": null,
+    "checkpoint": null
+  },
+  "runs": [
+    {
+      "run_id": "J-1",
+      "name": "Graph Target (Factor Schema)",
+      "status": "ok",
+      "return_code": 0,
+      "output": "runs\\true_coconut_h_series\\20260304_001943\\j-1.json",
+      "output_files": [
+        "runs\\true_coconut_h_series\\20260304_001943\\j-1.json"
+      ],
+      "metrics": {
+        "graph_count": 4.0,
+        "schema_valid_count": 4.0,
+        "schema_valid_rate": 1.0,
+        "mean_entities": 2.5,
+        "mean_edges": 1.5,
+        "unique_relation_count": 5.0
+      },
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\eval_j_1.py",
+        "--output",
+        "runs\\true_coconut_h_series\\20260304_001943\\j-1.json"
+      ],
+      "config": {
+        "input_artifact": null
+      }
+    },
+    {
+      "run_id": "J-2",
+      "name": "Paraphrase Explosion (Invariance)",
+      "status": "ok",
+      "return_code": 0,
+      "output": "runs\\true_coconut_h_series\\20260304_001943\\j-2.json",
+      "output_files": [
+        "runs\\true_coconut_h_series\\20260304_001943\\j-2.json"
+      ],
+      "metrics": {
+        "variant_count": 4000.0,
+        "invariant_count": 4000.0,
+        "invariance_rate": 1.0,
+        "variants_per_graph": 1000.0
+      },
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\eval_j_2.py",
+        "--j1-artifact",
+        "runs\\true_coconut_h_series\\20260304_001943\\j-1.json",
+        "--variants-per-graph",
+        "1000",
+        "--output",
+        "runs\\true_coconut_h_series\\20260304_001943\\j-2.json"
+      ],
+      "config": {
+        "j1_artifact": "runs\\true_coconut_h_series\\20260304_001943\\j-1.json",
+        "variants_per_graph": 1000
+      }
+    },
+    {
+      "run_id": "J-3",
+      "name": "Stop-Grad Isolation Gate",
+      "status": "ok",
+      "return_code": 0,
+      "output": "runs\\true_coconut_h_series\\20260304_001943\\j-3.json",
+      "output_files": [
+        "runs\\true_coconut_h_series\\20260304_001943\\j-3.json"
+      ],
+      "metrics": {
+        "has_adapter_disabled_context": 1.0,
+        "has_model_freeze_guard": 1.0,
+        "has_quantize_detach": 1.0,
+        "stopgrad_contract_pass": 1.0
+      },
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\eval_j_3.py",
+        "--source-script",
+        "D:\\lojbanhypop\\scripts\\train_h5_persistent_vq_advisor.py",
+        "--output",
+        "runs\\true_coconut_h_series\\20260304_001943\\j-3.json"
+      ],
+      "config": {
+        "source_script": "D:\\lojbanhypop\\scripts\\train_h5_persistent_vq_advisor.py"
+      }
+    },
+    {
+      "run_id": "J-4",
+      "name": "Operator Curriculum Build",
+      "status": "ok",
+      "return_code": 0,
+      "output": "runs\\true_coconut_h_series\\20260304_001943\\j-4.json",
+      "output_files": [
+        "runs\\true_coconut_h_series\\20260304_001943\\j-4.json",
+        "runs\\true_coconut_h_series\\20260304_001943\\j-4_curriculum.jsonl"
+      ],
+      "metrics": {
+        "sample_count": 1280.0,
+        "operator_count": 5.0,
+        "min_operator_coverage": 256.0,
+        "max_operator_coverage": 256.0
+      },
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\eval_j_4.py",
+        "--per-operator",
+        "256",
+        "--output",
+        "runs\\true_coconut_h_series\\20260304_001943\\j-4.json",
+        "--dataset-output",
+        "runs\\true_coconut_h_series\\20260304_001943\\j-4_curriculum.jsonl"
+      ],
+      "config": {
+        "dataset_output": "runs\\true_coconut_h_series\\20260304_001943\\j-4_curriculum.jsonl",
+        "per_operator": 256
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+BINARY ARTIFACT SUMMARY
+Original path: i_series/20260303_013852/h5_checkpoint.pt
+Original extension: .pt
+Size bytes: 48732657
+SHA256: fd8b56443b0cb6088e8848725e05cb2f8279d736a2e03dc334877862801e1169
+Note: binary payload omitted from txt export; this stub preserves identity and provenance.

@@ -1,0 +1,1280 @@
+{"operator": "equality", "prompt": "x0 is the same as y0"}
+{"operator": "equality", "prompt": "x1 equals y1"}
+{"operator": "equality", "prompt": "x2 is the same as y2"}
+{"operator": "equality", "prompt": "x3 equals y3"}
+{"operator": "equality", "prompt": "x4 equals y4"}
+{"operator": "equality", "prompt": "x5 equals y5"}
+{"operator": "equality", "prompt": "x6 is the same as y6"}
+{"operator": "equality", "prompt": "x7 equals y7"}
+{"operator": "equality", "prompt": "x8 equals y8"}
+{"operator": "equality", "prompt": "x9 equals y9"}
+{"operator": "equality", "prompt": "x10 equals y10"}
+{"operator": "equality", "prompt": "x11 is the same as y11"}
+{"operator": "equality", "prompt": "x12 is the same as y12"}
+{"operator": "equality", "prompt": "x13 equals y13"}
+{"operator": "equality", "prompt": "x14 equals y14"}
+{"operator": "equality", "prompt": "x15 equals y15"}
+{"operator": "equality", "prompt": "x16 is the same as y16"}
+{"operator": "equality", "prompt": "x17 equals y17"}
+{"operator": "equality", "prompt": "x18 equals y18"}
+{"operator": "equality", "prompt": "x19 equals y19"}
+{"operator": "equality", "prompt": "x20 equals y20"}
+{"operator": "equality", "prompt": "x21 is the same as y21"}
+{"operator": "equality", "prompt": "x22 equals y22"}
+{"operator": "equality", "prompt": "x23 equals y23"}
+{"operator": "equality", "prompt": "x24 equals y24"}
+{"operator": "equality", "prompt": "x25 equals y25"}
+{"operator": "equality", "prompt": "x26 is the same as y26"}
+{"operator": "equality", "prompt": "x27 is the same as y27"}
+{"operator": "equality", "prompt": "x28 equals y28"}
+{"operator": "equality", "prompt": "x29 equals y29"}
+{"operator": "equality", "prompt": "x30 is the same as y30"}
+{"operator": "equality", "prompt": "x31 equals y31"}
+{"operator": "equality", "prompt": "x32 equals y32"}
+{"operator": "equality", "prompt": "x33 equals y33"}
+{"operator": "equality", "prompt": "x34 is the same as y34"}
+{"operator": "equality", "prompt": "x35 equals y35"}
+{"operator": "equality", "prompt": "x36 equals y36"}
+{"operator": "equality", "prompt": "x37 equals y37"}
+{"operator": "equality", "prompt": "x38 equals y38"}
+{"operator": "equality", "prompt": "x39 is the same as y39"}
+{"operator": "equality", "prompt": "x40 is the same as y40"}
+{"operator": "equality", "prompt": "x41 is the same as y41"}
+{"operator": "equality", "prompt": "x42 is the same as y42"}
+{"operator": "equality", "prompt": "x43 is the same as y43"}
+{"operator": "equality", "prompt": "x44 is the same as y44"}
+{"operator": "equality", "prompt": "x45 is the same as y45"}
+{"operator": "equality", "prompt": "x46 equals y46"}
+{"operator": "equality", "prompt": "x47 equals y47"}
+{"operator": "equality", "prompt": "x48 equals y48"}
+{"operator": "equality", "prompt": "x49 equals y49"}
+{"operator": "equality", "prompt": "x50 is the same as y50"}
+{"operator": "equality", "prompt": "x51 is the same as y51"}
+{"operator": "equality", "prompt": "x52 is the same as y52"}
+{"operator": "equality", "prompt": "x53 is the same as y53"}
+{"operator": "equality", "prompt": "x54 is the same as y54"}
+{"operator": "equality", "prompt": "x55 equals y55"}
+{"operator": "equality", "prompt": "x56 equals y56"}
+{"operator": "equality", "prompt": "x57 is the same as y57"}
+{"operator": "equality", "prompt": "x58 equals y58"}
+{"operator": "equality", "prompt": "x59 is the same as y59"}
+{"operator": "equality", "prompt": "x60 equals y60"}
+{"operator": "equality", "prompt": "x61 is the same as y61"}
+{"operator": "equality", "prompt": "x62 is the same as y62"}
+{"operator": "equality", "prompt": "x63 equals y63"}
+{"operator": "equality", "prompt": "x64 equals y64"}
+{"operator": "equality", "prompt": "x65 is the same as y65"}
+{"operator": "equality", "prompt": "x66 is the same as y66"}
+{"operator": "equality", "prompt": "x67 is the same as y67"}
+{"operator": "equality", "prompt": "x68 is the same as y68"}
+{"operator": "equality", "prompt": "x69 is the same as y69"}
+{"operator": "equality", "prompt": "x70 equals y70"}
+{"operator": "equality", "prompt": "x71 equals y71"}
+{"operator": "equality", "prompt": "x72 is the same as y72"}
+{"operator": "equality", "prompt": "x73 is the same as y73"}
+{"operator": "equality", "prompt": "x74 equals y74"}
+{"operator": "equality", "prompt": "x75 equals y75"}
+{"operator": "equality", "prompt": "x76 is the same as y76"}
+{"operator": "equality", "prompt": "x77 is the same as y77"}
+{"operator": "equality", "prompt": "x78 is the same as y78"}
+{"operator": "equality", "prompt": "x79 is the same as y79"}
+{"operator": "equality", "prompt": "x80 is the same as y80"}
+{"operator": "equality", "prompt": "x81 equals y81"}
+{"operator": "equality", "prompt": "x82 is the same as y82"}
+{"operator": "equality", "prompt": "x83 is the same as y83"}
+{"operator": "equality", "prompt": "x84 equals y84"}
+{"operator": "equality", "prompt": "x85 equals y85"}
+{"operator": "equality", "prompt": "x86 is the same as y86"}
+{"operator": "equality", "prompt": "x87 equals y87"}
+{"operator": "equality", "prompt": "x88 equals y88"}
+{"operator": "equality", "prompt": "x89 is the same as y89"}
+{"operator": "equality", "prompt": "x90 equals y90"}
+{"operator": "equality", "prompt": "x91 equals y91"}
+{"operator": "equality", "prompt": "x92 is the same as y92"}
+{"operator": "equality", "prompt": "x93 is the same as y93"}
+{"operator": "equality", "prompt": "x94 is the same as y94"}
+{"operator": "equality", "prompt": "x95 equals y95"}
+{"operator": "equality", "prompt": "x96 equals y96"}
+{"operator": "equality", "prompt": "x97 is the same as y97"}
+{"operator": "equality", "prompt": "x98 is the same as y98"}
+{"operator": "equality", "prompt": "x99 is the same as y99"}
+{"operator": "equality", "prompt": "x100 equals y100"}
+{"operator": "equality", "prompt": "x101 is the same as y101"}
+{"operator": "equality", "prompt": "x102 is the same as y102"}
+{"operator": "equality", "prompt": "x103 is the same as y103"}
+{"operator": "equality", "prompt": "x104 is the same as y104"}
+{"operator": "equality", "prompt": "x105 is the same as y105"}
+{"operator": "equality", "prompt": "x106 equals y106"}
+{"operator": "equality", "prompt": "x107 equals y107"}
+{"operator": "equality", "prompt": "x108 equals y108"}
+{"operator": "equality", "prompt": "x109 equals y109"}
+{"operator": "equality", "prompt": "x110 equals y110"}
+{"operator": "equality", "prompt": "x111 equals y111"}
+{"operator": "equality", "prompt": "x112 equals y112"}
+{"operator": "equality", "prompt": "x113 equals y113"}
+{"operator": "equality", "prompt": "x114 is the same as y114"}
+{"operator": "equality", "prompt": "x115 equals y115"}
+{"operator": "equality", "prompt": "x116 is the same as y116"}
+{"operator": "equality", "prompt": "x117 is the same as y117"}
+{"operator": "equality", "prompt": "x118 equals y118"}
+{"operator": "equality", "prompt": "x119 equals y119"}
+{"operator": "equality", "prompt": "x120 is the same as y120"}
+{"operator": "equality", "prompt": "x121 is the same as y121"}
+{"operator": "equality", "prompt": "x122 is the same as y122"}
+{"operator": "equality", "prompt": "x123 equals y123"}
+{"operator": "equality", "prompt": "x124 equals y124"}
+{"operator": "equality", "prompt": "x125 is the same as y125"}
+{"operator": "equality", "prompt": "x126 is the same as y126"}
+{"operator": "equality", "prompt": "x127 is the same as y127"}
+{"operator": "equality", "prompt": "x128 is the same as y128"}
+{"operator": "equality", "prompt": "x129 is the same as y129"}
+{"operator": "equality", "prompt": "x130 equals y130"}
+{"operator": "equality", "prompt": "x131 is the same as y131"}
+{"operator": "equality", "prompt": "x132 is the same as y132"}
+{"operator": "equality", "prompt": "x133 equals y133"}
+{"operator": "equality", "prompt": "x134 equals y134"}
+{"operator": "equality", "prompt": "x135 equals y135"}
+{"operator": "equality", "prompt": "x136 equals y136"}
+{"operator": "equality", "prompt": "x137 is the same as y137"}
+{"operator": "equality", "prompt": "x138 equals y138"}
+{"operator": "equality", "prompt": "x139 equals y139"}
+{"operator": "equality", "prompt": "x140 is the same as y140"}
+{"operator": "equality", "prompt": "x141 equals y141"}
+{"operator": "equality", "prompt": "x142 equals y142"}
+{"operator": "equality", "prompt": "x143 equals y143"}
+{"operator": "equality", "prompt": "x144 equals y144"}
+{"operator": "equality", "prompt": "x145 equals y145"}
+{"operator": "equality", "prompt": "x146 is the same as y146"}
+{"operator": "equality", "prompt": "x147 equals y147"}
+{"operator": "equality", "prompt": "x148 equals y148"}
+{"operator": "equality", "prompt": "x149 equals y149"}
+{"operator": "equality", "prompt": "x150 is the same as y150"}
+{"operator": "equality", "prompt": "x151 equals y151"}
+{"operator": "equality", "prompt": "x152 is the same as y152"}
+{"operator": "equality", "prompt": "x153 is the same as y153"}
+{"operator": "equality", "prompt": "x154 is the same as y154"}
+{"operator": "equality", "prompt": "x155 is the same as y155"}
+{"operator": "equality", "prompt": "x156 equals y156"}
+{"operator": "equality", "prompt": "x157 equals y157"}
+{"operator": "equality", "prompt": "x158 is the same as y158"}
+{"operator": "equality", "prompt": "x159 is the same as y159"}
+{"operator": "equality", "prompt": "x160 is the same as y160"}
+{"operator": "equality", "prompt": "x161 is the same as y161"}
+{"operator": "equality", "prompt": "x162 is the same as y162"}
+{"operator": "equality", "prompt": "x163 equals y163"}
+{"operator": "equality", "prompt": "x164 equals y164"}
+{"operator": "equality", "prompt": "x165 equals y165"}
+{"operator": "equality", "prompt": "x166 is the same as y166"}
+{"operator": "equality", "prompt": "x167 is the same as y167"}
+{"operator": "equality", "prompt": "x168 is the same as y168"}
+{"operator": "equality", "prompt": "x169 equals y169"}
+{"operator": "equality", "prompt": "x170 equals y170"}
+{"operator": "equality", "prompt": "x171 equals y171"}
+{"operator": "equality", "prompt": "x172 is the same as y172"}
+{"operator": "equality", "prompt": "x173 equals y173"}
+{"operator": "equality", "prompt": "x174 equals y174"}
+{"operator": "equality", "prompt": "x175 is the same as y175"}
+{"operator": "equality", "prompt": "x176 equals y176"}
+{"operator": "equality", "prompt": "x177 is the same as y177"}
+{"operator": "equality", "prompt": "x178 is the same as y178"}
+{"operator": "equality", "prompt": "x179 equals y179"}
+{"operator": "equality", "prompt": "x180 is the same as y180"}
+{"operator": "equality", "prompt": "x181 equals y181"}
+{"operator": "equality", "prompt": "x182 is the same as y182"}
+{"operator": "equality", "prompt": "x183 equals y183"}
+{"operator": "equality", "prompt": "x184 equals y184"}
+{"operator": "equality", "prompt": "x185 equals y185"}
+{"operator": "equality", "prompt": "x186 is the same as y186"}
+{"operator": "equality", "prompt": "x187 equals y187"}
+{"operator": "equality", "prompt": "x188 equals y188"}
+{"operator": "equality", "prompt": "x189 is the same as y189"}
+{"operator": "equality", "prompt": "x190 is the same as y190"}
+{"operator": "equality", "prompt": "x191 equals y191"}
+{"operator": "equality", "prompt": "x192 equals y192"}
+{"operator": "equality", "prompt": "x193 is the same as y193"}
+{"operator": "equality", "prompt": "x194 is the same as y194"}
+{"operator": "equality", "prompt": "x195 is the same as y195"}
+{"operator": "equality", "prompt": "x196 equals y196"}
+{"operator": "equality", "prompt": "x197 is the same as y197"}
+{"operator": "equality", "prompt": "x198 is the same as y198"}
+{"operator": "equality", "prompt": "x199 is the same as y199"}
+{"operator": "equality", "prompt": "x200 is the same as y200"}
+{"operator": "equality", "prompt": "x201 equals y201"}
+{"operator": "equality", "prompt": "x202 equals y202"}
+{"operator": "equality", "prompt": "x203 equals y203"}
+{"operator": "equality", "prompt": "x204 equals y204"}
+{"operator": "equality", "prompt": "x205 is the same as y205"}
+{"operator": "equality", "prompt": "x206 equals y206"}
+{"operator": "equality", "prompt": "x207 is the same as y207"}
+{"operator": "equality", "prompt": "x208 equals y208"}
+{"operator": "equality", "prompt": "x209 is the same as y209"}
+{"operator": "equality", "prompt": "x210 equals y210"}
+{"operator": "equality", "prompt": "x211 is the same as y211"}
+{"operator": "equality", "prompt": "x212 is the same as y212"}
+{"operator": "equality", "prompt": "x213 equals y213"}
+{"operator": "equality", "prompt": "x214 equals y214"}
+{"operator": "equality", "prompt": "x215 is the same as y215"}
+{"operator": "equality", "prompt": "x216 equals y216"}
+{"operator": "equality", "prompt": "x217 is the same as y217"}
+{"operator": "equality", "prompt": "x218 equals y218"}
+{"operator": "equality", "prompt": "x219 is the same as y219"}
+{"operator": "equality", "prompt": "x220 is the same as y220"}
+{"operator": "equality", "prompt": "x221 equals y221"}
+{"operator": "equality", "prompt": "x222 is the same as y222"}
+{"operator": "equality", "prompt": "x223 is the same as y223"}
+{"operator": "equality", "prompt": "x224 is the same as y224"}
+{"operator": "equality", "prompt": "x225 equals y225"}
+{"operator": "equality", "prompt": "x226 equals y226"}
+{"operator": "equality", "prompt": "x227 equals y227"}
+{"operator": "equality", "prompt": "x228 equals y228"}
+{"operator": "equality", "prompt": "x229 equals y229"}
+{"operator": "equality", "prompt": "x230 equals y230"}
+{"operator": "equality", "prompt": "x231 is the same as y231"}
+{"operator": "equality", "prompt": "x232 equals y232"}
+{"operator": "equality", "prompt": "x233 is the same as y233"}
+{"operator": "equality", "prompt": "x234 is the same as y234"}
+{"operator": "equality", "prompt": "x235 equals y235"}
+{"operator": "equality", "prompt": "x236 equals y236"}
+{"operator": "equality", "prompt": "x237 equals y237"}
+{"operator": "equality", "prompt": "x238 equals y238"}
+{"operator": "equality", "prompt": "x239 equals y239"}
+{"operator": "equality", "prompt": "x240 equals y240"}
+{"operator": "equality", "prompt": "x241 is the same as y241"}
+{"operator": "equality", "prompt": "x242 equals y242"}
+{"operator": "equality", "prompt": "x243 equals y243"}
+{"operator": "equality", "prompt": "x244 equals y244"}
+{"operator": "equality", "prompt": "x245 is the same as y245"}
+{"operator": "equality", "prompt": "x246 equals y246"}
+{"operator": "equality", "prompt": "x247 is the same as y247"}
+{"operator": "equality", "prompt": "x248 equals y248"}
+{"operator": "equality", "prompt": "x249 is the same as y249"}
+{"operator": "equality", "prompt": "x250 is the same as y250"}
+{"operator": "equality", "prompt": "x251 is the same as y251"}
+{"operator": "equality", "prompt": "x252 equals y252"}
+{"operator": "equality", "prompt": "x253 equals y253"}
+{"operator": "equality", "prompt": "x254 is the same as y254"}
+{"operator": "equality", "prompt": "x255 is the same as y255"}
+{"operator": "coreference", "prompt": "x0 saw y0 and then they left"}
+{"operator": "coreference", "prompt": "x1 met y1. Later it thanked y1"}
+{"operator": "coreference", "prompt": "x2 met y2. Later it thanked y2"}
+{"operator": "coreference", "prompt": "x3 met y3. Later it thanked y3"}
+{"operator": "coreference", "prompt": "x4 saw y4 and then they left"}
+{"operator": "coreference", "prompt": "x5 met y5. Later it thanked y5"}
+{"operator": "coreference", "prompt": "x6 met y6. Later it thanked y6"}
+{"operator": "coreference", "prompt": "x7 met y7. Later it thanked y7"}
+{"operator": "coreference", "prompt": "x8 met y8. Later it thanked y8"}
+{"operator": "coreference", "prompt": "x9 met y9. Later it thanked y9"}
+{"operator": "coreference", "prompt": "x10 saw y10 and then they left"}
+{"operator": "coreference", "prompt": "x11 met y11. Later it thanked y11"}
+{"operator": "coreference", "prompt": "x12 met y12. Later it thanked y12"}
+{"operator": "coreference", "prompt": "x13 saw y13 and then they left"}
+{"operator": "coreference", "prompt": "x14 saw y14 and then they left"}
+{"operator": "coreference", "prompt": "x15 met y15. Later it thanked y15"}
+{"operator": "coreference", "prompt": "x16 met y16. Later it thanked y16"}
+{"operator": "coreference", "prompt": "x17 met y17. Later it thanked y17"}
+{"operator": "coreference", "prompt": "x18 met y18. Later it thanked y18"}
+{"operator": "coreference", "prompt": "x19 saw y19 and then they left"}
+{"operator": "coreference", "prompt": "x20 met y20. Later it thanked y20"}
+{"operator": "coreference", "prompt": "x21 met y21. Later it thanked y21"}
+{"operator": "coreference", "prompt": "x22 saw y22 and then they left"}
+{"operator": "coreference", "prompt": "x23 met y23. Later it thanked y23"}
+{"operator": "coreference", "prompt": "x24 met y24. Later it thanked y24"}
+{"operator": "coreference", "prompt": "x25 saw y25 and then they left"}
+{"operator": "coreference", "prompt": "x26 saw y26 and then they left"}
+{"operator": "coreference", "prompt": "x27 met y27. Later it thanked y27"}
+{"operator": "coreference", "prompt": "x28 saw y28 and then they left"}
+{"operator": "coreference", "prompt": "x29 saw y29 and then they left"}
+{"operator": "coreference", "prompt": "x30 saw y30 and then they left"}
+{"operator": "coreference", "prompt": "x31 met y31. Later it thanked y31"}
+{"operator": "coreference", "prompt": "x32 saw y32 and then they left"}
+{"operator": "coreference", "prompt": "x33 met y33. Later it thanked y33"}
+{"operator": "coreference", "prompt": "x34 saw y34 and then they left"}
+{"operator": "coreference", "prompt": "x35 met y35. Later it thanked y35"}
+{"operator": "coreference", "prompt": "x36 saw y36 and then they left"}
+{"operator": "coreference", "prompt": "x37 met y37. Later it thanked y37"}
+{"operator": "coreference", "prompt": "x38 saw y38 and then they left"}
+{"operator": "coreference", "prompt": "x39 saw y39 and then they left"}
+{"operator": "coreference", "prompt": "x40 saw y40 and then they left"}
+{"operator": "coreference", "prompt": "x41 met y41. Later it thanked y41"}
+{"operator": "coreference", "prompt": "x42 met y42. Later it thanked y42"}
+{"operator": "coreference", "prompt": "x43 saw y43 and then they left"}
+{"operator": "coreference", "prompt": "x44 met y44. Later it thanked y44"}
+{"operator": "coreference", "prompt": "x45 met y45. Later it thanked y45"}
+{"operator": "coreference", "prompt": "x46 saw y46 and then they left"}
+{"operator": "coreference", "prompt": "x47 met y47. Later it thanked y47"}
+{"operator": "coreference", "prompt": "x48 met y48. Later it thanked y48"}
+{"operator": "coreference", "prompt": "x49 saw y49 and then they left"}
+{"operator": "coreference", "prompt": "x50 met y50. Later it thanked y50"}
+{"operator": "coreference", "prompt": "x51 saw y51 and then they left"}
+{"operator": "coreference", "prompt": "x52 met y52. Later it thanked y52"}
+{"operator": "coreference", "prompt": "x53 saw y53 and then they left"}
+{"operator": "coreference", "prompt": "x54 met y54. Later it thanked y54"}
+{"operator": "coreference", "prompt": "x55 met y55. Later it thanked y55"}
+{"operator": "coreference", "prompt": "x56 saw y56 and then they left"}
+{"operator": "coreference", "prompt": "x57 saw y57 and then they left"}
+{"operator": "coreference", "prompt": "x58 met y58. Later it thanked y58"}
+{"operator": "coreference", "prompt": "x59 met y59. Later it thanked y59"}
+{"operator": "coreference", "prompt": "x60 met y60. Later it thanked y60"}
+{"operator": "coreference", "prompt": "x61 saw y61 and then they left"}
+{"operator": "coreference", "prompt": "x62 saw y62 and then they left"}
+{"operator": "coreference", "prompt": "x63 saw y63 and then they left"}
+{"operator": "coreference", "prompt": "x64 saw y64 and then they left"}
+{"operator": "coreference", "prompt": "x65 met y65. Later it thanked y65"}
+{"operator": "coreference", "prompt": "x66 saw y66 and then they left"}
+{"operator": "coreference", "prompt": "x67 saw y67 and then they left"}
+{"operator": "coreference", "prompt": "x68 met y68. Later it thanked y68"}
+{"operator": "coreference", "prompt": "x69 saw y69 and then they left"}
+{"operator": "coreference", "prompt": "x70 met y70. Later it thanked y70"}
+{"operator": "coreference", "prompt": "x71 saw y71 and then they left"}
+{"operator": "coreference", "prompt": "x72 saw y72 and then they left"}
+{"operator": "coreference", "prompt": "x73 saw y73 and then they left"}
+{"operator": "coreference", "prompt": "x74 met y74. Later it thanked y74"}
+{"operator": "coreference", "prompt": "x75 saw y75 and then they left"}
+{"operator": "coreference", "prompt": "x76 saw y76 and then they left"}
+{"operator": "coreference", "prompt": "x77 saw y77 and then they left"}
+{"operator": "coreference", "prompt": "x78 met y78. Later it thanked y78"}
+{"operator": "coreference", "prompt": "x79 met y79. Later it thanked y79"}
+{"operator": "coreference", "prompt": "x80 met y80. Later it thanked y80"}
+{"operator": "coreference", "prompt": "x81 met y81. Later it thanked y81"}
+{"operator": "coreference", "prompt": "x82 met y82. Later it thanked y82"}
+{"operator": "coreference", "prompt": "x83 saw y83 and then they left"}
+{"operator": "coreference", "prompt": "x84 saw y84 and then they left"}
+{"operator": "coreference", "prompt": "x85 met y85. Later it thanked y85"}
+{"operator": "coreference", "prompt": "x86 met y86. Later it thanked y86"}
+{"operator": "coreference", "prompt": "x87 saw y87 and then they left"}
+{"operator": "coreference", "prompt": "x88 met y88. Later it thanked y88"}
+{"operator": "coreference", "prompt": "x89 saw y89 and then they left"}
+{"operator": "coreference", "prompt": "x90 saw y90 and then they left"}
+{"operator": "coreference", "prompt": "x91 saw y91 and then they left"}
+{"operator": "coreference", "prompt": "x92 met y92. Later it thanked y92"}
+{"operator": "coreference", "prompt": "x93 saw y93 and then they left"}
+{"operator": "coreference", "prompt": "x94 saw y94 and then they left"}
+{"operator": "coreference", "prompt": "x95 met y95. Later it thanked y95"}
+{"operator": "coreference", "prompt": "x96 saw y96 and then they left"}
+{"operator": "coreference", "prompt": "x97 met y97. Later it thanked y97"}
+{"operator": "coreference", "prompt": "x98 met y98. Later it thanked y98"}
+{"operator": "coreference", "prompt": "x99 saw y99 and then they left"}
+{"operator": "coreference", "prompt": "x100 met y100. Later it thanked y100"}
+{"operator": "coreference", "prompt": "x101 saw y101 and then they left"}
+{"operator": "coreference", "prompt": "x102 met y102. Later it thanked y102"}
+{"operator": "coreference", "prompt": "x103 met y103. Later it thanked y103"}
+{"operator": "coreference", "prompt": "x104 saw y104 and then they left"}
+{"operator": "coreference", "prompt": "x105 met y105. Later it thanked y105"}
+{"operator": "coreference", "prompt": "x106 met y106. Later it thanked y106"}
+{"operator": "coreference", "prompt": "x107 met y107. Later it thanked y107"}
+{"operator": "coreference", "prompt": "x108 saw y108 and then they left"}
+{"operator": "coreference", "prompt": "x109 met y109. Later it thanked y109"}
+{"operator": "coreference", "prompt": "x110 saw y110 and then they left"}
+{"operator": "coreference", "prompt": "x111 met y111. Later it thanked y111"}
+{"operator": "coreference", "prompt": "x112 saw y112 and then they left"}
+{"operator": "coreference", "prompt": "x113 saw y113 and then they left"}
+{"operator": "coreference", "prompt": "x114 saw y114 and then they left"}
+{"operator": "coreference", "prompt": "x115 met y115. Later it thanked y115"}
+{"operator": "coreference", "prompt": "x116 met y116. Later it thanked y116"}
+{"operator": "coreference", "prompt": "x117 met y117. Later it thanked y117"}
+{"operator": "coreference", "prompt": "x118 met y118. Later it thanked y118"}
+{"operator": "coreference", "prompt": "x119 met y119. Later it thanked y119"}
+{"operator": "coreference", "prompt": "x120 saw y120 and then they left"}
+{"operator": "coreference", "prompt": "x121 met y121. Later it thanked y121"}
+{"operator": "coreference", "prompt": "x122 met y122. Later it thanked y122"}
+{"operator": "coreference", "prompt": "x123 met y123. Later it thanked y123"}
+{"operator": "coreference", "prompt": "x124 saw y124 and then they left"}
+{"operator": "coreference", "prompt": "x125 saw y125 and then they left"}
+{"operator": "coreference", "prompt": "x126 met y126. Later it thanked y126"}
+{"operator": "coreference", "prompt": "x127 saw y127 and then they left"}
+{"operator": "coreference", "prompt": "x128 saw y128 and then they left"}
+{"operator": "coreference", "prompt": "x129 met y129. Later it thanked y129"}
+{"operator": "coreference", "prompt": "x130 saw y130 and then they left"}
+{"operator": "coreference", "prompt": "x131 saw y131 and then they left"}
+{"operator": "coreference", "prompt": "x132 met y132. Later it thanked y132"}
+{"operator": "coreference", "prompt": "x133 saw y133 and then they left"}
+{"operator": "coreference", "prompt": "x134 met y134. Later it thanked y134"}
+{"operator": "coreference", "prompt": "x135 met y135. Later it thanked y135"}
+{"operator": "coreference", "prompt": "x136 met y136. Later it thanked y136"}
+{"operator": "coreference", "prompt": "x137 met y137. Later it thanked y137"}
+{"operator": "coreference", "prompt": "x138 saw y138 and then they left"}
+{"operator": "coreference", "prompt": "x139 met y139. Later it thanked y139"}
+{"operator": "coreference", "prompt": "x140 saw y140 and then they left"}
+{"operator": "coreference", "prompt": "x141 met y141. Later it thanked y141"}
+{"operator": "coreference", "prompt": "x142 saw y142 and then they left"}
+{"operator": "coreference", "prompt": "x143 saw y143 and then they left"}
+{"operator": "coreference", "prompt": "x144 saw y144 and then they left"}
+{"operator": "coreference", "prompt": "x145 saw y145 and then they left"}
+{"operator": "coreference", "prompt": "x146 met y146. Later it thanked y146"}
+{"operator": "coreference", "prompt": "x147 met y147. Later it thanked y147"}
+{"operator": "coreference", "prompt": "x148 saw y148 and then they left"}
+{"operator": "coreference", "prompt": "x149 met y149. Later it thanked y149"}
+{"operator": "coreference", "prompt": "x150 met y150. Later it thanked y150"}
+{"operator": "coreference", "prompt": "x151 saw y151 and then they left"}
+{"operator": "coreference", "prompt": "x152 saw y152 and then they left"}
+{"operator": "coreference", "prompt": "x153 met y153. Later it thanked y153"}
+{"operator": "coreference", "prompt": "x154 met y154. Later it thanked y154"}
+{"operator": "coreference", "prompt": "x155 met y155. Later it thanked y155"}
+{"operator": "coreference", "prompt": "x156 met y156. Later it thanked y156"}
+{"operator": "coreference", "prompt": "x157 saw y157 and then they left"}
+{"operator": "coreference", "prompt": "x158 saw y158 and then they left"}
+{"operator": "coreference", "prompt": "x159 met y159. Later it thanked y159"}
+{"operator": "coreference", "prompt": "x160 met y160. Later it thanked y160"}
+{"operator": "coreference", "prompt": "x161 met y161. Later it thanked y161"}
+{"operator": "coreference", "prompt": "x162 saw y162 and then they left"}
+{"operator": "coreference", "prompt": "x163 saw y163 and then they left"}
+{"operator": "coreference", "prompt": "x164 met y164. Later it thanked y164"}
+{"operator": "coreference", "prompt": "x165 saw y165 and then they left"}
+{"operator": "coreference", "prompt": "x166 met y166. Later it thanked y166"}
+{"operator": "coreference", "prompt": "x167 saw y167 and then they left"}
+{"operator": "coreference", "prompt": "x168 met y168. Later it thanked y168"}
+{"operator": "coreference", "prompt": "x169 met y169. Later it thanked y169"}
+{"operator": "coreference", "prompt": "x170 saw y170 and then they left"}
+{"operator": "coreference", "prompt": "x171 saw y171 and then they left"}
+{"operator": "coreference", "prompt": "x172 met y172. Later it thanked y172"}
+{"operator": "coreference", "prompt": "x173 saw y173 and then they left"}
+{"operator": "coreference", "prompt": "x174 saw y174 and then they left"}
+{"operator": "coreference", "prompt": "x175 saw y175 and then they left"}
+{"operator": "coreference", "prompt": "x176 saw y176 and then they left"}
+{"operator": "coreference", "prompt": "x177 met y177. Later it thanked y177"}
+{"operator": "coreference", "prompt": "x178 met y178. Later it thanked y178"}
+{"operator": "coreference", "prompt": "x179 saw y179 and then they left"}
+{"operator": "coreference", "prompt": "x180 met y180. Later it thanked y180"}
+{"operator": "coreference", "prompt": "x181 saw y181 and then they left"}
+{"operator": "coreference", "prompt": "x182 met y182. Later it thanked y182"}
+{"operator": "coreference", "prompt": "x183 met y183. Later it thanked y183"}
+{"operator": "coreference", "prompt": "x184 saw y184 and then they left"}
+{"operator": "coreference", "prompt": "x185 saw y185 and then they left"}
+{"operator": "coreference", "prompt": "x186 met y186. Later it thanked y186"}
+{"operator": "coreference", "prompt": "x187 saw y187 and then they left"}
+{"operator": "coreference", "prompt": "x188 saw y188 and then they left"}
+{"operator": "coreference", "prompt": "x189 met y189. Later it thanked y189"}
+{"operator": "coreference", "prompt": "x190 met y190. Later it thanked y190"}
+{"operator": "coreference", "prompt": "x191 met y191. Later it thanked y191"}
+{"operator": "coreference", "prompt": "x192 met y192. Later it thanked y192"}
+{"operator": "coreference", "prompt": "x193 saw y193 and then they left"}
+{"operator": "coreference", "prompt": "x194 met y194. Later it thanked y194"}
+{"operator": "coreference", "prompt": "x195 met y195. Later it thanked y195"}
+{"operator": "coreference", "prompt": "x196 saw y196 and then they left"}
+{"operator": "coreference", "prompt": "x197 met y197. Later it thanked y197"}
+{"operator": "coreference", "prompt": "x198 saw y198 and then they left"}
+{"operator": "coreference", "prompt": "x199 met y199. Later it thanked y199"}
+{"operator": "coreference", "prompt": "x200 saw y200 and then they left"}
+{"operator": "coreference", "prompt": "x201 saw y201 and then they left"}
+{"operator": "coreference", "prompt": "x202 met y202. Later it thanked y202"}
+{"operator": "coreference", "prompt": "x203 met y203. Later it thanked y203"}
+{"operator": "coreference", "prompt": "x204 met y204. Later it thanked y204"}
+{"operator": "coreference", "prompt": "x205 saw y205 and then they left"}
+{"operator": "coreference", "prompt": "x206 saw y206 and then they left"}
+{"operator": "coreference", "prompt": "x207 saw y207 and then they left"}
+{"operator": "coreference", "prompt": "x208 met y208. Later it thanked y208"}
+{"operator": "coreference", "prompt": "x209 saw y209 and then they left"}
+{"operator": "coreference", "prompt": "x210 met y210. Later it thanked y210"}
+{"operator": "coreference", "prompt": "x211 met y211. Later it thanked y211"}
+{"operator": "coreference", "prompt": "x212 saw y212 and then they left"}
+{"operator": "coreference", "prompt": "x213 met y213. Later it thanked y213"}
+{"operator": "coreference", "prompt": "x214 met y214. Later it thanked y214"}
+{"operator": "coreference", "prompt": "x215 met y215. Later it thanked y215"}
+{"operator": "coreference", "prompt": "x216 met y216. Later it thanked y216"}
+{"operator": "coreference", "prompt": "x217 met y217. Later it thanked y217"}
+{"operator": "coreference", "prompt": "x218 met y218. Later it thanked y218"}
+{"operator": "coreference", "prompt": "x219 met y219. Later it thanked y219"}
+{"operator": "coreference", "prompt": "x220 saw y220 and then they left"}
+{"operator": "coreference", "prompt": "x221 met y221. Later it thanked y221"}
+{"operator": "coreference", "prompt": "x222 saw y222 and then they left"}
+{"operator": "coreference", "prompt": "x223 saw y223 and then they left"}
+{"operator": "coreference", "prompt": "x224 met y224. Later it thanked y224"}
+{"operator": "coreference", "prompt": "x225 met y225. Later it thanked y225"}
+{"operator": "coreference", "prompt": "x226 met y226. Later it thanked y226"}
+{"operator": "coreference", "prompt": "x227 saw y227 and then they left"}
+{"operator": "coreference", "prompt": "x228 saw y228 and then they left"}
+{"operator": "coreference", "prompt": "x229 met y229. Later it thanked y229"}
+{"operator": "coreference", "prompt": "x230 saw y230 and then they left"}
+{"operator": "coreference", "prompt": "x231 met y231. Later it thanked y231"}
+{"operator": "coreference", "prompt": "x232 met y232. Later it thanked y232"}
+{"operator": "coreference", "prompt": "x233 met y233. Later it thanked y233"}
+{"operator": "coreference", "prompt": "x234 saw y234 and then they left"}
+{"operator": "coreference", "prompt": "x235 saw y235 and then they left"}
+{"operator": "coreference", "prompt": "x236 met y236. Later it thanked y236"}
+{"operator": "coreference", "prompt": "x237 saw y237 and then they left"}
+{"operator": "coreference", "prompt": "x238 met y238. Later it thanked y238"}
+{"operator": "coreference", "prompt": "x239 met y239. Later it thanked y239"}
+{"operator": "coreference", "prompt": "x240 met y240. Later it thanked y240"}
+{"operator": "coreference", "prompt": "x241 saw y241 and then they left"}
+{"operator": "coreference", "prompt": "x242 saw y242 and then they left"}
+{"operator": "coreference", "prompt": "x243 saw y243 and then they left"}
+{"operator": "coreference", "prompt": "x244 met y244. Later it thanked y244"}
+{"operator": "coreference", "prompt": "x245 saw y245 and then they left"}
+{"operator": "coreference", "prompt": "x246 saw y246 and then they left"}
+{"operator": "coreference", "prompt": "x247 met y247. Later it thanked y247"}
+{"operator": "coreference", "prompt": "x248 met y248. Later it thanked y248"}
+{"operator": "coreference", "prompt": "x249 met y249. Later it thanked y249"}
+{"operator": "coreference", "prompt": "x250 met y250. Later it thanked y250"}
+{"operator": "coreference", "prompt": "x251 saw y251 and then they left"}
+{"operator": "coreference", "prompt": "x252 saw y252 and then they left"}
+{"operator": "coreference", "prompt": "x253 saw y253 and then they left"}
+{"operator": "coreference", "prompt": "x254 met y254. Later it thanked y254"}
+{"operator": "coreference", "prompt": "x255 met y255. Later it thanked y255"}
+{"operator": "containment", "prompt": "x0 is contained by y0"}
+{"operator": "containment", "prompt": "x1 is inside y1"}
+{"operator": "containment", "prompt": "x2 is contained by y2"}
+{"operator": "containment", "prompt": "x3 is contained by y3"}
+{"operator": "containment", "prompt": "x4 is inside y4"}
+{"operator": "containment", "prompt": "x5 is inside y5"}
+{"operator": "containment", "prompt": "x6 is contained by y6"}
+{"operator": "containment", "prompt": "x7 is contained by y7"}
+{"operator": "containment", "prompt": "x8 is contained by y8"}
+{"operator": "containment", "prompt": "x9 is contained by y9"}
+{"operator": "containment", "prompt": "x10 is contained by y10"}
+{"operator": "containment", "prompt": "x11 is contained by y11"}
+{"operator": "containment", "prompt": "x12 is inside y12"}
+{"operator": "containment", "prompt": "x13 is inside y13"}
+{"operator": "containment", "prompt": "x14 is contained by y14"}
+{"operator": "containment", "prompt": "x15 is inside y15"}
+{"operator": "containment", "prompt": "x16 is contained by y16"}
+{"operator": "containment", "prompt": "x17 is inside y17"}
+{"operator": "containment", "prompt": "x18 is contained by y18"}
+{"operator": "containment", "prompt": "x19 is contained by y19"}
+{"operator": "containment", "prompt": "x20 is inside y20"}
+{"operator": "containment", "prompt": "x21 is contained by y21"}
+{"operator": "containment", "prompt": "x22 is contained by y22"}
+{"operator": "containment", "prompt": "x23 is contained by y23"}
+{"operator": "containment", "prompt": "x24 is inside y24"}
+{"operator": "containment", "prompt": "x25 is inside y25"}
+{"operator": "containment", "prompt": "x26 is inside y26"}
+{"operator": "containment", "prompt": "x27 is inside y27"}
+{"operator": "containment", "prompt": "x28 is inside y28"}
+{"operator": "containment", "prompt": "x29 is contained by y29"}
+{"operator": "containment", "prompt": "x30 is contained by y30"}
+{"operator": "containment", "prompt": "x31 is inside y31"}
+{"operator": "containment", "prompt": "x32 is contained by y32"}
+{"operator": "containment", "prompt": "x33 is inside y33"}
+{"operator": "containment", "prompt": "x34 is contained by y34"}
+{"operator": "containment", "prompt": "x35 is inside y35"}
+{"operator": "containment", "prompt": "x36 is contained by y36"}
+{"operator": "containment", "prompt": "x37 is contained by y37"}
+{"operator": "containment", "prompt": "x38 is contained by y38"}
+{"operator": "containment", "prompt": "x39 is inside y39"}
+{"operator": "containment", "prompt": "x40 is inside y40"}
+{"operator": "containment", "prompt": "x41 is inside y41"}
+{"operator": "containment", "prompt": "x42 is contained by y42"}
+{"operator": "containment", "prompt": "x43 is contained by y43"}
+{"operator": "containment", "prompt": "x44 is contained by y44"}
+{"operator": "containment", "prompt": "x45 is contained by y45"}
+{"operator": "containment", "prompt": "x46 is inside y46"}
+{"operator": "containment", "prompt": "x47 is contained by y47"}
+{"operator": "containment", "prompt": "x48 is contained by y48"}
+{"operator": "containment", "prompt": "x49 is contained by y49"}
+{"operator": "containment", "prompt": "x50 is contained by y50"}
+{"operator": "containment", "prompt": "x51 is inside y51"}
+{"operator": "containment", "prompt": "x52 is contained by y52"}
+{"operator": "containment", "prompt": "x53 is inside y53"}
+{"operator": "containment", "prompt": "x54 is contained by y54"}
+{"operator": "containment", "prompt": "x55 is contained by y55"}
+{"operator": "containment", "prompt": "x56 is contained by y56"}
+{"operator": "containment", "prompt": "x57 is inside y57"}
+{"operator": "containment", "prompt": "x58 is inside y58"}
+{"operator": "containment", "prompt": "x59 is inside y59"}
+{"operator": "containment", "prompt": "x60 is contained by y60"}
+{"operator": "containment", "prompt": "x61 is contained by y61"}
+{"operator": "containment", "prompt": "x62 is contained by y62"}
+{"operator": "containment", "prompt": "x63 is inside y63"}
+{"operator": "containment", "prompt": "x64 is contained by y64"}
+{"operator": "containment", "prompt": "x65 is contained by y65"}
+{"operator": "containment", "prompt": "x66 is inside y66"}
+{"operator": "containment", "prompt": "x67 is contained by y67"}
+{"operator": "containment", "prompt": "x68 is contained by y68"}
+{"operator": "containment", "prompt": "x69 is contained by y69"}
+{"operator": "containment", "prompt": "x70 is inside y70"}
+{"operator": "containment", "prompt": "x71 is contained by y71"}
+{"operator": "containment", "prompt": "x72 is inside y72"}
+{"operator": "containment", "prompt": "x73 is inside y73"}
+{"operator": "containment", "prompt": "x74 is contained by y74"}
+{"operator": "containment", "prompt": "x75 is inside y75"}
+{"operator": "containment", "prompt": "x76 is inside y76"}
+{"operator": "containment", "prompt": "x77 is contained by y77"}
+{"operator": "containment", "prompt": "x78 is contained by y78"}
+{"operator": "containment", "prompt": "x79 is contained by y79"}
+{"operator": "containment", "prompt": "x80 is inside y80"}
+{"operator": "containment", "prompt": "x81 is contained by y81"}
+{"operator": "containment", "prompt": "x82 is contained by y82"}
+{"operator": "containment", "prompt": "x83 is inside y83"}
+{"operator": "containment", "prompt": "x84 is contained by y84"}
+{"operator": "containment", "prompt": "x85 is inside y85"}
+{"operator": "containment", "prompt": "x86 is inside y86"}
+{"operator": "containment", "prompt": "x87 is inside y87"}
+{"operator": "containment", "prompt": "x88 is contained by y88"}
+{"operator": "containment", "prompt": "x89 is contained by y89"}
+{"operator": "containment", "prompt": "x90 is inside y90"}
+{"operator": "containment", "prompt": "x91 is contained by y91"}
+{"operator": "containment", "prompt": "x92 is contained by y92"}
+{"operator": "containment", "prompt": "x93 is inside y93"}
+{"operator": "containment", "prompt": "x94 is inside y94"}
+{"operator": "containment", "prompt": "x95 is inside y95"}
+{"operator": "containment", "prompt": "x96 is contained by y96"}
+{"operator": "containment", "prompt": "x97 is contained by y97"}
+{"operator": "containment", "prompt": "x98 is contained by y98"}
+{"operator": "containment", "prompt": "x99 is contained by y99"}
+{"operator": "containment", "prompt": "x100 is contained by y100"}
+{"operator": "containment", "prompt": "x101 is contained by y101"}
+{"operator": "containment", "prompt": "x102 is contained by y102"}
+{"operator": "containment", "prompt": "x103 is contained by y103"}
+{"operator": "containment", "prompt": "x104 is inside y104"}
+{"operator": "containment", "prompt": "x105 is contained by y105"}
+{"operator": "containment", "prompt": "x106 is contained by y106"}
+{"operator": "containment", "prompt": "x107 is contained by y107"}
+{"operator": "containment", "prompt": "x108 is inside y108"}
+{"operator": "containment", "prompt": "x109 is inside y109"}
+{"operator": "containment", "prompt": "x110 is inside y110"}
+{"operator": "containment", "prompt": "x111 is inside y111"}
+{"operator": "containment", "prompt": "x112 is inside y112"}
+{"operator": "containment", "prompt": "x113 is contained by y113"}
+{"operator": "containment", "prompt": "x114 is inside y114"}
+{"operator": "containment", "prompt": "x115 is contained by y115"}
+{"operator": "containment", "prompt": "x116 is contained by y116"}
+{"operator": "containment", "prompt": "x117 is contained by y117"}
+{"operator": "containment", "prompt": "x118 is contained by y118"}
+{"operator": "containment", "prompt": "x119 is inside y119"}
+{"operator": "containment", "prompt": "x120 is inside y120"}
+{"operator": "containment", "prompt": "x121 is inside y121"}
+{"operator": "containment", "prompt": "x122 is inside y122"}
+{"operator": "containment", "prompt": "x123 is inside y123"}
+{"operator": "containment", "prompt": "x124 is contained by y124"}
+{"operator": "containment", "prompt": "x125 is inside y125"}
+{"operator": "containment", "prompt": "x126 is contained by y126"}
+{"operator": "containment", "prompt": "x127 is inside y127"}
+{"operator": "containment", "prompt": "x128 is contained by y128"}
+{"operator": "containment", "prompt": "x129 is contained by y129"}
+{"operator": "containment", "prompt": "x130 is inside y130"}
+{"operator": "containment", "prompt": "x131 is inside y131"}
+{"operator": "containment", "prompt": "x132 is contained by y132"}
+{"operator": "containment", "prompt": "x133 is contained by y133"}
+{"operator": "containment", "prompt": "x134 is contained by y134"}
+{"operator": "containment", "prompt": "x135 is inside y135"}
+{"operator": "containment", "prompt": "x136 is contained by y136"}
+{"operator": "containment", "prompt": "x137 is contained by y137"}
+{"operator": "containment", "prompt": "x138 is contained by y138"}
+{"operator": "containment", "prompt": "x139 is inside y139"}
+{"operator": "containment", "prompt": "x140 is contained by y140"}
+{"operator": "containment", "prompt": "x141 is contained by y141"}
+{"operator": "containment", "prompt": "x142 is contained by y142"}
+{"operator": "containment", "prompt": "x143 is inside y143"}
+{"operator": "containment", "prompt": "x144 is inside y144"}
+{"operator": "containment", "prompt": "x145 is inside y145"}
+{"operator": "containment", "prompt": "x146 is contained by y146"}
+{"operator": "containment", "prompt": "x147 is inside y147"}
+{"operator": "containment", "prompt": "x148 is contained by y148"}
+{"operator": "containment", "prompt": "x149 is contained by y149"}
+{"operator": "containment", "prompt": "x150 is contained by y150"}
+{"operator": "containment", "prompt": "x151 is contained by y151"}
+{"operator": "containment", "prompt": "x152 is contained by y152"}
+{"operator": "containment", "prompt": "x153 is inside y153"}
+{"operator": "containment", "prompt": "x154 is inside y154"}
+{"operator": "containment", "prompt": "x155 is inside y155"}
+{"operator": "containment", "prompt": "x156 is contained by y156"}
+{"operator": "containment", "prompt": "x157 is contained by y157"}
+{"operator": "containment", "prompt": "x158 is contained by y158"}
+{"operator": "containment", "prompt": "x159 is inside y159"}
+{"operator": "containment", "prompt": "x160 is inside y160"}
+{"operator": "containment", "prompt": "x161 is contained by y161"}
+{"operator": "containment", "prompt": "x162 is contained by y162"}
+{"operator": "containment", "prompt": "x163 is contained by y163"}
+{"operator": "containment", "prompt": "x164 is inside y164"}
+{"operator": "containment", "prompt": "x165 is inside y165"}
+{"operator": "containment", "prompt": "x166 is inside y166"}
+{"operator": "containment", "prompt": "x167 is inside y167"}
+{"operator": "containment", "prompt": "x168 is inside y168"}
+{"operator": "containment", "prompt": "x169 is inside y169"}
+{"operator": "containment", "prompt": "x170 is contained by y170"}
+{"operator": "containment", "prompt": "x171 is inside y171"}
+{"operator": "containment", "prompt": "x172 is inside y172"}
+{"operator": "containment", "prompt": "x173 is inside y173"}
+{"operator": "containment", "prompt": "x174 is inside y174"}
+{"operator": "containment", "prompt": "x175 is inside y175"}
+{"operator": "containment", "prompt": "x176 is inside y176"}
+{"operator": "containment", "prompt": "x177 is contained by y177"}
+{"operator": "containment", "prompt": "x178 is inside y178"}
+{"operator": "containment", "prompt": "x179 is contained by y179"}
+{"operator": "containment", "prompt": "x180 is contained by y180"}
+{"operator": "containment", "prompt": "x181 is inside y181"}
+{"operator": "containment", "prompt": "x182 is inside y182"}
+{"operator": "containment", "prompt": "x183 is inside y183"}
+{"operator": "containment", "prompt": "x184 is contained by y184"}
+{"operator": "containment", "prompt": "x185 is inside y185"}
+{"operator": "containment", "prompt": "x186 is contained by y186"}
+{"operator": "containment", "prompt": "x187 is contained by y187"}
+{"operator": "containment", "prompt": "x188 is inside y188"}
+{"operator": "containment", "prompt": "x189 is inside y189"}
+{"operator": "containment", "prompt": "x190 is inside y190"}
+{"operator": "containment", "prompt": "x191 is contained by y191"}
+{"operator": "containment", "prompt": "x192 is contained by y192"}
+{"operator": "containment", "prompt": "x193 is contained by y193"}
+{"operator": "containment", "prompt": "x194 is contained by y194"}
+{"operator": "containment", "prompt": "x195 is inside y195"}
+{"operator": "containment", "prompt": "x196 is contained by y196"}
+{"operator": "containment", "prompt": "x197 is inside y197"}
+{"operator": "containment", "prompt": "x198 is inside y198"}
+{"operator": "containment", "prompt": "x199 is inside y199"}
+{"operator": "containment", "prompt": "x200 is contained by y200"}
+{"operator": "containment", "prompt": "x201 is contained by y201"}
+{"operator": "containment", "prompt": "x202 is inside y202"}
+{"operator": "containment", "prompt": "x203 is inside y203"}
+{"operator": "containment", "prompt": "x204 is inside y204"}
+{"operator": "containment", "prompt": "x205 is contained by y205"}
+{"operator": "containment", "prompt": "x206 is contained by y206"}
+{"operator": "containment", "prompt": "x207 is inside y207"}
+{"operator": "containment", "prompt": "x208 is contained by y208"}
+{"operator": "containment", "prompt": "x209 is inside y209"}
+{"operator": "containment", "prompt": "x210 is contained by y210"}
+{"operator": "containment", "prompt": "x211 is contained by y211"}
+{"operator": "containment", "prompt": "x212 is inside y212"}
+{"operator": "containment", "prompt": "x213 is contained by y213"}
+{"operator": "containment", "prompt": "x214 is inside y214"}
+{"operator": "containment", "prompt": "x215 is contained by y215"}
+{"operator": "containment", "prompt": "x216 is contained by y216"}
+{"operator": "containment", "prompt": "x217 is contained by y217"}
+{"operator": "containment", "prompt": "x218 is contained by y218"}
+{"operator": "containment", "prompt": "x219 is inside y219"}
+{"operator": "containment", "prompt": "x220 is inside y220"}
+{"operator": "containment", "prompt": "x221 is contained by y221"}
+{"operator": "containment", "prompt": "x222 is inside y222"}
+{"operator": "containment", "prompt": "x223 is inside y223"}
+{"operator": "containment", "prompt": "x224 is contained by y224"}
+{"operator": "containment", "prompt": "x225 is inside y225"}
+{"operator": "containment", "prompt": "x226 is contained by y226"}
+{"operator": "containment", "prompt": "x227 is inside y227"}
+{"operator": "containment", "prompt": "x228 is inside y228"}
+{"operator": "containment", "prompt": "x229 is contained by y229"}
+{"operator": "containment", "prompt": "x230 is inside y230"}
+{"operator": "containment", "prompt": "x231 is contained by y231"}
+{"operator": "containment", "prompt": "x232 is contained by y232"}
+{"operator": "containment", "prompt": "x233 is inside y233"}
+{"operator": "containment", "prompt": "x234 is contained by y234"}
+{"operator": "containment", "prompt": "x235 is inside y235"}
+{"operator": "containment", "prompt": "x236 is inside y236"}
+{"operator": "containment", "prompt": "x237 is contained by y237"}
+{"operator": "containment", "prompt": "x238 is contained by y238"}
+{"operator": "containment", "prompt": "x239 is inside y239"}
+{"operator": "containment", "prompt": "x240 is inside y240"}
+{"operator": "containment", "prompt": "x241 is contained by y241"}
+{"operator": "containment", "prompt": "x242 is inside y242"}
+{"operator": "containment", "prompt": "x243 is inside y243"}
+{"operator": "containment", "prompt": "x244 is inside y244"}
+{"operator": "containment", "prompt": "x245 is inside y245"}
+{"operator": "containment", "prompt": "x246 is contained by y246"}
+{"operator": "containment", "prompt": "x247 is inside y247"}
+{"operator": "containment", "prompt": "x248 is inside y248"}
+{"operator": "containment", "prompt": "x249 is inside y249"}
+{"operator": "containment", "prompt": "x250 is contained by y250"}
+{"operator": "containment", "prompt": "x251 is contained by y251"}
+{"operator": "containment", "prompt": "x252 is contained by y252"}
+{"operator": "containment", "prompt": "x253 is inside y253"}
+{"operator": "containment", "prompt": "x254 is inside y254"}
+{"operator": "containment", "prompt": "x255 is inside y255"}
+{"operator": "transitivity", "prompt": "if x0 then y0. if y0 then z0"}
+{"operator": "transitivity", "prompt": "x1 is north of y1. y1 is north of z1"}
+{"operator": "transitivity", "prompt": "x2 is north of y2. y2 is north of z2"}
+{"operator": "transitivity", "prompt": "if x3 then y3. if y3 then z3"}
+{"operator": "transitivity", "prompt": "x4 is north of y4. y4 is north of z4"}
+{"operator": "transitivity", "prompt": "if x5 then y5. if y5 then z5"}
+{"operator": "transitivity", "prompt": "if x6 then y6. if y6 then z6"}
+{"operator": "transitivity", "prompt": "if x7 then y7. if y7 then z7"}
+{"operator": "transitivity", "prompt": "if x8 then y8. if y8 then z8"}
+{"operator": "transitivity", "prompt": "if x9 then y9. if y9 then z9"}
+{"operator": "transitivity", "prompt": "x10 is north of y10. y10 is north of z10"}
+{"operator": "transitivity", "prompt": "x11 is north of y11. y11 is north of z11"}
+{"operator": "transitivity", "prompt": "x12 is north of y12. y12 is north of z12"}
+{"operator": "transitivity", "prompt": "x13 is north of y13. y13 is north of z13"}
+{"operator": "transitivity", "prompt": "if x14 then y14. if y14 then z14"}
+{"operator": "transitivity", "prompt": "x15 is north of y15. y15 is north of z15"}
+{"operator": "transitivity", "prompt": "if x16 then y16. if y16 then z16"}
+{"operator": "transitivity", "prompt": "if x17 then y17. if y17 then z17"}
+{"operator": "transitivity", "prompt": "x18 is north of y18. y18 is north of z18"}
+{"operator": "transitivity", "prompt": "x19 is north of y19. y19 is north of z19"}
+{"operator": "transitivity", "prompt": "if x20 then y20. if y20 then z20"}
+{"operator": "transitivity", "prompt": "if x21 then y21. if y21 then z21"}
+{"operator": "transitivity", "prompt": "if x22 then y22. if y22 then z22"}
+{"operator": "transitivity", "prompt": "if x23 then y23. if y23 then z23"}
+{"operator": "transitivity", "prompt": "x24 is north of y24. y24 is north of z24"}
+{"operator": "transitivity", "prompt": "x25 is north of y25. y25 is north of z25"}
+{"operator": "transitivity", "prompt": "if x26 then y26. if y26 then z26"}
+{"operator": "transitivity", "prompt": "x27 is north of y27. y27 is north of z27"}
+{"operator": "transitivity", "prompt": "if x28 then y28. if y28 then z28"}
+{"operator": "transitivity", "prompt": "if x29 then y29. if y29 then z29"}
+{"operator": "transitivity", "prompt": "x30 is north of y30. y30 is north of z30"}
+{"operator": "transitivity", "prompt": "if x31 then y31. if y31 then z31"}
+{"operator": "transitivity", "prompt": "if x32 then y32. if y32 then z32"}
+{"operator": "transitivity", "prompt": "if x33 then y33. if y33 then z33"}
+{"operator": "transitivity", "prompt": "x34 is north of y34. y34 is north of z34"}
+{"operator": "transitivity", "prompt": "if x35 then y35. if y35 then z35"}
+{"operator": "transitivity", "prompt": "x36 is north of y36. y36 is north of z36"}
+{"operator": "transitivity", "prompt": "if x37 then y37. if y37 then z37"}
+{"operator": "transitivity", "prompt": "x38 is north of y38. y38 is north of z38"}
+{"operator": "transitivity", "prompt": "if x39 then y39. if y39 then z39"}
+{"operator": "transitivity", "prompt": "x40 is north of y40. y40 is north of z40"}
+{"operator": "transitivity", "prompt": "if x41 then y41. if y41 then z41"}
+{"operator": "transitivity", "prompt": "x42 is north of y42. y42 is north of z42"}
+{"operator": "transitivity", "prompt": "x43 is north of y43. y43 is north of z43"}
+{"operator": "transitivity", "prompt": "if x44 then y44. if y44 then z44"}
+{"operator": "transitivity", "prompt": "x45 is north of y45. y45 is north of z45"}
+{"operator": "transitivity", "prompt": "x46 is north of y46. y46 is north of z46"}
+{"operator": "transitivity", "prompt": "if x47 then y47. if y47 then z47"}
+{"operator": "transitivity", "prompt": "if x48 then y48. if y48 then z48"}
+{"operator": "transitivity", "prompt": "if x49 then y49. if y49 then z49"}
+{"operator": "transitivity", "prompt": "if x50 then y50. if y50 then z50"}
+{"operator": "transitivity", "prompt": "x51 is north of y51. y51 is north of z51"}
+{"operator": "transitivity", "prompt": "if x52 then y52. if y52 then z52"}
+{"operator": "transitivity", "prompt": "if x53 then y53. if y53 then z53"}
+{"operator": "transitivity", "prompt": "if x54 then y54. if y54 then z54"}
+{"operator": "transitivity", "prompt": "if x55 then y55. if y55 then z55"}
+{"operator": "transitivity", "prompt": "x56 is north of y56. y56 is north of z56"}
+{"operator": "transitivity", "prompt": "x57 is north of y57. y57 is north of z57"}
+{"operator": "transitivity", "prompt": "x58 is north of y58. y58 is north of z58"}
+{"operator": "transitivity", "prompt": "x59 is north of y59. y59 is north of z59"}
+{"operator": "transitivity", "prompt": "x60 is north of y60. y60 is north of z60"}
+{"operator": "transitivity", "prompt": "if x61 then y61. if y61 then z61"}
+{"operator": "transitivity", "prompt": "if x62 then y62. if y62 then z62"}
+{"operator": "transitivity", "prompt": "if x63 then y63. if y63 then z63"}
+{"operator": "transitivity", "prompt": "if x64 then y64. if y64 then z64"}
+{"operator": "transitivity", "prompt": "if x65 then y65. if y65 then z65"}
+{"operator": "transitivity", "prompt": "if x66 then y66. if y66 then z66"}
+{"operator": "transitivity", "prompt": "x67 is north of y67. y67 is north of z67"}
+{"operator": "transitivity", "prompt": "if x68 then y68. if y68 then z68"}
+{"operator": "transitivity", "prompt": "x69 is north of y69. y69 is north of z69"}
+{"operator": "transitivity", "prompt": "x70 is north of y70. y70 is north of z70"}
+{"operator": "transitivity", "prompt": "if x71 then y71. if y71 then z71"}
+{"operator": "transitivity", "prompt": "x72 is north of y72. y72 is north of z72"}
+{"operator": "transitivity", "prompt": "x73 is north of y73. y73 is north of z73"}
+{"operator": "transitivity", "prompt": "if x74 then y74. if y74 then z74"}
+{"operator": "transitivity", "prompt": "if x75 then y75. if y75 then z75"}
+{"operator": "transitivity", "prompt": "if x76 then y76. if y76 then z76"}
+{"operator": "transitivity", "prompt": "if x77 then y77. if y77 then z77"}
+{"operator": "transitivity", "prompt": "x78 is north of y78. y78 is north of z78"}
+{"operator": "transitivity", "prompt": "x79 is north of y79. y79 is north of z79"}
+{"operator": "transitivity", "prompt": "if x80 then y80. if y80 then z80"}
+{"operator": "transitivity", "prompt": "x81 is north of y81. y81 is north of z81"}
+{"operator": "transitivity", "prompt": "x82 is north of y82. y82 is north of z82"}
+{"operator": "transitivity", "prompt": "if x83 then y83. if y83 then z83"}
+{"operator": "transitivity", "prompt": "x84 is north of y84. y84 is north of z84"}
+{"operator": "transitivity", "prompt": "x85 is north of y85. y85 is north of z85"}
+{"operator": "transitivity", "prompt": "if x86 then y86. if y86 then z86"}
+{"operator": "transitivity", "prompt": "if x87 then y87. if y87 then z87"}
+{"operator": "transitivity", "prompt": "x88 is north of y88. y88 is north of z88"}
+{"operator": "transitivity", "prompt": "if x89 then y89. if y89 then z89"}
+{"operator": "transitivity", "prompt": "x90 is north of y90. y90 is north of z90"}
+{"operator": "transitivity", "prompt": "x91 is north of y91. y91 is north of z91"}
+{"operator": "transitivity", "prompt": "if x92 then y92. if y92 then z92"}
+{"operator": "transitivity", "prompt": "x93 is north of y93. y93 is north of z93"}
+{"operator": "transitivity", "prompt": "x94 is north of y94. y94 is north of z94"}
+{"operator": "transitivity", "prompt": "x95 is north of y95. y95 is north of z95"}
+{"operator": "transitivity", "prompt": "if x96 then y96. if y96 then z96"}
+{"operator": "transitivity", "prompt": "if x97 then y97. if y97 then z97"}
+{"operator": "transitivity", "prompt": "if x98 then y98. if y98 then z98"}
+{"operator": "transitivity", "prompt": "x99 is north of y99. y99 is north of z99"}
+{"operator": "transitivity", "prompt": "x100 is north of y100. y100 is north of z100"}
+{"operator": "transitivity", "prompt": "x101 is north of y101. y101 is north of z101"}
+{"operator": "transitivity", "prompt": "if x102 then y102. if y102 then z102"}
+{"operator": "transitivity", "prompt": "if x103 then y103. if y103 then z103"}
+{"operator": "transitivity", "prompt": "x104 is north of y104. y104 is north of z104"}
+{"operator": "transitivity", "prompt": "x105 is north of y105. y105 is north of z105"}
+{"operator": "transitivity", "prompt": "if x106 then y106. if y106 then z106"}
+{"operator": "transitivity", "prompt": "if x107 then y107. if y107 then z107"}
+{"operator": "transitivity", "prompt": "if x108 then y108. if y108 then z108"}
+{"operator": "transitivity", "prompt": "if x109 then y109. if y109 then z109"}
+{"operator": "transitivity", "prompt": "if x110 then y110. if y110 then z110"}
+{"operator": "transitivity", "prompt": "if x111 then y111. if y111 then z111"}
+{"operator": "transitivity", "prompt": "if x112 then y112. if y112 then z112"}
+{"operator": "transitivity", "prompt": "x113 is north of y113. y113 is north of z113"}
+{"operator": "transitivity", "prompt": "if x114 then y114. if y114 then z114"}
+{"operator": "transitivity", "prompt": "x115 is north of y115. y115 is north of z115"}
+{"operator": "transitivity", "prompt": "x116 is north of y116. y116 is north of z116"}
+{"operator": "transitivity", "prompt": "x117 is north of y117. y117 is north of z117"}
+{"operator": "transitivity", "prompt": "x118 is north of y118. y118 is north of z118"}
+{"operator": "transitivity", "prompt": "x119 is north of y119. y119 is north of z119"}
+{"operator": "transitivity", "prompt": "if x120 then y120. if y120 then z120"}
+{"operator": "transitivity", "prompt": "x121 is north of y121. y121 is north of z121"}
+{"operator": "transitivity", "prompt": "if x122 then y122. if y122 then z122"}
+{"operator": "transitivity", "prompt": "x123 is north of y123. y123 is north of z123"}
+{"operator": "transitivity", "prompt": "if x124 then y124. if y124 then z124"}
+{"operator": "transitivity", "prompt": "if x125 then y125. if y125 then z125"}
+{"operator": "transitivity", "prompt": "x126 is north of y126. y126 is north of z126"}
+{"operator": "transitivity", "prompt": "x127 is north of y127. y127 is north of z127"}
+{"operator": "transitivity", "prompt": "x128 is north of y128. y128 is north of z128"}
+{"operator": "transitivity", "prompt": "if x129 then y129. if y129 then z129"}
+{"operator": "transitivity", "prompt": "x130 is north of y130. y130 is north of z130"}
+{"operator": "transitivity", "prompt": "x131 is north of y131. y131 is north of z131"}
+{"operator": "transitivity", "prompt": "x132 is north of y132. y132 is north of z132"}
+{"operator": "transitivity", "prompt": "if x133 then y133. if y133 then z133"}
+{"operator": "transitivity", "prompt": "x134 is north of y134. y134 is north of z134"}
+{"operator": "transitivity", "prompt": "if x135 then y135. if y135 then z135"}
+{"operator": "transitivity", "prompt": "if x136 then y136. if y136 then z136"}
+{"operator": "transitivity", "prompt": "x137 is north of y137. y137 is north of z137"}
+{"operator": "transitivity", "prompt": "if x138 then y138. if y138 then z138"}
+{"operator": "transitivity", "prompt": "x139 is north of y139. y139 is north of z139"}
+{"operator": "transitivity", "prompt": "x140 is north of y140. y140 is north of z140"}
+{"operator": "transitivity", "prompt": "x141 is north of y141. y141 is north of z141"}
+{"operator": "transitivity", "prompt": "x142 is north of y142. y142 is north of z142"}
+{"operator": "transitivity", "prompt": "x143 is north of y143. y143 is north of z143"}
+{"operator": "transitivity", "prompt": "x144 is north of y144. y144 is north of z144"}
+{"operator": "transitivity", "prompt": "if x145 then y145. if y145 then z145"}
+{"operator": "transitivity", "prompt": "x146 is north of y146. y146 is north of z146"}
+{"operator": "transitivity", "prompt": "if x147 then y147. if y147 then z147"}
+{"operator": "transitivity", "prompt": "if x148 then y148. if y148 then z148"}
+{"operator": "transitivity", "prompt": "x149 is north of y149. y149 is north of z149"}
+{"operator": "transitivity", "prompt": "x150 is north of y150. y150 is north of z150"}
+{"operator": "transitivity", "prompt": "if x151 then y151. if y151 then z151"}
+{"operator": "transitivity", "prompt": "x152 is north of y152. y152 is north of z152"}
+{"operator": "transitivity", "prompt": "x153 is north of y153. y153 is north of z153"}
+{"operator": "transitivity", "prompt": "if x154 then y154. if y154 then z154"}
+{"operator": "transitivity", "prompt": "if x155 then y155. if y155 then z155"}
+{"operator": "transitivity", "prompt": "x156 is north of y156. y156 is north of z156"}
+{"operator": "transitivity", "prompt": "x157 is north of y157. y157 is north of z157"}
+{"operator": "transitivity", "prompt": "x158 is north of y158. y158 is north of z158"}
+{"operator": "transitivity", "prompt": "if x159 then y159. if y159 then z159"}
+{"operator": "transitivity", "prompt": "x160 is north of y160. y160 is north of z160"}
+{"operator": "transitivity", "prompt": "x161 is north of y161. y161 is north of z161"}
+{"operator": "transitivity", "prompt": "x162 is north of y162. y162 is north of z162"}
+{"operator": "transitivity", "prompt": "if x163 then y163. if y163 then z163"}
+{"operator": "transitivity", "prompt": "if x164 then y164. if y164 then z164"}
+{"operator": "transitivity", "prompt": "if x165 then y165. if y165 then z165"}
+{"operator": "transitivity", "prompt": "x166 is north of y166. y166 is north of z166"}
+{"operator": "transitivity", "prompt": "if x167 then y167. if y167 then z167"}
+{"operator": "transitivity", "prompt": "x168 is north of y168. y168 is north of z168"}
+{"operator": "transitivity", "prompt": "x169 is north of y169. y169 is north of z169"}
+{"operator": "transitivity", "prompt": "x170 is north of y170. y170 is north of z170"}
+{"operator": "transitivity", "prompt": "if x171 then y171. if y171 then z171"}
+{"operator": "transitivity", "prompt": "if x172 then y172. if y172 then z172"}
+{"operator": "transitivity", "prompt": "x173 is north of y173. y173 is north of z173"}
+{"operator": "transitivity", "prompt": "if x174 then y174. if y174 then z174"}
+{"operator": "transitivity", "prompt": "x175 is north of y175. y175 is north of z175"}
+{"operator": "transitivity", "prompt": "if x176 then y176. if y176 then z176"}
+{"operator": "transitivity", "prompt": "x177 is north of y177. y177 is north of z177"}
+{"operator": "transitivity", "prompt": "x178 is north of y178. y178 is north of z178"}
+{"operator": "transitivity", "prompt": "x179 is north of y179. y179 is north of z179"}
+{"operator": "transitivity", "prompt": "if x180 then y180. if y180 then z180"}
+{"operator": "transitivity", "prompt": "if x181 then y181. if y181 then z181"}
+{"operator": "transitivity", "prompt": "if x182 then y182. if y182 then z182"}
+{"operator": "transitivity", "prompt": "if x183 then y183. if y183 then z183"}
+{"operator": "transitivity", "prompt": "if x184 then y184. if y184 then z184"}
+{"operator": "transitivity", "prompt": "if x185 then y185. if y185 then z185"}
+{"operator": "transitivity", "prompt": "x186 is north of y186. y186 is north of z186"}
+{"operator": "transitivity", "prompt": "if x187 then y187. if y187 then z187"}
+{"operator": "transitivity", "prompt": "if x188 then y188. if y188 then z188"}
+{"operator": "transitivity", "prompt": "if x189 then y189. if y189 then z189"}
+{"operator": "transitivity", "prompt": "if x190 then y190. if y190 then z190"}
+{"operator": "transitivity", "prompt": "x191 is north of y191. y191 is north of z191"}
+{"operator": "transitivity", "prompt": "if x192 then y192. if y192 then z192"}
+{"operator": "transitivity", "prompt": "x193 is north of y193. y193 is north of z193"}
+{"operator": "transitivity", "prompt": "if x194 then y194. if y194 then z194"}
+{"operator": "transitivity", "prompt": "if x195 then y195. if y195 then z195"}
+{"operator": "transitivity", "prompt": "x196 is north of y196. y196 is north of z196"}
+{"operator": "transitivity", "prompt": "x197 is north of y197. y197 is north of z197"}
+{"operator": "transitivity", "prompt": "if x198 then y198. if y198 then z198"}
+{"operator": "transitivity", "prompt": "x199 is north of y199. y199 is north of z199"}
+{"operator": "transitivity", "prompt": "if x200 then y200. if y200 then z200"}
+{"operator": "transitivity", "prompt": "x201 is north of y201. y201 is north of z201"}
+{"operator": "transitivity", "prompt": "x202 is north of y202. y202 is north of z202"}
+{"operator": "transitivity", "prompt": "if x203 then y203. if y203 then z203"}
+{"operator": "transitivity", "prompt": "if x204 then y204. if y204 then z204"}
+{"operator": "transitivity", "prompt": "if x205 then y205. if y205 then z205"}
+{"operator": "transitivity", "prompt": "x206 is north of y206. y206 is north of z206"}
+{"operator": "transitivity", "prompt": "x207 is north of y207. y207 is north of z207"}
+{"operator": "transitivity", "prompt": "x208 is north of y208. y208 is north of z208"}
+{"operator": "transitivity", "prompt": "x209 is north of y209. y209 is north of z209"}
+{"operator": "transitivity", "prompt": "x210 is north of y210. y210 is north of z210"}
+{"operator": "transitivity", "prompt": "if x211 then y211. if y211 then z211"}
+{"operator": "transitivity", "prompt": "x212 is north of y212. y212 is north of z212"}
+{"operator": "transitivity", "prompt": "if x213 then y213. if y213 then z213"}
+{"operator": "transitivity", "prompt": "x214 is north of y214. y214 is north of z214"}
+{"operator": "transitivity", "prompt": "x215 is north of y215. y215 is north of z215"}
+{"operator": "transitivity", "prompt": "if x216 then y216. if y216 then z216"}
+{"operator": "transitivity", "prompt": "if x217 then y217. if y217 then z217"}
+{"operator": "transitivity", "prompt": "x218 is north of y218. y218 is north of z218"}
+{"operator": "transitivity", "prompt": "x219 is north of y219. y219 is north of z219"}
+{"operator": "transitivity", "prompt": "x220 is north of y220. y220 is north of z220"}
+{"operator": "transitivity", "prompt": "x221 is north of y221. y221 is north of z221"}
+{"operator": "transitivity", "prompt": "if x222 then y222. if y222 then z222"}
+{"operator": "transitivity", "prompt": "if x223 then y223. if y223 then z223"}
+{"operator": "transitivity", "prompt": "x224 is north of y224. y224 is north of z224"}
+{"operator": "transitivity", "prompt": "if x225 then y225. if y225 then z225"}
+{"operator": "transitivity", "prompt": "x226 is north of y226. y226 is north of z226"}
+{"operator": "transitivity", "prompt": "x227 is north of y227. y227 is north of z227"}
+{"operator": "transitivity", "prompt": "if x228 then y228. if y228 then z228"}
+{"operator": "transitivity", "prompt": "if x229 then y229. if y229 then z229"}
+{"operator": "transitivity", "prompt": "x230 is north of y230. y230 is north of z230"}
+{"operator": "transitivity", "prompt": "if x231 then y231. if y231 then z231"}
+{"operator": "transitivity", "prompt": "x232 is north of y232. y232 is north of z232"}
+{"operator": "transitivity", "prompt": "x233 is north of y233. y233 is north of z233"}
+{"operator": "transitivity", "prompt": "x234 is north of y234. y234 is north of z234"}
+{"operator": "transitivity", "prompt": "if x235 then y235. if y235 then z235"}
+{"operator": "transitivity", "prompt": "x236 is north of y236. y236 is north of z236"}
+{"operator": "transitivity", "prompt": "if x237 then y237. if y237 then z237"}
+{"operator": "transitivity", "prompt": "x238 is north of y238. y238 is north of z238"}
+{"operator": "transitivity", "prompt": "x239 is north of y239. y239 is north of z239"}
+{"operator": "transitivity", "prompt": "x240 is north of y240. y240 is north of z240"}
+{"operator": "transitivity", "prompt": "if x241 then y241. if y241 then z241"}
+{"operator": "transitivity", "prompt": "x242 is north of y242. y242 is north of z242"}
+{"operator": "transitivity", "prompt": "if x243 then y243. if y243 then z243"}
+{"operator": "transitivity", "prompt": "if x244 then y244. if y244 then z244"}
+{"operator": "transitivity", "prompt": "x245 is north of y245. y245 is north of z245"}
+{"operator": "transitivity", "prompt": "x246 is north of y246. y246 is north of z246"}
+{"operator": "transitivity", "prompt": "x247 is north of y247. y247 is north of z247"}
+{"operator": "transitivity", "prompt": "x248 is north of y248. y248 is north of z248"}
+{"operator": "transitivity", "prompt": "x249 is north of y249. y249 is north of z249"}
+{"operator": "transitivity", "prompt": "x250 is north of y250. y250 is north of z250"}
+{"operator": "transitivity", "prompt": "if x251 then y251. if y251 then z251"}
+{"operator": "transitivity", "prompt": "x252 is north of y252. y252 is north of z252"}
+{"operator": "transitivity", "prompt": "if x253 then y253. if y253 then z253"}
+{"operator": "transitivity", "prompt": "if x254 then y254. if y254 then z254"}
+{"operator": "transitivity", "prompt": "if x255 then y255. if y255 then z255"}
+{"operator": "negation", "prompt": "it is false that x0"}
+{"operator": "negation", "prompt": "it is false that x1"}
+{"operator": "negation", "prompt": "not x2"}
+{"operator": "negation", "prompt": "it is false that x3"}
+{"operator": "negation", "prompt": "it is false that x4"}
+{"operator": "negation", "prompt": "it is false that x5"}
+{"operator": "negation", "prompt": "it is false that x6"}
+{"operator": "negation", "prompt": "it is false that x7"}
+{"operator": "negation", "prompt": "not x8"}
+{"operator": "negation", "prompt": "not x9"}
+{"operator": "negation", "prompt": "not x10"}
+{"operator": "negation", "prompt": "it is false that x11"}
+{"operator": "negation", "prompt": "it is false that x12"}
+{"operator": "negation", "prompt": "not x13"}
+{"operator": "negation", "prompt": "it is false that x14"}
+{"operator": "negation", "prompt": "it is false that x15"}
+{"operator": "negation", "prompt": "not x16"}
+{"operator": "negation", "prompt": "it is false that x17"}
+{"operator": "negation", "prompt": "it is false that x18"}
+{"operator": "negation", "prompt": "not x19"}
+{"operator": "negation", "prompt": "not x20"}
+{"operator": "negation", "prompt": "not x21"}
+{"operator": "negation", "prompt": "it is false that x22"}
+{"operator": "negation", "prompt": "it is false that x23"}
+{"operator": "negation", "prompt": "it is false that x24"}
+{"operator": "negation", "prompt": "not x25"}
+{"operator": "negation", "prompt": "it is false that x26"}
+{"operator": "negation", "prompt": "not x27"}
+{"operator": "negation", "prompt": "not x28"}
+{"operator": "negation", "prompt": "not x29"}
+{"operator": "negation", "prompt": "not x30"}
+{"operator": "negation", "prompt": "it is false that x31"}
+{"operator": "negation", "prompt": "not x32"}
+{"operator": "negation", "prompt": "not x33"}
+{"operator": "negation", "prompt": "it is false that x34"}
+{"operator": "negation", "prompt": "not x35"}
+{"operator": "negation", "prompt": "not x36"}
+{"operator": "negation", "prompt": "not x37"}
+{"operator": "negation", "prompt": "not x38"}
+{"operator": "negation", "prompt": "not x39"}
+{"operator": "negation", "prompt": "not x40"}
+{"operator": "negation", "prompt": "it is false that x41"}
+{"operator": "negation", "prompt": "it is false that x42"}
+{"operator": "negation", "prompt": "not x43"}
+{"operator": "negation", "prompt": "not x44"}
+{"operator": "negation", "prompt": "not x45"}
+{"operator": "negation", "prompt": "it is false that x46"}
+{"operator": "negation", "prompt": "it is false that x47"}
+{"operator": "negation", "prompt": "not x48"}
+{"operator": "negation", "prompt": "it is false that x49"}
+{"operator": "negation", "prompt": "it is false that x50"}
+{"operator": "negation", "prompt": "it is false that x51"}
+{"operator": "negation", "prompt": "not x52"}
+{"operator": "negation", "prompt": "it is false that x53"}
+{"operator": "negation", "prompt": "it is false that x54"}
+{"operator": "negation", "prompt": "not x55"}
+{"operator": "negation", "prompt": "it is false that x56"}
+{"operator": "negation", "prompt": "not x57"}
+{"operator": "negation", "prompt": "it is false that x58"}
+{"operator": "negation", "prompt": "it is false that x59"}
+{"operator": "negation", "prompt": "not x60"}
+{"operator": "negation", "prompt": "not x61"}
+{"operator": "negation", "prompt": "not x62"}
+{"operator": "negation", "prompt": "it is false that x63"}
+{"operator": "negation", "prompt": "not x64"}
+{"operator": "negation", "prompt": "it is false that x65"}
+{"operator": "negation", "prompt": "it is false that x66"}
+{"operator": "negation", "prompt": "it is false that x67"}
+{"operator": "negation", "prompt": "not x68"}
+{"operator": "negation", "prompt": "it is false that x69"}
+{"operator": "negation", "prompt": "not x70"}
+{"operator": "negation", "prompt": "not x71"}
+{"operator": "negation", "prompt": "it is false that x72"}
+{"operator": "negation", "prompt": "it is false that x73"}
+{"operator": "negation", "prompt": "not x74"}
+{"operator": "negation", "prompt": "it is false that x75"}
+{"operator": "negation", "prompt": "it is false that x76"}
+{"operator": "negation", "prompt": "it is false that x77"}
+{"operator": "negation", "prompt": "it is false that x78"}
+{"operator": "negation", "prompt": "it is false that x79"}
+{"operator": "negation", "prompt": "it is false that x80"}
+{"operator": "negation", "prompt": "not x81"}
+{"operator": "negation", "prompt": "it is false that x82"}
+{"operator": "negation", "prompt": "it is false that x83"}
+{"operator": "negation", "prompt": "not x84"}
+{"operator": "negation", "prompt": "it is false that x85"}
+{"operator": "negation", "prompt": "not x86"}
+{"operator": "negation", "prompt": "not x87"}
+{"operator": "negation", "prompt": "not x88"}
+{"operator": "negation", "prompt": "it is false that x89"}
+{"operator": "negation", "prompt": "it is false that x90"}
+{"operator": "negation", "prompt": "it is false that x91"}
+{"operator": "negation", "prompt": "it is false that x92"}
+{"operator": "negation", "prompt": "not x93"}
+{"operator": "negation", "prompt": "not x94"}
+{"operator": "negation", "prompt": "not x95"}
+{"operator": "negation", "prompt": "not x96"}
+{"operator": "negation", "prompt": "it is false that x97"}
+{"operator": "negation", "prompt": "it is false that x98"}
+{"operator": "negation", "prompt": "it is false that x99"}
+{"operator": "negation", "prompt": "it is false that x100"}
+{"operator": "negation", "prompt": "not x101"}
+{"operator": "negation", "prompt": "not x102"}
+{"operator": "negation", "prompt": "it is false that x103"}
+{"operator": "negation", "prompt": "not x104"}
+{"operator": "negation", "prompt": "not x105"}
+{"operator": "negation", "prompt": "not x106"}
+{"operator": "negation", "prompt": "not x107"}
+{"operator": "negation", "prompt": "not x108"}
+{"operator": "negation", "prompt": "it is false that x109"}
+{"operator": "negation", "prompt": "it is false that x110"}
+{"operator": "negation", "prompt": "not x111"}
+{"operator": "negation", "prompt": "it is false that x112"}
+{"operator": "negation", "prompt": "not x113"}
+{"operator": "negation", "prompt": "it is false that x114"}
+{"operator": "negation", "prompt": "it is false that x115"}
+{"operator": "negation", "prompt": "not x116"}
+{"operator": "negation", "prompt": "not x117"}
+{"operator": "negation", "prompt": "it is false that x118"}
+{"operator": "negation", "prompt": "it is false that x119"}
+{"operator": "negation", "prompt": "not x120"}
+{"operator": "negation", "prompt": "not x121"}
+{"operator": "negation", "prompt": "not x122"}
+{"operator": "negation", "prompt": "not x123"}
+{"operator": "negation", "prompt": "not x124"}
+{"operator": "negation", "prompt": "it is false that x125"}
+{"operator": "negation", "prompt": "not x126"}
+{"operator": "negation", "prompt": "not x127"}
+{"operator": "negation", "prompt": "not x128"}
+{"operator": "negation", "prompt": "it is false that x129"}
+{"operator": "negation", "prompt": "it is false that x130"}
+{"operator": "negation", "prompt": "it is false that x131"}
+{"operator": "negation", "prompt": "not x132"}
+{"operator": "negation", "prompt": "not x133"}
+{"operator": "negation", "prompt": "it is false that x134"}
+{"operator": "negation", "prompt": "it is false that x135"}
+{"operator": "negation", "prompt": "it is false that x136"}
+{"operator": "negation", "prompt": "not x137"}
+{"operator": "negation", "prompt": "not x138"}
+{"operator": "negation", "prompt": "not x139"}
+{"operator": "negation", "prompt": "not x140"}
+{"operator": "negation", "prompt": "not x141"}
+{"operator": "negation", "prompt": "not x142"}
+{"operator": "negation", "prompt": "it is false that x143"}
+{"operator": "negation", "prompt": "not x144"}
+{"operator": "negation", "prompt": "not x145"}
+{"operator": "negation", "prompt": "not x146"}
+{"operator": "negation", "prompt": "not x147"}
+{"operator": "negation", "prompt": "not x148"}
+{"operator": "negation", "prompt": "not x149"}
+{"operator": "negation", "prompt": "not x150"}
+{"operator": "negation", "prompt": "not x151"}
+{"operator": "negation", "prompt": "it is false that x152"}
+{"operator": "negation", "prompt": "not x153"}
+{"operator": "negation", "prompt": "it is false that x154"}
+{"operator": "negation", "prompt": "not x155"}
+{"operator": "negation", "prompt": "it is false that x156"}
+{"operator": "negation", "prompt": "not x157"}
+{"operator": "negation", "prompt": "it is false that x158"}
+{"operator": "negation", "prompt": "not x159"}
+{"operator": "negation", "prompt": "it is false that x160"}
+{"operator": "negation", "prompt": "not x161"}
+{"operator": "negation", "prompt": "it is false that x162"}
+{"operator": "negation", "prompt": "it is false that x163"}
+{"operator": "negation", "prompt": "it is false that x164"}
+{"operator": "negation", "prompt": "not x165"}
+{"operator": "negation", "prompt": "it is false that x166"}
+{"operator": "negation", "prompt": "not x167"}
+{"operator": "negation", "prompt": "not x168"}
+{"operator": "negation", "prompt": "not x169"}
+{"operator": "negation", "prompt": "it is false that x170"}
+{"operator": "negation", "prompt": "not x171"}
+{"operator": "negation", "prompt": "not x172"}
+{"operator": "negation", "prompt": "not x173"}
+{"operator": "negation", "prompt": "it is false that x174"}
+{"operator": "negation", "prompt": "it is false that x175"}
+{"operator": "negation", "prompt": "not x176"}
+{"operator": "negation", "prompt": "it is false that x177"}
+{"operator": "negation", "prompt": "it is false that x178"}
+{"operator": "negation", "prompt": "it is false that x179"}
+{"operator": "negation", "prompt": "it is false that x180"}
+{"operator": "negation", "prompt": "not x181"}
+{"operator": "negation", "prompt": "not x182"}
+{"operator": "negation", "prompt": "not x183"}
+{"operator": "negation", "prompt": "not x184"}
+{"operator": "negation", "prompt": "it is false that x185"}
+{"operator": "negation", "prompt": "not x186"}
+{"operator": "negation", "prompt": "not x187"}
+{"operator": "negation", "prompt": "not x188"}
+{"operator": "negation", "prompt": "it is false that x189"}
+{"operator": "negation", "prompt": "not x190"}
+{"operator": "negation", "prompt": "it is false that x191"}
+{"operator": "negation", "prompt": "it is false that x192"}
+{"operator": "negation", "prompt": "not x193"}
+{"operator": "negation", "prompt": "it is false that x194"}
+{"operator": "negation", "prompt": "it is false that x195"}
+{"operator": "negation", "prompt": "it is false that x196"}
+{"operator": "negation", "prompt": "not x197"}
+{"operator": "negation", "prompt": "not x198"}
+{"operator": "negation", "prompt": "it is false that x199"}
+{"operator": "negation", "prompt": "not x200"}
+{"operator": "negation", "prompt": "it is false that x201"}
+{"operator": "negation", "prompt": "not x202"}
+{"operator": "negation", "prompt": "it is false that x203"}
+{"operator": "negation", "prompt": "not x204"}
+{"operator": "negation", "prompt": "not x205"}
+{"operator": "negation", "prompt": "not x206"}
+{"operator": "negation", "prompt": "not x207"}
+{"operator": "negation", "prompt": "not x208"}
+{"operator": "negation", "prompt": "not x209"}
+{"operator": "negation", "prompt": "not x210"}
+{"operator": "negation", "prompt": "not x211"}
+{"operator": "negation", "prompt": "it is false that x212"}
+{"operator": "negation", "prompt": "not x213"}
+{"operator": "negation", "prompt": "not x214"}
+{"operator": "negation", "prompt": "not x215"}
+{"operator": "negation", "prompt": "not x216"}
+{"operator": "negation", "prompt": "not x217"}
+{"operator": "negation", "prompt": "not x218"}
+{"operator": "negation", "prompt": "not x219"}
+{"operator": "negation", "prompt": "not x220"}
+{"operator": "negation", "prompt": "not x221"}
+{"operator": "negation", "prompt": "it is false that x222"}
+{"operator": "negation", "prompt": "not x223"}
+{"operator": "negation", "prompt": "not x224"}
+{"operator": "negation", "prompt": "it is false that x225"}
+{"operator": "negation", "prompt": "not x226"}
+{"operator": "negation", "prompt": "not x227"}
+{"operator": "negation", "prompt": "not x228"}
+{"operator": "negation", "prompt": "not x229"}
+{"operator": "negation", "prompt": "not x230"}
+{"operator": "negation", "prompt": "not x231"}
+{"operator": "negation", "prompt": "not x232"}
+{"operator": "negation", "prompt": "not x233"}
+{"operator": "negation", "prompt": "it is false that x234"}
+{"operator": "negation", "prompt": "it is false that x235"}
+{"operator": "negation", "prompt": "not x236"}
+{"operator": "negation", "prompt": "not x237"}
+{"operator": "negation", "prompt": "not x238"}
+{"operator": "negation", "prompt": "not x239"}
+{"operator": "negation", "prompt": "it is false that x240"}
+{"operator": "negation", "prompt": "it is false that x241"}
+{"operator": "negation", "prompt": "it is false that x242"}
+{"operator": "negation", "prompt": "it is false that x243"}
+{"operator": "negation", "prompt": "it is false that x244"}
+{"operator": "negation", "prompt": "not x245"}
+{"operator": "negation", "prompt": "it is false that x246"}
+{"operator": "negation", "prompt": "it is false that x247"}
+{"operator": "negation", "prompt": "it is false that x248"}
+{"operator": "negation", "prompt": "not x249"}
+{"operator": "negation", "prompt": "it is false that x250"}
+{"operator": "negation", "prompt": "it is false that x251"}
+{"operator": "negation", "prompt": "it is false that x252"}
+{"operator": "negation", "prompt": "it is false that x253"}
+{"operator": "negation", "prompt": "not x254"}
+{"operator": "negation", "prompt": "it is false that x255"}

@@ -1,0 +1,25 @@
+{
+  "timestamp": "20260309_prelim_fix",
+  "cells": {
+    "A": {
+      "overall_accuracy": 0.08333333333333333,
+      "adjective_accuracy": 0.0,
+      "gate": 0.0
+    },
+    "B": {
+      "overall_accuracy": 0.08333333333333333,
+      "adjective_accuracy": 0.0,
+      "gate": 0.11911056190729141
+    },
+    "C": {
+      "overall_accuracy": 0.08333333333333333,
+      "adjective_accuracy": 0.0,
+      "gate": 0.11920255422592163
+    },
+    "D": {
+      "overall_accuracy": 0.08333333333333333,
+      "adjective_accuracy": 0.0,
+      "gate": 0.11939288675785065
+    }
+  }
+}

@@ -1,0 +1,6 @@
+BINARY ARTIFACT SUMMARY
+Original path: projections/vq_codebook_pilot_k200.pt
+Original extension: .pt
+Size bytes: 718674
+SHA256: 24dc22a66ea2fc1a3a336f398a40dbda4b3d74021c2f76e5fc0af6ffb45acd7f
+Note: binary payload omitted from txt export; this stub preserves identity and provenance.

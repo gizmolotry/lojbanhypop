@@ -1,0 +1,6 @@
+BINARY ARTIFACT SUMMARY
+Original path: l_series/m5_3_masked_pair_chain/20260313_155835/m5_3_smoke/20260313_155837/m5_3_masked_pair_chain_checkpoint.pt
+Original extension: .pt
+Size bytes: 88300639
+SHA256: c688bb9ad06dee4178eb325ad03a9dcd8b699f33ba35c5152b21361408bd5150
+Note: binary payload omitted from txt export; this stub preserves identity and provenance.

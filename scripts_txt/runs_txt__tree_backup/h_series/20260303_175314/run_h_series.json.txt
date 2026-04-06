@@ -1,0 +1,135 @@
+{
+  "timestamp": "2026-03-03T17:53:41.379593+00:00",
+  "base_model": "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+  "adapter": "runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+  "sample_size": 24,
+  "seeds": [
+    7,
+    11
+  ],
+  "dataset_size": 1000,
+  "execute": true,
+  "h5": {
+    "base_model": null,
+    "adapter": null,
+    "checkpoint": "runs\\true_coconut_h5\\20260302_172603\\h5_checkpoint.pt"
+  },
+  "runs": [
+    {
+      "run_id": "H5-PROV",
+      "name": "Provenance Trace",
+      "status": "ok",
+      "return_code": 0,
+      "output": "runs\\true_coconut_h_series\\20260303_175314\\h5-prov.json",
+      "output_files": [
+        "runs\\true_coconut_h_series\\20260303_175314\\h5-prov.json"
+      ],
+      "metrics": {
+        "provenance_mean_l2_delta": 225.2937469482422,
+        "provenance_exact_match_ratio_eps": 0.0024999999441206455,
+        "provenance_anchor_mean_l2_delta": 0.0
+      },
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\trace_h5_provenance.py",
+        "--h53-checkpoint",
+        "runs\\true_coconut_h5\\20260302_172603\\h5_checkpoint.pt",
+        "--slice1-checkpoint",
+        "runs\\true_coconut_h5\\20260302_053614\\h5_checkpoint.pt",
+        "--top-k",
+        "64",
+        "--output",
+        "runs\\true_coconut_h_series\\20260303_175314\\h5-prov.json"
+      ],
+      "config": {
+        "h53_checkpoint": "runs\\true_coconut_h5\\20260302_172603\\h5_checkpoint.pt",
+        "slice1_checkpoint": "runs\\true_coconut_h5\\20260302_053614\\h5_checkpoint.pt",
+        "top_k": 64
+      }
+    },
+    {
+      "run_id": "H5-OOD",
+      "name": "OOD Stress Test",
+      "status": "failed",
+      "return_code": 1,
+      "output": "runs\\true_coconut_h_series\\20260303_175314\\h5-ood.json",
+      "output_files": [
+        "runs\\true_coconut_h_series\\20260303_175314\\h5-ood.json"
+      ],
+      "metrics": null,
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\eval_h5_ood_stress.py",
+        "--base-model",
+        "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+        "--adapter",
+        "runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+        "--checkpoint",
+        "runs\\true_coconut_h5\\20260302_172603\\h5_checkpoint.pt",
+        "--per-domain-limit",
+        "4",
+        "--max-logic-new-tokens",
+        "24",
+        "--max-final-new-tokens",
+        "16",
+        "--layer-index",
+        "12",
+        "--inject-scale",
+        "1.0",
+        "--relation-bias",
+        "0.0",
+        "--output",
+        "runs\\true_coconut_h_series\\20260303_175314\\h5-ood.json",
+        "--local-files-only"
+      ],
+      "config": {
+        "base_model": "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+        "adapter": "runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+        "checkpoint": "runs\\true_coconut_h5\\20260302_172603\\h5_checkpoint.pt"
+      }
+    },
+    {
+      "run_id": "H5-DPTR",
+      "name": "Dynamic Pointer Refactor Eval",
+      "status": "failed",
+      "return_code": 1,
+      "output": "runs\\true_coconut_h_series\\20260303_175314\\h5-dptr.json",
+      "output_files": [
+        "runs\\true_coconut_h_series\\20260303_175314\\h5-dptr.json"
+      ],
+      "metrics": null,
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\eval_h5_dynamic_pointer_refactor.py",
+        "--base-model",
+        "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+        "--adapter",
+        "runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+        "--checkpoint",
+        "runs\\true_coconut_h5\\20260302_172603\\h5_checkpoint.pt",
+        "--sample-size",
+        "4",
+        "--pointer-window",
+        "16",
+        "--max-logic-new-tokens",
+        "24",
+        "--max-final-new-tokens",
+        "16",
+        "--layer-index",
+        "12",
+        "--inject-scale",
+        "1.0",
+        "--relation-bias",
+        "0.0",
+        "--output",
+        "runs\\true_coconut_h_series\\20260303_175314\\h5-dptr.json",
+        "--local-files-only"
+      ],
+      "config": {
+        "base_model": "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+        "adapter": "runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+        "checkpoint": "runs\\true_coconut_h5\\20260302_172603\\h5_checkpoint.pt"
+      }
+    }
+  ]
+}

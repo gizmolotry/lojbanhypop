@@ -1,0 +1,299 @@
+{
+  "dataset": "runs\\lora_sft_dataset.jsonl",
+  "trace_anchor": "\nTRACE:",
+  "answer_anchor": "\nANSWER:",
+  "top_k": 64,
+  "min_count": 2,
+  "pairs": [
+    [
+      "TASK_MULTI_AGENT",
+      "BIND_AGENT_E1"
+    ],
+    [
+      "BIND_AGENT_E1",
+      "BIND_AGENT_E2"
+    ],
+    [
+      "BIND_AGENT_E2",
+      "BIND_OBJ_O1"
+    ],
+    [
+      "BIND_OBJ_O1",
+      "STATE_OBJ_LOC1"
+    ],
+    [
+      "STATE_OBJ_LOC1",
+      "EVENT_MOVE_LOC2"
+    ],
+    [
+      "EVENT_MOVE_LOC2",
+      "OBS_ABSENT"
+    ],
+    [
+      "OBS_ABSENT",
+      "MENTAL_STATE_E1_LOC1"
+    ],
+    [
+      "MENTAL_STATE_E1_LOC1",
+      "VERIFY_ID"
+    ],
+    [
+      "VERIFY_ID",
+      "ANS_LOC1"
+    ],
+    [
+      "EVENT_MOVE_LOC2",
+      "OBS_PRESENT"
+    ],
+    [
+      "OBS_PRESENT",
+      "MENTAL_STATE_E1_LOC2"
+    ],
+    [
+      "MENTAL_STATE_E1_LOC2",
+      "VERIFY_ID"
+    ],
+    [
+      "VERIFY_ID",
+      "ANS_LOC2"
+    ],
+    [
+      "TASK_WINOGRAD",
+      "BIND_E1"
+    ],
+    [
+      "BIND_E1",
+      "BIND_E2"
+    ],
+    [
+      "BIND_E2",
+      "LINK_CAUSAL"
+    ],
+    [
+      "LINK_CAUSAL",
+      "PRONOUN_REF"
+    ],
+    [
+      "TASK_KNIGHTS",
+      "BIND_A"
+    ],
+    [
+      "BIND_A",
+      "BIND_B"
+    ],
+    [
+      "BIND_B",
+      "BIND_C"
+    ],
+    [
+      "BIND_C",
+      "CLAIM_GRAPH"
+    ],
+    [
+      "CLAIM_GRAPH",
+      "ASSUME_BRANCH"
+    ],
+    [
+      "ASSUME_BRANCH",
+      "CONSISTENCY_CHECK"
+    ],
+    [
+      "VERIFY_ID",
+      "ANS_ROLE_MAP"
+    ],
+    [
+      "CONSISTENCY_CHECK",
+      "SOLUTION_AK_BN_CK"
+    ],
+    [
+      "SOLUTION_AK_BN_CK",
+      "VERIFY_ID"
+    ],
+    [
+      "PRONOUN_REF",
+      "RESOLVE_PRON_E1"
+    ],
+    [
+      "RESOLVE_PRON_E1",
+      "VERIFY_ID"
+    ],
+    [
+      "VERIFY_ID",
+      "ANS_E1"
+    ],
+    [
+      "PRONOUN_REF",
+      "RESOLVE_PRON_E2"
+    ],
+    [
+      "RESOLVE_PRON_E2",
+      "VERIFY_ID"
+    ],
+    [
+      "VERIFY_ID",
+      "ANS_E2"
+    ]
+  ],
+  "counts": [
+    {
+      "left": "TASK_MULTI_AGENT",
+      "right": "BIND_AGENT_E1",
+      "count": 622
+    },
+    {
+      "left": "BIND_AGENT_E1",
+      "right": "BIND_AGENT_E2",
+      "count": 622
+    },
+    {
+      "left": "BIND_AGENT_E2",
+      "right": "BIND_OBJ_O1",
+      "count": 622
+    },
+    {
+      "left": "BIND_OBJ_O1",
+      "right": "STATE_OBJ_LOC1",
+      "count": 622
+    },
+    {
+      "left": "STATE_OBJ_LOC1",
+      "right": "EVENT_MOVE_LOC2",
+      "count": 622
+    },
+    {
+      "left": "EVENT_MOVE_LOC2",
+      "right": "OBS_ABSENT",
+      "count": 414
+    },
+    {
+      "left": "OBS_ABSENT",
+      "right": "MENTAL_STATE_E1_LOC1",
+      "count": 414
+    },
+    {
+      "left": "MENTAL_STATE_E1_LOC1",
+      "right": "VERIFY_ID",
+      "count": 414
+    },
+    {
+      "left": "VERIFY_ID",
+      "right": "ANS_LOC1",
+      "count": 414
+    },
+    {
+      "left": "EVENT_MOVE_LOC2",
+      "right": "OBS_PRESENT",
+      "count": 208
+    },
+    {
+      "left": "OBS_PRESENT",
+      "right": "MENTAL_STATE_E1_LOC2",
+      "count": 208
+    },
+    {
+      "left": "MENTAL_STATE_E1_LOC2",
+      "right": "VERIFY_ID",
+      "count": 208
+    },
+    {
+      "left": "VERIFY_ID",
+      "right": "ANS_LOC2",
+      "count": 208
+    },
+    {
+      "left": "TASK_WINOGRAD",
+      "right": "BIND_E1",
+      "count": 4
+    },
+    {
+      "left": "BIND_E1",
+      "right": "BIND_E2",
+      "count": 4
+    },
+    {
+      "left": "BIND_E2",
+      "right": "LINK_CAUSAL",
+      "count": 4
+    },
+    {
+      "left": "LINK_CAUSAL",
+      "right": "PRONOUN_REF",
+      "count": 4
+    },
+    {
+      "left": "TASK_KNIGHTS",
+      "right": "BIND_A",
+      "count": 3
+    },
+    {
+      "left": "BIND_A",
+      "right": "BIND_B",
+      "count": 3
+    },
+    {
+      "left": "BIND_B",
+      "right": "BIND_C",
+      "count": 3
+    },
+    {
+      "left": "BIND_C",
+      "right": "CLAIM_GRAPH",
+      "count": 3
+    },
+    {
+      "left": "CLAIM_GRAPH",
+      "right": "ASSUME_BRANCH",
+      "count": 3
+    },
+    {
+      "left": "ASSUME_BRANCH",
+      "right": "CONSISTENCY_CHECK",
+      "count": 3
+    },
+    {
+      "left": "VERIFY_ID",
+      "right": "ANS_ROLE_MAP",
+      "count": 3
+    },
+    {
+      "left": "CONSISTENCY_CHECK",
+      "right": "SOLUTION_AK_BN_CK",
+      "count": 2
+    },
+    {
+      "left": "SOLUTION_AK_BN_CK",
+      "right": "VERIFY_ID",
+      "count": 2
+    },
+    {
+      "left": "PRONOUN_REF",
+      "right": "RESOLVE_PRON_E1",
+      "count": 2
+    },
+    {
+      "left": "RESOLVE_PRON_E1",
+      "right": "VERIFY_ID",
+      "count": 2
+    },
+    {
+      "left": "VERIFY_ID",
+      "right": "ANS_E1",
+      "count": 2
+    },
+    {
+      "left": "PRONOUN_REF",
+      "right": "RESOLVE_PRON_E2",
+      "count": 2
+    },
+    {
+      "left": "RESOLVE_PRON_E2",
+      "right": "VERIFY_ID",
+      "count": 2
+    },
+    {
+      "left": "VERIFY_ID",
+      "right": "ANS_E2",
+      "count": 2
+    }
+  ]
+}

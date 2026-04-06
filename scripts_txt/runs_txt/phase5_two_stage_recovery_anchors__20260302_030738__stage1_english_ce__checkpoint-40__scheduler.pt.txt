@@ -1,0 +1,6 @@
+BINARY ARTIFACT SUMMARY
+Original path: phase5_two_stage_recovery_anchors/20260302_030738/stage1_english_ce/checkpoint-40/scheduler.pt
+Original extension: .pt
+Size bytes: 1465
+SHA256: 0a177cd3809c5eed48e626166a987719a8ed39a6049c0b5c4dd31dfe942333ac
+Note: binary payload omitted from txt export; this stub preserves identity and provenance.

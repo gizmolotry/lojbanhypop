@@ -1,0 +1,25 @@
+{
+  "timestamp": "20260308_225151",
+  "cells": {
+    "A": {
+      "overall_accuracy": 0.0,
+      "adjective_accuracy": 0.0,
+      "gate": 0.0
+    },
+    "B": {
+      "overall_accuracy": 0.0,
+      "adjective_accuracy": 0.0,
+      "gate": 0.11917223781347275
+    },
+    "C": {
+      "overall_accuracy": 0.0,
+      "adjective_accuracy": 0.0,
+      "gate": 0.1191721111536026
+    },
+    "D": {
+      "overall_accuracy": 0.0,
+      "adjective_accuracy": 0.0,
+      "gate": 0.11917205899953842
+    }
+  }
+}

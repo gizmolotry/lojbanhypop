@@ -1,0 +1,86 @@
+{
+  "timestamp": "2026-03-03T18:03:05.364598+00:00",
+  "base_model": "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+  "adapter": "runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+  "checkpoint": "runs\\true_coconut_h5\\20260302_172603\\h5_checkpoint.pt",
+  "config": {
+    "per_domain_limit": 2,
+    "max_logic_new_tokens": 16,
+    "max_final_new_tokens": 12,
+    "layer_index": 12,
+    "inject_scale": 1.0,
+    "relation_bias": 0.0,
+    "use_iron_collar": false
+  },
+  "summary": {
+    "total": 4,
+    "correct": 3,
+    "accuracy": 0.75
+  },
+  "domains": {
+    "spatial": {
+      "total": 2,
+      "correct": 1,
+      "surgery_hits": 0,
+      "trace_token_total": 32,
+      "pointer_advances": 0,
+      "accuracy": 0.5,
+      "avg_surgery_hits": 0.0,
+      "avg_trace_tokens": 16.0,
+      "avg_pointer_advances": 0.0
+    },
+    "temporal": {
+      "total": 2,
+      "correct": 2,
+      "surgery_hits": 0,
+      "trace_token_total": 32,
+      "pointer_advances": 0,
+      "accuracy": 1.0,
+      "avg_surgery_hits": 0.0,
+      "avg_trace_tokens": 16.0,
+      "avg_pointer_advances": 0.0
+    }
+  },
+  "samples": [
+    {
+      "domain": "spatial",
+      "prompt": "A is left of B. B is left of C. Which is leftmost?",
+      "expected_answer": "A",
+      "prediction": "C\nExplanation: The answer is C because it is the",
+      "correct": false,
+      "trace_token_count": 16,
+      "surgery_hits": 0,
+      "pointer_advances": 0
+    },
+    {
+      "domain": "spatial",
+      "prompt": "D is north of E. E is north of F. Which is farthest north?",
+      "expected_answer": "D",
+      "prediction": "D\nExplanation: D is north of E and E is",
+      "correct": true,
+      "trace_token_count": 16,
+      "surgery_hits": 0,
+      "pointer_advances": 0
+    },
+    {
+      "domain": "temporal",
+      "prompt": "Breakfast happens before lunch. Lunch happens before dinner. What happens first?",
+      "expected_answer": "breakfast",
+      "prediction": "Breakfast. Explanation: Breakfast happens before lunch. Lunch happens before",
+      "correct": true,
+      "trace_token_count": 16,
+      "surgery_hits": 0,
+      "pointer_advances": 0
+    },
+    {
+      "domain": "temporal",
+      "prompt": "Alpha starts before Beta. Beta starts before Gamma. Which starts last?",
+      "expected_answer": "Gamma",
+      "prediction": "Gamma\nExplanation: The logic question asks us to determine which",
+      "correct": true,
+      "trace_token_count": 16,
+      "surgery_hits": 0,
+      "pointer_advances": 0
+    }
+  ]
+}

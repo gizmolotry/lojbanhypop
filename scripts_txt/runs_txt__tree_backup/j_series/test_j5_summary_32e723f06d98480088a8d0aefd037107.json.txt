@@ -1,0 +1,16 @@
+{
+  "metrics": {
+    "accepted_foil_pair_accuracy": 0.8125,
+    "foil_auc": 0.8125
+  },
+  "samples": [
+    {
+      "true_score": 1.0,
+      "false_score": 0.0
+    },
+    {
+      "true_score": 0.8,
+      "false_score": 0.3
+    }
+  ]
+}

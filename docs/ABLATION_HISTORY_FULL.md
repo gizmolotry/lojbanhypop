@@ -1,10 +1,10 @@
 # Full Ablation History
 
-- Source manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/ablation_history_backfill_m_excavation_20260329/ablation_history_manifest.json`
-- Generated from run: `ablation_history_backfill_m_excavation_20260329`
-- Total canonical entries: `145`
-- Artifact-backed entries: `126`
-- Runnable entries: `44`
+- Source manifest: `D:/lojbanhypop/artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/ablation_history_backfill_github_control_plane_20260405/ablation_history_manifest.json`
+- Generated from run: `ablation_history_backfill_github_control_plane_20260405`
+- Total canonical entries: `140`
+- Artifact-backed entries: `121`
+- Runnable entries: `39`
 
 This document lists every ablation point currently tracked in the unified ledger. Each item includes a brief description, provenance status, and the best-known metric surface when one exists.
 
@@ -19,7 +19,7 @@ This document lists every ablation point currently tracked in the unified ledger
 - `a_to_g_matrix`: `6`
 - `phase5_train_ablation`: `7`
 - `phase5_objective_ablation`: `7`
-- `m_track`: `78`
+- `m_track`: `73`
 - `historical_gap`: `1`
 
 ## core_matrix
@@ -981,7 +981,19 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Best-known metrics: held_out_accuracy=`0.600000`
 - Scripts: `scripts/m10/final_audit.py`
 
-### m_telemetry (65)
+### m_telemetry (60)
+
+#### M3.12 A
+
+- Canonical ID: `m.track.m3_12.a`
+- Normalized ID: `M3.12.A`
+- Taxonomy: major=`3` minor=`12` cell=`A`
+- Aliases: `M3.12.A, A`
+- Lookup aliases: `M3.12.A`
+- Brief: telemetry-rooted M3.12 ablation cell
+- Architectural question: `M3`
+- Provenance: evidence=`mixed` confidence=`high` reproducibility=`artifact_only`
+- Baseline relation: M3.12 cell
 
 #### hypercube_ablation telemetry report
 
@@ -1150,18 +1162,6 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.15 cell
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.001251`
-
-#### M3.12 A
-
-- Canonical ID: `m.track.m3_12.a`
-- Normalized ID: `M3.12.A`
-- Taxonomy: major=`3` minor=`12` cell=`A`
-- Aliases: `M3.12.A, A`
-- Lookup aliases: `M3.12.A`
-- Brief: telemetry-rooted M3.12 ablation cell
-- Architectural question: `M3`
-- Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
-- Baseline relation: M3.12 cell
 
 #### M3.12 B
 
@@ -1675,72 +1675,6 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M3.19 cell
 - Best-known metrics: held_out_accuracy=`0.000000`, intervention_effect_on_gold=`-0.000002`, resume_first_token_accuracy=`0.000000`, english_fluency_score=`1.000000`
-
-#### relaxed residual scratchpad
-
-- Canonical ID: `m.track.m14.c`
-- Normalized ID: `M14.C`
-- Taxonomy: major=`14` minor=`None` cell=`C`
-- Aliases: `M14.C, C`
-- Lookup aliases: `M14.C`
-- Brief: telemetry-rooted M14 ablation cell
-- Architectural question: `M14`
-- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
-- Baseline relation: M14 cell
-- Inherits from: `M3.19.D0, M11`
-- Best-known metrics: held_out_accuracy=`1.000000`, intervention_effect_on_gold=`0.000269`, resume_first_token_accuracy=`0.000000`, english_fluency_score=`1.000000`
-
-#### scratchpad-only control
-
-- Canonical ID: `m.track.m14.a`
-- Normalized ID: `M14.A`
-- Taxonomy: major=`14` minor=`None` cell=`A`
-- Aliases: `M14.A, A`
-- Lookup aliases: `M14.A`
-- Brief: telemetry-rooted M14 ablation cell
-- Architectural question: `M14`
-- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
-- Baseline relation: M14 cell
-- Best-known metrics: held_out_accuracy=`1.000000`, intervention_effect_on_gold=`0.000000`, resume_first_token_accuracy=`0.000000`, english_fluency_score=`1.000000`
-
-#### severance-threshold residual scratchpad
-
-- Canonical ID: `m.track.m14.d`
-- Normalized ID: `M14.D`
-- Taxonomy: major=`14` minor=`None` cell=`D`
-- Aliases: `M14.D, D`
-- Lookup aliases: `M14.D`
-- Brief: telemetry-rooted M14 ablation cell
-- Architectural question: `M14`
-- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
-- Baseline relation: M14 cell
-- Best-known metrics: held_out_accuracy=`1.000000`, intervention_effect_on_gold=`0.000264`, resume_first_token_accuracy=`0.000000`, english_fluency_score=`1.000000`
-
-#### strict residual scratchpad
-
-- Canonical ID: `m.track.m14.b`
-- Normalized ID: `M14.B`
-- Taxonomy: major=`14` minor=`None` cell=`B`
-- Aliases: `M14.B, B`
-- Lookup aliases: `M14.B`
-- Brief: telemetry-rooted M14 ablation cell
-- Architectural question: `M14`
-- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
-- Baseline relation: M14 cell
-- Best-known metrics: held_out_accuracy=`1.000000`, intervention_effect_on_gold=`-0.000150`, resume_first_token_accuracy=`0.000000`, english_fluency_score=`1.000000`
-
-#### token-only scratchpad baseline
-
-- Canonical ID: `m.track.m14.e`
-- Normalized ID: `M14.E`
-- Taxonomy: major=`14` minor=`None` cell=`E`
-- Aliases: `M14.E, E`
-- Lookup aliases: `M14.E`
-- Brief: telemetry-rooted M14 ablation cell
-- Architectural question: `M14`
-- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
-- Baseline relation: M14 cell
-- Best-known metrics: held_out_accuracy=`1.000000`, intervention_effect_on_gold=`-0.000282`, resume_first_token_accuracy=`0.000000`, english_fluency_score=`1.000000`
 
 #### M3.13 A
 

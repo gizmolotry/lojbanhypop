@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-03-11T01:06:45.457026+00:00",
+  "series": {
+    "series_contract_version": "1.0",
+    "series_id": "M",
+    "track": "M1",
+    "script": "scripts/run_true_coconut_h_series.py"
+  },
+  "declared_output_root": "runs/j_series/test_run_true_coconut_8a672829b620413eb8dff3496eed6488",
+  "base_model": "dummy-base",
+  "adapter": "artifacts/test_tmp/run_true_coconut_h_series_c138055dd9cc4b538be8fe1160305266/dummy-adapter",
+  "sample_size": 24,
+  "seeds": [
+    7,
+    11
+  ],
+  "dataset_size": 1000,
+  "execute": true,
+  "h5": {
+    "base_model": null,
+    "adapter": null,
+    "checkpoint": null
+  },
+  "h5_extensions": [
+    {
+      "run_id": "J-4",
+      "m_series_alias": "M1.3",
+      "name": "Operator Curriculum Build",
+      "status": "failed",
+      "return_code": -3,
+      "output": "runs/j_series/test_run_true_coconut_8a672829b620413eb8dff3496eed6488/20260311_010645/j-4.json",
+      "metrics": {},
+      "lineage": {
+        "mode": "eval_only",
+        "checkpoint_in": null,
+        "checkpoint_out": null,
+        "dataset_profile": "operator_curriculum_v1",
+        "difficulty_tier": "all"
+      },
+      "notes": ""
+    }
+  ],
+  "runs": [
+    {
+      "run_id": "J-4",
+      "name": "Operator Curriculum Build",
+      "status": "failed",
+      "return_code": -3,
+      "output": "runs/j_series/test_run_true_coconut_8a672829b620413eb8dff3496eed6488/20260311_010645/j-4.json",
+      "output_files": [
+        "runs/j_series/test_run_true_coconut_8a672829b620413eb8dff3496eed6488/20260311_010645/j-4.json",
+        "runs/j_series/test_run_true_coconut_8a672829b620413eb8dff3496eed6488/20260311_010645/j-4_curriculum.jsonl"
+      ],
+      "metrics": null,
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\eval_j_4.py",
+        "--per-operator",
+        "256",
+        "--output",
+        "runs\\j_series\\test_run_true_coconut_8a672829b620413eb8dff3496eed6488\\20260311_010645\\j-4.json",
+        "--dataset-output",
+        "runs\\j_series\\test_run_true_coconut_8a672829b620413eb8dff3496eed6488\\20260311_010645\\j-4_curriculum.jsonl"
+      ],
+      "config": {
+        "dataset_output": "runs/j_series/test_run_true_coconut_8a672829b620413eb8dff3496eed6488/20260311_010645/j-4_curriculum.jsonl",
+        "per_operator": 256
+      },
+      "lineage": {
+        "mode": "eval_only",
+        "checkpoint_in": null,
+        "checkpoint_out": null,
+        "dataset_profile": "operator_curriculum_v1",
+        "difficulty_tier": "all"
+      }
+    }
+  ]
+}

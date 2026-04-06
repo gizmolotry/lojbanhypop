@@ -1,0 +1,413 @@
+{
+  "summary": {
+    "run_id": "J-5",
+    "name": "Adversarial Problem Synthesis",
+    "generated_utc": "2026-03-04T05:35:32.251408+00:00",
+    "dataset_output": "runs\\j_series\\test_j5_eval_7c0bede6a28d44b0801753a153785703\\j5.jsonl",
+    "series_contract_version": "1.0",
+    "series_id": "J",
+    "track": "invariance_data",
+    "script": "scripts/eval_j_5.py"
+  },
+  "metrics": {
+    "problem_count": 32.0,
+    "accepted_count": 9.0,
+    "generator_accept_rate": 0.28125,
+    "schema_valid_rate": 1.0,
+    "solver_consistency_rate": 0.28125,
+    "novelty_mean": 1.0,
+    "novelty_threshold": 0.2,
+    "dedupe_reject_count": 0.0,
+    "scope_by_depth": {
+      "1": 0.46153846153846156,
+      "2": 0.1875,
+      "3": 0.0,
+      "4": 0.0
+    },
+    "foil_auc": 0.5625,
+    "domain_coverage": 2.0
+  },
+  "samples": [
+    {
+      "domain": "kinship",
+      "depth": 1,
+      "prompt": "parent0 is parent of child0.",
+      "foil_prompt": "child0 is the parent of parent0.",
+      "factor_graph": {
+        "entities": [
+          "child0",
+          "guardian0",
+          "parent0",
+          "sibling0"
+        ],
+        "edges": [
+          {
+            "src": "parent0",
+            "rel": "parent_of",
+            "dst": "child0"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "child0",
+          "guardian0",
+          "parent0",
+          "sibling0"
+        ],
+        "edges": [
+          {
+            "src": "child0",
+            "rel": "parent_of",
+            "dst": "parent0"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0
+    },
+    {
+      "domain": "kinship",
+      "depth": 2,
+      "prompt": "if child3 then sibling3. parent3 is parent of child3.",
+      "foil_prompt": "parent3 is parent of child3. sibling3 implies child3.",
+      "factor_graph": {
+        "entities": [
+          "child3",
+          "guardian3",
+          "parent3",
+          "sibling3"
+        ],
+        "edges": [
+          {
+            "src": "parent3",
+            "rel": "parent_of",
+            "dst": "child3"
+          },
+          {
+            "src": "child3",
+            "rel": "implies",
+            "dst": "sibling3"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "child3",
+          "guardian3",
+          "parent3",
+          "sibling3"
+        ],
+        "edges": [
+          {
+            "src": "sibling3",
+            "rel": "implies",
+            "dst": "child3"
+          },
+          {
+            "src": "parent3",
+            "rel": "parent_of",
+            "dst": "child3"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.5
+    },
+    {
+      "domain": "kinship",
+      "depth": 1,
+      "prompt": "parent6 is parent of child6.",
+      "foil_prompt": "child6 is parent of parent6.",
+      "factor_graph": {
+        "entities": [
+          "child6",
+          "guardian6",
+          "parent6",
+          "sibling6"
+        ],
+        "edges": [
+          {
+            "src": "parent6",
+            "rel": "parent_of",
+            "dst": "child6"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "child6",
+          "guardian6",
+          "parent6",
+          "sibling6"
+        ],
+        "edges": [
+          {
+            "src": "child6",
+            "rel": "parent_of",
+            "dst": "parent6"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0
+    },
+    {
+      "domain": "legal_permission",
+      "depth": 1,
+      "prompt": "actor11 permits role11.",
+      "foil_prompt": "actor11 is authorized by role11.",
+      "factor_graph": {
+        "entities": [
+          "actor11",
+          "permit11",
+          "policy11",
+          "role11"
+        ],
+        "edges": [
+          {
+            "src": "actor11",
+            "rel": "permits",
+            "dst": "role11"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "actor11",
+          "permit11",
+          "policy11",
+          "role11"
+        ],
+        "edges": [
+          {
+            "src": "role11",
+            "rel": "permits",
+            "dst": "actor11"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0
+    },
+    {
+      "domain": "legal_permission",
+      "depth": 1,
+      "prompt": "actor14 permits role14.",
+      "foil_prompt": "role14 permits actor14.",
+      "factor_graph": {
+        "entities": [
+          "actor14",
+          "permit14",
+          "policy14",
+          "role14"
+        ],
+        "edges": [
+          {
+            "src": "actor14",
+            "rel": "permits",
+            "dst": "role14"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "actor14",
+          "permit14",
+          "policy14",
+          "role14"
+        ],
+        "edges": [
+          {
+            "src": "role14",
+            "rel": "permits",
+            "dst": "actor14"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0
+    },
+    {
+      "domain": "kinship",
+      "depth": 2,
+      "prompt": "if child15 then sibling15. parent15 is parent of child15.",
+      "foil_prompt": "child15 is child of parent15. whenever sibling15, then child15.",
+      "factor_graph": {
+        "entities": [
+          "child15",
+          "guardian15",
+          "parent15",
+          "sibling15"
+        ],
+        "edges": [
+          {
+            "src": "parent15",
+            "rel": "parent_of",
+            "dst": "child15"
+          },
+          {
+            "src": "child15",
+            "rel": "implies",
+            "dst": "sibling15"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "child15",
+          "guardian15",
+          "parent15",
+          "sibling15"
+        ],
+        "edges": [
+          {
+            "src": "sibling15",
+            "rel": "implies",
+            "dst": "child15"
+          },
+          {
+            "src": "parent15",
+            "rel": "parent_of",
+            "dst": "child15"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0
+    },
+    {
+      "domain": "legal_permission",
+      "depth": 2,
+      "prompt": "actor17 permits role17. if role17 then permit17.",
+      "foil_prompt": "role17 implies permit17. role17 allows actor17.",
+      "factor_graph": {
+        "entities": [
+          "actor17",
+          "permit17",
+          "policy17",
+          "role17"
+        ],
+        "edges": [
+          {
+            "src": "actor17",
+            "rel": "permits",
+            "dst": "role17"
+          },
+          {
+            "src": "role17",
+            "rel": "implies",
+            "dst": "permit17"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "actor17",
+          "permit17",
+          "policy17",
+          "role17"
+        ],
+        "edges": [
+          {
+            "src": "role17",
+            "rel": "permits",
+            "dst": "actor17"
+          },
+          {
+            "src": "role17",
+            "rel": "implies",
+            "dst": "permit17"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0
+    },
+    {
+      "domain": "kinship",
+      "depth": 1,
+      "prompt": "parent21 is parent of child21.",
+      "foil_prompt": "child21 is the parent of parent21.",
+      "factor_graph": {
+        "entities": [
+          "child21",
+          "guardian21",
+          "parent21",
+          "sibling21"
+        ],
+        "edges": [
+          {
+            "src": "parent21",
+            "rel": "parent_of",
+            "dst": "child21"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "child21",
+          "guardian21",
+          "parent21",
+          "sibling21"
+        ],
+        "edges": [
+          {
+            "src": "child21",
+            "rel": "parent_of",
+            "dst": "parent21"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0
+    },
+    {
+      "domain": "legal_permission",
+      "depth": 1,
+      "prompt": "actor26 permits role26.",
+      "foil_prompt": "role26 allows actor26.",
+      "factor_graph": {
+        "entities": [
+          "actor26",
+          "permit26",
+          "policy26",
+          "role26"
+        ],
+        "edges": [
+          {
+            "src": "actor26",
+            "rel": "permits",
+            "dst": "role26"
+          }
+        ]
+      },
+      "foil_graph": {
+        "entities": [
+          "actor26",
+          "permit26",
+          "policy26",
+          "role26"
+        ],
+        "edges": [
+          {
+            "src": "role26",
+            "rel": "permits",
+            "dst": "actor26"
+          }
+        ]
+      },
+      "novelty": 1.0,
+      "true_score": 1.0,
+      "false_score": 0.0
+    }
+  ]
+}

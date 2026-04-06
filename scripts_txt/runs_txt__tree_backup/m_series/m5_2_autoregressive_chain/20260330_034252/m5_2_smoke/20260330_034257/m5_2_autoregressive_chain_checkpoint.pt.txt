@@ -1,0 +1,6 @@
+BINARY ARTIFACT SUMMARY
+Original path: m_series/m5_2_autoregressive_chain/20260330_034252/m5_2_smoke/20260330_034257/m5_2_autoregressive_chain_checkpoint.pt
+Original extension: .pt
+Size bytes: 78654351
+SHA256: bfdc4c9cee274ac9fb6492f386c8d5efdf4551e1cf378cf0387d0bb604eb5bac
+Note: binary payload omitted from txt export; this stub preserves identity and provenance.

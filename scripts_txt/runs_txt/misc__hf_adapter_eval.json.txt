@@ -1,0 +1,501 @@
+{
+  "timestamp": "2026-03-02T07:57:43.339245+00:00",
+  "base_model": "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+  "adapter": "runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+  "sample_size": 24,
+  "seed": 7,
+  "summary": {
+    "base": {
+      "total": 24,
+      "correct": 0,
+      "accuracy": 0.0
+    },
+    "adapter": {
+      "total": 24,
+      "correct": 9,
+      "accuracy": 0.375
+    }
+  },
+  "rows": [
+    {
+      "problem_id": 800,
+      "mode": "base",
+      "prompt": "Bob puts the red ball in the cabinet. Dana moves it to the shelf while Bob is outside. Alice takes the blue ball. Where does Bob think the red ball is?",
+      "expected": "cabinet",
+      "predicted": "The red ball is inside the cabinet.",
+      "normalized_expected": "cabinet",
+      "normalized_predicted": "redballisinsidecabinet",
+      "correct": false
+    },
+    {
+      "problem_id": 800,
+      "mode": "adapter",
+      "prompt": "Bob puts the red ball in the cabinet. Dana moves it to the shelf while Bob is outside. Alice takes the blue ball. Where does Bob think the red ball is?",
+      "expected": "cabinet",
+      "predicted": "cabinet",
+      "normalized_expected": "cabinet",
+      "normalized_predicted": "cabinet",
+      "correct": true
+    },
+    {
+      "problem_id": 801,
+      "mode": "base",
+      "prompt": "Charlie puts the red ball in the cabinet. Alice moves it to the shelf while Charlie is outside. Dana takes the blue ball. Where does Charlie think the red ball is?",
+      "expected": "cabinet",
+      "predicted": "Outside",
+      "normalized_expected": "cabinet",
+      "normalized_predicted": "outside",
+      "correct": false
+    },
+    {
+      "problem_id": 801,
+      "mode": "adapter",
+      "prompt": "Charlie puts the red ball in the cabinet. Alice moves it to the shelf while Charlie is outside. Dana takes the blue ball. Where does Charlie think the red ball is?",
+      "expected": "cabinet",
+      "predicted": "cabinet",
+      "normalized_expected": "cabinet",
+      "normalized_predicted": "cabinet",
+      "correct": true
+    },
+    {
+      "problem_id": 802,
+      "mode": "base",
+      "prompt": "The city councilmen refused the demonstrators a permit because they feared violence. Who feared violence?",
+      "expected": "councilmen",
+      "predicted": "The city councilmen fear violence.",
+      "normalized_expected": "councilmen",
+      "normalized_predicted": "citycouncilmenfearviolence",
+      "correct": false
+    },
+    {
+      "problem_id": 802,
+      "mode": "adapter",
+      "prompt": "The city councilmen refused the demonstrators a permit because they feared violence. Who feared violence?",
+      "expected": "councilmen",
+      "predicted": "",
+      "normalized_expected": "councilmen",
+      "normalized_predicted": "",
+      "correct": false
+    },
+    {
+      "problem_id": 803,
+      "mode": "base",
+      "prompt": "Eve puts the red ball in the shelf. Charlie moves it to the drawer while Eve is outside. Bob takes the blue ball. Where does Eve think the red ball is?",
+      "expected": "shelf",
+      "predicted": "Outside",
+      "normalized_expected": "shelf",
+      "normalized_predicted": "outside",
+      "correct": false
+    },
+    {
+      "problem_id": 803,
+      "mode": "adapter",
+      "prompt": "Eve puts the red ball in the shelf. Charlie moves it to the drawer while Eve is outside. Bob takes the blue ball. Where does Eve think the red ball is?",
+      "expected": "shelf",
+      "predicted": "shelf",
+      "normalized_expected": "shelf",
+      "normalized_predicted": "shelf",
+      "correct": true
+    },
+    {
+      "problem_id": 804,
+      "mode": "base",
+      "prompt": "Bob puts the red ball in the box. Charlie moves it to the cabinet while Bob is outside. Dana takes the blue ball. Where does Bob think the red ball is?",
+      "expected": "box",
+      "predicted": "The answer is that Bob thinks the red ball is inside the box.",
+      "normalized_expected": "box",
+      "normalized_predicted": "answeristhatbobthinksredballisinsidebox",
+      "correct": false
+    },
+    {
+      "problem_id": 804,
+      "mode": "adapter",
+      "prompt": "Bob puts the red ball in the box. Charlie moves it to the cabinet while Bob is outside. Dana takes the blue ball. Where does Bob think the red ball is?",
+      "expected": "box",
+      "predicted": "box",
+      "normalized_expected": "box",
+      "normalized_predicted": "box",
+      "correct": true
+    },
+    {
+      "problem_id": 805,
+      "mode": "base",
+      "prompt": "The trophy does not fit in the suitcase because it is too big. What is too big?",
+      "expected": "trophy",
+      "predicted": "A large backpack.",
+      "normalized_expected": "trophy",
+      "normalized_predicted": "alargebackpack",
+      "correct": false
+    },
+    {
+      "problem_id": 805,
+      "mode": "adapter",
+      "prompt": "The trophy does not fit in the suitcase because it is too big. What is too big?",
+      "expected": "trophy",
+      "predicted": "",
+      "normalized_expected": "trophy",
+      "normalized_predicted": "",
+      "correct": false
+    },
+    {
+      "problem_id": 806,
+      "mode": "base",
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "expected": "demonstrators",
+      "predicted": "The city councilmen advocated revolution.",
+      "normalized_expected": "demonstrators",
+      "normalized_predicted": "citycouncilmenadvocatedrevolution",
+      "correct": false
+    },
+    {
+      "problem_id": 806,
+      "mode": "adapter",
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "expected": "demonstrators",
+      "predicted": "",
+      "normalized_expected": "demonstrators",
+      "normalized_predicted": "",
+      "correct": false
+    },
+    {
+      "problem_id": 807,
+      "mode": "base",
+      "prompt": "A says: 'B is a knave.' B says: 'A and C are both knights.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knave,C=knight",
+      "predicted": "B",
+      "normalized_expected": "a=knight,b=knave,c=knight",
+      "normalized_predicted": "b",
+      "correct": false
+    },
+    {
+      "problem_id": 807,
+      "mode": "adapter",
+      "prompt": "A says: 'B is a knave.' B says: 'A and C are both knights.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knave,C=knight",
+      "predicted": ")||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||(",
+      "normalized_expected": "a=knight,b=knave,c=knight",
+      "normalized_predicted": "",
+      "correct": false
+    },
+    {
+      "problem_id": 808,
+      "mode": "base",
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "expected": "demonstrators",
+      "predicted": "The city councilmen advocated revolution.",
+      "normalized_expected": "demonstrators",
+      "normalized_predicted": "citycouncilmenadvocatedrevolution",
+      "correct": false
+    },
+    {
+      "problem_id": 808,
+      "mode": "adapter",
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "expected": "demonstrators",
+      "predicted": "",
+      "normalized_expected": "demonstrators",
+      "normalized_predicted": "",
+      "correct": false
+    },
+    {
+      "problem_id": 809,
+      "mode": "base",
+      "prompt": "Bob puts the red ball in the shelf. Eve moves it to the drawer while Bob is watching. Dana takes the blue ball. Where does Bob think the red ball is?",
+      "expected": "drawer",
+      "predicted": "The red ball is on the shelf.",
+      "normalized_expected": "drawer",
+      "normalized_predicted": "redballisonshelf",
+      "correct": false
+    },
+    {
+      "problem_id": 809,
+      "mode": "adapter",
+      "prompt": "Bob puts the red ball in the shelf. Eve moves it to the drawer while Bob is watching. Dana takes the blue ball. Where does Bob think the red ball is?",
+      "expected": "drawer",
+      "predicted": "drawer",
+      "normalized_expected": "drawer",
+      "normalized_predicted": "drawer",
+      "correct": true
+    },
+    {
+      "problem_id": 810,
+      "mode": "base",
+      "prompt": "Bob puts the red ball in the shelf. Charlie moves it to the drawer while Bob is outside. Dana takes the blue ball. Where does Bob think the red ball is?",
+      "expected": "shelf",
+      "predicted": "The red ball is in the shelf.",
+      "normalized_expected": "shelf",
+      "normalized_predicted": "redballisshelf",
+      "correct": false
+    },
+    {
+      "problem_id": 810,
+      "mode": "adapter",
+      "prompt": "Bob puts the red ball in the shelf. Charlie moves it to the drawer while Bob is outside. Dana takes the blue ball. Where does Bob think the red ball is?",
+      "expected": "shelf",
+      "predicted": "shelf",
+      "normalized_expected": "shelf",
+      "normalized_predicted": "shelf",
+      "correct": true
+    },
+    {
+      "problem_id": 811,
+      "mode": "base",
+      "prompt": "Bob puts the red ball in the shelf. Eve moves it to the drawer while Bob is outside. Frank takes the blue ball. Where does Bob think the red ball is?",
+      "expected": "shelf",
+      "predicted": "The red ball is inside the shelf.",
+      "normalized_expected": "shelf",
+      "normalized_predicted": "redballisinsideshelf",
+      "correct": false
+    },
+    {
+      "problem_id": 811,
+      "mode": "adapter",
+      "prompt": "Bob puts the red ball in the shelf. Eve moves it to the drawer while Bob is outside. Frank takes the blue ball. Where does Bob think the red ball is?",
+      "expected": "shelf",
+      "predicted": "shelf",
+      "normalized_expected": "shelf",
+      "normalized_predicted": "shelf",
+      "correct": true
+    },
+    {
+      "problem_id": 812,
+      "mode": "base",
+      "prompt": "Dana puts the red ball in the desk. Eve moves it to the drawer while Dana is outside. Charlie takes the blue ball. Where does Dana think the red ball is?",
+      "expected": "desk",
+      "predicted": "Outside",
+      "normalized_expected": "desk",
+      "normalized_predicted": "outside",
+      "correct": false
+    },
+    {
+      "problem_id": 812,
+      "mode": "adapter",
+      "prompt": "Dana puts the red ball in the desk. Eve moves it to the drawer while Dana is outside. Charlie takes the blue ball. Where does Dana think the red ball is?",
+      "expected": "desk",
+      "predicted": "desk",
+      "normalized_expected": "desk",
+      "normalized_predicted": "desk",
+      "correct": true
+    },
+    {
+      "problem_id": 813,
+      "mode": "base",
+      "prompt": "A says: 'B is a knave.' B says: 'C is a knight.' C says: 'A is a knight.' Who is what?",
+      "expected": "A=knight,B=knave,C=knight",
+      "predicted": "Knight, Knight, Knave",
+      "normalized_expected": "a=knight,b=knave,c=knight",
+      "normalized_predicted": "knight,knight,knave",
+      "correct": false
+    },
+    {
+      "problem_id": 813,
+      "mode": "adapter",
+      "prompt": "A says: 'B is a knave.' B says: 'C is a knight.' C says: 'A is a knight.' Who is what?",
+      "expected": "A=knight,B=knave,C=knight",
+      "predicted": ")||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||(",
+      "normalized_expected": "a=knight,b=knave,c=knight",
+      "normalized_predicted": "",
+      "correct": false
+    },
+    {
+      "problem_id": 814,
+      "mode": "base",
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "expected": "demonstrators",
+      "predicted": "The city councilmen advocated revolution.",
+      "normalized_expected": "demonstrators",
+      "normalized_predicted": "citycouncilmenadvocatedrevolution",
+      "correct": false
+    },
+    {
+      "problem_id": 814,
+      "mode": "adapter",
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "expected": "demonstrators",
+      "predicted": "",
+      "normalized_expected": "demonstrators",
+      "normalized_predicted": "",
+      "correct": false
+    },
+    {
+      "problem_id": 815,
+      "mode": "base",
+      "prompt": "The city councilmen refused the demonstrators a permit because they feared violence. Who feared violence?",
+      "expected": "councilmen",
+      "predicted": "The city councilmen fear violence.",
+      "normalized_expected": "councilmen",
+      "normalized_predicted": "citycouncilmenfearviolence",
+      "correct": false
+    },
+    {
+      "problem_id": 815,
+      "mode": "adapter",
+      "prompt": "The city councilmen refused the demonstrators a permit because they feared violence. Who feared violence?",
+      "expected": "councilmen",
+      "predicted": "",
+      "normalized_expected": "councilmen",
+      "normalized_predicted": "",
+      "correct": false
+    },
+    {
+      "problem_id": 816,
+      "mode": "base",
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knight,C=knave",
+      "predicted": "Knight",
+      "normalized_expected": "a=knight,b=knight,c=knave",
+      "normalized_predicted": "knight",
+      "correct": false
+    },
+    {
+      "problem_id": 816,
+      "mode": "adapter",
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knight,C=knave",
+      "predicted": ")||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||(",
+      "normalized_expected": "a=knight,b=knight,c=knave",
+      "normalized_predicted": "",
+      "correct": false
+    },
+    {
+      "problem_id": 817,
+      "mode": "base",
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knight,C=knave",
+      "predicted": "Knight",
+      "normalized_expected": "a=knight,b=knight,c=knave",
+      "normalized_predicted": "knight",
+      "correct": false
+    },
+    {
+      "problem_id": 817,
+      "mode": "adapter",
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knight,C=knave",
+      "predicted": ")||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||(",
+      "normalized_expected": "a=knight,b=knight,c=knave",
+      "normalized_predicted": "",
+      "correct": false
+    },
+    {
+      "problem_id": 818,
+      "mode": "base",
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "expected": "demonstrators",
+      "predicted": "The city councilmen advocated revolution.",
+      "normalized_expected": "demonstrators",
+      "normalized_predicted": "citycouncilmenadvocatedrevolution",
+      "correct": false
+    },
+    {
+      "problem_id": 818,
+      "mode": "adapter",
+      "prompt": "The city councilmen refused the demonstrators a permit because they advocated revolution. Who advocated revolution?",
+      "expected": "demonstrators",
+      "predicted": "",
+      "normalized_expected": "demonstrators",
+      "normalized_predicted": "",
+      "correct": false
+    },
+    {
+      "problem_id": 819,
+      "mode": "base",
+      "prompt": "Dana puts the red ball in the drawer. Alice moves it to the desk while Dana is outside. Frank takes the blue ball. Where does Dana think the red ball is?",
+      "expected": "drawer",
+      "predicted": "On the desk",
+      "normalized_expected": "drawer",
+      "normalized_predicted": "ondesk",
+      "correct": false
+    },
+    {
+      "problem_id": 819,
+      "mode": "adapter",
+      "prompt": "Dana puts the red ball in the drawer. Alice moves it to the desk while Dana is outside. Frank takes the blue ball. Where does Dana think the red ball is?",
+      "expected": "drawer",
+      "predicted": "drawer",
+      "normalized_expected": "drawer",
+      "normalized_predicted": "drawer",
+      "correct": true
+    },
+    {
+      "problem_id": 820,
+      "mode": "base",
+      "prompt": "The city councilmen refused the demonstrators a permit because they feared violence. Who feared violence?",
+      "expected": "councilmen",
+      "predicted": "The city councilmen fear violence.",
+      "normalized_expected": "councilmen",
+      "normalized_predicted": "citycouncilmenfearviolence",
+      "correct": false
+    },
+    {
+      "problem_id": 820,
+      "mode": "adapter",
+      "prompt": "The city councilmen refused the demonstrators a permit because they feared violence. Who feared violence?",
+      "expected": "councilmen",
+      "predicted": "",
+      "normalized_expected": "councilmen",
+      "normalized_predicted": "",
+      "correct": false
+    },
+    {
+      "problem_id": 821,
+      "mode": "base",
+      "prompt": "The trophy does not fit in the suitcase because it is too big. What is too big?",
+      "expected": "trophy",
+      "predicted": "A large backpack.",
+      "normalized_expected": "trophy",
+      "normalized_predicted": "alargebackpack",
+      "correct": false
+    },
+    {
+      "problem_id": 821,
+      "mode": "adapter",
+      "prompt": "The trophy does not fit in the suitcase because it is too big. What is too big?",
+      "expected": "trophy",
+      "predicted": "",
+      "normalized_expected": "trophy",
+      "normalized_predicted": "",
+      "correct": false
+    },
+    {
+      "problem_id": 822,
+      "mode": "base",
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knight,C=knave",
+      "predicted": "Knight",
+      "normalized_expected": "a=knight,b=knight,c=knave",
+      "normalized_predicted": "knight",
+      "correct": false
+    },
+    {
+      "problem_id": 822,
+      "mode": "adapter",
+      "prompt": "A says: 'B is a knight.' B says: 'C is a knight.' C says: 'A is a knave.' Who is what?",
+      "expected": "A=knight,B=knight,C=knave",
+      "predicted": ")||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||( )||(",
+      "normalized_expected": "a=knight,b=knight,c=knave",
+      "normalized_predicted": "",
+      "correct": false
+    },
+    {
+      "problem_id": 823,
+      "mode": "base",
+      "prompt": "The city councilmen refused the demonstrators a permit because they feared violence. Who feared violence?",
+      "expected": "councilmen",
+      "predicted": "The city councilmen fear violence.",
+      "normalized_expected": "councilmen",
+      "normalized_predicted": "citycouncilmenfearviolence",
+      "correct": false
+    },
+    {
+      "problem_id": 823,
+      "mode": "adapter",
+      "prompt": "The city councilmen refused the demonstrators a permit because they feared violence. Who feared violence?",
+      "expected": "councilmen",
+      "predicted": "",
+      "normalized_expected": "councilmen",
+      "normalized_predicted": "",
+      "correct": false
+    }
+  ]
+}

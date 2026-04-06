@@ -13,6 +13,7 @@ DEFAULTS = {
     "history_output_dir": "artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill",
     "program_map_output_dir": "artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_map",
     "program_spine_output_dir": "artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine",
+    "history_catalog_output": "docs/ABLATION_HISTORY_FULL.md",
     "suite_output_dir": "artifacts/runs/telemetry/raw/ablation/hypercube/m_bridge_ablation_test_suite",
     "run_id": "",
     "include_git": False,
@@ -30,6 +31,11 @@ def _program_map_run_id(base_run_id: str) -> str:
 
 def _program_spine_run_id(base_run_id: str) -> str:
     return f"{base_run_id}_program_spine"
+
+
+def _history_manifest_path(history_output_dir: str, base_run_id: str) -> str:
+    root = history_output_dir.rstrip("/\\")
+    return f"{root}/{_history_run_id(base_run_id)}/ablation_history_manifest.json"
 
 
 def _suite_run_id(base_run_id: str) -> str:
@@ -58,8 +64,10 @@ def _run_program_map(**context: object) -> None:
     cfg = merge_conf(DEFAULTS, conf)
     run_id = sanitize_run_id(str(cfg.get("run_id") or getattr(dag_run, "run_id", "manual")))
     output_dir = validate_output_partition(str(cfg.get("program_map_output_dir", "")), "telemetry/raw")
+    history_manifest = _history_manifest_path(str(cfg.get("history_output_dir", "")), run_id)
 
     args = [
+        "--history-manifest", history_manifest,
         "--output-root", output_dir,
         "--run-id", _program_map_run_id(run_id),
     ]
@@ -72,12 +80,29 @@ def _run_program_spine(**context: object) -> None:
     cfg = merge_conf(DEFAULTS, conf)
     run_id = sanitize_run_id(str(cfg.get("run_id") or getattr(dag_run, "run_id", "manual")))
     output_dir = validate_output_partition(str(cfg.get("program_spine_output_dir", "")), "telemetry/raw")
+    history_manifest = _history_manifest_path(str(cfg.get("history_output_dir", "")), run_id)
 
     args = [
+        "--history-manifest", history_manifest,
         "--output-root", output_dir,
         "--run-id", _program_spine_run_id(run_id),
     ]
     run_repo_script("scripts/build_ablation_program_spine.py", args)
+
+
+def _run_history_catalog(**context: object) -> None:
+    dag_run = context.get("dag_run")
+    conf = getattr(dag_run, "conf", None)
+    cfg = merge_conf(DEFAULTS, conf)
+    run_id = sanitize_run_id(str(cfg.get("run_id") or getattr(dag_run, "run_id", "manual")))
+    history_manifest = _history_manifest_path(str(cfg.get("history_output_dir", "")), run_id)
+    catalog_output = str(cfg.get("history_catalog_output", "")).strip() or "docs/ABLATION_HISTORY_FULL.md"
+
+    args = [
+        "--history-manifest", history_manifest,
+        "--output", catalog_output,
+    ]
+    run_repo_script("scripts/render_ablation_history_catalog.py", args)
 
 
 def _run_suite(**context: object) -> None:
@@ -98,7 +123,7 @@ def _run_suite(**context: object) -> None:
 
 with DAG(
     dag_id="lojban_ablation_program_spine",
-    description="Master control-plane DAG that backfills the full ablation history, renders the concentrated program map, renders the ordered program spine, and refreshes the unified M-series suite.",
+    description="Master control-plane DAG that backfills the full ablation history, renders the concentrated program map, renders the ordered program spine, renders the human-readable history catalog, and refreshes the unified M-series suite.",
     start_date=datetime(2026, 1, 1),
     schedule=None,
     catchup=False,
@@ -108,6 +133,7 @@ with DAG(
         "history_output_dir": Param("artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill", type="string", minLength=1),
         "program_map_output_dir": Param("artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_map", type="string", minLength=1),
         "program_spine_output_dir": Param("artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine", type="string", minLength=1),
+        "history_catalog_output": Param("docs/ABLATION_HISTORY_FULL.md", type="string", minLength=1),
         "suite_output_dir": Param("artifacts/runs/telemetry/raw/ablation/hypercube/m_bridge_ablation_test_suite", type="string", minLength=1),
         "run_id": Param("", type="string"),
         "include_git": Param(False, type="boolean"),
@@ -129,9 +155,14 @@ with DAG(
         python_callable=_run_program_spine,
     )
 
+    render_history_catalog = PythonOperator(
+        task_id="render_history_catalog",
+        python_callable=_run_history_catalog,
+    )
+
     refresh_unified_suite = PythonOperator(
         task_id="refresh_unified_suite",
         python_callable=_run_suite,
     )
 
-    history_backfill >> build_program_map >> build_program_spine >> refresh_unified_suite
+    history_backfill >> build_program_map >> build_program_spine >> render_history_catalog >> refresh_unified_suite

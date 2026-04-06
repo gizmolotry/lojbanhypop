@@ -1,0 +1,44 @@
+{
+  "timestamp": "2026-03-04T17:55:27.643004+00:00",
+  "rows": [
+    {
+      "run_id": "L6-A",
+      "m_series_alias": "M2.A",
+      "name": "Scope Drill + TierB Force + Soft Constraint Identity Audit",
+      "status": "planned",
+      "return_code": null,
+      "run_dir": "runs\\l_series\\l6_ablation\\20260304_175527\\l6-a",
+      "final_constraint_arity_strict": null,
+      "final_constraint_scope": null,
+      "final_constraint_identity": null,
+      "tier_b_enabled": null,
+      "tier_c_enabled": null
+    },
+    {
+      "run_id": "L6-B",
+      "m_series_alias": "M2.B",
+      "name": "Scope Drill Only",
+      "status": "planned",
+      "return_code": null,
+      "run_dir": "runs\\l_series\\l6_ablation\\20260304_175527\\l6-b",
+      "final_constraint_arity_strict": null,
+      "final_constraint_scope": null,
+      "final_constraint_identity": null,
+      "tier_b_enabled": null,
+      "tier_c_enabled": null
+    },
+    {
+      "run_id": "L6-C",
+      "m_series_alias": "M2.C",
+      "name": "TierB Force + Soft Constraint Audit Only",
+      "status": "planned",
+      "return_code": null,
+      "run_dir": "runs\\l_series\\l6_ablation\\20260304_175527\\l6-c",
+      "final_constraint_arity_strict": null,
+      "final_constraint_scope": null,
+      "final_constraint_identity": null,
+      "tier_b_enabled": null,
+      "tier_c_enabled": null
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+BINARY ARTIFACT SUMMARY
+Original path: m_series/m5_padded_nary/20260330_040549/m5_n3/20260330_042033/m5_padded_nary_checkpoint.pt
+Original extension: .pt
+Size bytes: 64295012
+SHA256: 6eab32b9fb9a8a6582cb03d892d8a978ba8817bd8fed599e2a30cc75de3dcc8f
+Note: binary payload omitted from txt export; this stub preserves identity and provenance.

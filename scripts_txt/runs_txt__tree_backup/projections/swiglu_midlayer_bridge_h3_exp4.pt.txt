@@ -1,0 +1,6 @@
+BINARY ARTIFACT SUMMARY
+Original path: projections/swiglu_midlayer_bridge_h3_exp4.pt
+Original extension: .pt
+Size bytes: 25710979
+SHA256: 7dc7415896b49d3bb59cee68e5c1d60964a0a451c4bd63654e7804fd14cec7a1
+Note: binary payload omitted from txt export; this stub preserves identity and provenance.

@@ -1,0 +1,95 @@
+{
+  "timestamp": "2026-03-10T21:51:12.179263+00:00",
+  "series": {
+    "series_contract_version": "1.0",
+    "series_id": "M",
+    "track": "M1",
+    "script": "scripts/run_true_coconut_h_series.py"
+  },
+  "declared_output_root": "runs/j_series/test_run_true_coconut_cf083a0fffbc46acaa85e373e53f465a",
+  "base_model": "dummy-base",
+  "adapter": "artifacts/test_tmp/run_true_coconut_h_series_a57dfd4ccfa149d1a0529cae573714c7/dummy-adapter",
+  "sample_size": 24,
+  "seeds": [
+    7,
+    11
+  ],
+  "dataset_size": 1000,
+  "execute": true,
+  "h5": {
+    "base_model": null,
+    "adapter": null,
+    "checkpoint": null
+  },
+  "h5_extensions": [
+    {
+      "run_id": "H5-DPTR",
+      "m_series_alias": "M0.3",
+      "name": "Dynamic Pointer Refactor Eval",
+      "status": "failed",
+      "return_code": 2,
+      "output": "runs/j_series/test_run_true_coconut_cf083a0fffbc46acaa85e373e53f465a/20260310_215112/h5-dptr.json",
+      "metrics": {},
+      "lineage": {
+        "mode": "eval_only",
+        "checkpoint_in": "runs/j_series/test_run_true_coconut_cf083a0fffbc46acaa85e373e53f465a/ckpt.pt",
+        "checkpoint_out": null,
+        "dataset_profile": "dynamic_pointer_refactor_v1",
+        "difficulty_tier": "all"
+      },
+      "notes": ""
+    }
+  ],
+  "runs": [
+    {
+      "run_id": "H5-DPTR",
+      "name": "Dynamic Pointer Refactor Eval",
+      "status": "failed",
+      "return_code": 2,
+      "output": "runs/j_series/test_run_true_coconut_cf083a0fffbc46acaa85e373e53f465a/20260310_215112/h5-dptr.json",
+      "output_files": [
+        "runs/j_series/test_run_true_coconut_cf083a0fffbc46acaa85e373e53f465a/20260310_215112/h5-dptr.json"
+      ],
+      "metrics": null,
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\eval_h5_dynamic_pointer_refactor.py",
+        "--base-model",
+        "dummy-base",
+        "--adapter",
+        "artifacts\\test_tmp\\run_true_coconut_h_series_a57dfd4ccfa149d1a0529cae573714c7\\dummy-adapter",
+        "--checkpoint",
+        "runs\\j_series\\test_run_true_coconut_cf083a0fffbc46acaa85e373e53f465a\\ckpt.pt",
+        "--sample-size",
+        "8",
+        "--pointer-window",
+        "16",
+        "--max-logic-new-tokens",
+        "48",
+        "--max-final-new-tokens",
+        "48",
+        "--layer-index",
+        "12",
+        "--inject-scale",
+        "1.0",
+        "--relation-bias",
+        "0.0",
+        "--output",
+        "runs\\j_series\\test_run_true_coconut_cf083a0fffbc46acaa85e373e53f465a\\20260310_215112\\h5-dptr.json",
+        "--local-files-only"
+      ],
+      "config": {
+        "base_model": "dummy-base",
+        "adapter": "artifacts/test_tmp/run_true_coconut_h_series_a57dfd4ccfa149d1a0529cae573714c7/dummy-adapter",
+        "checkpoint": "runs/j_series/test_run_true_coconut_cf083a0fffbc46acaa85e373e53f465a/ckpt.pt"
+      },
+      "lineage": {
+        "mode": "eval_only",
+        "checkpoint_in": "runs/j_series/test_run_true_coconut_cf083a0fffbc46acaa85e373e53f465a/ckpt.pt",
+        "checkpoint_out": null,
+        "dataset_profile": "dynamic_pointer_refactor_v1",
+        "difficulty_tier": "all"
+      }
+    }
+  ]
+}

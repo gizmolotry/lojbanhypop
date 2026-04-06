@@ -1,0 +1,6 @@
+BINARY ARTIFACT SUMMARY
+Original path: projections/identity_headdim.pt
+Original extension: .pt
+Size bytes: 18541
+SHA256: 06ac390a112f65cc8847e55802f6185cef27dfa5d382bb6d9473ef1165fb4216
+Note: binary payload omitted from txt export; this stub preserves identity and provenance.

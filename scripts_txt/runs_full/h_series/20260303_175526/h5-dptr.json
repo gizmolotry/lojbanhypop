@@ -1,0 +1,93 @@
+{
+  "timestamp": "2026-03-03T17:58:13.095444+00:00",
+  "base_model": "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
+  "adapter": "runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+  "checkpoint": "runs\\true_coconut_h5\\20260302_172603\\h5_checkpoint.pt",
+  "config": {
+    "sample_size": 4,
+    "pointer_window": 16,
+    "max_logic_new_tokens": 24,
+    "max_final_new_tokens": 16,
+    "layer_index": 12,
+    "inject_scale": 1.0,
+    "relation_bias": 0.0,
+    "use_iron_collar": false
+  },
+  "summary": {
+    "total": 4,
+    "standard_correct": 1,
+    "dynamic_correct": 1,
+    "standard_accuracy": 0.25,
+    "dynamic_accuracy": 0.25,
+    "dynamic_minus_standard_accuracy": 0.0
+  },
+  "dynamic_pointer_metrics": {
+    "avg_pointer_slot": 2.479166626930237,
+    "max_pointer_slot": 8.0,
+    "self_ref_rate": 0.10416666666666667,
+    "cold_start_oob_ratio": 0.041666666666666664,
+    "unique_slots_used": 9.0
+  },
+  "samples": [
+    {
+      "prompt": "A is left of B. B is left of C. Which is leftmost?",
+      "expected_answer": "A",
+      "standard_prediction": "C\nExplanation: The logic question asks us to determine which person is leftmost",
+      "dynamic_prediction": "C\nExplanation: The answer is C because it is the leftmost position in",
+      "standard_correct": false,
+      "dynamic_correct": false,
+      "dynamic_pointer_stats": {
+        "avg_pointer_slot": 2.4583332538604736,
+        "max_pointer_slot": 8.0,
+        "self_ref_rate": 0.10416666666666667,
+        "cold_start_oob_ratio": 0.041666666666666664,
+        "unique_slots_used": 9
+      }
+    },
+    {
+      "prompt": "D is north of E. E is north of F. Which is farthest north?",
+      "expected_answer": "D",
+      "standard_prediction": "F\nExplanation: The answer is F because it is the farthest north among",
+      "dynamic_prediction": "F\nExplanation: The answer is F because it is the farthest north because",
+      "standard_correct": false,
+      "dynamic_correct": false,
+      "dynamic_pointer_stats": {
+        "avg_pointer_slot": 2.5416667461395264,
+        "max_pointer_slot": 8.0,
+        "self_ref_rate": 0.10416666666666667,
+        "cold_start_oob_ratio": 0.041666666666666664,
+        "unique_slots_used": 9
+      }
+    },
+    {
+      "prompt": "Breakfast happens before lunch. Lunch happens before dinner. What happens first?",
+      "expected_answer": "breakfast",
+      "standard_prediction": "breakfast\nExplanation: The question states that breakfast happens before lunch. This means that",
+      "dynamic_prediction": "Breakfast\nExplanation: The question asks about the order of events, which is why",
+      "standard_correct": true,
+      "dynamic_correct": true,
+      "dynamic_pointer_stats": {
+        "avg_pointer_slot": 2.4583332538604736,
+        "max_pointer_slot": 8.0,
+        "self_ref_rate": 0.10416666666666667,
+        "cold_start_oob_ratio": 0.041666666666666664,
+        "unique_slots_used": 9
+      }
+    },
+    {
+      "prompt": "Task A is after Task B. Task B is after Task C. Which is earliest?",
+      "expected_answer": "Task C",
+      "standard_prediction": "Task A\nExplanation: Task A is the earliest because it is the first task",
+      "dynamic_prediction": "Task A\nExplanation: Task A is the earliest because it is the first task",
+      "standard_correct": false,
+      "dynamic_correct": false,
+      "dynamic_pointer_stats": {
+        "avg_pointer_slot": 2.4583332538604736,
+        "max_pointer_slot": 8.0,
+        "self_ref_rate": 0.10416666666666667,
+        "cold_start_oob_ratio": 0.041666666666666664,
+        "unique_slots_used": 9
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+BINARY ARTIFACT SUMMARY
+Original path: projections/babel_bridge_trained.pt
+Original extension: .pt
+Size bytes: 18116
+SHA256: 9d33d9669308d167a88d91beab41030085cfbfe05f8f67afa85382e49873be7d
+Note: binary payload omitted from txt export; this stub preserves identity and provenance.

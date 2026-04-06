@@ -1,0 +1,14 @@
+{
+  "summary": {
+    "run_id": "J-3",
+    "name": "Stop-Grad Isolation Gate",
+    "generated_utc": "2026-03-04T00:19:43.691934+00:00",
+    "source_script": "D:\\lojbanhypop\\scripts\\train_h5_persistent_vq_advisor.py"
+  },
+  "metrics": {
+    "has_adapter_disabled_context": 1.0,
+    "has_model_freeze_guard": 1.0,
+    "has_quantize_detach": 1.0,
+    "stopgrad_contract_pass": 1.0
+  }
+}

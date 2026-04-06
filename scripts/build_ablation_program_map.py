@@ -114,9 +114,10 @@ def main() -> None:
 
     history = json.loads(history_manifest.read_text(encoding="utf-8"))
     entries = history.get("entries", [])
+    series_family_manifests = history.get("series_family_manifests", [])
     transitions = history.get("transition_manifests", [])
 
-    families = _build_family_map(entries)
+    families = _build_family_map(entries, series_family_manifests)
     ordered_families = _ordered_family_rows(families)
     manifest = {
         "schema_version": "1.0",
@@ -246,9 +247,59 @@ def _program_layer(family_key: str) -> str:
     return "manifold_and_return_path"
 
 
-def _build_family_map(entries: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+def _legacy_family_key(entry: dict[str, Any]) -> str | None:
+    family_group = str(entry.get("family_group") or "")
+    canonical_id = str(entry.get("canonical_id") or "")
+    if family_group in {"a_to_g_matrix", "core_matrix", "control_duel"}:
+        return "A-G"
+    if family_group == "h_series":
+        return "H5" if "h5" in canonical_id.lower() else "H"
+    if family_group == "h5_bridge":
+        return "H5"
+    if family_group == "j_series":
+        return "J"
+    if family_group == "l_series":
+        return "L"
+    if canonical_id.startswith("phase5."):
+        return "Phase Eval"
+    return None
+
+
+def _seed_legacy_families(series_family_manifests: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
     families: dict[str, dict[str, Any]] = {}
+    for manifest in series_family_manifests:
+        family_key = str(manifest.get("series_key") or "").strip()
+        if not family_key:
+            continue
+        families[family_key] = {
+            "family_key": family_key,
+            "program_layer": _program_layer(family_key),
+            "normalized_ids": sorted(manifest.get("normalized_ids", []), key=_normalized_sort_key),
+            "legacy_aliases": sorted(manifest.get("legacy_aliases", [])),
+            "canonical_ids": sorted(manifest.get("canonical_ids", [])),
+            "title_summary": str(manifest.get("objective") or manifest.get("title") or ""),
+            "script_paths": sorted(set(manifest.get("script_paths", []))),
+            "dag_paths": sorted(set([*manifest.get("dag_paths", []), *FAMILY_DAG_MAP.get(family_key, [])])),
+            "doc_paths": sorted(set(manifest.get("doc_paths", []))),
+            "artifact_roots": sorted(set(manifest.get("artifact_roots", []))),
+            "family_groups": sorted(set(manifest.get("family_groups", []))),
+            "reproducibility": [],
+            "evidence_classes": [],
+            "entry_count": int(manifest.get("entry_count") or 0),
+            "runnable_count": int(manifest.get("runnable_count") or 0),
+            "artifact_only_count": int(manifest.get("artifact_only_count") or 0),
+            "doc_only_count": int(manifest.get("doc_only_count") or 0),
+            "status_summary": "mixed_historical",
+        }
+        families[family_key]["status_summary"] = _status_summary(families[family_key])
+    return families
+
+
+def _build_family_map(entries: list[dict[str, Any]], series_family_manifests: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    families: dict[str, dict[str, Any]] = _seed_legacy_families(series_family_manifests)
     for entry in entries:
+        if _legacy_family_key(entry) is not None:
+            continue
         family_key = _family_key(entry)
         if family_key is None:
             continue
@@ -262,6 +313,9 @@ def _build_family_map(entries: list[dict[str, Any]]) -> dict[str, dict[str, Any]
                 "titles": [],
                 "script_paths": set(),
                 "dag_paths": set(),
+                "doc_paths": set(),
+                "artifact_roots": set(),
+                "family_groups": set(),
                 "reproducibility": set(),
                 "evidence_classes": set(),
                 "entry_count": 0,
@@ -286,6 +340,15 @@ def _build_family_map(entries: list[dict[str, Any]]) -> dict[str, dict[str, Any]
         for path in entry.get("dag_paths", []):
             if str(path).strip():
                 row["dag_paths"].add(str(path))
+        for path in entry.get("doc_paths", []):
+            if str(path).strip():
+                row["doc_paths"].add(str(path))
+        for path in entry.get("artifact_roots", []):
+            if str(path).strip():
+                row["artifact_roots"].add(str(path))
+        family_group = str(entry.get("family_group") or "").strip()
+        if family_group:
+            row["family_groups"].add(family_group)
         repro = str(entry.get("reproducibility_status") or "")
         if repro:
             row["reproducibility"].add(repro)
@@ -300,16 +363,20 @@ def _build_family_map(entries: list[dict[str, Any]]) -> dict[str, dict[str, Any]
             row["doc_only_count"] += 1
 
     for family_key, row in families.items():
-        for dag in FAMILY_DAG_MAP.get(family_key, []):
-            row["dag_paths"].add(dag)
+        dag_paths = set(row.get("dag_paths", []))
+        dag_paths.update(FAMILY_DAG_MAP.get(family_key, []))
+        row["dag_paths"] = sorted(dag_paths)
         row["normalized_ids"] = sorted(row["normalized_ids"], key=_normalized_sort_key)
         row["canonical_ids"] = sorted(set(row["canonical_ids"]))
-        row["legacy_aliases"] = sorted(row["legacy_aliases"])
-        row["script_paths"] = sorted(row["script_paths"])
-        row["dag_paths"] = sorted(row["dag_paths"])
-        row["reproducibility"] = sorted(row["reproducibility"])
-        row["evidence_classes"] = sorted(row["evidence_classes"])
-        row["title_summary"] = _title_summary(row["titles"])
+        row["legacy_aliases"] = sorted(set(row["legacy_aliases"]))
+        row["script_paths"] = sorted(set(row["script_paths"]))
+        row["doc_paths"] = sorted(set(row.get("doc_paths", [])))
+        row["artifact_roots"] = sorted(set(row.get("artifact_roots", [])))
+        row["family_groups"] = sorted(set(row.get("family_groups", [])))
+        row["reproducibility"] = sorted(set(row["reproducibility"]))
+        row["evidence_classes"] = sorted(set(row["evidence_classes"]))
+        if "titles" in row:
+            row["title_summary"] = _title_summary(row["titles"])
         row["status_summary"] = _status_summary(row)
     return families
 
@@ -365,8 +432,16 @@ def _ordered_family_rows(families: dict[str, dict[str, Any]]) -> list[dict[str, 
                 "scripts/render_ablation_history_catalog.py",
                 "scripts/run_m_bridge_ablation_test_suite.py",
                 "scripts/build_ablation_program_map.py",
+                "scripts/build_ablation_program_spine.py",
             ],
-            "dag_paths": sorted(FAMILY_DAG_MAP["History"]),
+            "dag_paths": sorted([*FAMILY_DAG_MAP["History"], "airflow/dags/lojban_ablation_program_spine_dag.py", "airflow/dags/lojban_ablation_master_spine_dag.py"]),
+            "doc_paths": [
+                "docs/ABLATION_HISTORY_FULL.md",
+                "docs/ABLATION_PROGRAM_MAP.md",
+                "docs/ABLATION_PROGRAM_SPINE.md",
+            ],
+            "artifact_roots": [],
+            "family_groups": ["control_plane"],
             "reproducibility": ["runnable"],
             "evidence_classes": ["artifact"],
             "entry_count": 0,
@@ -413,10 +488,16 @@ def _render_markdown(manifest: dict[str, Any]) -> str:
             lines.append(f"- Doc-only rows: `{row['doc_only_count']}`")
         if row.get("title_summary"):
             lines.append(f"- Brief: {row['title_summary']}")
+        if row.get("family_groups"):
+            lines.append(f"- Family groups: `{', '.join(row['family_groups'])}`")
+        if row.get("doc_paths"):
+            lines.append(f"- Docs: `{', '.join(row['doc_paths'])}`")
         if row.get("script_paths"):
             lines.append(f"- Scripts: `{', '.join(row['script_paths'])}`")
         if row.get("dag_paths"):
             lines.append(f"- DAGs: `{', '.join(row['dag_paths'])}`")
+        if row.get("artifact_roots"):
+            lines.append(f"- Artifact roots: `{', '.join(row['artifact_roots'][:8])}`")
         lines.append("")
     lines.append("## Transition Spine")
     lines.append("")

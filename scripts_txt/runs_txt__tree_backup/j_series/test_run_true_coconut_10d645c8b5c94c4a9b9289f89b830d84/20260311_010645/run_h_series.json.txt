@@ -1,0 +1,111 @@
+{
+  "timestamp": "2026-03-11T01:06:45.422573+00:00",
+  "series": {
+    "series_contract_version": "1.0",
+    "series_id": "M",
+    "track": "M1",
+    "script": "scripts/run_true_coconut_h_series.py"
+  },
+  "declared_output_root": "runs/j_series/test_run_true_coconut_10d645c8b5c94c4a9b9289f89b830d84",
+  "base_model": "dummy-base",
+  "adapter": "artifacts/test_tmp/run_true_coconut_h_series_a4df7edaa18b4acb93f5e34ff088097f/dummy-adapter",
+  "sample_size": 24,
+  "seeds": [
+    7,
+    11
+  ],
+  "dataset_size": 1000,
+  "execute": false,
+  "h5": {
+    "base_model": null,
+    "adapter": null,
+    "checkpoint": null
+  },
+  "h5_extensions": [
+    {
+      "run_id": "J-1",
+      "m_series_alias": "M1.1",
+      "name": "Graph Target (Factor Schema)",
+      "status": "planned",
+      "return_code": null,
+      "output": "runs/j_series/test_run_true_coconut_10d645c8b5c94c4a9b9289f89b830d84/20260311_010645/j-1.json",
+      "metrics": {},
+      "lineage": {
+        "mode": "eval_only",
+        "checkpoint_in": null,
+        "checkpoint_out": null,
+        "dataset_profile": "factor_schema_graph_target_v1",
+        "difficulty_tier": "all"
+      },
+      "notes": ""
+    },
+    {
+      "run_id": "J-2",
+      "m_series_alias": "M1.2",
+      "name": "Paraphrase Explosion (Invariance)",
+      "status": "planned",
+      "return_code": null,
+      "output": "runs/j_series/test_run_true_coconut_10d645c8b5c94c4a9b9289f89b830d84/20260311_010645/j-2.json",
+      "metrics": {},
+      "lineage": {
+        "mode": "eval_only",
+        "checkpoint_in": null,
+        "checkpoint_out": null,
+        "dataset_profile": "paraphrase_explosion_v1",
+        "difficulty_tier": "all"
+      },
+      "notes": "planned_j1_dependency"
+    }
+  ],
+  "runs": [
+    {
+      "run_id": "J-1",
+      "name": "Graph Target (Factor Schema)",
+      "status": "planned",
+      "return_code": null,
+      "output": "runs/j_series/test_run_true_coconut_10d645c8b5c94c4a9b9289f89b830d84/20260311_010645/j-1.json",
+      "output_files": [
+        "runs/j_series/test_run_true_coconut_10d645c8b5c94c4a9b9289f89b830d84/20260311_010645/j-1.json"
+      ],
+      "metrics": null,
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\eval_j_1.py",
+        "--output",
+        "runs\\j_series\\test_run_true_coconut_10d645c8b5c94c4a9b9289f89b830d84\\20260311_010645\\j-1.json"
+      ],
+      "config": {
+        "input_artifact": null
+      },
+      "lineage": {
+        "mode": "eval_only",
+        "checkpoint_in": null,
+        "checkpoint_out": null,
+        "dataset_profile": "factor_schema_graph_target_v1",
+        "difficulty_tier": "all"
+      }
+    },
+    {
+      "run_id": "J-2",
+      "name": "Paraphrase Explosion (Invariance)",
+      "status": "planned",
+      "return_code": null,
+      "output": "runs/j_series/test_run_true_coconut_10d645c8b5c94c4a9b9289f89b830d84/20260311_010645/j-2.json",
+      "output_files": [
+        "runs/j_series/test_run_true_coconut_10d645c8b5c94c4a9b9289f89b830d84/20260311_010645/j-2.json"
+      ],
+      "metrics": null,
+      "command": [],
+      "config": {
+        "reason": "planned_j1_dependency"
+      },
+      "lineage": {
+        "mode": "eval_only",
+        "checkpoint_in": null,
+        "checkpoint_out": null,
+        "dataset_profile": "paraphrase_explosion_v1",
+        "difficulty_tier": "all"
+      }
+    }
+  ]
+}

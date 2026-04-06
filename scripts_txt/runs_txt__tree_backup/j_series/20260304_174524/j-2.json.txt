@@ -1,0 +1,52 @@
+{
+  "summary": {
+    "run_id": "J-2",
+    "name": "Paraphrase Explosion",
+    "generated_utc": "2026-03-04T17:45:28.942688+00:00",
+    "j1_artifact": "runs\\j_series\\20260304_174524\\j-1.json",
+    "series_contract_version": "1.0",
+    "series_id": "J",
+    "track": "invariance_data",
+    "script": "scripts/eval_j_2.py"
+  },
+  "metrics": {
+    "variant_count": 4000.0,
+    "invariant_count": 4000.0,
+    "invariance_rate": 1.0,
+    "variants_per_graph": 1000.0
+  },
+  "samples": [
+    {
+      "text": "e2 is inside e0. e2 is inside e1.",
+      "invariant": true
+    },
+    {
+      "text": "e2 is inside e0. e2 is inside e1.",
+      "invariant": true
+    },
+    {
+      "text": "e1 is inside e0. e1 is inside e2.",
+      "invariant": true
+    },
+    {
+      "text": "e2 is inside e0. e2 is inside e1.",
+      "invariant": true
+    },
+    {
+      "text": "e1 is inside e0. e1 is inside e2.",
+      "invariant": true
+    },
+    {
+      "text": "e1 is inside e0. e1 is inside e2.",
+      "invariant": true
+    },
+    {
+      "text": "e0 is inside e1. e0 is inside e2.",
+      "invariant": true
+    },
+    {
+      "text": "e1 is inside e0. e1 is inside e2.",
+      "invariant": true
+    }
+  ]
+}

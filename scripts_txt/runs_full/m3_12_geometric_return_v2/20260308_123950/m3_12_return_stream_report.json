@@ -1,0 +1,57 @@
+{
+  "timestamp": "2026-03-08T12:39:50.194361+00:00",
+  "config": {
+    "base_model": "C:\\Users\\Andrew\\hf_models\\Qwen2.5-0.5B-Instruct",
+    "adapter": "D:\\lojbanhypop\\runs\\phase5_two_stage_recovery_anchors\\20260302_030738\\stage2_phase5",
+    "checkpoint": "D:\\lojbanhypop\\runs\\l_series\\m3_8_diversification\\20260307_013004\\hard\\m3_8_c\\20260307_013545\\l_series_checkpoint.pt",
+    "train_steps": "200",
+    "eval_size": "100",
+    "lr": "0.0003",
+    "bottleneck_dim": "32",
+    "num_queries": "8",
+    "max_logic_new_tokens": "48",
+    "max_final_new_tokens": "16",
+    "layer_index": "12",
+    "seed": "42",
+    "output_root": "runs\\m3_12_geometric_return_v2",
+    "local_files_only": "True"
+  },
+  "cells": {
+    "A": {
+      "overall_accuracy": 0.35,
+      "adjective_flip_accuracy": 0.21052631578947367,
+      "causal_connective_accuracy": 0.36764705882352944,
+      "mean_active_tokens": 23.59,
+      "mean_operator_entropy": 0.7284926130411804,
+      "mean_scope_violation": 0.3428165160114376,
+      "return_signal_stats": {
+        "mean_gate_magnitude": 0.0,
+        "mean_cue_norm": 0.0
+      }
+    },
+    "B": {
+      "overall_accuracy": 0.35,
+      "adjective_flip_accuracy": 0.21052631578947367,
+      "causal_connective_accuracy": 0.36764705882352944,
+      "mean_active_tokens": 3.0,
+      "mean_operator_entropy": 0.0,
+      "mean_scope_violation": 0.4705882352941176,
+      "return_signal_stats": {
+        "mean_gate_magnitude": 0.12501589953899384,
+        "mean_cue_norm": 5470.527348632812
+      }
+    },
+    "C": {
+      "overall_accuracy": 0.35,
+      "adjective_flip_accuracy": 0.21052631578947367,
+      "causal_connective_accuracy": 0.36764705882352944,
+      "mean_active_tokens": 3.0,
+      "mean_operator_entropy": 0.0,
+      "mean_scope_violation": 0.4705882352941176,
+      "return_signal_stats": {
+        "mean_gate_magnitude": 0.12500518560409546,
+        "mean_cue_norm": 7954.79755859375
+      }
+    }
+  }
+}

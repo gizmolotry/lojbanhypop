@@ -1,0 +1,256 @@
+{
+  "timestamp": "2026-03-04T17:45:36.085141+00:00",
+  "base_model": "dummy",
+  "adapter": "runs\\i_series\\20260303_031401\\h5_checkpoint.pt",
+  "sample_size": 24,
+  "seeds": [
+    7,
+    11
+  ],
+  "dataset_size": 1000,
+  "execute": true,
+  "h5": {
+    "base_model": null,
+    "adapter": null,
+    "checkpoint": null
+  },
+  "h5_extensions": [
+    {
+      "run_id": "J-1",
+      "name": "Graph Target (Factor Schema)",
+      "status": "ok",
+      "return_code": 0,
+      "output": "runs\\j_series\\20260304_174524\\j-1.json",
+      "metrics": {
+        "graph_count": 4.0,
+        "schema_valid_count": 4.0,
+        "schema_valid_rate": 1.0,
+        "mean_entities": 2.5,
+        "mean_edges": 1.5,
+        "unique_relation_count": 5.0
+      },
+      "notes": ""
+    },
+    {
+      "run_id": "J-2",
+      "name": "Paraphrase Explosion (Invariance)",
+      "status": "ok",
+      "return_code": 0,
+      "output": "runs\\j_series\\20260304_174524\\j-2.json",
+      "metrics": {
+        "variant_count": 4000.0,
+        "invariant_count": 4000.0,
+        "invariance_rate": 1.0,
+        "variants_per_graph": 1000.0
+      },
+      "notes": ""
+    },
+    {
+      "run_id": "J-3",
+      "name": "Stop-Grad Isolation Gate",
+      "status": "ok",
+      "return_code": 0,
+      "output": "runs\\j_series\\20260304_174524\\j-3.json",
+      "metrics": {
+        "has_adapter_disabled_context": 1.0,
+        "has_model_freeze_guard": 1.0,
+        "has_quantize_detach": 1.0,
+        "stopgrad_contract_pass": 1.0
+      },
+      "notes": ""
+    },
+    {
+      "run_id": "J-4",
+      "name": "Operator Curriculum Build",
+      "status": "ok",
+      "return_code": 0,
+      "output": "runs\\j_series\\20260304_174524\\j-4.json",
+      "metrics": {
+        "sample_count": 1280.0,
+        "operator_count": 5.0,
+        "min_operator_coverage": 256.0,
+        "max_operator_coverage": 256.0
+      },
+      "notes": ""
+    },
+    {
+      "run_id": "J-5",
+      "name": "Adversarial Synthesis (Scope/Foil)",
+      "status": "ok",
+      "return_code": 0,
+      "output": "runs\\j_series\\20260304_174524\\j-5.json",
+      "metrics": {
+        "problem_count": 512.0,
+        "accepted_count": 110.0,
+        "generator_accept_rate": 0.21484375,
+        "schema_valid_rate": 1.0,
+        "solver_consistency_rate": 0.21484375,
+        "novelty_mean": 1.0,
+        "novelty_threshold": 0.3,
+        "dedupe_reject_count": 0.0,
+        "foil_minimal_edit_rate": 1.0,
+        "foil_auc": 0.310546875,
+        "domain_coverage": 3.0
+      },
+      "notes": ""
+    }
+  ],
+  "runs": [
+    {
+      "run_id": "J-1",
+      "name": "Graph Target (Factor Schema)",
+      "status": "ok",
+      "return_code": 0,
+      "output": "runs\\j_series\\20260304_174524\\j-1.json",
+      "output_files": [
+        "runs\\j_series\\20260304_174524\\j-1.json"
+      ],
+      "metrics": {
+        "graph_count": 4.0,
+        "schema_valid_count": 4.0,
+        "schema_valid_rate": 1.0,
+        "mean_entities": 2.5,
+        "mean_edges": 1.5,
+        "unique_relation_count": 5.0
+      },
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\eval_j_1.py",
+        "--output",
+        "runs\\j_series\\20260304_174524\\j-1.json"
+      ],
+      "config": {
+        "input_artifact": null
+      }
+    },
+    {
+      "run_id": "J-2",
+      "name": "Paraphrase Explosion (Invariance)",
+      "status": "ok",
+      "return_code": 0,
+      "output": "runs\\j_series\\20260304_174524\\j-2.json",
+      "output_files": [
+        "runs\\j_series\\20260304_174524\\j-2.json"
+      ],
+      "metrics": {
+        "variant_count": 4000.0,
+        "invariant_count": 4000.0,
+        "invariance_rate": 1.0,
+        "variants_per_graph": 1000.0
+      },
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\eval_j_2.py",
+        "--j1-artifact",
+        "runs\\j_series\\20260304_174524\\j-1.json",
+        "--variants-per-graph",
+        "1000",
+        "--output",
+        "runs\\j_series\\20260304_174524\\j-2.json"
+      ],
+      "config": {
+        "j1_artifact": "runs\\j_series\\20260304_174524\\j-1.json",
+        "variants_per_graph": 1000
+      }
+    },
+    {
+      "run_id": "J-3",
+      "name": "Stop-Grad Isolation Gate",
+      "status": "ok",
+      "return_code": 0,
+      "output": "runs\\j_series\\20260304_174524\\j-3.json",
+      "output_files": [
+        "runs\\j_series\\20260304_174524\\j-3.json"
+      ],
+      "metrics": {
+        "has_adapter_disabled_context": 1.0,
+        "has_model_freeze_guard": 1.0,
+        "has_quantize_detach": 1.0,
+        "stopgrad_contract_pass": 1.0
+      },
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\eval_j_3.py",
+        "--source-script",
+        "D:\\lojbanhypop\\scripts\\train_h5_persistent_vq_advisor.py",
+        "--output",
+        "runs\\j_series\\20260304_174524\\j-3.json"
+      ],
+      "config": {
+        "source_script": "D:\\lojbanhypop\\scripts\\train_h5_persistent_vq_advisor.py"
+      }
+    },
+    {
+      "run_id": "J-4",
+      "name": "Operator Curriculum Build",
+      "status": "ok",
+      "return_code": 0,
+      "output": "runs\\j_series\\20260304_174524\\j-4.json",
+      "output_files": [
+        "runs\\j_series\\20260304_174524\\j-4.json",
+        "runs\\j_series\\20260304_174524\\j-4_curriculum.jsonl"
+      ],
+      "metrics": {
+        "sample_count": 1280.0,
+        "operator_count": 5.0,
+        "min_operator_coverage": 256.0,
+        "max_operator_coverage": 256.0
+      },
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\eval_j_4.py",
+        "--per-operator",
+        "256",
+        "--output",
+        "runs\\j_series\\20260304_174524\\j-4.json",
+        "--dataset-output",
+        "runs\\j_series\\20260304_174524\\j-4_curriculum.jsonl"
+      ],
+      "config": {
+        "dataset_output": "runs\\j_series\\20260304_174524\\j-4_curriculum.jsonl",
+        "per_operator": 256
+      }
+    },
+    {
+      "run_id": "J-5",
+      "name": "Adversarial Synthesis (Scope/Foil)",
+      "status": "ok",
+      "return_code": 0,
+      "output": "runs\\j_series\\20260304_174524\\j-5.json",
+      "output_files": [
+        "runs\\j_series\\20260304_174524\\j-5.json",
+        "runs\\j_series\\20260304_174524\\j-5_adversarial.jsonl"
+      ],
+      "metrics": {
+        "problem_count": 512.0,
+        "accepted_count": 110.0,
+        "generator_accept_rate": 0.21484375,
+        "schema_valid_rate": 1.0,
+        "solver_consistency_rate": 0.21484375,
+        "novelty_mean": 1.0,
+        "novelty_threshold": 0.3,
+        "dedupe_reject_count": 0.0,
+        "foil_minimal_edit_rate": 1.0,
+        "foil_auc": 0.310546875,
+        "domain_coverage": 3.0
+      },
+      "command": [
+        "C:\\Users\\Andrew\\miniconda3\\python.exe",
+        "D:\\lojbanhypop\\scripts\\eval_j_5.py",
+        "--sample-count",
+        "512",
+        "--novelty-threshold",
+        "0.30",
+        "--output",
+        "runs\\j_series\\20260304_174524\\j-5.json",
+        "--dataset-output",
+        "runs\\j_series\\20260304_174524\\j-5_adversarial.jsonl"
+      ],
+      "config": {
+        "dataset_output": "runs\\j_series\\20260304_174524\\j-5_adversarial.jsonl",
+        "sample_count": 512,
+        "novelty_threshold": 0.3
+      }
+    }
+  ]
+}

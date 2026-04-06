@@ -1,0 +1,14 @@
+{
+  "h5_slice1": {
+    "timestamp": "2026-03-02T04:18:29.210213+00:00",
+    "run_dir": "runs\\i_series\\20260302_033728",
+    "report": "runs\\i_series\\20260302_033728\\h5_slice1_report.json",
+    "checkpoint": "runs\\i_series\\20260302_033728\\h5_codebook_advisor.pt",
+    "metrics": {
+      "codes_used": 1291,
+      "usage_ratio": 0.6471177944862155,
+      "arity_violation_rate": 0.0,
+      "advisor_len_mean": 144.0
+    }
+  }
+}

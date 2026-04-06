@@ -1,0 +1,6 @@
+BINARY ARTIFACT SUMMARY
+Original path: l_series/m3_8_diversification/decollapse_small/20260311_103934/hard/m3_8_b/20260311_104736/l_series_checkpoint.pt
+Original extension: .pt
+Size bytes: 58367885
+SHA256: 77d099e301bb6eac86feaaa5759c2a68424c7d1437489a19a55c394585846d4b
+Note: binary payload omitted from txt export; this stub preserves identity and provenance.

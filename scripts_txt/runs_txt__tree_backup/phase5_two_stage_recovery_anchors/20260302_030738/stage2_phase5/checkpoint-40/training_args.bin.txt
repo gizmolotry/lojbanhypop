@@ -1,0 +1,6 @@
+BINARY ARTIFACT SUMMARY
+Original path: phase5_two_stage_recovery_anchors/20260302_030738/stage2_phase5/checkpoint-40/training_args.bin
+Original extension: .bin
+Size bytes: 5841
+SHA256: bffed7fffab2f8816e6cd5d1f535fa62ffcef36eb95d3ca1b65574e75cc6a832
+Note: binary payload omitted from txt export; this stub preserves identity and provenance.

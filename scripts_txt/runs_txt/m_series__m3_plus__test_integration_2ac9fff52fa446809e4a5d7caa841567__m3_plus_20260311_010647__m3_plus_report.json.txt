@@ -1,0 +1,157 @@
+{
+  "generated_utc": "2026-03-11T01:06:47.733277+00:00",
+  "report_type": "m3_plus_family",
+  "series": {
+    "series_contract_version": "1.0",
+    "series_id": "M",
+    "track": "M3+",
+    "script": "scripts/run_m3_plus_family.py"
+  },
+  "declared_l_output_root": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567",
+  "declared_report_output_root": "runs/m_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567",
+  "lineage_defaults": {
+    "mode": "train",
+    "checkpoint_in": null,
+    "checkpoint_out": null,
+    "dataset_profile": "legacy",
+    "difficulty_tier": "all"
+  },
+  "inputs": {
+    "base_model": "dummy-base",
+    "adapter": "runs/phase5_two_stage_recovery_anchors/test_adapter_2ac9fff52fa446809e4a5d7caa841567",
+    "j5_summary": "runs/j_series/test_j5_summary_2ac9fff52fa446809e4a5d7caa841567.json",
+    "dynamic_arity_signatures": false,
+    "operator_arity_json": "",
+    "default_relation_arity": 2,
+    "arity_enforcement_mode": "crystallization",
+    "dataset_profile": "legacy",
+    "difficulty_tier": "all",
+    "baseline_manifest": "docs/baselines/test_m_series_baseline_2ac9fff52fa446809e4a5d7caa841567.json",
+    "baseline_manifest_sha1": "ec035ed507d4678ad2cf41f9f61355e61103a740",
+    "baseline_id": "M_BASE_TEST_2ac9fff52fa446809e4a5d7caa841567"
+  },
+  "rows": [
+    {
+      "run_id": "M3.0",
+      "name": "Baseline Gate Run (L6-C + curriculum)",
+      "status": "ok",
+      "return_code": 0,
+      "run_dir": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_0/20260310_000000",
+      "summary_path": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_0/20260310_000000/l_series_summary.json",
+      "checkpoint_path": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_0/20260310_000000/l_series_checkpoint.pt",
+      "final_constraint_arity_strict": 0.0,
+      "final_constraint_scope": 0.25,
+      "final_constraint_scope_unbound": 0.08,
+      "final_constraint_identity": 0.0,
+      "tier_b_enabled": true,
+      "tier_c_enabled": true,
+      "lineage": {
+        "mode": "train",
+        "checkpoint_in": null,
+        "checkpoint_out": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_0/20260310_000000/l_series_checkpoint.pt",
+        "dataset_profile": "legacy",
+        "difficulty_tier": "all"
+      }
+    },
+    {
+      "run_id": "M3.1",
+      "name": "Binding Bootcamp (unbound focus)",
+      "status": "ok",
+      "return_code": 0,
+      "run_dir": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_1/20260310_000000",
+      "summary_path": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_1/20260310_000000/l_series_summary.json",
+      "checkpoint_path": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_1/20260310_000000/l_series_checkpoint.pt",
+      "final_constraint_arity_strict": 0.0,
+      "final_constraint_scope": 0.25,
+      "final_constraint_scope_unbound": 0.08,
+      "final_constraint_identity": 0.0,
+      "tier_b_enabled": true,
+      "tier_c_enabled": true,
+      "lineage": {
+        "mode": "train",
+        "checkpoint_in": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_0/20260310_000000/l_series_checkpoint.pt",
+        "checkpoint_out": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_1/20260310_000000/l_series_checkpoint.pt",
+        "dataset_profile": "legacy",
+        "difficulty_tier": "all"
+      }
+    },
+    {
+      "run_id": "M3.2",
+      "name": "Depth Ramp (1->4 curriculum pressure)",
+      "status": "ok",
+      "return_code": 0,
+      "run_dir": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_2/20260310_000000",
+      "summary_path": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_2/20260310_000000/l_series_summary.json",
+      "checkpoint_path": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_2/20260310_000000/l_series_checkpoint.pt",
+      "final_constraint_arity_strict": 0.0,
+      "final_constraint_scope": 0.25,
+      "final_constraint_scope_unbound": 0.08,
+      "final_constraint_identity": 0.0,
+      "tier_b_enabled": true,
+      "tier_c_enabled": true,
+      "lineage": {
+        "mode": "train",
+        "checkpoint_in": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_1/20260310_000000/l_series_checkpoint.pt",
+        "checkpoint_out": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_2/20260310_000000/l_series_checkpoint.pt",
+        "dataset_profile": "legacy",
+        "difficulty_tier": "all"
+      }
+    },
+    {
+      "run_id": "M3.3",
+      "name": "Truth Discrimination (foil-sensitive tier B)",
+      "status": "ok",
+      "return_code": 0,
+      "run_dir": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_3/20260310_000000",
+      "summary_path": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_3/20260310_000000/l_series_summary.json",
+      "checkpoint_path": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_3/20260310_000000/l_series_checkpoint.pt",
+      "final_constraint_arity_strict": 0.0,
+      "final_constraint_scope": 0.25,
+      "final_constraint_scope_unbound": 0.08,
+      "final_constraint_identity": 0.0,
+      "tier_b_enabled": true,
+      "tier_c_enabled": true,
+      "lineage": {
+        "mode": "train",
+        "checkpoint_in": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_2/20260310_000000/l_series_checkpoint.pt",
+        "checkpoint_out": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_3/20260310_000000/l_series_checkpoint.pt",
+        "dataset_profile": "legacy",
+        "difficulty_tier": "all"
+      }
+    },
+    {
+      "run_id": "M3.4",
+      "name": "Compression Activation (tier C pressure)",
+      "status": "ok",
+      "return_code": 0,
+      "run_dir": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_4/20260310_000000",
+      "summary_path": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_4/20260310_000000/l_series_summary.json",
+      "checkpoint_path": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_4/20260310_000000/l_series_checkpoint.pt",
+      "final_constraint_arity_strict": 0.0,
+      "final_constraint_scope": 0.09,
+      "final_constraint_scope_unbound": 0.01,
+      "final_constraint_identity": 0.0,
+      "tier_b_enabled": true,
+      "tier_c_enabled": true,
+      "lineage": {
+        "mode": "train",
+        "checkpoint_in": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_3/20260310_000000/l_series_checkpoint.pt",
+        "checkpoint_out": "runs/l_series/m3_plus/test_integration_2ac9fff52fa446809e4a5d7caa841567/20260311_010647/m3_4/20260310_000000/l_series_checkpoint.pt",
+        "dataset_profile": "legacy",
+        "difficulty_tier": "all"
+      }
+    }
+  ],
+  "gate_eval": {
+    "gate_target_run_id": "M3.4",
+    "gate_target_status": "ok",
+    "arity_feasible": true,
+    "identity_guardrail_lte_0_05": true,
+    "unbound_solved_lt_0_02": true,
+    "scope_gate_lt_0_10": true,
+    "foil_metric_polarity_check_true_gt_false_rate": 1.0,
+    "accepted_foil_pair_accuracy": 0.8125,
+    "foil_auc_deprecated": 0.8125,
+    "phase3_graduation_ready": true
+  }
+}
