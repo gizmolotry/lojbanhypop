@@ -83,6 +83,12 @@ M19_ISOLATION_GRID: list[dict[str, Any]] = [
 ]
 
 
+def _clone_track(base_key: str, **updates: Any) -> dict[str, Any]:
+    track = deepcopy(M19_REGISTRY[base_key]) if "M19_REGISTRY" in globals() else {}
+    track.update(updates)
+    return track
+
+
 M19_REGISTRY: dict[str, dict[str, Any]] = {
     "M19": {
         "family": "symbiote_runway_mainline",
@@ -99,6 +105,9 @@ M19_REGISTRY: dict[str, dict[str, Any]] = {
             "paper_package": "scripts/control_plane/render_m19_paper_package.py",
             "grid": "scripts/m19/run_m19_isolation_grid.py",
             "suite": "scripts/m19/run_m19_mainline_suite.py",
+            "typed_suite": "scripts/m19/run_m19_typed_physics_suite.py",
+            "gumbel_faithfulness": "scripts/m19/run_m19_gumbel_faithfulness_suite.py",
+            "hyperbolic_faithfulness": "scripts/m19/run_m19_hyperbolic_faithfulness_suite.py",
         },
         "dags": {
             "train": "airflow/dags/m19/lojban_m19_mainline_suite_dag.py",
@@ -112,6 +121,9 @@ M19_REGISTRY: dict[str, dict[str, Any]] = {
             "paper_package": "airflow/dags/m19/lojban_m19_paper_package_dag.py",
             "mainline": "airflow/dags/m19/lojban_m19_mainline_suite_dag.py",
             "grid": "airflow/dags/m19/lojban_m19_isolation_grid_dag.py",
+            "typed_suite": "airflow/dags/m19/lojban_m19_typed_physics_suite_dag.py",
+            "gumbel_faithfulness": "airflow/dags/m19/lojban_m19_gumbel_faithfulness_suite_dag.py",
+            "hyperbolic_faithfulness": "airflow/dags/m19/lojban_m19_hyperbolic_faithfulness_suite_dag.py",
         },
         "output_roots": {
             "train": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_mainline_train",
@@ -230,6 +242,81 @@ M19_REGISTRY: dict[str, dict[str, Any]] = {
         },
     },
 }
+
+M19_REGISTRY["M19.31"] = _clone_track(
+    "M19",
+    family="symbiote_runway_typed_gumbel",
+    implementation_label="typed_euclidean_gumbel_arity_bridge",
+    thesis="retrofit the bounded runway with typed Lojban-inspired predicate, operator, and pointer slot families plus hard differentiable arity routing over judri slots.",
+    output_roots={
+        **M19_REGISTRY["M19"]["output_roots"],
+        "train": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_31_typed_gumbel_train",
+        "benchmark": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_31_typed_gumbel_benchmark",
+        "audit": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_31_typed_gumbel_audit",
+        "dictionary_audit": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_31_typed_gumbel_dictionary_audit",
+        "integrity": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_31_typed_gumbel_integrity",
+        "replication": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_31_typed_gumbel_replication",
+        "kill_tests": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_31_typed_gumbel_kill_tests",
+        "mainline": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_31_typed_gumbel_suite",
+    },
+    report_names={
+        **M19_REGISTRY["M19"]["report_names"],
+        "train": "m19_31_train_manifest.json",
+        "benchmark": "m19_31_benchmark_report.json",
+        "audit": "m19_31_audit_report.json",
+        "dictionary_audit": "m19_31_dictionary_audit_report.json",
+        "integrity": "m19_31_integrity_report.json",
+        "replication": "m19_31_replication_report.json",
+        "kill_tests": "m19_31_kill_test_report.json",
+        "mainline": "m19_31_mainline_report.json",
+    },
+    defaults={
+        "typed_slot_layout": "gismu:2,cmavo:2,judri:4",
+        "arity_router_mode": "gumbel_hard",
+        "geometry_mode": "euclidean",
+        "typed_physics_config": "configs/m19_typed_physics_ontology.json",
+    },
+    aliases=["M19.3c"],
+)
+
+M19_REGISTRY["M19.32"] = _clone_track(
+    "M19",
+    family="symbiote_runway_typed_hyperbolic",
+    implementation_label="typed_hyperbolic_codebook_bridge",
+    thesis="retrofit the bounded runway with typed Lojban-inspired slot families and forward-pass hyperbolic radius-band separation for predicate, operator, and pointer roles.",
+    output_roots={
+        **M19_REGISTRY["M19"]["output_roots"],
+        "train": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_32_typed_hyperbolic_train",
+        "benchmark": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_32_typed_hyperbolic_benchmark",
+        "audit": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_32_typed_hyperbolic_audit",
+        "dictionary_audit": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_32_typed_hyperbolic_dictionary_audit",
+        "integrity": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_32_typed_hyperbolic_integrity",
+        "replication": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_32_typed_hyperbolic_replication",
+        "kill_tests": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_32_typed_hyperbolic_kill_tests",
+        "mainline": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_32_typed_hyperbolic_suite",
+    },
+    report_names={
+        **M19_REGISTRY["M19"]["report_names"],
+        "train": "m19_32_train_manifest.json",
+        "benchmark": "m19_32_benchmark_report.json",
+        "audit": "m19_32_audit_report.json",
+        "dictionary_audit": "m19_32_dictionary_audit_report.json",
+        "integrity": "m19_32_integrity_report.json",
+        "replication": "m19_32_replication_report.json",
+        "kill_tests": "m19_32_kill_test_report.json",
+        "mainline": "m19_32_mainline_report.json",
+    },
+    defaults={
+        "typed_slot_layout": "gismu:2,cmavo:2,judri:4",
+        "arity_router_mode": "soft",
+        "geometry_mode": "hyperbolic",
+        "typed_physics_config": "configs/m19_typed_physics_ontology.json",
+    },
+    aliases=["M19.3d"],
+)
+
+M19_REGISTRY["M19.3c"] = deepcopy(M19_REGISTRY["M19.31"])
+M19_REGISTRY["M19.3d"] = deepcopy(M19_REGISTRY["M19.32"])
 
 
 def m19_track_spec(track: str = "M19") -> dict[str, Any]:

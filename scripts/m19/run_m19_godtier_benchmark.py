@@ -25,6 +25,7 @@ from lojban_evolution.m19.family import (
     M19_SCRATCHPAD_TOKEN,
     M19_SYMBIOTE_END_TOKEN,
 )
+from lojban_evolution.m19.typed_physics import parse_typed_slot_layout
 from lojban_evolution.series_contract import (
     assert_output_path_allowed,
     lineage_metadata,
@@ -276,6 +277,7 @@ def _run_static_bridge_regime(
     random_scale: float,
     max_new_tokens: int,
     mode: str,
+    gumbel_temperature: float,
 ) -> tuple[str, int, dict[str, Any]]:
     prompt = _build_static_prompt(question, scratchpad_token, scratchpad_length)
     inputs = tokenizer(prompt, return_tensors="pt").to(device)
@@ -297,7 +299,11 @@ def _run_static_bridge_regime(
             delta = None
         else:
             assert bridge is not None
-            delta, _, _, _ = bridge(h_tap, active_steps=int(scratchpad_length))
+            delta, _, _, telemetry = bridge(
+                h_tap,
+                active_steps=int(scratchpad_length),
+                gumbel_temperature=gumbel_temperature,
+            )
 
     extra = {
         "latent_steps": int(scratchpad_length),
@@ -305,7 +311,35 @@ def _run_static_bridge_regime(
         "premature_stop": False,
         "max_cap_hit": False,
         "scratchpad_bleed": False,
+        "typed_family_accuracy": None,
+        "arity_violation_rate": None,
+        "masked_pointer_zero_rate": None,
+        "family_slot_entropy": None,
+        "symbolic_trace_alignment": None,
+        "predicate_pointer_radial_gap": None,
+        "family_radius_violation_rate": None,
+        "hyperbolic_geodesic_margin": None,
+        "hyperbolic_projection_clip_rate": None,
     }
+    if mode == "bridge":
+        slot_family_ids = telemetry.get("slot_family_ids") or []
+        slot_family_logits = telemetry.get("slot_family_logits")
+        if slot_family_logits is not None and slot_family_ids:
+            family_targets = torch.tensor(slot_family_ids, device=slot_family_logits.device, dtype=torch.long)
+            extra["typed_family_accuracy"] = float(
+                (slot_family_logits[0].argmax(dim=-1) == family_targets).float().mean().item()
+            )
+        extra["masked_pointer_zero_rate"] = float(telemetry.get("masked_pointer_zero_rate", 0.0))
+        extra["family_slot_entropy"] = float(telemetry.get("slot_family_entropy", 0.0))
+        hyper_metrics = telemetry.get("hyperbolic_metrics", {})
+        for key in (
+            "predicate_pointer_radial_gap",
+            "family_radius_violation_rate",
+            "hyperbolic_geodesic_margin",
+            "hyperbolic_projection_clip_rate",
+        ):
+            if key in hyper_metrics:
+                extra[key] = float(hyper_metrics.get(key, 0.0))
     ctx = m19_injection_hook(backbone, int(tap_layer), scratchpad_mask, delta) if delta is not None else nullcontext()
     with ctx:
         with torch.no_grad():
@@ -335,6 +369,7 @@ def _run_dynamic_bridge_regime(
     max_latent_steps: int,
     max_new_tokens: int,
     mode: str,
+    gumbel_temperature: float,
 ) -> tuple[str, int, dict[str, Any]]:
     prompt_core = _build_prompt_core(question)
     current_ids = tokenizer(prompt_core, return_tensors="pt").input_ids[0].tolist() + [int(scratchpad_token_id)]
@@ -342,6 +377,15 @@ def _run_dynamic_bridge_regime(
     max_cap_hit = False
     scratchpad_bleed = False
     halt_similarity_trace: list[float] = []
+    family_accuracy_values: list[float] = []
+    masked_zero_values: list[float] = []
+    family_entropy_values: list[float] = []
+    hyper_metrics_rollup: dict[str, list[float]] = {
+        "predicate_pointer_radial_gap": [],
+        "family_radius_violation_rate": [],
+        "hyperbolic_geodesic_margin": [],
+        "hyperbolic_projection_clip_rate": [],
+    }
 
     while True:
         inputs = {"input_ids": torch.tensor([current_ids], device=device, dtype=torch.long)}
@@ -366,10 +410,28 @@ def _run_dynamic_bridge_regime(
             elif mode == "bridge":
                 assert bridge is not None
                 lengths = torch.tensor([active_steps], device=device, dtype=torch.long)
-                delta, _, _, telemetry = bridge(h_tap, active_steps=active_steps, lengths=lengths)
+                delta, _, _, telemetry = bridge(
+                    h_tap,
+                    active_steps=active_steps,
+                    lengths=lengths,
+                    gumbel_temperature=gumbel_temperature,
+                )
                 sim_row = telemetry["halt_cosine_per_step"][0, :active_steps].detach().float().cpu().tolist()
                 if sim_row:
                     halt_similarity_trace.append(float(sim_row[-1]))
+                slot_family_ids = telemetry.get("slot_family_ids") or []
+                slot_family_logits = telemetry.get("slot_family_logits")
+                if slot_family_logits is not None and slot_family_ids:
+                    family_targets = torch.tensor(slot_family_ids, device=slot_family_logits.device, dtype=torch.long)
+                    family_accuracy_values.append(
+                        float((slot_family_logits[0].argmax(dim=-1) == family_targets).float().mean().item())
+                    )
+                masked_zero_values.append(float(telemetry.get("masked_pointer_zero_rate", 0.0)))
+                family_entropy_values.append(float(telemetry.get("slot_family_entropy", 0.0)))
+                hyper_metrics = telemetry.get("hyperbolic_metrics", {})
+                for key in hyper_metrics_rollup:
+                    if key in hyper_metrics:
+                        hyper_metrics_rollup[key].append(float(hyper_metrics.get(key, 0.0)))
 
         ctx = m19_injection_hook(backbone, int(tap_layer), scratchpad_mask, delta) if delta is not None else nullcontext()
         with ctx:
@@ -416,7 +478,14 @@ def _run_dynamic_bridge_regime(
         "scratchpad_bleed": bool(scratchpad_bleed),
         "halt_similarity_trace": halt_similarity_trace,
         "halt_similarity_last": float(halt_similarity_trace[-1]) if halt_similarity_trace else 0.0,
+        "typed_family_accuracy": (sum(family_accuracy_values) / max(1, len(family_accuracy_values))) if family_accuracy_values else None,
+        "arity_violation_rate": None,
+        "masked_pointer_zero_rate": (sum(masked_zero_values) / max(1, len(masked_zero_values))) if masked_zero_values else None,
+        "family_slot_entropy": (sum(family_entropy_values) / max(1, len(family_entropy_values))) if family_entropy_values else None,
+        "symbolic_trace_alignment": None,
     }
+    for key, values in hyper_metrics_rollup.items():
+        extra[key] = (sum(values) / max(1, len(values))) if values else None
     return _decode_generated(tokenizer, answer_ids), total_generated_tokens, extra
 
 
@@ -460,6 +529,11 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             scratchpad_len=int(args.scratchpad_length),
             num_queries=int(args.num_queries),
             max_latent_steps=int(args.max_latent_steps),
+            typed_slot_layout=parse_typed_slot_layout(args.typed_slot_layout) if str(args.typed_slot_layout).strip() else None,
+            geometry_mode=str(args.geometry_mode),
+            arity_router_mode=str(args.arity_router_mode),
+            gumbel_hard=bool(args.gumbel_hard),
+            poincare_curvature=float(args.poincare_curvature),
         ).to(device=device, dtype=model_dtype)
         bridge.load_state_dict(torch.load(args.bridge_path, map_location=device), strict=False)
         bridge.eval()
@@ -472,6 +546,11 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             scratchpad_len=int(args.static_scratchpad_length),
             num_queries=int(args.static_num_queries),
             max_latent_steps=max(int(args.static_scratchpad_length), int(args.max_latent_steps)),
+            typed_slot_layout=parse_typed_slot_layout(args.typed_slot_layout) if str(args.typed_slot_layout).strip() else None,
+            geometry_mode=str(args.geometry_mode),
+            arity_router_mode=str(args.arity_router_mode),
+            gumbel_hard=bool(args.gumbel_hard),
+            poincare_curvature=float(args.poincare_curvature),
         ).to(device=device, dtype=model_dtype)
         static_bridge.load_state_dict(torch.load(args.static_bridge_path, map_location=device), strict=False)
         static_bridge.eval()
@@ -507,6 +586,13 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
         correct = 0
         phrase_correct = 0
         total_tokens = 0
+        typed_family_values: list[float] = []
+        masked_pointer_values: list[float] = []
+        family_entropy_values: list[float] = []
+        radial_gap_values: list[float] = []
+        radial_violation_values: list[float] = []
+        geodesic_margin_values: list[float] = []
+        clip_rate_values: list[float] = []
         total_premature = 0
         total_cap = 0
         total_bleed = 0
@@ -543,6 +629,7 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
                     float(args.random_scale),
                     int(reg["max_new_tokens"]),
                     str(reg["mode"]),
+                    float(args.gumbel_temp_end),
                 )
             else:
                 gen_text, token_count, extra = _run_dynamic_bridge_regime(
@@ -561,6 +648,7 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
                     int(args.max_latent_steps),
                     int(reg["max_new_tokens"]),
                     str(reg["mode"]),
+                    float(args.gumbel_temp_end),
                 )
                 total_premature += 1 if bool(extra.get("premature_stop")) else 0
                 total_cap += 1 if bool(extra.get("max_cap_hit")) else 0
@@ -571,6 +659,20 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
                     entanglement_values.append(sum(halt_trace[:-1]) / max(1, len(halt_trace[:-1])))
 
             total_tokens += token_count
+            if isinstance(extra.get("typed_family_accuracy"), (int, float)):
+                typed_family_values.append(float(extra["typed_family_accuracy"]))
+            if isinstance(extra.get("masked_pointer_zero_rate"), (int, float)):
+                masked_pointer_values.append(float(extra["masked_pointer_zero_rate"]))
+            if isinstance(extra.get("family_slot_entropy"), (int, float)):
+                family_entropy_values.append(float(extra["family_slot_entropy"]))
+            if isinstance(extra.get("predicate_pointer_radial_gap"), (int, float)):
+                radial_gap_values.append(float(extra["predicate_pointer_radial_gap"]))
+            if isinstance(extra.get("family_radius_violation_rate"), (int, float)):
+                radial_violation_values.append(float(extra["family_radius_violation_rate"]))
+            if isinstance(extra.get("hyperbolic_geodesic_margin"), (int, float)):
+                geodesic_margin_values.append(float(extra["hyperbolic_geodesic_margin"]))
+            if isinstance(extra.get("hyperbolic_projection_clip_rate"), (int, float)):
+                clip_rate_values.append(float(extra["hyperbolic_projection_clip_rate"]))
             is_correct = scoring_fn(gen_text, str(item["answer"]))
             is_phrase_correct = phrase_scoring_fn(gen_text, str(item["answer"]))
             if is_correct:
@@ -582,7 +684,18 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
         acc = correct / max(1, len(samples))
         phrase_acc = phrase_correct / max(1, len(samples))
         tok = total_tokens / max(1, len(samples))
-        results[str(reg["id"])] = {"accuracy": acc, "phrase_accuracy": phrase_acc, "avg_tokens": tok}
+        results[str(reg["id"])] = {
+            "accuracy": acc,
+            "phrase_accuracy": phrase_acc,
+            "avg_tokens": tok,
+            "typed_family_accuracy": (sum(typed_family_values) / max(1, len(typed_family_values))) if typed_family_values else None,
+            "masked_pointer_zero_rate": (sum(masked_pointer_values) / max(1, len(masked_pointer_values))) if masked_pointer_values else None,
+            "family_slot_entropy": (sum(family_entropy_values) / max(1, len(family_entropy_values))) if family_entropy_values else None,
+            "predicate_pointer_radial_gap": (sum(radial_gap_values) / max(1, len(radial_gap_values))) if radial_gap_values else None,
+            "family_radius_violation_rate": (sum(radial_violation_values) / max(1, len(radial_violation_values))) if radial_violation_values else None,
+            "hyperbolic_geodesic_margin": (sum(geodesic_margin_values) / max(1, len(geodesic_margin_values))) if geodesic_margin_values else None,
+            "hyperbolic_projection_clip_rate": (sum(clip_rate_values) / max(1, len(clip_rate_values))) if clip_rate_values else None,
+        }
         if reg["kind"] == "dynamic":
             results[str(reg["id"])].update(
                 {
@@ -658,6 +771,13 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             "seed": int(args.seed),
             "include_random_control": bool(args.include_random_control),
             "random_scale": float(args.random_scale),
+            "typed_slot_layout": parse_typed_slot_layout(args.typed_slot_layout) if str(args.typed_slot_layout).strip() else [],
+            "arity_router_mode": str(args.arity_router_mode),
+            "gumbel_hard": bool(args.gumbel_hard),
+            "gumbel_temp_start": float(args.gumbel_temp_start),
+            "gumbel_temp_end": float(args.gumbel_temp_end),
+            "geometry_mode": str(args.geometry_mode),
+            "poincare_curvature": float(args.poincare_curvature),
         },
         "results": results,
         "dynamic_rollup": dynamic_rollup,
@@ -703,6 +823,15 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             "max_cap_hit_rate": _result_metric(results, mainline_key, "max_cap_hit_rate"),
             "scratchpad_bleed_rate": _result_metric(results, mainline_key, "scratchpad_bleed_rate"),
             "caa_manifold_entanglement_score": _result_metric(results, mainline_key, "caa_manifold_entanglement_score"),
+            "typed_family_accuracy": _result_metric(results, mainline_key, "typed_family_accuracy"),
+            "arity_violation_rate": _result_metric(results, mainline_key, "arity_violation_rate"),
+            "masked_pointer_zero_rate": _result_metric(results, mainline_key, "masked_pointer_zero_rate"),
+            "family_slot_entropy": _result_metric(results, mainline_key, "family_slot_entropy"),
+            "symbolic_trace_alignment": _result_metric(results, mainline_key, "symbolic_trace_alignment"),
+            "predicate_pointer_radial_gap": _result_metric(results, mainline_key, "predicate_pointer_radial_gap"),
+            "family_radius_violation_rate": _result_metric(results, mainline_key, "family_radius_violation_rate"),
+            "hyperbolic_geodesic_margin": _result_metric(results, mainline_key, "hyperbolic_geodesic_margin"),
+            "hyperbolic_projection_clip_rate": _result_metric(results, mainline_key, "hyperbolic_projection_clip_rate"),
         },
         "headline": {
             "overall_accuracy": mainline_accuracy,
@@ -711,6 +840,9 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             "en_cot_accuracy": en_cot_accuracy,
             "zh_cot_accuracy": zh_cot_accuracy,
             "static_m19_3_accuracy": static_accuracy,
+            "typed_family_accuracy": _result_metric(results, mainline_key, "typed_family_accuracy"),
+            "masked_pointer_zero_rate": _result_metric(results, mainline_key, "masked_pointer_zero_rate"),
+            "family_slot_entropy": _result_metric(results, mainline_key, "family_slot_entropy"),
         },
         "sample_predictions": sample_predictions,
         "report_path": str(report_path).replace("\\", "/"),
@@ -745,6 +877,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--include-random-control", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--dynamic-pacing", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--random-scale", type=float, default=0.05)
+    parser.add_argument("--typed-slot-layout", type=str, default="")
+    parser.add_argument("--arity-router-mode", type=str, default="soft")
+    parser.add_argument("--gumbel-hard", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--gumbel-temp-start", type=float, default=1.0)
+    parser.add_argument("--gumbel-temp-end", type=float, default=0.35)
+    parser.add_argument("--geometry-mode", type=str, default="euclidean")
+    parser.add_argument("--poincare-curvature", type=float, default=1.0)
     parser.add_argument("--seed", type=int, default=19)
     parser.add_argument("--track", type=str, default="")
     parser.add_argument("--run-id", type=str, default=datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S"))
@@ -755,6 +894,17 @@ def parse_args() -> argparse.Namespace:
     args = parser.parse_args()
     if args.eval_data_path is not None:
         args.dataset_path = args.eval_data_path
+    track_key = _track_key(args.track)
+    defaults = M19_REGISTRY.get(track_key, {}).get("defaults", {})
+    if defaults:
+        if not str(args.typed_slot_layout).strip() and defaults.get("typed_slot_layout"):
+            args.typed_slot_layout = str(defaults["typed_slot_layout"])
+        if str(args.arity_router_mode).strip() == "soft" and defaults.get("arity_router_mode"):
+            args.arity_router_mode = str(defaults["arity_router_mode"])
+        if str(args.geometry_mode).strip() == "euclidean" and defaults.get("geometry_mode"):
+            args.geometry_mode = str(defaults["geometry_mode"])
+        if not args.gumbel_hard and str(defaults.get("arity_router_mode", "")).strip() == "gumbel_hard":
+            args.gumbel_hard = True
     return args
 
 

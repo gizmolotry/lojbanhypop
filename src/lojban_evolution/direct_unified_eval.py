@@ -59,6 +59,15 @@ KEY_METRICS = (
     "entity_renamed_accuracy",
     "format_accuracy",
     "numeric_accuracy",
+    "typed_family_accuracy",
+    "arity_violation_rate",
+    "masked_pointer_zero_rate",
+    "family_slot_entropy",
+    "symbolic_trace_alignment",
+    "predicate_pointer_radial_gap",
+    "family_radius_violation_rate",
+    "hyperbolic_geodesic_margin",
+    "hyperbolic_projection_clip_rate",
     "integrity_overlap_flag",
     "integrity_mask_flag",
     "integrity_audit_flag",
@@ -139,6 +148,7 @@ def discover_m19_surfaces(
     replication_report_path: Path | None = None,
     stability_report_path: Path | None = None,
     kill_test_report_path: Path | None = None,
+    dictionary_audit_report_path: Path | None = None,
 ) -> dict[str, dict[str, Any]]:
     track_key = _track_key(track)
     benchmark_path = benchmark_report_path or _latest_named_manifest(
@@ -175,6 +185,17 @@ def discover_m19_surfaces(
             REPO_ROOT / M19_REGISTRY["M19"]["output_roots"]["kill_tests"],
             M19_REGISTRY["M19"]["report_names"]["kill_tests"],
         )
+    dictionary_audit_path = dictionary_audit_report_path
+    if (
+        dictionary_audit_path is None
+        and track_key in M19_REGISTRY
+        and "dictionary_audit" in M19_REGISTRY[track_key].get("output_roots", {})
+        and "dictionary_audit" in M19_REGISTRY[track_key].get("report_names", {})
+    ):
+        dictionary_audit_path = _latest_named_manifest(
+            REPO_ROOT / M19_REGISTRY[track_key]["output_roots"]["dictionary_audit"],
+            M19_REGISTRY[track_key]["report_names"]["dictionary_audit"],
+        )
 
     surfaces: dict[str, dict[str, Any]] = {
         "benchmark": _surface_record("benchmark", benchmark_path),
@@ -183,6 +204,7 @@ def discover_m19_surfaces(
         "replication": _surface_record("replication", replication_path),
         "stability_microgrid": _surface_record("stability_microgrid", stability_path),
         "kill_tests": _surface_record("kill_tests", kill_test_path),
+        "dictionary_audit": _surface_record("dictionary_audit", dictionary_audit_path),
     }
     return surfaces
 
@@ -197,6 +219,7 @@ def build_direct_unified_eval_manifest(
     replication_report_path: Path | None = None,
     stability_report_path: Path | None = None,
     kill_test_report_path: Path | None = None,
+    dictionary_audit_report_path: Path | None = None,
     history_manifest_path: Path | None = None,
     taxonomy: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -217,6 +240,7 @@ def build_direct_unified_eval_manifest(
         replication_report_path=replication_report_path,
         stability_report_path=stability_report_path,
         kill_test_report_path=kill_test_report_path,
+        dictionary_audit_report_path=dictionary_audit_report_path,
     )
     benchmark_payload = direct_surfaces["benchmark"]["payload"]
     audit_payload = direct_surfaces["audit"]["payload"]
@@ -224,6 +248,7 @@ def build_direct_unified_eval_manifest(
     replication_payload = direct_surfaces["replication"]["payload"]
     stability_payload = direct_surfaces["stability_microgrid"]["payload"]
     kill_test_payload = direct_surfaces["kill_tests"]["payload"]
+    dictionary_audit_payload = direct_surfaces["dictionary_audit"]["payload"]
     historical_references = _resolve_historical_family_references(contract, history_manifest_path)
     comparison_targets = _resolve_comparison_targets(contract, history_manifest_path)
     reference_surface_index = _build_reference_surface_index(historical_references, comparison_targets)
@@ -236,6 +261,7 @@ def build_direct_unified_eval_manifest(
         replication_payload=replication_payload,
         stability_payload=stability_payload,
         kill_test_payload=kill_test_payload,
+        dictionary_audit_payload=dictionary_audit_payload,
         reference_surface_index=reference_surface_index,
     )
 
@@ -246,6 +272,7 @@ def build_direct_unified_eval_manifest(
         replication_payload,
         stability_payload,
         kill_test_payload,
+        dictionary_audit_payload,
     )
     direct_report_paths = {
         name: surface["path"]
@@ -370,6 +397,7 @@ def _evaluate_contracts(
     replication_payload: dict[str, Any] | None,
     stability_payload: dict[str, Any] | None,
     kill_test_payload: dict[str, Any] | None,
+    dictionary_audit_payload: dict[str, Any] | None,
     reference_surface_index: dict[str, dict[str, Any]],
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
@@ -385,6 +413,7 @@ def _evaluate_contracts(
                 replication_payload,
                 stability_payload,
                 kill_test_payload,
+                dictionary_audit_payload,
             )
             rows.append(_attach_reference_surface(row, contract, reference_surface_index))
             continue
@@ -410,6 +439,7 @@ def _evaluate_m19_contract(
     replication_payload: dict[str, Any] | None,
     stability_payload: dict[str, Any] | None,
     kill_test_payload: dict[str, Any] | None,
+    dictionary_audit_payload: dict[str, Any] | None,
 ) -> dict[str, Any]:
     notes: list[str] = []
     if test_id == "m19.runway_efficiency":
@@ -601,6 +631,63 @@ def _evaluate_m19_contract(
             "notes": ["Broader kill tests extend the integrity bundle with entity, format, and numeric perturbation checks on the purged slice."],
         }
 
+    if test_id == "m19.typed_faithfulness":
+        if not dictionary_audit_payload:
+            return _missing_contract_row(test_id, contract, "missing dictionary audit report for typed-faithfulness surface")
+        checkpoints = dictionary_audit_payload.get("checkpoints", [])
+        if not isinstance(checkpoints, list) or not checkpoints:
+            return _missing_contract_row(test_id, contract, "dictionary audit report has no checkpoint rows")
+        first = checkpoints[0]
+        faithfulness = first.get("typed_faithfulness", {}) if isinstance(first, dict) else {}
+        metrics = _filtered_metrics(
+            faithfulness,
+            (
+                "typed_family_accuracy",
+                "arity_violation_rate",
+                "masked_pointer_zero_rate",
+                "family_slot_entropy",
+                "symbolic_trace_alignment",
+            ),
+        )
+        if not metrics:
+            return _missing_contract_row(test_id, contract, "dictionary audit did not emit typed-faithfulness metrics")
+        return {
+            "test_id": test_id,
+            "surface": contract.get("surface"),
+            "status": "available",
+            "provenance": "artifact",
+            "metrics": metrics,
+            "notes": ["Typed faithfulness measures Lojban-inspired family prediction, arity discipline, pointer masking, and trace alignment on the active typed bridge."],
+        }
+
+    if test_id == "m19.hyperbolic_geometry":
+        if not dictionary_audit_payload:
+            return _missing_contract_row(test_id, contract, "missing dictionary audit report for hyperbolic geometry surface")
+        checkpoints = dictionary_audit_payload.get("checkpoints", [])
+        if not isinstance(checkpoints, list) or not checkpoints:
+            return _missing_contract_row(test_id, contract, "dictionary audit report has no checkpoint rows")
+        first = checkpoints[0]
+        faithfulness = first.get("typed_faithfulness", {}) if isinstance(first, dict) else {}
+        metrics = _filtered_metrics(
+            faithfulness,
+            (
+                "predicate_pointer_radial_gap",
+                "family_radius_violation_rate",
+                "hyperbolic_geodesic_margin",
+                "hyperbolic_projection_clip_rate",
+            ),
+        )
+        if not metrics:
+            return _missing_contract_row(test_id, contract, "dictionary audit did not emit hyperbolic geometry metrics")
+        return {
+            "test_id": test_id,
+            "surface": contract.get("surface"),
+            "status": "available",
+            "provenance": "artifact",
+            "metrics": metrics,
+            "notes": ["Hyperbolic geometry tracks typed family separation in the Poincare-ball branch and is non-applicable for plain Euclidean baselines without emitted metrics."],
+        }
+
     return _missing_contract_row(test_id, contract, f"no evaluator is registered for {test_id}")
 
 
@@ -775,6 +862,7 @@ def _build_headline_metrics(
     replication_payload: dict[str, Any] | None,
     stability_payload: dict[str, Any] | None,
     kill_test_payload: dict[str, Any] | None,
+    dictionary_audit_payload: dict[str, Any] | None,
 ) -> dict[str, Any]:
     headline: dict[str, Any] = {}
     if isinstance(benchmark_payload, dict):
@@ -816,6 +904,13 @@ def _build_headline_metrics(
         if isinstance(kill_test_payload.get("headline"), dict):
             for key, value in kill_test_payload["headline"].items():
                 headline[f"kill_{key}"] = value
+    if isinstance(dictionary_audit_payload, dict):
+        checkpoints = dictionary_audit_payload.get("checkpoints", [])
+        if isinstance(checkpoints, list) and checkpoints:
+            first = checkpoints[0]
+            if isinstance(first, dict):
+                for key, value in _filtered_metrics(first.get("typed_faithfulness", {}), KEY_METRICS).items():
+                    headline.setdefault(key, value)
     return {k: v for k, v in headline.items() if v is not None}
 
 

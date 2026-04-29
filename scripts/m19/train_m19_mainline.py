@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 import torch
+import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from tqdm import tqdm
@@ -31,6 +32,16 @@ from lojban_evolution.m19.family import (
     M19_SYMBIOTE_END_TOKEN,
 )
 from lojban_evolution.m19.training import maybe_apply_surface_augmentations
+from lojban_evolution.m19.typed_physics import (
+    FAMILY_TO_ID,
+    build_typed_targets,
+    family_separation_loss,
+    load_typed_physics_config,
+    mean_entropy_from_logits,
+    parse_typed_slot_layout,
+    slot_usage_balance_loss,
+    symbolic_trace_alignment_score,
+)
 from lojban_evolution.series_contract import (
     assert_output_path_allowed,
     lineage_metadata,
@@ -75,6 +86,16 @@ def _split_sample(raw_text: str, mode: str) -> tuple[str, str]:
         question = raw_text.split("Question:")[1].split("Final answer:")[0].strip()
         answer = raw_text.split("Final answer:")[1].strip()
     return question, answer
+
+
+def _materialize_row(batch_dict: dict[str, Any]) -> dict[str, Any]:
+    row: dict[str, Any] = {}
+    for key, value in batch_dict.items():
+        if isinstance(value, list):
+            row[key] = value[0]
+        else:
+            row[key] = value
+    return row
 
 
 def _default_run_dir(output_root: Path, run_id: str) -> Path:
@@ -161,8 +182,20 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
         scratchpad_len=int(args.scratchpad_length),
         num_queries=int(args.num_queries),
         max_latent_steps=int(args.max_latent_steps),
+        typed_slot_layout=parse_typed_slot_layout(args.typed_slot_layout) if str(args.typed_slot_layout).strip() else None,
+        geometry_mode=str(args.geometry_mode),
+        arity_router_mode=str(args.arity_router_mode),
+        gumbel_hard=bool(args.gumbel_hard),
+        poincare_curvature=float(args.poincare_curvature),
     ).to(device=device, dtype=model_dtype)
     optimizer = torch.optim.AdamW(bridge.parameters(), lr=float(args.learning_rate))
+    typed_physics_config = load_typed_physics_config(args.typed_physics_config) if str(args.typed_physics_config).strip() else None
+    typed_slot_layout = list(bridge.typed_slot_layout)
+    slot_family_targets = (
+        torch.tensor([FAMILY_TO_ID[family] for family in typed_slot_layout], device=device, dtype=torch.long)
+        if typed_slot_layout
+        else None
+    )
 
     dataset = M19Dataset(Path(args.data_path))
     loader = DataLoader(dataset, batch_size=1, shuffle=True)
@@ -186,14 +219,29 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
         topo_sum = 0.0
         ac_sum = 0.0
         repulsion_sum = 0.0
+        typed_family_sum = 0.0
+        arity_sum = 0.0
+        family_sep_sum = 0.0
+        slot_balance_sum = 0.0
+        typed_accuracy_sum = 0.0
+        typed_alignment_sum = 0.0
+        typed_violation_sum = 0.0
+        masked_zero_sum = 0.0
+        family_entropy_sum = 0.0
+        hyperbolic_gap_sum = 0.0
+        hyperbolic_violation_sum = 0.0
+        hyperbolic_geodesic_sum = 0.0
+        hyperbolic_clip_sum = 0.0
+        typed_supervision_steps = 0
         query_embed_cosine_sum = 0.0
         scratch_trace_cosine_sum = 0.0
         operator_entropy_sum = 0.0
         for batch_dict in tqdm(loader, desc=f"Epoch {epoch + 1}"):
             optimizer.zero_grad()
 
-            raw_text = str(batch_dict["text"][0])
-            mode = str(batch_dict["mode"][0])
+            row = _materialize_row(batch_dict)
+            raw_text = str(row["text"])
+            mode = str(row["mode"])
             question, answer = _split_sample(raw_text, mode)
             question, answer, augmentation_flags = maybe_apply_surface_augmentations(
                 question,
@@ -216,6 +264,10 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
             else:
                 target_steps = int(args.scratchpad_length)
             curriculum_targets.append(int(target_steps))
+            progress = (total_steps + 1) / max(1, int(args.epochs) * len(loader))
+            gumbel_temperature = float(args.gumbel_temp_start) + (
+                (float(args.gumbel_temp_end) - float(args.gumbel_temp_start)) * progress
+            )
             scratch_tokens = " ".join([str(args.scratchpad_token)] * int(target_steps))
             prompt_core = f"Solve the logic question.\n\nQuestion: {question}\n"
             bridge_prompt = f"{prompt_core}{scratch_tokens}"
@@ -230,12 +282,50 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
                 h_tap = out_prompt.hidden_states[int(args.tap_layer)]
 
             lengths = torch.tensor([int(target_steps)], device=device, dtype=torch.long)
-            delta, l_topo, op_logits, telemetry = bridge(h_tap, active_steps=int(target_steps), lengths=lengths)
+            delta, l_topo, op_logits, telemetry = bridge(
+                h_tap,
+                active_steps=int(target_steps),
+                lengths=lengths,
+                gumbel_temperature=gumbel_temperature,
+            )
             bridge.update_halt_centroid(telemetry["trace"], lengths=lengths)
             l_repulse = compute_query_repulsion_loss(
-                bridge.query_embeds,
+                bridge.query_dictionary(),
                 margin=float(args.query_repulsion_margin),
             )
+            typed_family_loss = torch.zeros((), device=device, dtype=delta.dtype)
+            arity_loss = torch.zeros((), device=device, dtype=delta.dtype)
+            family_sep_loss = torch.zeros((), device=device, dtype=delta.dtype)
+            slot_balance = torch.zeros((), device=device, dtype=delta.dtype)
+            typed_family_accuracy = 0.0
+            symbolic_alignment = 0.0
+            arity_violation = 0.0
+            masked_zero_rate = float(telemetry.get("masked_pointer_zero_rate", 0.0))
+            hyper_metrics = telemetry.get("hyperbolic_metrics", {})
+            if typed_slot_layout and telemetry.get("slot_family_logits") is not None and slot_family_targets is not None:
+                slot_family_logits = telemetry["slot_family_logits"][0]
+                typed_family_loss = F.cross_entropy(slot_family_logits, slot_family_targets)
+                typed_family_accuracy = float((slot_family_logits.argmax(dim=-1) == slot_family_targets).float().mean().item())
+                family_sep_loss = family_separation_loss(telemetry["query_state"], typed_slot_layout)
+                if telemetry.get("judri_mask") is not None:
+                    slot_balance = slot_usage_balance_loss(telemetry["judri_mask"])
+            targets = (
+                build_typed_targets(raw_text=raw_text, mode=mode, config=typed_physics_config, row=row)
+                if typed_physics_config is not None
+                else None
+            )
+            if targets is not None and targets.has_supervision and telemetry.get("slot_family_logits") is not None:
+                typed_supervision_steps += 1
+                family_hist = torch.tensor(targets.family_histogram, device=device, dtype=delta.dtype)
+                symbolic_alignment = float(
+                    symbolic_trace_alignment_score(telemetry["slot_family_logits"][0], family_hist).detach().item()
+                )
+                if telemetry.get("arity_logits") is not None and targets.primary_arity is not None:
+                    arity_target = torch.tensor([int(targets.primary_arity) - 1], device=device, dtype=torch.long)
+                    arity_logits = telemetry["arity_logits"]
+                    arity_loss = F.cross_entropy(arity_logits, arity_target)
+                    arity_prediction = int(arity_logits.argmax(dim=-1)[0].item()) + 1
+                    arity_violation = 0.0 if arity_prediction == int(targets.primary_arity) else 1.0
             scratchpad_mask = inputs_full.input_ids.eq(scratchpad_token_id)
             labels = inputs_full.input_ids.clone()
             labels[0, : len(tokenizer(prompt_core, return_tensors="pt").input_ids[0])] = -100
@@ -250,6 +340,10 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
                 + float(args.topology_weight) * l_topo
                 + float(args.anti_collapse_weight) * l_ac
                 + float(args.query_repulsion_weight) * l_repulse
+                + float(args.typed_family_weight) * typed_family_loss
+                + float(args.typed_arity_weight) * arity_loss
+                + float(args.family_separation_weight) * family_sep_loss
+                + float(args.slot_usage_balance_weight) * slot_balance
             )
             loss.backward()
             optimizer.step()
@@ -259,6 +353,19 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
             topo_sum += float(l_topo.detach().item())
             ac_sum += float(l_ac.detach().item())
             repulsion_sum += float(l_repulse.detach().item())
+            typed_family_sum += float(typed_family_loss.detach().item())
+            arity_sum += float(arity_loss.detach().item())
+            family_sep_sum += float(family_sep_loss.detach().item())
+            slot_balance_sum += float(slot_balance.detach().item())
+            typed_accuracy_sum += float(typed_family_accuracy)
+            typed_alignment_sum += float(symbolic_alignment)
+            typed_violation_sum += float(arity_violation)
+            masked_zero_sum += float(masked_zero_rate)
+            family_entropy_sum += float(telemetry.get("slot_family_entropy", 0.0))
+            hyperbolic_gap_sum += float(hyper_metrics.get("predicate_pointer_radial_gap", 0.0))
+            hyperbolic_violation_sum += float(hyper_metrics.get("family_radius_violation_rate", 0.0))
+            hyperbolic_geodesic_sum += float(hyper_metrics.get("hyperbolic_geodesic_margin", 0.0))
+            hyperbolic_clip_sum += float(hyper_metrics.get("hyperbolic_projection_clip_rate", 0.0))
             health = telemetry.get("dictionary_health", {})
             query_embed_cosine_sum += float(health.get("query_embed_pairwise_cosine_mean", 0.0))
             scratch_trace_cosine_sum += float(health.get("scratch_trace_pairwise_cosine_mean", 0.0))
@@ -274,10 +381,24 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
                 "mean_topology_loss": topo_sum / denom,
                 "mean_anti_collapse_loss": ac_sum / denom,
                 "mean_query_repulsion_loss": repulsion_sum / denom,
+                "mean_typed_family_loss": typed_family_sum / denom,
+                "mean_typed_arity_loss": arity_sum / denom,
+                "mean_family_separation_loss": family_sep_sum / denom,
+                "mean_slot_usage_balance_loss": slot_balance_sum / denom,
                 "mean_target_steps": float(sum(curriculum_targets[-denom:]) / max(1, min(denom, len(curriculum_targets)))),
                 "mean_query_embed_pairwise_cosine": query_embed_cosine_sum / denom,
                 "mean_scratch_trace_pairwise_cosine": scratch_trace_cosine_sum / denom,
                 "mean_operator_entropy_ratio": operator_entropy_sum / denom,
+                "typed_family_accuracy": typed_accuracy_sum / denom,
+                "arity_violation_rate": (typed_violation_sum / max(1, typed_supervision_steps)) if typed_supervision_steps else 0.0,
+                "masked_pointer_zero_rate": masked_zero_sum / denom,
+                "family_slot_entropy": family_entropy_sum / denom,
+                "symbolic_trace_alignment": (typed_alignment_sum / max(1, typed_supervision_steps)) if typed_supervision_steps else 0.0,
+                "predicate_pointer_radial_gap": hyperbolic_gap_sum / denom,
+                "family_radius_violation_rate": hyperbolic_violation_sum / denom,
+                "hyperbolic_geodesic_margin": hyperbolic_geodesic_sum / denom,
+                "hyperbolic_projection_clip_rate": hyperbolic_clip_sum / denom,
+                "typed_supervision_steps": float(typed_supervision_steps),
             }
         )
         print(f"Epoch {epoch + 1} Mean Loss: {epoch_metrics[-1]['mean_loss']:.4f}")
@@ -331,6 +452,18 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
             "min_entropy": float(args.min_entropy),
             "query_repulsion_weight": float(args.query_repulsion_weight),
             "query_repulsion_margin": float(args.query_repulsion_margin),
+            "typed_physics_config": str(args.typed_physics_config).replace("\\", "/") if str(args.typed_physics_config).strip() else None,
+            "typed_slot_layout": typed_slot_layout,
+            "arity_router_mode": str(args.arity_router_mode),
+            "gumbel_hard": bool(args.gumbel_hard),
+            "gumbel_temp_start": float(args.gumbel_temp_start),
+            "gumbel_temp_end": float(args.gumbel_temp_end),
+            "typed_family_weight": float(args.typed_family_weight),
+            "typed_arity_weight": float(args.typed_arity_weight),
+            "family_separation_weight": float(args.family_separation_weight),
+            "slot_usage_balance_weight": float(args.slot_usage_balance_weight),
+            "geometry_mode": str(args.geometry_mode),
+            "poincare_curvature": float(args.poincare_curvature),
             "local_files_only": bool(args.local_files_only),
             "entity_rename_augmentation_prob": float(args.entity_rename_augmentation_prob),
             "format_flatten_augmentation_prob": float(args.format_flatten_augmentation_prob),
@@ -384,6 +517,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--min-entropy", type=float, default=0.85)
     parser.add_argument("--query-repulsion-weight", type=float, default=0.0)
     parser.add_argument("--query-repulsion-margin", type=float, default=0.15)
+    parser.add_argument("--typed-physics-config", type=str, default="")
+    parser.add_argument("--typed-slot-layout", type=str, default="")
+    parser.add_argument("--arity-router-mode", type=str, default="soft")
+    parser.add_argument("--gumbel-hard", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--gumbel-temp-start", type=float, default=1.0)
+    parser.add_argument("--gumbel-temp-end", type=float, default=0.35)
+    parser.add_argument("--typed-family-weight", type=float, default=0.05)
+    parser.add_argument("--typed-arity-weight", type=float, default=0.05)
+    parser.add_argument("--family-separation-weight", type=float, default=0.02)
+    parser.add_argument("--slot-usage-balance-weight", type=float, default=0.01)
+    parser.add_argument("--geometry-mode", type=str, default="euclidean")
+    parser.add_argument("--poincare-curvature", type=float, default=1.0)
     parser.add_argument("--scratchpad-token", type=str, default=M19_SCRATCHPAD_TOKEN)
     parser.add_argument("--symbiote-end-token", type=str, default=M19_SYMBIOTE_END_TOKEN)
     parser.add_argument("--seed", type=int, default=19)
@@ -404,6 +549,17 @@ def parse_args() -> argparse.Namespace:
         args.checkpoint_output = args.checkpoint_output_path
     if args.report_output is None and args.report_output_path is not None:
         args.report_output = args.report_output_path
+    track_key = _track_key(args.track)
+    defaults = M19_REGISTRY.get(track_key, {}).get("defaults", {})
+    if defaults:
+        if not str(args.typed_physics_config).strip() and defaults.get("typed_physics_config"):
+            args.typed_physics_config = str(defaults["typed_physics_config"])
+        if not str(args.typed_slot_layout).strip() and defaults.get("typed_slot_layout"):
+            args.typed_slot_layout = str(defaults["typed_slot_layout"])
+        if str(args.arity_router_mode).strip() == "soft" and defaults.get("arity_router_mode"):
+            args.arity_router_mode = str(defaults["arity_router_mode"])
+        if str(args.geometry_mode).strip() == "euclidean" and defaults.get("geometry_mode"):
+            args.geometry_mode = str(defaults["geometry_mode"])
     return args
 
 

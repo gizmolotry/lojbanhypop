@@ -86,3 +86,18 @@ def test_run_m19_dictionary_audit_help() -> None:
     assert "usage:" in out.lower()
     assert "--bridge-spec" in out
     assert "--dataset-path" in out
+    assert "--typed-slot-layout" in out
+
+
+def test_run_m19_typed_physics_suite_help() -> None:
+    out = _run_help("scripts/m19/run_m19_typed_physics_suite.py")
+    assert "usage:" in out.lower()
+    assert "--track" in out
+    assert "--typed-slot-layout" in out
+
+
+def test_run_m19_gumbel_and_hyperbolic_suite_help() -> None:
+    gumbel = _run_help("scripts/m19/run_m19_gumbel_faithfulness_suite.py")
+    hyper = _run_help("scripts/m19/run_m19_hyperbolic_faithfulness_suite.py")
+    assert "--epochs" in gumbel
+    assert "--poincare-curvature" in hyper

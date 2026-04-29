@@ -35,6 +35,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--replication-report", type=Path, default=None)
     parser.add_argument("--stability-report", type=Path, default=None)
     parser.add_argument("--kill-test-report", type=Path, default=None)
+    parser.add_argument("--dictionary-audit-report", type=Path, default=None)
 
     parser.add_argument("--execute-m19-direct", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--base-model", type=str, default="C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct")
@@ -49,6 +50,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--min-latent-steps", type=int, default=4)
     parser.add_argument("--max-latent-steps", type=int, default=64)
     parser.add_argument("--random-scale", type=float, default=0.05)
+    parser.add_argument("--typed-slot-layout", type=str, default="")
+    parser.add_argument("--arity-router-mode", type=str, default="soft")
+    parser.add_argument("--gumbel-hard", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--gumbel-temp-end", type=float, default=0.35)
+    parser.add_argument("--geometry-mode", type=str, default="euclidean")
+    parser.add_argument("--poincare-curvature", type=float, default=1.0)
     parser.add_argument("--seed", type=int, default=19)
     parser.add_argument("--cell-id", type=str, default="M19.3_8Q_128D_8S")
     return parser.parse_args()
@@ -83,6 +90,7 @@ def main() -> None:
         replication_report_path=args.replication_report,
         stability_report_path=args.stability_report,
         kill_test_report_path=args.kill_test_report,
+        dictionary_audit_report_path=args.dictionary_audit_report,
         history_manifest_path=history_manifest,
     )
     manifest["run_id"] = run_id
@@ -97,6 +105,7 @@ def main() -> None:
         "replication_report": _repo_string(args.replication_report) if args.replication_report else None,
         "stability_report": _repo_string(args.stability_report) if args.stability_report else None,
         "kill_test_report": _repo_string(args.kill_test_report) if args.kill_test_report else None,
+        "dictionary_audit_report": _repo_string(args.dictionary_audit_report) if args.dictionary_audit_report else None,
     }
 
     manifest_path = output_dir / "direct_unified_eval_manifest.json"
@@ -135,6 +144,16 @@ def _run_m19_direct(args: argparse.Namespace, direct_dir: Path) -> tuple[Path, P
         str(int(args.max_latent_steps)),
         "--random-scale",
         str(float(args.random_scale)),
+        "--typed-slot-layout",
+        str(args.typed_slot_layout),
+        "--arity-router-mode",
+        str(args.arity_router_mode),
+        "--gumbel-temp-end",
+        str(float(args.gumbel_temp_end)),
+        "--geometry-mode",
+        str(args.geometry_mode),
+        "--poincare-curvature",
+        str(float(args.poincare_curvature)),
         "--seed",
         str(int(args.seed)),
         "--track",
@@ -146,6 +165,8 @@ def _run_m19_direct(args: argparse.Namespace, direct_dir: Path) -> tuple[Path, P
     ]
     if track_key == "M19.4":
         benchmark_cmd.append("--dynamic-pacing")
+    if bool(args.gumbel_hard):
+        benchmark_cmd.append("--gumbel-hard")
     _run(benchmark_cmd)
 
     if track_key == "M19.4":
@@ -170,6 +191,16 @@ def _run_m19_direct(args: argparse.Namespace, direct_dir: Path) -> tuple[Path, P
         str(int(args.bottleneck_dim)),
         "--random-scale",
         str(float(args.random_scale)),
+        "--typed-slot-layout",
+        str(args.typed_slot_layout),
+        "--arity-router-mode",
+        str(args.arity_router_mode),
+        "--gumbel-temp-end",
+        str(float(args.gumbel_temp_end)),
+        "--geometry-mode",
+        str(args.geometry_mode),
+        "--poincare-curvature",
+        str(float(args.poincare_curvature)),
         "--seed",
         str(int(args.seed)),
         "--track",
@@ -179,6 +210,8 @@ def _run_m19_direct(args: argparse.Namespace, direct_dir: Path) -> tuple[Path, P
         "--output-path",
         str(audit_report),
     ]
+    if bool(args.gumbel_hard):
+        audit_cmd.append("--gumbel-hard")
     _run(audit_cmd)
     return benchmark_report, audit_report
 

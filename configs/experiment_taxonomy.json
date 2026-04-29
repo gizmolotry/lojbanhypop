@@ -553,6 +553,31 @@
         "masked_accuracy"
       ],
       "surface": "m19_kill_test_suite"
+    },
+    "m19.typed_faithfulness": {
+      "test_id": "m19.typed_faithfulness",
+      "family": "M19",
+      "description": "Typed Lojban-inspired family, arity, pointer-mask, and trace-alignment faithfulness on the active M19 typed bridge.",
+      "metrics": [
+        "typed_family_accuracy",
+        "arity_violation_rate",
+        "masked_pointer_zero_rate",
+        "family_slot_entropy",
+        "symbolic_trace_alignment"
+      ],
+      "surface": "m19_dictionary_audit"
+    },
+    "m19.hyperbolic_geometry": {
+      "test_id": "m19.hyperbolic_geometry",
+      "family": "M19",
+      "description": "Hyperbolic geometry separation metrics for typed predicate/operator/pointer codebooks in the M19.32 branch.",
+      "metrics": [
+        "predicate_pointer_radial_gap",
+        "family_radius_violation_rate",
+        "hyperbolic_geodesic_margin",
+        "hyperbolic_projection_clip_rate"
+      ],
+      "surface": "m19_dictionary_audit"
     }
   },
   "family_comparison_contracts": {
@@ -664,9 +689,11 @@
         "m19.dynamic_pacing_guardrails",
         "m19.integrity_controls",
         "m19.replication_stability",
-        "m19.kill_test_suite"
+        "m19.kill_test_suite",
+        "m19.typed_faithfulness",
+        "m19.hyperbolic_geometry"
       ],
-      "explicit_compare_entries": ["M18", "M19", "M19.3.A", "M19.3.B"]
+      "explicit_compare_entries": ["M18", "M19", "M19.3.A", "M19.3.B", "M19.31", "M19.32"]
     }
   },
   "entry_overrides": {

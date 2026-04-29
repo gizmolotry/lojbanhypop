@@ -118,6 +118,27 @@ def test_build_direct_unified_eval_manifest_static_m19() -> None:
             }
         },
     )
+    dictionary_path = _write_json(
+        tmp_path / "dictionary.json",
+        {
+            "checkpoints": [
+                {
+                    "label": "seed23",
+                    "typed_faithfulness": {
+                        "typed_family_accuracy": 0.88,
+                        "arity_violation_rate": 0.05,
+                        "masked_pointer_zero_rate": 1.0,
+                        "family_slot_entropy": 0.22,
+                        "symbolic_trace_alignment": 0.74,
+                        "predicate_pointer_radial_gap": 0.31,
+                        "family_radius_violation_rate": 0.02,
+                        "hyperbolic_geodesic_margin": 0.56,
+                        "hyperbolic_projection_clip_rate": 0.04,
+                    },
+                }
+            ]
+        },
+    )
     j_anchor = _write_json(tmp_path / "j-5.json", {"metrics": {"accepted_foil_pair_accuracy": 0.77}})
     l_anchor = _write_json(tmp_path / "l_series_summary.json", {"metrics": {"constraint_scope": 0.92}})
     history_path = _write_json(
@@ -151,6 +172,7 @@ def test_build_direct_unified_eval_manifest_static_m19() -> None:
         replication_report_path=replication_path,
         stability_report_path=stability_path,
         kill_test_report_path=kill_path,
+        dictionary_audit_report_path=dictionary_path,
         history_manifest_path=history_path,
     )
 
@@ -173,6 +195,12 @@ def test_build_direct_unified_eval_manifest_static_m19() -> None:
     kill = next(row for row in manifest["contract_results"] if row["test_id"] == "m19.kill_test_suite")
     assert kill["status"] == "available"
     assert kill["metrics"]["entity_accuracy"] == 0.17
+    typed = next(row for row in manifest["contract_results"] if row["test_id"] == "m19.typed_faithfulness")
+    assert typed["status"] == "available"
+    assert typed["metrics"]["typed_family_accuracy"] == 0.88
+    hyper = next(row for row in manifest["contract_results"] if row["test_id"] == "m19.hyperbolic_geometry")
+    assert hyper["status"] == "available"
+    assert hyper["metrics"]["predicate_pointer_radial_gap"] == 0.31
 
     inherited = {row["test_id"] for row in manifest["contract_results"]}
     assert "m14.scratchpad_bleed" in inherited
@@ -189,6 +217,7 @@ def test_build_direct_unified_eval_manifest_static_m19() -> None:
     assert manifest["headline_metrics"]["best_mean_accuracy"] == 0.28
     assert manifest["headline_metrics"]["stability_combo_slug"] == "lr_5em05_aug_0p0"
     assert manifest["headline_metrics"]["entity_accuracy"] == 0.17
+    assert manifest["headline_metrics"]["typed_family_accuracy"] == 0.88
 
     rendered = render_direct_unified_eval_markdown(manifest)
     assert "Direct Unified Eval: M19 (M19)" in rendered

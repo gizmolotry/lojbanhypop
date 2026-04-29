@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "description": "Shared typed-physics ontology for M19 Lojbanic retrofits.",
+  "legacy_sources": {
+    "m9_taxonomy": "src/lojban_evolution/m9/taxonomy.py",
+    "m19_curriculum": "artifacts/datasets/m19_mixed_curriculum_v1.jsonl"
+  },
+  "default_slot_layouts": {
+    "8q_v1": ["gismu", "gismu", "cmavo", "cmavo", "judri", "judri", "judri", "judri"]
+  },
+  "radius_bands": {
+    "gismu": {"min": 0.05, "max": 0.30},
+    "cmavo": {"min": 0.22, "max": 0.55},
+    "judri": {"min": 0.48, "max": 0.82},
+    "control": {"min": 0.08, "max": 0.40}
+  },
+  "exact_tokens": {
+    "TASK_MULTI_AGENT": {"family": "control", "arity": null},
+    "TASK_WINOGRAD": {"family": "control", "arity": null},
+    "TASK_WINOGRAD_BENCH": {"family": "control", "arity": null},
+    "TASK_SPATIAL": {"family": "control", "arity": null},
+    "TASK_TEMPORAL": {"family": "control", "arity": null},
+    "TASK_COMPARATIVE": {"family": "control", "arity": null},
+    "TASK_KNIGHTS": {"family": "control", "arity": null},
+    "TASK_NESTED_SCOPE": {"family": "control", "arity": null},
+    "TASK_DEONTIC": {"family": "control", "arity": null},
+    "TASK_COUNTERFACTUAL": {"family": "control", "arity": null},
+    "TASK_QUANTIFIER": {"family": "control", "arity": null},
+    "REL_LEFT_OF": {"family": "gismu", "arity": 2, "place_labels": ["subject", "object"]},
+    "REL_RIGHT_OF": {"family": "gismu", "arity": 2, "place_labels": ["subject", "object"]},
+    "REL_BEFORE": {"family": "gismu", "arity": 2, "place_labels": ["earlier", "later"]},
+    "REL_GT": {"family": "gismu", "arity": 2, "place_labels": ["larger", "smaller"]},
+    "REL_PERMISSION": {"family": "gismu", "arity": 2, "place_labels": ["action", "permission_state"]},
+    "LINK_CAUSAL": {"family": "gismu", "arity": 2, "place_labels": ["cause", "effect"]},
+    "STATE_OBJ_LOC1": {"family": "gismu", "arity": 2, "place_labels": ["object", "location"]},
+    "STATE_OBJ_LOC2": {"family": "gismu", "arity": 2, "place_labels": ["object", "location"]},
+    "EVENT_MOVE_LOC2": {"family": "gismu", "arity": 3, "place_labels": ["agent", "object", "target"]},
+    "MENTAL_STATE_E1_LOC1": {"family": "gismu", "arity": 2, "place_labels": ["agent", "belief_location"]},
+    "MENTAL_STATE_E1_LOC2": {"family": "gismu", "arity": 2, "place_labels": ["agent", "belief_location"]},
+    "RULE_UNLESS": {"family": "cmavo", "arity": 2},
+    "IF_CHAIN": {"family": "cmavo", "arity": 2},
+    "CHAIN_TRANSITIVE": {"family": "cmavo", "arity": 2},
+    "CHECK_EQUIV": {"family": "cmavo", "arity": 2},
+    "NEGATE_WAIVER": {"family": "cmavo", "arity": 1},
+    "PRONOUN_REF": {"family": "judri", "arity": null},
+    "FORALL_BIND": {"family": "judri", "arity": null},
+    "EXISTS_BIND": {"family": "judri", "arity": null},
+    "VERIFY_ID": {"family": "control", "arity": null},
+    "VERIFY_TRUE": {"family": "control", "arity": null},
+    "VERIFY_FALSE": {"family": "control", "arity": null}
+  },
+  "prefix_rules": [
+    {"prefix": "BIND_", "family": "judri", "arity": null},
+    {"prefix": "RESOLVE_", "family": "judri", "arity": null},
+    {"prefix": "ROLE_", "family": "judri", "arity": null},
+    {"prefix": "OBS_", "family": "cmavo", "arity": 1},
+    {"prefix": "STATE_", "family": "gismu", "arity": 2},
+    {"prefix": "EVENT_", "family": "gismu", "arity": 3},
+    {"prefix": "MENTAL_STATE_", "family": "gismu", "arity": 2},
+    {"prefix": "REL_", "family": "gismu", "arity": 2},
+    {"prefix": "LINK_", "family": "gismu", "arity": 2},
+    {"prefix": "CLAIM_", "family": "cmavo", "arity": 2},
+    {"prefix": "ASSUME_", "family": "cmavo", "arity": 1},
+    {"prefix": "CONSISTENCY_", "family": "cmavo", "arity": 2},
+    {"prefix": "SCOPE_", "family": "cmavo", "arity": 2},
+    {"prefix": "RULE_", "family": "cmavo", "arity": 2},
+    {"prefix": "NEGATE_", "family": "cmavo", "arity": 1},
+    {"prefix": "WINO_FAMILY_", "family": "control", "arity": null},
+    {"prefix": "TASK_", "family": "control", "arity": null},
+    {"prefix": "VERIFY_", "family": "control", "arity": null},
+    {"prefix": "ANS_", "family": "control", "arity": null},
+    {"prefix": "SOLUTION_", "family": "control", "arity": null}
+  ],
+  "fallback": {
+    "family": "control",
+    "arity": null
+  }
+}

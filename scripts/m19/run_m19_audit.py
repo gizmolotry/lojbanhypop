@@ -17,6 +17,7 @@ sys.path.append(str(Path(__file__).resolve().parent.parent.parent / "src"))
 
 from lojban_evolution.m19.engine import M19SymbioteBridge, m19_injection_hook
 from lojban_evolution.m19.family import M19_HIDDEN_SIZE, M19_REGISTRY, M19_SCRATCHPAD_TOKEN
+from lojban_evolution.m19.typed_physics import parse_typed_slot_layout
 from lojban_evolution.series_contract import (
     assert_output_path_allowed,
     lineage_metadata,
@@ -157,6 +158,11 @@ def run_m19_audit(args: argparse.Namespace) -> dict[str, Any]:
         scratchpad_len=int(args.scratchpad_length),
         num_queries=int(args.num_queries),
         max_latent_steps=max_latent_steps,
+        typed_slot_layout=parse_typed_slot_layout(args.typed_slot_layout) if str(args.typed_slot_layout).strip() else None,
+        geometry_mode=str(args.geometry_mode),
+        arity_router_mode=str(args.arity_router_mode),
+        gumbel_hard=bool(args.gumbel_hard),
+        poincare_curvature=float(args.poincare_curvature),
     ).to(device=device, dtype=model_dtype)
     bridge_load = bridge.load_state_dict(bridge_state, strict=False)
     bridge.eval()
@@ -178,6 +184,12 @@ def run_m19_audit(args: argparse.Namespace) -> dict[str, Any]:
         correct = 0
         phrase_correct = 0
         total_tokens = 0
+        typed_family_values: list[float] = []
+        masked_pointer_values: list[float] = []
+        family_entropy_values: list[float] = []
+        radial_gap_values: list[float] = []
+        radial_violation_values: list[float] = []
+        geodesic_margin_values: list[float] = []
         rows: list[dict[str, Any]] = []
         for item in tqdm(samples, desc=cid):
             use_scratchpad = cid != "BASE-NO-SCRATCHPAD"
@@ -191,7 +203,20 @@ def run_m19_audit(args: argparse.Namespace) -> dict[str, Any]:
                 with torch.no_grad():
                     out_prompt = backbone(**inputs, output_hidden_states=True)
                     h_tap = out_prompt.hidden_states[int(args.tap_layer)]
-                    delta, _, _, _ = bridge(h_tap)
+                    delta, _, _, telemetry = bridge(h_tap, gumbel_temperature=float(args.gumbel_temp_end))
+                slot_family_ids = telemetry.get("slot_family_ids") or []
+                slot_family_logits = telemetry.get("slot_family_logits")
+                if slot_family_logits is not None and slot_family_ids:
+                    family_targets = torch.tensor(slot_family_ids, device=slot_family_logits.device, dtype=torch.long)
+                    typed_family_values.append(
+                        float((slot_family_logits[0].argmax(dim=-1) == family_targets).float().mean().item())
+                    )
+                masked_pointer_values.append(float(telemetry.get("masked_pointer_zero_rate", 0.0)))
+                family_entropy_values.append(float(telemetry.get("slot_family_entropy", 0.0)))
+                hyper_metrics = telemetry.get("hyperbolic_metrics", {})
+                radial_gap_values.append(float(hyper_metrics.get("predicate_pointer_radial_gap", 0.0)))
+                radial_violation_values.append(float(hyper_metrics.get("family_radius_violation_rate", 0.0)))
+                geodesic_margin_values.append(float(hyper_metrics.get("hyperbolic_geodesic_margin", 0.0)))
             elif cid == "RANDOM":
                 delta = torch.randn(
                     1,
@@ -240,6 +265,12 @@ def run_m19_audit(args: argparse.Namespace) -> dict[str, Any]:
             "accuracy": correct / max(1, len(samples)),
             "phrase_accuracy": phrase_correct / max(1, len(samples)),
             "avg_tokens": total_tokens / max(1, len(samples)),
+            "typed_family_accuracy": (sum(typed_family_values) / max(1, len(typed_family_values))) if typed_family_values else None,
+            "masked_pointer_zero_rate": (sum(masked_pointer_values) / max(1, len(masked_pointer_values))) if masked_pointer_values else None,
+            "family_slot_entropy": (sum(family_entropy_values) / max(1, len(family_entropy_values))) if family_entropy_values else None,
+            "predicate_pointer_radial_gap": (sum(radial_gap_values) / max(1, len(radial_gap_values))) if radial_gap_values else None,
+            "family_radius_violation_rate": (sum(radial_violation_values) / max(1, len(radial_violation_values))) if radial_violation_values else None,
+            "hyperbolic_geodesic_margin": (sum(geodesic_margin_values) / max(1, len(geodesic_margin_values))) if geodesic_margin_values else None,
         }
         previews[cid] = rows[: min(10, len(rows))]
 
@@ -269,6 +300,12 @@ def run_m19_audit(args: argparse.Namespace) -> dict[str, Any]:
             "random_scale": float(args.random_scale),
             "checkpoint_missing_keys": list(bridge_load.missing_keys),
             "checkpoint_unexpected_keys": list(bridge_load.unexpected_keys),
+            "typed_slot_layout": parse_typed_slot_layout(args.typed_slot_layout) if str(args.typed_slot_layout).strip() else [],
+            "arity_router_mode": str(args.arity_router_mode),
+            "gumbel_hard": bool(args.gumbel_hard),
+            "gumbel_temp_end": float(args.gumbel_temp_end),
+            "geometry_mode": str(args.geometry_mode),
+            "poincare_curvature": float(args.poincare_curvature),
         },
         "results": results,
         "headline": {
@@ -304,6 +341,9 @@ def run_m19_audit(args: argparse.Namespace) -> dict[str, Any]:
                 (results.get("Q-FORMER", {}).get("phrase_accuracy") or 0.0)
                 - (results.get("RANDOM", {}).get("phrase_accuracy") or 0.0)
             ),
+            "typed_family_accuracy": results.get("Q-FORMER", {}).get("typed_family_accuracy"),
+            "masked_pointer_zero_rate": results.get("Q-FORMER", {}).get("masked_pointer_zero_rate"),
+            "family_slot_entropy": results.get("Q-FORMER", {}).get("family_slot_entropy"),
         },
         "sample_predictions": previews,
         "report_path": str(report_path).replace("\\", "/"),
@@ -337,6 +377,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--scratchpad-token", type=str, default=M19_SCRATCHPAD_TOKEN)
     parser.add_argument("--max-new-tokens", type=int, default=20)
     parser.add_argument("--random-scale", type=float, default=0.05)
+    parser.add_argument("--typed-slot-layout", type=str, default="")
+    parser.add_argument("--arity-router-mode", type=str, default="soft")
+    parser.add_argument("--gumbel-hard", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--gumbel-temp-end", type=float, default=0.35)
+    parser.add_argument("--geometry-mode", type=str, default="euclidean")
+    parser.add_argument("--poincare-curvature", type=float, default=1.0)
     parser.add_argument("--seed", type=int, default=19)
     parser.add_argument("--track", type=str, default="")
     parser.add_argument("--cell-id", type=str, default="")
@@ -347,6 +393,17 @@ def parse_args() -> argparse.Namespace:
     args = parser.parse_args()
     if args.data_path is not None:
         args.dataset_path = args.data_path
+    track_key = str(args.track).strip() if str(args.track).strip() in M19_REGISTRY else "M19"
+    defaults = M19_REGISTRY.get(track_key, {}).get("defaults", {})
+    if defaults:
+        if not str(args.typed_slot_layout).strip() and defaults.get("typed_slot_layout"):
+            args.typed_slot_layout = str(defaults["typed_slot_layout"])
+        if str(args.arity_router_mode).strip() == "soft" and defaults.get("arity_router_mode"):
+            args.arity_router_mode = str(defaults["arity_router_mode"])
+        if str(args.geometry_mode).strip() == "euclidean" and defaults.get("geometry_mode"):
+            args.geometry_mode = str(defaults["geometry_mode"])
+        if not args.gumbel_hard and str(defaults.get("arity_router_mode", "")).strip() == "gumbel_hard":
+            args.gumbel_hard = True
     return args
 
 

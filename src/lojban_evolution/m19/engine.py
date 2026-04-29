@@ -6,6 +6,17 @@ import math
 from typing import Tuple, Dict, Any, List
 from contextlib import contextmanager
 
+from .typed_physics import (
+    FAMILY_TO_ID,
+    apply_radius_bands,
+    family_histogram_from_ids,
+    hyperbolic_family_metrics,
+    logmap0,
+    mean_entropy_from_logits,
+    parse_typed_slot_layout,
+    slot_family_counts,
+)
+
 
 def _off_diagonal_cosines(vectors: torch.Tensor) -> torch.Tensor:
     if vectors.ndim != 2:
@@ -166,6 +177,12 @@ class M19SymbioteBridge(nn.Module):
         scratchpad_len: int = 8,
         num_queries: int = 8,
         max_latent_steps: int | None = None,
+        typed_slot_layout: list[str] | tuple[str, ...] | str | None = None,
+        geometry_mode: str = "euclidean",
+        arity_router_mode: str = "soft",
+        gumbel_hard: bool = False,
+        poincare_curvature: float = 1.0,
+        radius_bands: dict[str, dict[str, float]] | None = None,
     ):
         super().__init__()
         self.hidden_size = hidden_size
@@ -173,9 +190,44 @@ class M19SymbioteBridge(nn.Module):
         self.scratchpad_len = scratchpad_len
         self.num_queries = num_queries
         self.max_latent_steps = max(int(max_latent_steps or scratchpad_len), int(scratchpad_len))
-        
+        self.typed_slot_layout = parse_typed_slot_layout(typed_slot_layout) if typed_slot_layout else []
+        self.typed_physics_enabled = bool(self.typed_slot_layout)
+        self.geometry_mode = str(geometry_mode).strip().lower() or "euclidean"
+        self.arity_router_mode = str(arity_router_mode).strip().lower() or "soft"
+        self.gumbel_hard = bool(gumbel_hard)
+        self.poincare_curvature = max(float(poincare_curvature), 1e-5)
+        self.radius_bands = radius_bands or {
+            "gismu": {"min": 0.05, "max": 0.30},
+            "cmavo": {"min": 0.22, "max": 0.55},
+            "judri": {"min": 0.48, "max": 0.82},
+            "control": {"min": 0.08, "max": 0.40},
+        }
+        self.slot_family_counts = slot_family_counts(self.typed_slot_layout) if self.typed_physics_enabled else {}
+        self.family_indices = {
+            family: [idx for idx, name in enumerate(self.typed_slot_layout) if name == family]
+            for family in FAMILY_TO_ID
+        } if self.typed_physics_enabled else {}
+        self.register_buffer(
+            "slot_family_ids",
+            torch.tensor([FAMILY_TO_ID[name] for name in self.typed_slot_layout], dtype=torch.long),
+            persistent=False,
+        )
+
         # 1. Latent Queries (Extraction Heads)
         self.query_embeds = nn.Parameter(torch.randn(num_queries, bottleneck_dim) * 0.02)
+        if self.typed_physics_enabled:
+            self.family_query_banks = nn.ParameterDict()
+            for family, count in self.slot_family_counts.items():
+                if count > 0:
+                    self.family_query_banks[family] = nn.Parameter(torch.randn(count, bottleneck_dim) * 0.02)
+            self.typed_slot_position = nn.Parameter(torch.randn(len(self.typed_slot_layout), bottleneck_dim) * 0.02)
+            self.family_head = nn.Linear(bottleneck_dim, len(FAMILY_TO_ID))
+            self.arity_head = nn.Linear(bottleneck_dim, 3) if self.family_indices.get("gismu") else None
+        else:
+            self.family_query_banks = None
+            self.typed_slot_position = None
+            self.family_head = None
+            self.arity_head = None
         
         # 2. Cross-Attention Bottleneck
         self.compress = nn.Linear(hidden_size, bottleneck_dim)
@@ -191,21 +243,147 @@ class M19SymbioteBridge(nn.Module):
         self.register_buffer("halt_centroid", torch.zeros(bottleneck_dim), persistent=True)
         self.register_buffer("halt_centroid_samples", torch.tensor(0.0), persistent=True)
 
+    def query_dictionary(self) -> torch.Tensor:
+        if not self.typed_physics_enabled or self.family_query_banks is None:
+            return self.query_embeds
+        counters = {family: 0 for family in FAMILY_TO_ID}
+        slots: list[torch.Tensor] = []
+        for idx, family in enumerate(self.typed_slot_layout):
+            family_bank = self.family_query_banks[family]
+            family_offset = counters[family]
+            slots.append(family_bank[family_offset] + self.typed_slot_position[idx])
+            counters[family] += 1
+        return torch.stack(slots, dim=0)
+
+    def _apply_typed_routing(
+        self,
+        query_state: torch.Tensor,
+        gumbel_temperature: float,
+    ) -> tuple[torch.Tensor, dict[str, Any]]:
+        if not self.typed_physics_enabled or self.family_head is None:
+            return query_state, {
+                "slot_family_logits": None,
+                "slot_family_entropy": 0.0,
+                "judri_mask": None,
+                "arity_logits": None,
+                "arity_distribution": None,
+                "active_predicate_slot": None,
+                "masked_pointer_zero_rate": 0.0,
+                "hyperbolic_metrics": {},
+            }
+
+        routed_state = query_state
+        telemetry: dict[str, Any] = {
+            "slot_family_logits": self.family_head(query_state),
+            "slot_family_entropy": 0.0,
+            "judri_mask": None,
+            "arity_logits": None,
+            "arity_distribution": None,
+            "active_predicate_slot": None,
+            "masked_pointer_zero_rate": 0.0,
+            "hyperbolic_metrics": {},
+        }
+        telemetry["slot_family_entropy"] = float(mean_entropy_from_logits(telemetry["slot_family_logits"]).detach().item())
+
+        if self.geometry_mode == "hyperbolic":
+            routed_state, clip_mask = apply_radius_bands(
+                query_state,
+                self.typed_slot_layout,
+                self.radius_bands,
+                self.poincare_curvature,
+            )
+            telemetry["hyperbolic_metrics"] = hyperbolic_family_metrics(
+                routed_state.detach(),
+                self.typed_slot_layout,
+                self.poincare_curvature,
+                self.radius_bands,
+            )
+            telemetry["hyperbolic_metrics"]["hyperbolic_projection_clip_rate"] = float(clip_mask.mean().detach().item())
+
+        gismu_indices = self.family_indices.get("gismu", [])
+        judri_indices = self.family_indices.get("judri", [])
+        if gismu_indices and judri_indices and self.arity_head is not None:
+            family_logits = telemetry["slot_family_logits"]
+            family_probs = F.softmax(family_logits[:, gismu_indices, :], dim=-1)
+            gismu_scores = family_probs[..., FAMILY_TO_ID["gismu"]]
+            active_local = gismu_scores.argmax(dim=1)
+            batch_ids = torch.arange(routed_state.shape[0], device=routed_state.device)
+            active_state = routed_state[:, gismu_indices, :][batch_ids, active_local, :]
+            arity_logits = self.arity_head(active_state)
+            if self.arity_router_mode == "gumbel_hard":
+                arity_distribution = F.gumbel_softmax(
+                    arity_logits,
+                    tau=max(float(gumbel_temperature), 1e-4),
+                    hard=bool(self.gumbel_hard),
+                    dim=-1,
+                )
+            else:
+                arity_distribution = F.softmax(arity_logits, dim=-1)
+            pointer_budget = (arity_distribution * torch.tensor([1.0, 2.0, 3.0], device=routed_state.device, dtype=routed_state.dtype)).sum(dim=-1)
+            if self.arity_router_mode == "gumbel_hard":
+                active_budget = pointer_budget.round().to(dtype=torch.long)
+            else:
+                active_budget = pointer_budget.round().clamp_min(1.0).to(dtype=torch.long)
+            hard_mask = torch.zeros(
+                routed_state.shape[0],
+                len(judri_indices),
+                device=routed_state.device,
+                dtype=routed_state.dtype,
+            )
+            for batch_idx in range(routed_state.shape[0]):
+                budget = min(len(judri_indices), int(active_budget[batch_idx].item()))
+                if budget > 0:
+                    hard_mask[batch_idx, :budget] = 1.0
+            positions = torch.arange(1, len(judri_indices) + 1, device=routed_state.device, dtype=routed_state.dtype).unsqueeze(0)
+            soft_mask = torch.sigmoid((pointer_budget.unsqueeze(-1) - positions + 0.5) * 8.0)
+            if self.arity_router_mode == "gumbel_hard":
+                judri_mask = hard_mask + soft_mask - soft_mask.detach()
+            else:
+                judri_mask = soft_mask
+            routed_state = routed_state.clone()
+            routed_state[:, judri_indices, :] = routed_state[:, judri_indices, :] * judri_mask.unsqueeze(-1)
+            telemetry["judri_mask"] = hard_mask
+            telemetry["arity_logits"] = arity_logits
+            telemetry["arity_distribution"] = arity_distribution
+            telemetry["active_predicate_slot"] = active_local
+            if len(judri_indices) > 0:
+                zero_mask = (1.0 - hard_mask).unsqueeze(-1)
+                masked_values = routed_state[:, judri_indices, :] * zero_mask
+                telemetry["masked_pointer_zero_rate"] = float((masked_values.abs() < 1e-8).float().mean().detach().item())
+
+        return routed_state, telemetry
+
     def forward(
         self,
         h_tap: torch.Tensor,
         active_steps: int | None = None,
         lengths: torch.Tensor | None = None,
+        gumbel_temperature: float = 1.0,
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, Dict[str, Any]]:
         b = h_tap.shape[0]
         target_steps = int(active_steps or self.scratchpad_len)
         target_steps = max(1, min(target_steps, self.max_latent_steps))
         h_bottleneck = self.compress(h_tap)
         
-        queries = self.query_embeds.unsqueeze(0).expand(b, -1, -1)
+        queries = self.query_dictionary().unsqueeze(0).expand(b, -1, -1)
         h_query, _ = self.cross_attn(queries, h_bottleneck, h_bottleneck)
-        h_reservoir = self.output_map(h_query.transpose(1, 2)).transpose(1, 2)
-        h_scratch = h_reservoir[:, :target_steps, :]
+        h_query, typed_telemetry = self._apply_typed_routing(h_query, gumbel_temperature=gumbel_temperature)
+        if self.geometry_mode == "hyperbolic" and self.typed_physics_enabled:
+            h_reservoir = self.output_map(logmap0(h_query, self.poincare_curvature).transpose(1, 2)).transpose(1, 2)
+            h_scratch = logmap0(
+                apply_radius_bands(
+                    torch.tanh(h_reservoir),
+                    [self.typed_slot_layout[min(idx, len(self.typed_slot_layout) - 1)] for idx in range(h_reservoir.shape[1])]
+                    if self.typed_slot_layout
+                    else ["control"] * h_reservoir.shape[1],
+                    self.radius_bands,
+                    self.poincare_curvature,
+                )[0][:, :target_steps, :],
+                self.poincare_curvature,
+            )
+        else:
+            h_reservoir = self.output_map(h_query.transpose(1, 2)).transpose(1, 2)
+            h_scratch = h_reservoir[:, :target_steps, :]
 
         if lengths is None:
             lengths = torch.full((b,), target_steps, device=h_tap.device, dtype=torch.long)
@@ -218,8 +396,19 @@ class M19SymbioteBridge(nn.Module):
             "query_state": h_query.detach(),
             "trace": h_scratch.detach(),
             "delta": delta.detach(),
+            "typed_slot_layout": list(self.typed_slot_layout),
+            "slot_family_ids": self.slot_family_ids.detach().cpu().tolist() if self.typed_physics_enabled else [],
+            "slot_family_logits": typed_telemetry.get("slot_family_logits").detach() if typed_telemetry.get("slot_family_logits") is not None else None,
+            "slot_family_entropy": typed_telemetry.get("slot_family_entropy", 0.0),
+            "judri_mask": typed_telemetry.get("judri_mask").detach() if typed_telemetry.get("judri_mask") is not None else None,
+            "arity_logits": typed_telemetry.get("arity_logits").detach() if typed_telemetry.get("arity_logits") is not None else None,
+            "arity_distribution": typed_telemetry.get("arity_distribution").detach() if typed_telemetry.get("arity_distribution") is not None else None,
+            "active_predicate_slot": typed_telemetry.get("active_predicate_slot").detach() if typed_telemetry.get("active_predicate_slot") is not None else None,
+            "masked_pointer_zero_rate": typed_telemetry.get("masked_pointer_zero_rate", 0.0),
+            "geometry_mode": self.geometry_mode,
+            "hyperbolic_metrics": typed_telemetry.get("hyperbolic_metrics", {}),
             "dictionary_health": dictionary_health_metrics(
-                self.query_embeds.detach(),
+                self.query_dictionary().detach(),
                 h_query.detach(),
                 h_scratch.detach(),
                 delta.detach(),
@@ -227,6 +416,12 @@ class M19SymbioteBridge(nn.Module):
                 lengths=lengths.detach() if lengths is not None else None,
             ),
         }
+        if self.typed_physics_enabled:
+            dictionary_health = telemetry["dictionary_health"]
+            dictionary_health["masked_pointer_zero_rate"] = float(typed_telemetry.get("masked_pointer_zero_rate", 0.0))
+            dictionary_health["family_slot_entropy"] = float(typed_telemetry.get("slot_family_entropy", 0.0))
+            for key, value in typed_telemetry.get("hyperbolic_metrics", {}).items():
+                dictionary_health[key] = float(value)
 
         return delta, l_topo, op_logits, telemetry
 

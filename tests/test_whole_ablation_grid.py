@@ -32,6 +32,9 @@ def test_m19_direct_unified_eval_headline_metrics_are_not_clobbered() -> None:
             "entity_accuracy": 0.0,
             "format_accuracy": 0.2625,
             "numeric_accuracy": 0.3625,
+            "typed_family_accuracy": 0.88,
+            "masked_pointer_zero_rate": 1.0,
+            "family_slot_entropy": 0.22,
         },
         "metrics": {},
     }
@@ -49,6 +52,9 @@ def test_m19_direct_unified_eval_headline_metrics_are_not_clobbered() -> None:
     assert metrics["kill_entity_accuracy"] == 0.0
     assert metrics["kill_format_accuracy"] == 0.2625
     assert metrics["kill_numeric_accuracy"] == 0.3625
+    assert metrics["typed_family_accuracy"] == 0.88
+    assert metrics["masked_pointer_zero_rate"] == 1.0
+    assert metrics["family_slot_entropy"] == 0.22
 
 
 def test_m19_legacy_metrics_can_supplement_headline_metrics() -> None:
