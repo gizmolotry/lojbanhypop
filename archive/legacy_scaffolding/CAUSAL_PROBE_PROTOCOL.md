@@ -12,7 +12,7 @@ Measure whether increasing symbolic rigidity (`k`) causally improves identity co
 ## Command (Dry Run First)
 ```powershell
 $env:PYTHONPATH="src"
-python scripts/run_causal_probe_matrix.py `
+python scripts/legacy/run_causal_probe_matrix.py `
   --base-model C:\Users\Andrew\hf_models\Qwen2.5-0.5B-Instruct `
   --dataset runs/lora_sft_dataset.jsonl `
   --local-files-only
@@ -21,7 +21,7 @@ python scripts/run_causal_probe_matrix.py `
 ## Command (Execute Full Matrix)
 ```powershell
 $env:PYTHONPATH="src"
-python scripts/run_causal_probe_matrix.py `
+python scripts/legacy/run_causal_probe_matrix.py `
   --base-model C:\Users\Andrew\hf_models\Qwen2.5-0.5B-Instruct `
   --dataset runs/lora_sft_dataset.jsonl `
   --local-files-only `

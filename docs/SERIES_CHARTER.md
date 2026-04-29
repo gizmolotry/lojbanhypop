@@ -6,10 +6,10 @@ This file defines non-overlapping responsibilities for each experiment series.
 
 | Series | Purpose | Canonical Scripts | Canonical Local Output Roots | Core Success Metrics |
 |---|---|---|---|---|
-| `A-G` | Benchmark ablation comparisons | `scripts/run_coconut_ablation_matrix.py` | `runs/ablation/a_to_g` | final accuracy lift, symbolic lift, run-level deltas |
-| `J` | Data invariance + adversarial synthesis diagnostics | `scripts/eval_j_1.py`..`scripts/eval_j_5.py` | `runs/j_series` | invariance rate, generator accept rate, accepted foil pair accuracy, accept rate by depth |
-| `L` | Constraint-optimized training (Lexicographic Augmented Lagrangian) | `scripts/train_l_series_mvs.py` | `runs/l_series` | Tier-A violations, lambda stability, training convergence |
-| `M` | Merged modern stack runs (`J -> recursive scope -> foils/truth -> L tiers -> gates`) | `scripts/run_true_coconut_h_series.py` (J/M1), `scripts/run_l6_ablation_branch.py` (M2), upcoming Phase-3 gate run | `runs/j_series`, `runs/l_series/l6_ablation` | gate pass rate, scope-by-depth, identity guardrail, foil minimal-edit integrity |
+| `A-G` | Benchmark ablation comparisons | `scripts/legacy/run_coconut_ablation_matrix.py` | `runs/ablation/a_to_g` | final accuracy lift, symbolic lift, run-level deltas |
+| `J` | Data invariance + adversarial synthesis diagnostics | `scripts/legacy/eval_j_1.py`..`scripts/legacy/eval_j_5.py` | `runs/j_series` | invariance rate, generator accept rate, accepted foil pair accuracy, accept rate by depth |
+| `L` | Constraint-optimized training (Lexicographic Augmented Lagrangian) | `scripts/legacy/train_l_series_mvs.py` | `runs/l_series` | Tier-A violations, lambda stability, training convergence |
+| `M` | Merged modern stack runs (`J -> recursive scope -> foils/truth -> L tiers -> gates`) | `scripts/legacy/run_true_coconut_h_series.py` (J/M1), `scripts/legacy/run_l6_ablation_branch.py` (M2), upcoming Phase-3 gate run | `runs/j_series`, `runs/l_series/l6_ablation` | gate pass rate, scope-by-depth, identity guardrail, foil minimal-edit integrity |
 
 ## Enforcement
 

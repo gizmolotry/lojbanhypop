@@ -9,7 +9,7 @@ import pytest
 from conftest import load_script_module
 
 
-mod = load_script_module("coconut_handoff", "scripts/coconut_handoff.py")
+mod = load_script_module("coconut_handoff", "scripts/legacy/coconut_handoff.py")
 
 
 def _make_cache(num_layers: int = 2, heads: int = 2, seq: int = 4, dim: int = 3):

@@ -27,10 +27,10 @@ def test_write_run_manifest() -> None:
     tmp_dir = Path("artifacts/test_tmp") / f"manifest_{uuid.uuid4().hex}"
     tmp_dir.mkdir(parents=True, exist_ok=True)
     out = tmp_dir / "run_manifest.json"
-    write_run_manifest(out, {"script": "scripts/run_experiment.py", "config": {"seed": 7}})
+    write_run_manifest(out, {"script": "scripts/legacy/run_experiment.py", "config": {"seed": 7}})
     payload = json.loads(out.read_text(encoding="utf-8"))
     assert payload["schema_version"] == "1.0"
-    assert payload["script"] == "scripts/run_experiment.py"
+    assert payload["script"] == "scripts/legacy/run_experiment.py"
     assert payload["config"]["seed"] == 7
     shutil.rmtree(tmp_dir, ignore_errors=True)
 
@@ -55,7 +55,7 @@ def test_write_run_manifest_s3_uri_uses_boto3_put_object(monkeypatch) -> None:
     monkeypatch.setitem(sys.modules, "boto3", fake_boto3)
     _s3_client.cache_clear()
 
-    write_run_manifest("s3://unit-test-bucket/manifests/run_manifest.json", {"script": "scripts/run_experiment.py"})
+    write_run_manifest("s3://unit-test-bucket/manifests/run_manifest.json", {"script": "scripts/legacy/run_experiment.py"})
 
     assert len(calls) == 1
     call = calls[0]
@@ -63,7 +63,7 @@ def test_write_run_manifest_s3_uri_uses_boto3_put_object(monkeypatch) -> None:
     assert call["Key"] == "manifests/run_manifest.json"
     payload = json.loads(call["Body"].decode("utf-8"))
     assert payload["schema_version"] == "1.0"
-    assert payload["script"] == "scripts/run_experiment.py"
+    assert payload["script"] == "scripts/legacy/run_experiment.py"
     _s3_client.cache_clear()
 
 
@@ -85,7 +85,7 @@ def test_run_experiment_s3_writes_history_and_summary(monkeypatch) -> None:
         dataset_size=20,
         max_accept_per_iteration=1,
     )
-    write_run_manifest(join_path(payload["run_dir"], "run_manifest.json"), {"script": "scripts/run_experiment.py"})
+    write_run_manifest(join_path(payload["run_dir"], "run_manifest.json"), {"script": "scripts/legacy/run_experiment.py"})
 
     keys = {call["Key"] for call in calls}
     assert any(key.endswith("/history.json") for key in keys)

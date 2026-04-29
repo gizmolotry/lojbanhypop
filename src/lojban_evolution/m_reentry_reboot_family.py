@@ -12,8 +12,8 @@ REENTRY_REBOOT_REGISTRY: dict[str, dict[str, Any]] = {
     "M3.18": {
         "family": "reentry_architecture",
         "implementation_label": "decoder_reentry_resume",
-        "runner_script": "scripts/run_m3_18_decoder_reentry_resume.py",
-        "dag": "airflow/dags/lojban_m3_18_decoder_reentry_resume_dag.py",
+        "runner_script": "scripts/m3/run_m3_18_decoder_reentry_resume.py",
+        "dag": "airflow/dags/m3/lojban_m3_18_decoder_reentry_resume_dag.py",
         "output_root": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_18_decoder_reentry_resume",
         "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json",
         "thesis": "advisor reasoning should hand back a compact decoder-native summary rather than remain directly exposed during generation",

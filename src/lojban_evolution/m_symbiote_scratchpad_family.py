@@ -12,8 +12,8 @@ SYMBIOTE_SCRATCHPAD_REGISTRY: dict[str, dict[str, Any]] = {
     "M14": {
         "family": "symbiote_scratchpad",
         "implementation_label": "hybrid_symbiote_scratchpad",
-        "runner_script": "scripts/run_m14_symbiote_scratchpad.py",
-        "dag": "airflow/dags/lojban_m14_symbiote_scratchpad_dag.py",
+        "runner_script": "scripts/m14/run_m14_symbiote_scratchpad.py",
+        "dag": "airflow/dags/m14/lojban_m14_symbiote_scratchpad_dag.py",
         "output_root": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad",
         "report_name": "m14_report.json",
         "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json",

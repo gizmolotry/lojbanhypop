@@ -7,6 +7,7 @@ The archive preserves historical experiment material without leaving the repo ro
 - `archive/results/<family>/<date_or_window>/<legacy_name>/`
 - `archive/reports/<family_or_topic>/`
 - `archive/datasets/<family_or_topic>/`
+- `archive/exports/<target>/`
 - `archive/snapshots/`
 - `archive/lineage/`
 
@@ -23,9 +24,19 @@ The final path keeps the original legacy directory name as the leaf directory so
 
 Examples:
 
-- `archive/results/m9/active/RESULTS_M9_PHASE3` -> `archive/results/m9/active/archive/results/m9/active/RESULTS_M9_PHASE3`
+- root legacy output `RESULTS_M9_PHASE3` -> `archive/results/m9/legacy_root/RESULTS_M9_PHASE3`
+- root export mirror `scripts_txt` -> `archive/exports/notebooklm/scripts_txt`
 - `RESULTS_M3_15D_ANSWER_PATH_20260311` -> `archive/results/m3/20260311/RESULTS_M3_15D_ANSWER_PATH_20260311`
-- `archive/datasets/root/20260312/ROOT_ARITY_DATA_20260312` -> `archive/datasets/root/20260312/archive/datasets/root/20260312/ROOT_ARITY_DATA_20260312`
+- `ROOT_ARITY_DATA_20260312` -> `archive/datasets/root/20260312/ROOT_ARITY_DATA_20260312`
+
+## Current Root Decompression
+
+Recent cleanup passes moved two long-lived root clutter surfaces into the archive:
+
+- `RESULTS_M9_PHASE3` was archived under `archive/results/m9/legacy_root/`
+- the flat text export bundle previously living at `scripts_txt/` was archived under `archive/exports/notebooklm/`
+
+This keeps the root focused on active source, docs, orchestration, and canonical artifacts.
 
 ## Source Of Truth
 

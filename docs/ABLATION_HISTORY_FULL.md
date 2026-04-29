@@ -1,10 +1,10 @@
 # Full Ablation History
 
-- Source manifest: `D:/lojbanhypop/artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/ablation_history_backfill_github_control_plane_20260405/ablation_history_manifest.json`
-- Generated from run: `ablation_history_backfill_github_control_plane_20260405`
-- Total canonical entries: `140`
-- Artifact-backed entries: `121`
-- Runnable entries: `39`
+- Source manifest: `D:/lojbanhypop/artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m19_4_refresh_20260416/ablation_history_manifest.json`
+- Generated from run: `m19_4_refresh_20260416`
+- Total canonical entries: `169`
+- Artifact-backed entries: `150`
+- Runnable entries: `68`
 
 This document lists every ablation point currently tracked in the unified ledger. Each item includes a brief description, provenance status, and the best-known metric surface when one exists.
 
@@ -19,7 +19,7 @@ This document lists every ablation point currently tracked in the unified ledger
 - `a_to_g_matrix`: `6`
 - `phase5_train_ablation`: `7`
 - `phase5_objective_ablation`: `7`
-- `m_track`: `73`
+- `m_track`: `102`
 - `historical_gap`: `1`
 
 ## core_matrix
@@ -133,7 +133,7 @@ Mid-layer bridge and related H-family latent handoff experiments.
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: h-series family row
 - Best-known metrics: held_out_accuracy=`0.000000`, final_answer_lift=`-0.166667`, geometry_retention=`0.934098`
-- Scripts: `D:/lojbanhypop/scripts/true_coconut.py`
+- Scripts: `scripts/legacy/true_coconut.py`
 
 #### Dynamic Pointer Refactor Eval
 
@@ -144,7 +144,7 @@ Mid-layer bridge and related H-family latent handoff experiments.
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: h-series family row
 - Best-known metrics: held_out_accuracy=`0.250000`
-- Scripts: `D:/lojbanhypop/scripts/eval_h5_dynamic_pointer_refactor.py`
+- Scripts: `scripts/legacy/eval_h5_dynamic_pointer_refactor.py`
 
 #### OOD Stress Test
 
@@ -155,7 +155,7 @@ Mid-layer bridge and related H-family latent handoff experiments.
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: h-series family row
 - Best-known metrics: held_out_accuracy=`0.750000`
-- Scripts: `D:/lojbanhypop/scripts/eval_h5_ood_stress.py`
+- Scripts: `scripts/legacy/eval_h5_ood_stress.py`
 
 #### Provenance Trace
 
@@ -166,7 +166,7 @@ Mid-layer bridge and related H-family latent handoff experiments.
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: h-series family row
 - Best-known metrics: geometry_retention=`0.002500`
-- Scripts: `D:/lojbanhypop/scripts/trace_h5_provenance.py`
+- Scripts: `scripts/legacy/trace_h5_provenance.py`
 
 ### legacy_h_series (4)
 
@@ -275,8 +275,10 @@ Data invariance, adversarial synthesis, and acceptance-diagnostic series.
 - Architectural question: `M1`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: j-series row
+- Automatic compare-against: `M1, J, M1.1, M1.5`
+- Required test contracts: `j.accept_rate_by_depth, j.accepted_foil_pair_accuracy, j.invariance_rate, j.schema_validity`
 - Best-known metrics: surgery_trigger_rate=`1.000000`
-- Scripts: `D:/lojbanhypop/scripts/eval_j_1.py`
+- Scripts: `scripts/legacy/eval_j_1.py`
 
 #### Operator Curriculum Build
 
@@ -289,7 +291,9 @@ Data invariance, adversarial synthesis, and acceptance-diagnostic series.
 - Architectural question: `M1`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: j-series row
-- Scripts: `D:/lojbanhypop/scripts/eval_j_4.py`
+- Automatic compare-against: `M1, J, M1.1, M1.5`
+- Required test contracts: `j.accept_rate_by_depth, j.accepted_foil_pair_accuracy, j.invariance_rate, j.schema_validity`
+- Scripts: `scripts/legacy/eval_j_4.py`
 
 #### Paraphrase Explosion (Invariance)
 
@@ -302,7 +306,9 @@ Data invariance, adversarial synthesis, and acceptance-diagnostic series.
 - Architectural question: `M1`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: j-series row
-- Scripts: `D:/lojbanhypop/scripts/eval_j_2.py`
+- Automatic compare-against: `M1, J, M1.1, M1.5`
+- Required test contracts: `j.accept_rate_by_depth, j.accepted_foil_pair_accuracy, j.invariance_rate, j.schema_validity`
+- Scripts: `scripts/legacy/eval_j_2.py`
 
 #### Stop-Grad Isolation Gate
 
@@ -315,8 +321,10 @@ Data invariance, adversarial synthesis, and acceptance-diagnostic series.
 - Architectural question: `M1`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: j-series row
+- Automatic compare-against: `M1, J, M1.1, M1.5`
+- Required test contracts: `j.accept_rate_by_depth, j.accepted_foil_pair_accuracy, j.invariance_rate, j.schema_validity`
 - Best-known metrics: surgery_trigger_rate=`1.000000`
-- Scripts: `D:/lojbanhypop/scripts/eval_j_3.py, D:/lojbanhypop/scripts/train_h5_persistent_vq_advisor.py`
+- Scripts: `scripts/legacy/eval_j_3.py, scripts/legacy/train_h5_persistent_vq_advisor.py`
 
 #### Adversarial Synthesis (Scope/Foil)
 
@@ -329,8 +337,10 @@ Data invariance, adversarial synthesis, and acceptance-diagnostic series.
 - Architectural question: `M1`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: j-series row
+- Automatic compare-against: `M1, J, M1.1, M1.5`
+- Required test contracts: `j.accept_rate_by_depth, j.accepted_foil_pair_accuracy, j.invariance_rate, j.schema_validity`
 - Best-known metrics: surgery_trigger_rate=`1.000000`
-- Scripts: `D:/lojbanhypop/scripts/eval_j_5.py`
+- Scripts: `scripts/legacy/eval_j_5.py`
 
 
 ## l_series
@@ -350,6 +360,8 @@ Constraint-optimized Lagrangian training lineage, including the L-series charter
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3+ row
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 
 #### Binding Bootcamp (unbound focus)
 
@@ -362,6 +374,8 @@ Constraint-optimized Lagrangian training lineage, including the L-series charter
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3+ row
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 
 #### Compression Activation (tier C pressure)
 
@@ -374,6 +388,8 @@ Constraint-optimized Lagrangian training lineage, including the L-series charter
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3+ row
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 
 #### Depth Ramp (1->4 curriculum pressure)
 
@@ -386,6 +402,8 @@ Constraint-optimized Lagrangian training lineage, including the L-series charter
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3+ row
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 
 #### Truth Discrimination (foil-sensitive tier B)
 
@@ -398,6 +416,8 @@ Constraint-optimized Lagrangian training lineage, including the L-series charter
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3+ row
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 
 #### Ablated anchor (swap-test disabled)
 
@@ -488,6 +508,7 @@ Constraint-optimized Lagrangian training lineage, including the L-series charter
 - Brief: telemetry-rooted M3.8 family row
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.8 row
+- Scripts: `scripts/m3/run_m3_8_operator_diversification.py`
 
 #### Family clustering objective
 
@@ -497,6 +518,7 @@ Constraint-optimized Lagrangian training lineage, including the L-series charter
 - Brief: telemetry-rooted M3.8 family row
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.8 row
+- Scripts: `scripts/m3/run_m3_8_operator_diversification.py`
 
 #### Operator entropy regularization
 
@@ -506,6 +528,7 @@ Constraint-optimized Lagrangian training lineage, including the L-series charter
 - Brief: telemetry-rooted M3.8 family row
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.8 row
+- Scripts: `scripts/m3/run_m3_8_operator_diversification.py`
 
 ### l_series_charter (1)
 
@@ -517,8 +540,8 @@ Constraint-optimized Lagrangian training lineage, including the L-series charter
 - Brief: replace static weighted-loss blending with lexicographic augmented Lagrangian control over Tier A/B/C constraints
 - Provenance: evidence=`doc_reported` confidence=`low` reproducibility=`doc_only`
 - Baseline relation: series charter
-- Scripts: `scripts/train_l_series_mvs.py`
-- DAGs: `airflow/dags/lojban_l_series_dag.py`
+- Scripts: `scripts/legacy/train_l_series_mvs.py`
+- DAGs: `airflow/dags/legacy/lojban_l_series_dag.py`
 - Notes: Documented in docs/L_SERIES.md as the main lexicographic constraint-control phase. | Serves as the umbrella lineage for L6 and the early M3+/M4/M5 branch experiments rooted in runs/l_series.
 
 ### l_series_l6 (3)
@@ -534,7 +557,9 @@ Constraint-optimized Lagrangian training lineage, including the L-series charter
 - Architectural question: `M2`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: l6 branch cell
-- Scripts: `scripts/run_l6_ablation_branch.py, scripts/train_l_series_mvs.py`
+- Automatic compare-against: `M2, M1, J, L, M2.1, M2.3`
+- Required test contracts: `j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/legacy/run_l6_ablation_branch.py, scripts/legacy/train_l_series_mvs.py`
 
 #### Scope Drill Only
 
@@ -547,7 +572,9 @@ Constraint-optimized Lagrangian training lineage, including the L-series charter
 - Architectural question: `M2`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: l6 branch cell
-- Scripts: `scripts/run_l6_ablation_branch.py, scripts/train_l_series_mvs.py`
+- Automatic compare-against: `M2, M1, J, L, M2.1, M2.3`
+- Required test contracts: `j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/legacy/run_l6_ablation_branch.py, scripts/legacy/train_l_series_mvs.py`
 
 #### TierB Force + Soft Constraint Audit Only
 
@@ -560,7 +587,9 @@ Constraint-optimized Lagrangian training lineage, including the L-series charter
 - Architectural question: `M2`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: l6 branch cell
-- Scripts: `scripts/run_l6_ablation_branch.py, scripts/train_l_series_mvs.py`
+- Automatic compare-against: `M2, M1, J, L, M2.1, M2.3`
+- Required test contracts: `j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/legacy/run_l6_ablation_branch.py, scripts/legacy/train_l_series_mvs.py`
 
 
 ## a_to_g_matrix
@@ -577,8 +606,8 @@ Artifact-backed reruns of the legacy A-G matrix under the modern telemetry stack
 - Brief: artifact-backed rerun of the A-G coconut ablation matrix
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`doc_only`
 - Baseline relation: a-to-g matrix cell
-- Scripts: `scripts/run_coconut_ablation_matrix.py`
-- DAGs: `airflow/dags/lojban_ablation_matrix_dag.py`
+- Scripts: `scripts/legacy/run_coconut_ablation_matrix.py`
+- DAGs: `airflow/dags/control_plane/lojban_ablation_matrix_dag.py`
 
 #### Coconut Fusion (Latent KV Handoff)
 
@@ -589,8 +618,8 @@ Artifact-backed reruns of the legacy A-G matrix under the modern telemetry stack
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: a-to-g matrix cell
 - Best-known metrics: held_out_accuracy=`0.000000`, logical_accuracy=`0.041667`, final_answer_lift=`-0.166667`, symbolic_lift=`0.041667`
-- Scripts: `scripts/run_coconut_ablation_matrix.py`
-- DAGs: `airflow/dags/lojban_ablation_matrix_dag.py`
+- Scripts: `scripts/legacy/run_coconut_ablation_matrix.py`
+- DAGs: `airflow/dags/control_plane/lojban_ablation_matrix_dag.py`
 
 #### Control (English CoT -> English)
 
@@ -601,8 +630,8 @@ Artifact-backed reruns of the legacy A-G matrix under the modern telemetry stack
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: a-to-g matrix cell
 - Best-known metrics: held_out_accuracy=`0.166667`, logical_accuracy=`0.000000`
-- Scripts: `scripts/run_coconut_ablation_matrix.py`
-- DAGs: `airflow/dags/lojban_ablation_matrix_dag.py`
+- Scripts: `scripts/legacy/run_coconut_ablation_matrix.py`
+- DAGs: `airflow/dags/control_plane/lojban_ablation_matrix_dag.py`
 
 #### Enhanced Constraint Text-to-Text (No Handoff)
 
@@ -613,8 +642,8 @@ Artifact-backed reruns of the legacy A-G matrix under the modern telemetry stack
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: a-to-g matrix cell
 - Best-known metrics: held_out_accuracy=`0.000000`, logical_accuracy=`0.395833`, final_answer_lift=`-0.166667`, symbolic_lift=`0.395833`
-- Scripts: `scripts/run_coconut_ablation_matrix.py`
-- DAGs: `airflow/dags/lojban_ablation_matrix_dag.py`
+- Scripts: `scripts/legacy/run_coconut_ablation_matrix.py`
+- DAGs: `airflow/dags/control_plane/lojban_ablation_matrix_dag.py`
 
 #### Legacy Text-to-Text (No Handoff)
 
@@ -625,8 +654,8 @@ Artifact-backed reruns of the legacy A-G matrix under the modern telemetry stack
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: a-to-g matrix cell
 - Best-known metrics: held_out_accuracy=`0.437500`, logical_accuracy=`0.395833`, final_answer_lift=`0.270833`, symbolic_lift=`0.395833`
-- Scripts: `scripts/run_coconut_ablation_matrix.py`
-- DAGs: `airflow/dags/lojban_ablation_matrix_dag.py`
+- Scripts: `scripts/legacy/run_coconut_ablation_matrix.py`
+- DAGs: `airflow/dags/control_plane/lojban_ablation_matrix_dag.py`
 
 #### NoPE Fusion (DroPE + latent handoff)
 
@@ -637,8 +666,8 @@ Artifact-backed reruns of the legacy A-G matrix under the modern telemetry stack
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: a-to-g matrix cell
 - Best-known metrics: held_out_accuracy=`0.000000`, final_answer_lift=`0.000000`
-- Scripts: `scripts/run_coconut_ablation_matrix.py`
-- DAGs: `airflow/dags/lojban_ablation_matrix_dag.py`
+- Scripts: `scripts/legacy/run_coconut_ablation_matrix.py`
+- DAGs: `airflow/dags/control_plane/lojban_ablation_matrix_dag.py`
 
 
 ## phase5_train_ablation
@@ -655,7 +684,7 @@ Training-stack ablations along the phase-5 path.
 - Brief: phase-5 training objective weight ablation
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: phase5 train ablation variant
-- Scripts: `scripts/run_phase5_train_ablation.py`
+- Scripts: `scripts/legacy/run_phase5_train_ablation.py`
 
 #### ablate_compression_regularization_weight
 
@@ -665,7 +694,7 @@ Training-stack ablations along the phase-5 path.
 - Brief: phase-5 training objective weight ablation
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: phase5 train ablation variant
-- Scripts: `scripts/run_phase5_train_ablation.py`
+- Scripts: `scripts/legacy/run_phase5_train_ablation.py`
 
 #### ablate_coverage_regularization_weight
 
@@ -675,7 +704,7 @@ Training-stack ablations along the phase-5 path.
 - Brief: phase-5 training objective weight ablation
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: phase5 train ablation variant
-- Scripts: `scripts/run_phase5_train_ablation.py`
+- Scripts: `scripts/legacy/run_phase5_train_ablation.py`
 
 #### ablate_roundtrip_consistency_weight
 
@@ -685,7 +714,7 @@ Training-stack ablations along the phase-5 path.
 - Brief: phase-5 training objective weight ablation
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: phase5 train ablation variant
-- Scripts: `scripts/run_phase5_train_ablation.py`
+- Scripts: `scripts/legacy/run_phase5_train_ablation.py`
 
 #### ablate_semantic_unambiguity_weight
 
@@ -695,7 +724,7 @@ Training-stack ablations along the phase-5 path.
 - Brief: phase-5 training objective weight ablation
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: phase5 train ablation variant
-- Scripts: `scripts/run_phase5_train_ablation.py`
+- Scripts: `scripts/legacy/run_phase5_train_ablation.py`
 
 #### baseline_no_phase5
 
@@ -705,7 +734,7 @@ Training-stack ablations along the phase-5 path.
 - Brief: phase-5 training objective weight ablation
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: phase5 train ablation variant
-- Scripts: `scripts/run_phase5_train_ablation.py`
+- Scripts: `scripts/legacy/run_phase5_train_ablation.py`
 
 #### phase5_full
 
@@ -715,7 +744,7 @@ Training-stack ablations along the phase-5 path.
 - Brief: phase-5 training objective weight ablation
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: phase5 train ablation variant
-- Scripts: `scripts/run_phase5_train_ablation.py`
+- Scripts: `scripts/legacy/run_phase5_train_ablation.py`
 
 
 ## phase5_objective_ablation
@@ -732,7 +761,7 @@ Objective and loss-surface ablations along the phase-5 path.
 - Brief: differentiate the contribution of individual phase-5 regularizer terms
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: objective-term ablation
-- Scripts: `scripts/run_phase5_objective_ablation.py`
+- Scripts: `scripts/legacy/run_phase5_objective_ablation.py`
 
 #### ablate_compression_regularization_loss
 
@@ -742,7 +771,7 @@ Objective and loss-surface ablations along the phase-5 path.
 - Brief: differentiate the contribution of individual phase-5 regularizer terms
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: objective-term ablation
-- Scripts: `scripts/run_phase5_objective_ablation.py`
+- Scripts: `scripts/legacy/run_phase5_objective_ablation.py`
 
 #### ablate_coverage_regularization_loss
 
@@ -752,7 +781,7 @@ Objective and loss-surface ablations along the phase-5 path.
 - Brief: differentiate the contribution of individual phase-5 regularizer terms
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: objective-term ablation
-- Scripts: `scripts/run_phase5_objective_ablation.py`
+- Scripts: `scripts/legacy/run_phase5_objective_ablation.py`
 
 #### ablate_roundtrip_consistency_loss
 
@@ -762,7 +791,7 @@ Objective and loss-surface ablations along the phase-5 path.
 - Brief: differentiate the contribution of individual phase-5 regularizer terms
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: objective-term ablation
-- Scripts: `scripts/run_phase5_objective_ablation.py`
+- Scripts: `scripts/legacy/run_phase5_objective_ablation.py`
 
 #### ablate_semantic_unambiguity_loss
 
@@ -772,7 +801,7 @@ Objective and loss-surface ablations along the phase-5 path.
 - Brief: differentiate the contribution of individual phase-5 regularizer terms
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: objective-term ablation
-- Scripts: `scripts/run_phase5_objective_ablation.py`
+- Scripts: `scripts/legacy/run_phase5_objective_ablation.py`
 
 #### baseline_no_phase5
 
@@ -782,7 +811,7 @@ Objective and loss-surface ablations along the phase-5 path.
 - Brief: differentiate the contribution of individual phase-5 regularizer terms
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: objective-term ablation
-- Scripts: `scripts/run_phase5_objective_ablation.py`
+- Scripts: `scripts/legacy/run_phase5_objective_ablation.py`
 
 #### phase5_full
 
@@ -792,7 +821,7 @@ Objective and loss-surface ablations along the phase-5 path.
 - Brief: differentiate the contribution of individual phase-5 regularizer terms
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: objective-term ablation
-- Scripts: `scripts/run_phase5_objective_ablation.py`
+- Scripts: `scripts/legacy/run_phase5_objective_ablation.py`
 
 
 ## m_track
@@ -812,6 +841,8 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M10`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: m10 publication row
+- Automatic compare-against: `M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L`
+- Required test contracts: `j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Scripts: `scripts/m10/final_audit.py`
 
 #### M6.6 directed AST final
@@ -825,8 +856,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M6`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: m6 expansive variant
+- Automatic compare-against: `M6, M5, M4, M3, M2, M1, J, L`
+- Required test contracts: `j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.300000`
-- Scripts: `scripts/train_m6_logic_engine.py, scripts/eval_m6_logic_engine.py`
+- Scripts: `scripts/m6/eval_m6_logic_engine.py, scripts/m6/train_m6_logic_engine.py`
 
 #### M6 severed bridge
 
@@ -839,8 +872,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M6`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: m6 baseline
+- Automatic compare-against: `M6, M5, M4, M3, M2, M1, J, L`
+- Required test contracts: `j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.700000`
-- Scripts: `scripts/train_m6_logic_engine.py, scripts/eval_m6_logic_engine.py`
+- Scripts: `scripts/m6/eval_m6_logic_engine.py, scripts/m6/train_m6_logic_engine.py`
 
 #### M6.1 alignment 70acc
 
@@ -853,8 +888,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M6`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: m6 aligned variant
+- Automatic compare-against: `M6, M5, M4, M3, M2, M1, J, L`
+- Required test contracts: `j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.700000`
-- Scripts: `scripts/train_m6_logic_engine.py, scripts/eval_m6_logic_engine.py`
+- Scripts: `scripts/m6/eval_m6_logic_engine.py, scripts/m6/train_m6_logic_engine.py`
 
 #### M6.2 aligned 30acc
 
@@ -867,8 +904,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M6`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: m6 aligned variant
+- Automatic compare-against: `M6, M5, M4, M3, M2, M1, J, L`
+- Required test contracts: `j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.300000`
-- Scripts: `scripts/train_m6_logic_engine.py, scripts/eval_m6_logic_engine.py`
+- Scripts: `scripts/m6/eval_m6_logic_engine.py, scripts/m6/train_m6_logic_engine.py`
 
 #### M6.3 scratchpad 35acc
 
@@ -881,8 +920,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M6`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: m6 scratchpad variant
+- Automatic compare-against: `M6, M5, M4, M3, M2, M1, J, L`
+- Required test contracts: `j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.300000`
-- Scripts: `scripts/train_m6_logic_engine.py, scripts/eval_m6_logic_engine.py`
+- Scripts: `scripts/m6/eval_m6_logic_engine.py, scripts/m6/train_m6_logic_engine.py`
 
 #### M7 interleaved coprocessor
 
@@ -895,8 +936,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M7`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: m7 family row
+- Automatic compare-against: `M7, M6, M5, M4, M3, M2, M1, J, L`
+- Required test contracts: `j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.750000`
-- Scripts: `scripts/train_m7_interleaved.py, scripts/eval_m7_interleaved.py`
+- Scripts: `scripts/m7/eval_m7_interleaved.py, scripts/m7/train_m7_interleaved.py`
 
 #### M8 council of oracles
 
@@ -909,8 +952,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M8`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: m8 family row
+- Automatic compare-against: `M8, M7, M6, M5, M4, M3, M2, M1, J, L`
+- Required test contracts: `j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.550000`
-- Scripts: `scripts/train_m8_council.py, scripts/eval_m8_council.py`
+- Scripts: `scripts/m8/eval_m8_council.py, scripts/m8/train_m8_council.py`
 
 #### M9 duel hypercube
 
@@ -923,6 +968,8 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M9`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: m9 hypercube row
+- Automatic compare-against: `M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L`
+- Required test contracts: `j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Scripts: `scripts/m9/eval_m9.py`
 
 #### M9 provenance manifold audit
@@ -936,6 +983,8 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M9`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: m9 audit row
+- Automatic compare-against: `M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L`
+- Required test contracts: `j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.000000`
 - Scripts: `scripts/m9/eval_m9.py`
 
@@ -950,6 +999,8 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M10`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: m10 floor-lock row
+- Automatic compare-against: `M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L`
+- Required test contracts: `j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.780000`, macro_f1=`0.427924`
 - Scripts: `scripts/m10/final_audit.py`
 
@@ -964,6 +1015,8 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M10`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: m10 final bridge row
+- Automatic compare-against: `M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L`
+- Required test contracts: `j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.833333`, macro_f1=`0.418315`
 - Scripts: `scripts/m10/final_audit.py`
 
@@ -978,22 +1031,12 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M10`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: m10 audit row
+- Automatic compare-against: `M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L`
+- Required test contracts: `j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.600000`
 - Scripts: `scripts/m10/final_audit.py`
 
-### m_telemetry (60)
-
-#### M3.12 A
-
-- Canonical ID: `m.track.m3_12.a`
-- Normalized ID: `M3.12.A`
-- Taxonomy: major=`3` minor=`12` cell=`A`
-- Aliases: `M3.12.A, A`
-- Lookup aliases: `M3.12.A`
-- Brief: telemetry-rooted M3.12 ablation cell
-- Architectural question: `M3`
-- Provenance: evidence=`mixed` confidence=`high` reproducibility=`artifact_only`
-- Baseline relation: M3.12 cell
+### m_telemetry (89)
 
 #### hypercube_ablation telemetry report
 
@@ -1060,7 +1103,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M3.9 family report
-- Scripts: `scripts/run_m3_9_primitive_probe.py`
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m3/run_m3_9_primitive_probe.py`
 
 #### M3.10 telemetry report
 
@@ -1073,7 +1118,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M3.10 family report
-- Scripts: `scripts/run_m3_10_ood_accuracy_probe.py`
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m3/run_m3_10_ood_accuracy_probe.py`
 
 #### M3.11 telemetry report
 
@@ -1086,7 +1133,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M3.11 family report
-- Scripts: `scripts/run_m3_11_winograd_failure_anatomy.py`
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m3/run_m3_11_winograd_failure_anatomy.py`
 
 #### M3.14 A
 
@@ -1099,6 +1148,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.14 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m3/run_m3_14_structural_alignment_bridge.py`
 
 #### M3.14 B
 
@@ -1111,6 +1163,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.14 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m3/run_m3_14_structural_alignment_bridge.py`
 
 #### M3.14 C
 
@@ -1123,6 +1178,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.14 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m3/run_m3_14_structural_alignment_bridge.py`
 
 #### M3.15 A
 
@@ -1135,7 +1193,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.15 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000000`
+- Scripts: `scripts/m3/run_m3_15_rotary_coconut.py`
 
 #### M3.15 B
 
@@ -1148,7 +1209,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.15 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.001251`
+- Scripts: `scripts/m3/run_m3_15_rotary_coconut.py`
 
 #### M3.15 C
 
@@ -1161,7 +1225,25 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.15 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.001251`
+- Scripts: `scripts/m3/run_m3_15_rotary_coconut.py`
+
+#### M3.12 A
+
+- Canonical ID: `m.track.m3_12.a`
+- Normalized ID: `M3.12.A`
+- Taxonomy: major=`3` minor=`12` cell=`A`
+- Aliases: `M3.12.A, A`
+- Lookup aliases: `M3.12.A`
+- Brief: telemetry-rooted M3.12 ablation cell
+- Architectural question: `M3`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
+- Baseline relation: M3.12 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m3/run_m3_12_geometric_return_stream.py`
 
 #### M3.12 B
 
@@ -1174,6 +1256,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.12 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m3/run_m3_12_geometric_return_stream.py`
 
 #### M3.12 C
 
@@ -1186,6 +1271,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.12 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m3/run_m3_12_geometric_return_stream.py`
 
 #### M3.15b A
 
@@ -1198,7 +1286,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.15b cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000000`
+- Scripts: `scripts/m3/run_m3_15b_relation_local_rotary.py`
 
 #### M3.15b B
 
@@ -1211,7 +1302,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.15b cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.003670`
+- Scripts: `scripts/m3/run_m3_15b_relation_local_rotary.py`
 
 #### M3.15b C
 
@@ -1224,7 +1318,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.15b cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000000`
+- Scripts: `scripts/m3/run_m3_15b_relation_local_rotary.py`
 
 #### M3.15c A
 
@@ -1237,7 +1334,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.15c cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000000`
+- Scripts: `scripts/m3/run_m3_15c_family_conditioned_bridge.py`
 
 #### M3.15c B
 
@@ -1250,7 +1350,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.15c cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000000`
+- Scripts: `scripts/m3/run_m3_15c_family_conditioned_bridge.py`
 
 #### M3.15c C
 
@@ -1263,7 +1366,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.15c cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000000`
+- Scripts: `scripts/m3/run_m3_15c_family_conditioned_bridge.py`
 
 #### M3.15d A
 
@@ -1276,7 +1382,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.15d cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000000`
+- Scripts: `scripts/m3/run_m3_15d_answer_path_forcing.py`
 
 #### M3.15d B
 
@@ -1289,7 +1398,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.15d cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000000`
+- Scripts: `scripts/m3/run_m3_15d_answer_path_forcing.py`
 
 #### M3.15d C
 
@@ -1302,7 +1414,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.15d cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000000`
+- Scripts: `scripts/m3/run_m3_15d_answer_path_forcing.py`
 
 #### M3.15d D
 
@@ -1315,7 +1430,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.15d cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000000`
+- Scripts: `scripts/m3/run_m3_15d_answer_path_forcing.py`
 
 #### M3.16 A
 
@@ -1328,7 +1446,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.16 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000000`
+- Scripts: `scripts/m3/run_m3_16_continuous_graph_bias.py`
 
 #### M3.16 B
 
@@ -1341,7 +1462,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.16 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000680`
+- Scripts: `scripts/m3/run_m3_16_continuous_graph_bias.py`
 
 #### M3.16 C
 
@@ -1354,7 +1478,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.16 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000072`
+- Scripts: `scripts/m3/run_m3_16_continuous_graph_bias.py`
 
 #### M3.16 D
 
@@ -1367,7 +1494,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.16 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000124`
+- Scripts: `scripts/m3/run_m3_16_continuous_graph_bias.py`
 
 #### M4.0 telemetry report
 
@@ -1380,7 +1510,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M4`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M4.0 family report
-- Scripts: `scripts/run_m4_0_semantic_probe.py`
+- Automatic compare-against: `M4, M3, M2, M1, J, L, M4.0, M4.2`
+- Required test contracts: `m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m4/run_m4_0_semantic_probe.py`
 
 #### M4.2 telemetry report
 
@@ -1393,7 +1525,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M4`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M4.2 family report
-- Scripts: `scripts/run_m4_2_predicate_grounding.py`
+- Automatic compare-against: `M4, M3, M2, M1, J, L, M4.0, M4.2`
+- Required test contracts: `m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m4/run_m4_2_predicate_grounding.py`
 
 #### Reuse-oriented control
 
@@ -1406,6 +1540,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M5`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M5 row
+- Automatic compare-against: `M5, M4, M3, M2, M1, J, L, M5.1, M5.2, M5.3`
+- Required test contracts: `m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m5/run_m5_autoformalization.py`
 
 #### Selective lexical adversary + family clustering
 
@@ -1418,6 +1555,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M5`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M5 row
+- Automatic compare-against: `M5, M4, M3, M2, M1, J, L, M5.1, M5.2, M5.3`
+- Required test contracts: `m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m5/run_m5_autoformalization.py`
 
 #### Selective lexical adversary + reuse
 
@@ -1430,6 +1570,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M5`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M5 row
+- Automatic compare-against: `M5, M4, M3, M2, M1, J, L, M5.1, M5.2, M5.3`
+- Required test contracts: `m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m5/run_m5_autoformalization.py`
 
 #### Add counterfactual invariance
 
@@ -1442,6 +1585,8 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M5`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M5.padded_nary_family row
+- Automatic compare-against: `M5, M4, M3, M2, M1, J, L, M5.1, M5.2, M5.3`
+- Required test contracts: `m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 
 #### Core + uniformity + GRL
 
@@ -1454,6 +1599,8 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M5`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M5.padded_nary_family row
+- Automatic compare-against: `M5, M4, M3, M2, M1, J, L, M5.1, M5.2, M5.3`
+- Required test contracts: `m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 
 #### Full padded crucible
 
@@ -1466,6 +1613,8 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M5`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M5.padded_nary_family row
+- Automatic compare-against: `M5, M4, M3, M2, M1, J, L, M5.1, M5.2, M5.3`
+- Required test contracts: `m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 
 #### Padded core only
 
@@ -1478,6 +1627,8 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M5`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M5.padded_nary_family row
+- Automatic compare-against: `M5, M4, M3, M2, M1, J, L, M5.1, M5.2, M5.3`
+- Required test contracts: `m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 
 #### M5.2.autoregressive_chain.run telemetry report
 
@@ -1490,7 +1641,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M5`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M5.2.autoregressive_chain.run family report
-- Scripts: `scripts/run_m5_2_autoregressive_chain.py`
+- Automatic compare-against: `M5, M4, M3, M2, M1, J, L, M5.1, M5.2, M5.3`
+- Required test contracts: `m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m5/run_m5_2_autoregressive_chain.py`
 
 #### M5.3.masked_pair_chain.run telemetry report
 
@@ -1503,7 +1656,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M5`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M5.3.masked_pair_chain.run family report
-- Scripts: `scripts/run_m5_3_masked_pair_chain.py`
+- Automatic compare-against: `M5, M4, M3, M2, M1, J, L, M5.1, M5.2, M5.3`
+- Required test contracts: `m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m5/run_m5_3_masked_pair_chain.py`
 
 #### control no re-entry
 
@@ -1516,7 +1671,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.17 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000000`
+- Scripts: `scripts/m3/run_m3_17_advisor_reentry_bridge.py`
 
 #### direct residual re-encoder
 
@@ -1529,7 +1687,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.17 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000427`
+- Scripts: `scripts/m3/run_m3_17_advisor_reentry_bridge.py`
 
 #### single return-state bottleneck
 
@@ -1542,7 +1703,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.17 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`-12.486698`
+- Scripts: `scripts/m3/run_m3_17_advisor_reentry_bridge.py`
 
 #### three return-state bottleneck
 
@@ -1555,7 +1719,10 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.17 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`-8.375755`
+- Scripts: `scripts/m3/run_m3_17_advisor_reentry_bridge.py`
 
 #### control no advisor
 
@@ -1568,7 +1735,11 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M3.18 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000000`, resume_first_token_accuracy=`0.000000`, english_fluency_score=`1.000000`
+- Scripts: `scripts/m3/run_m3_18_decoder_reentry_resume.py`
+- DAGs: `airflow/dags/m3/lojban_m3_18_decoder_reentry_resume_dag.py`
 
 #### frozen multi-return token bundle
 
@@ -1581,7 +1752,11 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M3.18 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`-8.691725`, resume_first_token_accuracy=`0.000000`, english_fluency_score=`0.850000`
+- Scripts: `scripts/m3/run_m3_18_decoder_reentry_resume.py`
+- DAGs: `airflow/dags/m3/lojban_m3_18_decoder_reentry_resume_dag.py`
 
 #### frozen single return token
 
@@ -1594,7 +1769,11 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M3.18 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`-8.378815`, resume_first_token_accuracy=`0.000000`, english_fluency_score=`1.000000`
+- Scripts: `scripts/m3/run_m3_18_decoder_reentry_resume.py`
+- DAGs: `airflow/dags/m3/lojban_m3_18_decoder_reentry_resume_dag.py`
 
 #### hybrid token plus residual translator
 
@@ -1607,7 +1786,11 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M3.18 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`-8.879877`, resume_first_token_accuracy=`0.000000`, english_fluency_score=`0.850000`
+- Scripts: `scripts/m3/run_m3_18_decoder_reentry_resume.py`
+- DAGs: `airflow/dags/m3/lojban_m3_18_decoder_reentry_resume_dag.py`
 
 #### learned residual continuation vector
 
@@ -1621,7 +1804,11 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M3.18 cell
 - Inherits from: `M3.17.D`
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.500000`, intervention_effect_on_gold=`0.000060`, resume_first_token_accuracy=`0.000000`, english_fluency_score=`1.000000`
+- Scripts: `scripts/m3/run_m3_18_decoder_reentry_resume.py`
+- DAGs: `airflow/dags/m3/lojban_m3_18_decoder_reentry_resume_dag.py`
 
 #### M3.19 D0
 
@@ -1635,6 +1822,8 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M3.19 cell
 - Inherits from: `M3.18.D`
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.000000`, intervention_effect_on_gold=`0.000010`, resume_first_token_accuracy=`0.000000`, english_fluency_score=`1.000000`
 
 #### M3.19 D1
@@ -1648,6 +1837,8 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M3.19 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.000000`, intervention_effect_on_gold=`-0.000002`, resume_first_token_accuracy=`0.000000`, english_fluency_score=`1.000000`
 
 #### M3.19 D2
@@ -1661,6 +1852,8 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M3.19 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.000000`, intervention_effect_on_gold=`-0.000002`, resume_first_token_accuracy=`0.000000`, english_fluency_score=`1.000000`
 
 #### M3.19 D3
@@ -1674,7 +1867,454 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
 - Baseline relation: M3.19 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 - Best-known metrics: held_out_accuracy=`0.000000`, intervention_effect_on_gold=`-0.000002`, resume_first_token_accuracy=`0.000000`, english_fluency_score=`1.000000`
+
+#### M18 telemetry report
+
+- Canonical ID: `m.track.m18`
+- Normalized ID: `M18`
+- Taxonomy: major=`18` minor=`None` cell=`None`
+- Aliases: `M18`
+- Lookup aliases: `M18`
+- Brief: telemetry-rooted M18 family report
+- Architectural question: `M18`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M18 family report
+- Automatic compare-against: `M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M14.D`
+- Required test contracts: `m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m18/run_m18_controller_family.py, scripts/m18/run_sapir_whorf_audit.py`
+- DAGs: `airflow/dags/m18/lojban_m18_controller_family_dag.py`
+
+#### M18 EN-CONCISE
+
+- Canonical ID: `m.track.m18_1.a`
+- Normalized ID: `M18.1.A`
+- Taxonomy: major=`18` minor=`1` cell=`A`
+- Aliases: `M18.harmonized_audit.EN-CONCISE, EN-CONCISE`
+- Lookup aliases: `M18.harmonized_audit.EN-CONCISE`
+- Brief: telemetry-rooted M18 ablation cell
+- Architectural question: `M18`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M18 cell
+- Automatic compare-against: `M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M14.D`
+- Required test contracts: `m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m18/run_harmonized_audit.py`
+
+#### M18 EN-COT
+
+- Canonical ID: `m.track.m18_1.b`
+- Normalized ID: `M18.1.B`
+- Taxonomy: major=`18` minor=`1` cell=`B`
+- Aliases: `M18.harmonized_audit.EN-COT, EN-COT`
+- Lookup aliases: `M18.harmonized_audit.EN-COT`
+- Brief: telemetry-rooted M18 ablation cell
+- Architectural question: `M18`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M18 cell
+- Automatic compare-against: `M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M14.D`
+- Required test contracts: `m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m18/run_harmonized_audit.py`
+
+#### M18 KILL-LABEL
+
+- Canonical ID: `m.track.m18_1.f`
+- Normalized ID: `M18.1.F`
+- Taxonomy: major=`18` minor=`1` cell=`F`
+- Aliases: `M18.harmonized_audit.KILL-LABEL, KILL-LABEL`
+- Lookup aliases: `M18.harmonized_audit.KILL-LABEL`
+- Brief: telemetry-rooted M18 ablation cell
+- Architectural question: `M18`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M18 cell
+- Automatic compare-against: `M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M14.D`
+- Required test contracts: `m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m18/run_harmonized_audit.py`
+
+#### M18 KILL-RANDOM
+
+- Canonical ID: `m.track.m18_1.g`
+- Normalized ID: `M18.1.G`
+- Taxonomy: major=`18` minor=`1` cell=`G`
+- Aliases: `M18.harmonized_audit.KILL-RANDOM, KILL-RANDOM`
+- Lookup aliases: `M18.harmonized_audit.KILL-RANDOM`
+- Brief: telemetry-rooted M18 ablation cell
+- Architectural question: `M18`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M18 cell
+- Automatic compare-against: `M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M14.D`
+- Required test contracts: `m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m18/run_harmonized_audit.py`
+
+#### M18 L-TYPED
+
+- Canonical ID: `m.track.m18_1.e`
+- Normalized ID: `M18.1.E`
+- Taxonomy: major=`18` minor=`1` cell=`E`
+- Aliases: `M18.harmonized_audit.L-TYPED, L-TYPED`
+- Lookup aliases: `M18.harmonized_audit.L-TYPED`
+- Brief: telemetry-rooted M18 ablation cell
+- Architectural question: `M18`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M18 cell
+- Automatic compare-against: `M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M14.D`
+- Required test contracts: `m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m18/run_harmonized_audit.py`
+
+#### M18 U-TYPED
+
+- Canonical ID: `m.track.m18_1.d`
+- Normalized ID: `M18.1.D`
+- Taxonomy: major=`18` minor=`1` cell=`D`
+- Aliases: `M18.harmonized_audit.U-TYPED, U-TYPED`
+- Lookup aliases: `M18.harmonized_audit.U-TYPED`
+- Brief: telemetry-rooted M18 ablation cell
+- Architectural question: `M18`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M18 cell
+- Automatic compare-against: `M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M14.D`
+- Required test contracts: `m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m18/run_harmonized_audit.py`
+
+#### M18 ZH-COT
+
+- Canonical ID: `m.track.m18_1.c`
+- Normalized ID: `M18.1.C`
+- Taxonomy: major=`18` minor=`1` cell=`C`
+- Aliases: `M18.harmonized_audit.ZH-COT, ZH-COT`
+- Lookup aliases: `M18.harmonized_audit.ZH-COT`
+- Brief: telemetry-rooted M18 ablation cell
+- Architectural question: `M18`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M18 cell
+- Automatic compare-against: `M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M14.D`
+- Required test contracts: `m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m18/run_harmonized_audit.py`
+
+#### M18 EN-CONCISE
+
+- Canonical ID: `m.track.m18_2.a`
+- Normalized ID: `M18.2.A`
+- Taxonomy: major=`18` minor=`2` cell=`A`
+- Aliases: `M18.hybrid_cot_audit.EN-CONCISE, EN-CONCISE`
+- Lookup aliases: `M18.hybrid_cot_audit.EN-CONCISE`
+- Brief: telemetry-rooted M18 ablation cell
+- Architectural question: `M18`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M18 cell
+- Automatic compare-against: `M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M14.D`
+- Required test contracts: `m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m18/run_hybrid_cot_audit.py`
+
+#### M18 EN-COT
+
+- Canonical ID: `m.track.m18_2.b`
+- Normalized ID: `M18.2.B`
+- Taxonomy: major=`18` minor=`2` cell=`B`
+- Aliases: `M18.hybrid_cot_audit.EN-COT, EN-COT`
+- Lookup aliases: `M18.hybrid_cot_audit.EN-COT`
+- Brief: telemetry-rooted M18 ablation cell
+- Architectural question: `M18`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M18 cell
+- Automatic compare-against: `M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M14.D`
+- Required test contracts: `m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m18/run_hybrid_cot_audit.py`
+
+#### M18 EN-COT+KILL-RANDOM
+
+- Canonical ID: `m.track.m18_2.d`
+- Normalized ID: `M18.2.D`
+- Taxonomy: major=`18` minor=`2` cell=`D`
+- Aliases: `M18.hybrid_cot_audit.EN-COT+KILL-RANDOM, EN-COT+KILL-RANDOM`
+- Lookup aliases: `M18.hybrid_cot_audit.EN-COT+KILL-RANDOM`
+- Brief: telemetry-rooted M18 ablation cell
+- Architectural question: `M18`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M18 cell
+- Automatic compare-against: `M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M14.D`
+- Required test contracts: `m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m18/run_hybrid_cot_audit.py`
+
+#### M18 EN-COT+L-TYPED
+
+- Canonical ID: `m.track.m18_2.f`
+- Normalized ID: `M18.2.F`
+- Taxonomy: major=`18` minor=`2` cell=`F`
+- Aliases: `M18.hybrid_cot_audit.EN-COT+L-TYPED, EN-COT+L-TYPED`
+- Lookup aliases: `M18.hybrid_cot_audit.EN-COT+L-TYPED`
+- Brief: telemetry-rooted M18 ablation cell
+- Architectural question: `M18`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M18 cell
+- Automatic compare-against: `M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M14.D`
+- Required test contracts: `m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m18/run_hybrid_cot_audit.py`
+
+#### M18 EN-COT+U-TYPED
+
+- Canonical ID: `m.track.m18_2.e`
+- Normalized ID: `M18.2.E`
+- Taxonomy: major=`18` minor=`2` cell=`E`
+- Aliases: `M18.hybrid_cot_audit.EN-COT+U-TYPED, EN-COT+U-TYPED`
+- Lookup aliases: `M18.hybrid_cot_audit.EN-COT+U-TYPED`
+- Brief: telemetry-rooted M18 ablation cell
+- Architectural question: `M18`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M18 cell
+- Automatic compare-against: `M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M14.D`
+- Required test contracts: `m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m18/run_hybrid_cot_audit.py`
+
+#### M18 ZH-COT
+
+- Canonical ID: `m.track.m18_2.c`
+- Normalized ID: `M18.2.C`
+- Taxonomy: major=`18` minor=`2` cell=`C`
+- Aliases: `M18.hybrid_cot_audit.ZH-COT, ZH-COT`
+- Lookup aliases: `M18.hybrid_cot_audit.ZH-COT`
+- Brief: telemetry-rooted M18 ablation cell
+- Architectural question: `M18`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M18 cell
+- Automatic compare-against: `M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M14.D`
+- Required test contracts: `m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m18/run_hybrid_cot_audit.py`
+
+#### M19.train telemetry report
+
+- Canonical ID: `m.track.m19_train`
+- Aliases: `M19.train`
+- Lookup aliases: `M19.train`
+- Brief: telemetry-rooted M19.train family report
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M19.train family report
+- Scripts: `scripts/m19/train_m19_mainline.py`
+- DAGs: `airflow/dags/m19/lojban_m19_mainline_suite_dag.py`
+
+#### M19.audit telemetry report
+
+- Canonical ID: `m.track.m19_audit`
+- Aliases: `M19.audit`
+- Lookup aliases: `M19.audit`
+- Brief: telemetry-rooted M19.audit family report
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M19.audit family report
+- Scripts: `scripts/m19/run_m19_audit.py`
+
+#### M19.benchmark telemetry report
+
+- Canonical ID: `m.track.m19_benchmark`
+- Aliases: `M19.benchmark`
+- Lookup aliases: `M19.benchmark`
+- Brief: telemetry-rooted M19.benchmark family report
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M19.benchmark family report
+- Scripts: `scripts/m19/run_m19_godtier_benchmark.py`
+
+#### M19 telemetry report
+
+- Canonical ID: `m.track.m19`
+- Normalized ID: `M19`
+- Taxonomy: major=`19` minor=`None` cell=`None`
+- Aliases: `M19`
+- Lookup aliases: `M19`
+- Brief: telemetry-rooted M19 family report
+- Architectural question: `M19`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M19 family report
+- Automatic compare-against: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B`
+- Required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m19/run_m19_mainline_suite.py`
+- DAGs: `airflow/dags/m19/lojban_m19_mainline_suite_dag.py`
+
+#### 16Q / 64D / 12S
+
+- Canonical ID: `m.track.m19_3.f`
+- Normalized ID: `M19.3.F`
+- Taxonomy: major=`19` minor=`3` cell=`F`
+- Aliases: `M19.3.F, F`
+- Lookup aliases: `M19.3.F`
+- Brief: telemetry-rooted M19.3 ablation cell
+- Architectural question: `M19`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M19.3 cell
+- Automatic compare-against: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B`
+- Required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Best-known metrics: held_out_accuracy=`0.240000`
+- Scripts: `scripts/m19/run_isolation_grid.py`
+- DAGs: `airflow/dags/m19/lojban_m19_isolation_grid_dag.py`
+
+#### 16Q / 64D / 8S
+
+- Canonical ID: `m.track.m19_3.c`
+- Normalized ID: `M19.3.C`
+- Taxonomy: major=`19` minor=`3` cell=`C`
+- Aliases: `M19.3.C, C`
+- Lookup aliases: `M19.3.C`
+- Brief: telemetry-rooted M19.3 ablation cell
+- Architectural question: `M19`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M19.3 cell
+- Automatic compare-against: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B`
+- Required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Best-known metrics: held_out_accuracy=`0.240000`
+- Scripts: `scripts/m19/run_isolation_grid.py`
+- DAGs: `airflow/dags/m19/lojban_m19_isolation_grid_dag.py`
+
+#### 8Q / 128D / 12S
+
+- Canonical ID: `m.track.m19_3.e`
+- Normalized ID: `M19.3.E`
+- Taxonomy: major=`19` minor=`3` cell=`E`
+- Aliases: `M19.3.E, E`
+- Lookup aliases: `M19.3.E`
+- Brief: telemetry-rooted M19.3 ablation cell
+- Architectural question: `M19`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M19.3 cell
+- Automatic compare-against: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B`
+- Required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Best-known metrics: held_out_accuracy=`0.260000`
+- Scripts: `scripts/m19/run_isolation_grid.py`
+- DAGs: `airflow/dags/m19/lojban_m19_isolation_grid_dag.py`
+
+#### 8Q / 128D / 8S
+
+- Canonical ID: `m.track.m19_3.b`
+- Normalized ID: `M19.3.B`
+- Taxonomy: major=`19` minor=`3` cell=`B`
+- Aliases: `M19.3.B, B`
+- Lookup aliases: `M19.3.B`
+- Brief: telemetry-rooted M19.3 ablation cell
+- Architectural question: `M19`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M19.3 cell
+- Automatic compare-against: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B`
+- Required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Best-known metrics: held_out_accuracy=`0.300000`
+- Scripts: `scripts/m19/run_isolation_grid.py`
+- DAGs: `airflow/dags/m19/lojban_m19_isolation_grid_dag.py`
+
+#### 8Q / 64D / 12S
+
+- Canonical ID: `m.track.m19_3.d`
+- Normalized ID: `M19.3.D`
+- Taxonomy: major=`19` minor=`3` cell=`D`
+- Aliases: `M19.3.D, D`
+- Lookup aliases: `M19.3.D`
+- Brief: telemetry-rooted M19.3 ablation cell
+- Architectural question: `M19`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M19.3 cell
+- Automatic compare-against: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B`
+- Required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Best-known metrics: held_out_accuracy=`0.240000`
+- Scripts: `scripts/m19/run_isolation_grid.py`
+- DAGs: `airflow/dags/m19/lojban_m19_isolation_grid_dag.py`
+
+#### 8Q / 64D / 8S
+
+- Canonical ID: `m.track.m19_3.a`
+- Normalized ID: `M19.3.A`
+- Taxonomy: major=`19` minor=`3` cell=`A`
+- Aliases: `M19.3.A, A`
+- Lookup aliases: `M19.3.A`
+- Brief: telemetry-rooted M19.3 ablation cell
+- Architectural question: `M19`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M19.3 cell
+- Automatic compare-against: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B`
+- Required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Best-known metrics: held_out_accuracy=`0.080000`
+- Scripts: `scripts/m19/run_isolation_grid.py`
+- DAGs: `airflow/dags/m19/lojban_m19_isolation_grid_dag.py`
+
+#### replicate_baseline_seed43
+
+- Canonical ID: `m.track.m19_3.r21`
+- Normalized ID: `M19.3.R21`
+- Taxonomy: major=`19` minor=`3` cell=`R21`
+- Aliases: `M19.3.R21, R21`
+- Lookup aliases: `M19.3.R21`
+- Brief: telemetry-rooted M19.3 ablation cell
+- Architectural question: `M19`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M19.3 cell
+- Automatic compare-against: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B`
+- Required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Best-known metrics: held_out_accuracy=`0.080000`
+- Scripts: `scripts/m19/run_isolation_grid.py`
+- DAGs: `airflow/dags/m19/lojban_m19_isolation_grid_dag.py`
+
+#### replicate_baseline_seed44
+
+- Canonical ID: `m.track.m19_3.r22`
+- Normalized ID: `M19.3.R22`
+- Taxonomy: major=`19` minor=`3` cell=`R22`
+- Aliases: `M19.3.R22, R22`
+- Lookup aliases: `M19.3.R22`
+- Brief: telemetry-rooted M19.3 ablation cell
+- Architectural question: `M19`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M19.3 cell
+- Automatic compare-against: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B`
+- Required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Best-known metrics: held_out_accuracy=`0.200000`
+- Scripts: `scripts/m19/run_isolation_grid.py`
+- DAGs: `airflow/dags/m19/lojban_m19_isolation_grid_dag.py`
+
+#### replicate_width_probe_seed43
+
+- Canonical ID: `m.track.m19_3.r11`
+- Normalized ID: `M19.3.R11`
+- Taxonomy: major=`19` minor=`3` cell=`R11`
+- Aliases: `M19.3.R11, R11`
+- Lookup aliases: `M19.3.R11`
+- Brief: telemetry-rooted M19.3 ablation cell
+- Architectural question: `M19`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M19.3 cell
+- Automatic compare-against: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B`
+- Required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Best-known metrics: held_out_accuracy=`0.140000`
+- Scripts: `scripts/m19/run_isolation_grid.py`
+- DAGs: `airflow/dags/m19/lojban_m19_isolation_grid_dag.py`
+
+#### replicate_width_probe_seed44
+
+- Canonical ID: `m.track.m19_3.r12`
+- Normalized ID: `M19.3.R12`
+- Taxonomy: major=`19` minor=`3` cell=`R12`
+- Aliases: `M19.3.R12, R12`
+- Lookup aliases: `M19.3.R12`
+- Brief: telemetry-rooted M19.3 ablation cell
+- Architectural question: `M19`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M19.3 cell
+- Automatic compare-against: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B`
+- Required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Best-known metrics: held_out_accuracy=`0.260000`
+- Scripts: `scripts/m19/run_isolation_grid.py`
+- DAGs: `airflow/dags/m19/lojban_m19_isolation_grid_dag.py`
+
+#### M19.4 telemetry report
+
+- Canonical ID: `m.track.m19_4`
+- Normalized ID: `M19.4`
+- Taxonomy: major=`19` minor=`4` cell=`None`
+- Aliases: `M19.4`
+- Lookup aliases: `M19.4`
+- Brief: telemetry-rooted M19.4 family report
+- Architectural question: `M19`
+- Provenance: evidence=`artifact` confidence=`high` reproducibility=`runnable`
+- Baseline relation: M19.4 family report
+- Inherits from: `M19.3.B`
+- Automatic compare-against: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B`
+- Required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m19/run_m19_godtier_benchmark.py`
+- DAGs: `airflow/dags/m19/lojban_m19_mainline_suite_dag.py`
 
 #### M3.13 A
 
@@ -1687,6 +2327,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.13 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m3/run_m3_13_geometric_ablation_grid.py`
 
 #### M3.13 B
 
@@ -1699,6 +2342,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.13 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m3/run_m3_13_geometric_ablation_grid.py`
 
 #### M3.13 C
 
@@ -1711,6 +2357,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.13 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m3/run_m3_13_geometric_ablation_grid.py`
 
 #### M3.13 D
 
@@ -1723,6 +2372,9 @@ Modern telemetry-rooted M-series work that is not historically rooted in L-serie
 - Architectural question: `M3`
 - Provenance: evidence=`artifact` confidence=`high` reproducibility=`artifact_only`
 - Baseline relation: M3.13 cell
+- Automatic compare-against: `M3, M2, M1, J, L, M3.15d, M3.17, M3.18, M3.19`
+- Required test contracts: `m3.reentry_intervention, m3.reentry_fluency, j.accepted_foil_pair_accuracy, j.invariance_rate, l.constraint_scope, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Scripts: `scripts/m3/run_m3_13_geometric_ablation_grid.py`
 
 
 ## historical_gap
@@ -1740,7 +2392,7 @@ Known missing artifacts, orphaned checkpoints, and preserved gaps.
 - Provenance: evidence=`doc_reported` confidence=`medium` reproducibility=`orphaned`
 - Baseline relation: restoration target
 - Best-known metrics: held_out_accuracy=`0.396000`, logical_accuracy=`0.417000`
-- Scripts: `scripts/run_phase5_two_stage_recovery.py, scripts/mine_compositional_anchors.py`
+- Scripts: `scripts/data/mine_compositional_anchors.py, scripts/legacy/run_phase5_two_stage_recovery.py`
 - Notes: Doc-reported missing asset for the original two-stage control baseline. | Serves as gap handling rather than a confirmed artifact-backed ablation run.
 
 

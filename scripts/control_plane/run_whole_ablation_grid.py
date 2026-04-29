@@ -1,0 +1,794 @@
+from __future__ import annotations
+
+import argparse
+import json
+import subprocess
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+sys.path.append(str(Path(__file__).resolve().parents[2] / "src"))
+
+from lojban_evolution.series_contract import assert_output_path_allowed, series_metadata
+
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_OUTPUT_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "whole_ablation_grid"
+DEFAULT_DOC_OUTPUT = REPO_ROOT / "docs" / "history" / "reports" / "WHOLE_ABLATION_GRID_LATEST.md"
+DEFAULT_HISTORY_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "ablation_history_backfill"
+DEFAULT_PROGRAM_SPINE_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "ablation_program_spine"
+DEFAULT_LEGACY_GRID_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "legacy_grid"
+DEFAULT_M_BRIDGE_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m_bridge_ablation_test_suite"
+DEFAULT_M14_REPORT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m14_5_decompressor" / "m14_5_report.json"
+DEFAULT_M18_REPORT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m18_controller_family" / "m18_frontier_audits_20260409" / "m18_family_report.json"
+DEFAULT_DIRECT_UNIFIED_EVAL_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "direct_unified_eval"
+DEFAULT_M19_MAINLINE_REPORT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m19_mainline_suite" / "m19_mainline_20260409_v2" / "m19_mainline_report.json"
+DEFAULT_M19_4_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m19_dynamic_pacing_suite"
+DEFAULT_M19_4_BENCH_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m19_dynamic_pacing_benchmark"
+DEFAULT_M19_ISOLATION_REPORT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m19_isolation_grid" / "m19_isolation_grid_20260409_v2" / "m19_isolation_grid_report.json"
+DEFAULT_M19_ZH_SUMMARY = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m19_zh_comparison" / "m19_zh_comparison_20260409" / "m19_zh_comparison_summary.json"
+DEFAULT_M19_REPLICATION_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m19_replication_suite"
+DEFAULT_M19_KILL_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m19_kill_test_suite"
+
+STAGE_ORDER = [
+    "A-G",
+    "H",
+    "H5",
+    "J",
+    "L",
+    "J/L Hypercube",
+    "Phase Eval",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6",
+    "M7",
+    "M8",
+    "M9",
+    "M10",
+    "M11",
+    "M14",
+    "M18",
+    "M19",
+    "Control Plane",
+]
+
+PREFERRED_REPORT_GLOBS = ["*report.json", "*manifest.json", "*summary.json", "*.json"]
+KEY_METRICS = [
+    "headline_accuracy",
+    "headline_macro_f1",
+    "overall_accuracy",
+    "held_out_accuracy",
+    "logical_accuracy",
+    "mean_intervention_delta_gold",
+    "resume_first_token_accuracy",
+    "english_fluency_score",
+    "loop_rate",
+    "contamination_rate",
+    "lift_vs_en_cot",
+    "lift_vs_random",
+    "avg_tokens",
+    "audit_qformer_accuracy",
+    "constraint_scope",
+    "constraint_identity",
+    "full_total_regularizer",
+]
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Build one canonical whole-grid ablation report.")
+    parser.add_argument("--history-manifest", type=Path, default=None)
+    parser.add_argument("--program-spine-manifest", type=Path, default=None)
+    parser.add_argument("--legacy-grid-manifest", type=Path, default=None)
+    parser.add_argument("--m-bridge-manifest", type=Path, default=None)
+    parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
+    parser.add_argument("--doc-output", type=Path, default=DEFAULT_DOC_OUTPUT)
+    parser.add_argument("--run-id", type=str, default="")
+    parser.add_argument("--refresh-legacy-grid", action="store_true")
+    parser.add_argument("--legacy-grid-run-id", type=str, default="")
+    parser.add_argument("--legacy-grid-execute", action="store_true")
+    parser.add_argument("--local-files-only", action="store_true")
+    return parser.parse_args()
+
+
+def main() -> None:
+    args = parse_args()
+    output_root = _validated_output_root(args.output_root)
+    run_id = args.run_id.strip() or datetime.now(timezone.utc).strftime("whole_ablation_grid_%Y%m%d_%H%M%S")
+    output_dir = output_root / run_id
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    history_manifest = args.history_manifest or _latest_named_manifest(DEFAULT_HISTORY_ROOT, "ablation_history_manifest.json")
+    program_spine_manifest = args.program_spine_manifest or _latest_named_manifest(
+        DEFAULT_PROGRAM_SPINE_ROOT, "ablation_program_spine_manifest.json"
+    )
+    legacy_grid_manifest = args.legacy_grid_manifest or _latest_named_manifest(
+        DEFAULT_LEGACY_GRID_ROOT, "legacy_ablation_grid_manifest.json"
+    )
+    if args.refresh_legacy_grid:
+        legacy_grid_manifest = _refresh_legacy_grid(args, legacy_grid_manifest)
+    m_bridge_manifest = args.m_bridge_manifest or _latest_named_manifest(
+        DEFAULT_M_BRIDGE_ROOT, "m_bridge_ablation_suite_manifest.json"
+    )
+
+    history = _read_json_required(history_manifest)
+    spine = _read_json_required(program_spine_manifest)
+    legacy_grid = _read_json_optional(legacy_grid_manifest)
+    m_bridge = _read_json_optional(m_bridge_manifest)
+
+    stages_by_key = {str(stage.get("stage_key", "")): stage for stage in spine.get("stages", []) if isinstance(stage, dict)}
+    rows: list[dict[str, Any]] = []
+    for stage_key in STAGE_ORDER:
+        stage = stages_by_key.get(stage_key)
+        if stage is None:
+            continue
+        if stage_key in {"A-G", "H", "H5", "J", "L", "J/L Hypercube", "Phase Eval"}:
+            row = _legacy_row(stage, legacy_grid)
+        elif stage_key == "M3":
+            row = _m3_row(stage, m_bridge)
+        elif stage_key == "M11":
+            row = _m11_row(stage, m_bridge)
+        elif stage_key in {"M14", "M18", "M19"}:
+            row = _special_stage_row(stage)
+        elif stage_key == "Control Plane":
+            row = _control_plane_row(stage, history_manifest, program_spine_manifest, legacy_grid_manifest, m_bridge_manifest)
+        else:
+            row = _generic_row(stage)
+        rows.append(row)
+
+    manifest = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "series": series_metadata("M", "M.whole_grid", "scripts/control_plane/run_whole_ablation_grid.py"),
+        "run_id": run_id,
+        "source_manifests": {
+            "history_manifest": _repo_relative(history_manifest),
+            "program_spine_manifest": _repo_relative(program_spine_manifest),
+            "legacy_grid_manifest": _repo_relative(legacy_grid_manifest) if legacy_grid_manifest else None,
+            "m_bridge_manifest": _repo_relative(m_bridge_manifest) if m_bridge_manifest else None,
+        },
+        "legacy_grid_status": _legacy_grid_status(legacy_grid),
+        "coverage_summary": _coverage_summary(rows),
+        "stage_rows": rows,
+        "notes": [
+            "Fresh reruns and artifact-backed anchors are intentionally separated.",
+            "Legacy H and H5 remain represented through the recovered shared H/H5/J surface.",
+            "This control-plane report is the whole grid view, not a claim that every historical family was retrained in this pass.",
+        ],
+    }
+
+    manifest_path = output_dir / "whole_ablation_grid_manifest.json"
+    summary_path = output_dir / "whole_ablation_grid_summary.md"
+    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    summary = _render_markdown(manifest)
+    summary_path.write_text(summary, encoding="utf-8")
+    args.doc_output.parent.mkdir(parents=True, exist_ok=True)
+    args.doc_output.write_text(summary, encoding="utf-8")
+
+    print(f"Wrote: {manifest_path}")
+    print(f"Wrote: {summary_path}")
+    print(f"Wrote: {args.doc_output}")
+
+
+def _refresh_legacy_grid(args: argparse.Namespace, current_manifest: Path | None) -> Path:
+    run_id = args.legacy_grid_run_id.strip()
+    if not run_id and current_manifest is not None:
+        run_id = current_manifest.parent.name
+    if not run_id:
+        raise ValueError("Need --legacy-grid-run-id or an existing legacy manifest to refresh the legacy grid.")
+    cmd = [
+        sys.executable,
+        str(REPO_ROOT / "scripts" / "legacy" / "run_legacy_ablation_grid.py"),
+        "--run-id",
+        run_id,
+        "--execute" if args.legacy_grid_execute else "--aggregate-only",
+    ]
+    if args.local_files_only:
+        cmd.append("--local-files-only")
+    subprocess.run(cmd, cwd=REPO_ROOT, check=True)
+    return DEFAULT_LEGACY_GRID_ROOT / run_id / "legacy_ablation_grid_manifest.json"
+
+
+def _validated_output_root(path: Path) -> Path:
+    candidate = Path(path)
+    try:
+        relative = candidate.resolve().relative_to(REPO_ROOT.resolve()).as_posix()
+    except ValueError:
+        relative = str(candidate).replace("\\", "/")
+    validated = assert_output_path_allowed("M", relative)
+    return REPO_ROOT / validated
+
+
+def _legacy_row(stage: dict[str, Any], legacy_grid: dict[str, Any] | None) -> dict[str, Any]:
+    lane_map = {
+        "A-G": "a_to_g",
+        "H": "hj",
+        "H5": "hj",
+        "J": "hj",
+        "L": "l6",
+        "Phase Eval": "phase5_objective",
+    }
+    stage_key = str(stage.get("stage_key", ""))
+    lane_name = lane_map.get(stage_key)
+    lane = _legacy_lane(legacy_grid, lane_name) if lane_name else None
+    metrics: dict[str, float] = {}
+    notes: list[str] = []
+    supplemental: list[str] = []
+    surface_kind = "history_only"
+    anchor_path = None
+
+    if lane is not None:
+        surface_kind = "fresh_legacy_lane"
+        anchor_path = _string_or_none(lane.get("artifact_path"))
+        if isinstance(lane.get("metrics_digest"), dict):
+            metrics.update({str(k): _float_or_zero(v) for k, v in lane["metrics_digest"].items()})
+        notes.append(f"fresh legacy surface status: {lane.get('status', 'unknown')}")
+        if stage_key in {"H", "H5", "J"}:
+            notes.append("represented inside the recovered shared H/H5/J runnable lane")
+        if stage_key == "Phase Eval":
+            for extra_lane_name in ("phase5_train", "english_cot_duel"):
+                extra_lane = _legacy_lane(legacy_grid, extra_lane_name)
+                if extra_lane is not None and extra_lane.get("artifact_path"):
+                    supplemental.append(str(extra_lane["artifact_path"]))
+            metrics.update(_phase_eval_metrics(legacy_grid))
+    elif stage_key == "J/L Hypercube":
+        notes.append("historical orchestration layer linking late J/L aggregation into the M families")
+
+    return _row(stage, surface_kind, anchor_path, supplemental, _limit_metrics(metrics), notes)
+
+
+def _m3_row(stage: dict[str, Any], m_bridge: dict[str, Any] | None) -> dict[str, Any]:
+    metrics: dict[str, float] = {}
+    notes: list[str] = []
+    anchor_path = _repo_relative(_latest_named_manifest(DEFAULT_M_BRIDGE_ROOT, "m_bridge_ablation_suite_manifest.json"))
+    if isinstance(m_bridge, dict):
+        tracks = m_bridge.get("m3_tracks", [])
+        if isinstance(tracks, list):
+            metrics["bridge_track_count"] = float(len(tracks))
+            harmful = 0
+            for track in tracks:
+                if isinstance(track, dict) and any("harm" in str(line).lower() for line in track.get("diagnosis", [])):
+                    harmful += 1
+            metrics["harmful_track_count"] = float(harmful)
+        for line in m_bridge.get("diagnosis", [])[:4]:
+            notes.append(str(line))
+    return _row(stage, "artifact_anchor", anchor_path, [], _limit_metrics(metrics), notes)
+
+
+def _m11_row(stage: dict[str, Any], m_bridge: dict[str, Any] | None) -> dict[str, Any]:
+    m11 = (m_bridge or {}).get("m11_track", {}) if isinstance(m_bridge, dict) else {}
+    metrics = {
+        "headline_accuracy": _float_or_zero(m11.get("headline_accuracy")),
+        "headline_macro_f1": _float_or_zero(m11.get("headline_macro_f1")),
+        "bridge_audit_accuracy": _float_or_zero(m11.get("bridge_audit_accuracy")),
+        "floor_lock_accuracy": _float_or_zero(m11.get("floor_lock_accuracy")),
+        "publication_mean_acc": _float_or_zero(m11.get("publication_mean_acc")),
+    }
+    notes = [str(line) for line in m11.get("diagnosis", [])[:4]] if isinstance(m11, dict) else []
+    anchor_path = _string_or_none(m11.get("manifest_path"))
+    supplemental = [
+        path
+        for path in [
+            _string_or_none(m11.get("bridge_audit_path")),
+            _string_or_none(m11.get("floor_lock_path")),
+            _string_or_none(m11.get("publication_metrics_path")),
+        ]
+        if path
+    ]
+    return _row(stage, "artifact_anchor" if anchor_path else "runnable_no_anchor", anchor_path, supplemental, _limit_metrics(metrics), notes)
+
+
+def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
+    stage_key = str(stage.get("stage_key"))
+    anchor = _explicit_stage_anchor(stage_key) or _resolve_generic_anchor(stage)
+    payload = _read_json_optional(anchor) if anchor else None
+    metrics = _special_stage_metrics(stage_key, payload)
+    stage_for_row = _stage_with_direct_contract(stage, payload) if stage_key == "M19" else stage
+    supplemental: list[str] = []
+    notes: list[str] = []
+    if stage_key == "M14":
+        notes.append("anchored M14 artifact surface is still sparse and should not be over-read")
+    if stage_key == "M18":
+        notes.append("M18 anchor includes English, Chinese, typed, and hybrid comparisons")
+    if stage_key == "M19":
+        notes.append("M19 anchor captures runway mainline and isolation-era artifacts")
+        dynamic_anchor = _latest_named_manifest(DEFAULT_M19_4_ROOT, "m19_4_mainline_report.json")
+        if dynamic_anchor and dynamic_anchor.exists():
+            supplemental.append(_repo_relative(dynamic_anchor) or "")
+        dynamic_benchmark = _latest_named_manifest(DEFAULT_M19_4_BENCH_ROOT, "m19_4_benchmark_report.json")
+        if dynamic_benchmark and dynamic_benchmark.exists():
+            supplemental.append(_repo_relative(dynamic_benchmark) or "")
+        if DEFAULT_M19_ISOLATION_REPORT.exists():
+            supplemental.append(_repo_relative(DEFAULT_M19_ISOLATION_REPORT) or "")
+        if DEFAULT_M19_ZH_SUMMARY.exists():
+            supplemental.append(_repo_relative(DEFAULT_M19_ZH_SUMMARY) or "")
+    return _row(
+        stage_for_row,
+        "artifact_anchor" if anchor else "runnable_no_anchor",
+        _repo_relative(anchor) if anchor else None,
+        [path for path in supplemental if path],
+        _limit_metrics(metrics),
+        notes,
+    )
+
+
+def _control_plane_row(
+    stage: dict[str, Any],
+    history_manifest: Path,
+    program_spine_manifest: Path,
+    legacy_grid_manifest: Path | None,
+    m_bridge_manifest: Path | None,
+) -> dict[str, Any]:
+    supplemental = [
+        _repo_relative(program_spine_manifest),
+        _repo_relative(legacy_grid_manifest) if legacy_grid_manifest else None,
+        _repo_relative(m_bridge_manifest) if m_bridge_manifest else None,
+    ]
+    return _row(
+        stage,
+        "control_plane_manifest",
+        _repo_relative(history_manifest),
+        [path for path in supplemental if path],
+        {},
+        ["canonical history, spine, legacy grid, and bridge suite are linked from this row"],
+    )
+
+
+def _stage_with_direct_contract(stage: dict[str, Any], payload: dict[str, Any] | None) -> dict[str, Any]:
+    if not isinstance(payload, dict):
+        return stage
+    contract = payload.get("comparison_contract")
+    if not isinstance(contract, dict):
+        return stage
+
+    updated = dict(stage)
+    required = contract.get("required_test_contract_ids")
+    if isinstance(required, list):
+        updated["required_test_contracts"] = [str(item) for item in required]
+    targets = contract.get("comparison_targets")
+    if isinstance(targets, list):
+        updated["comparison_targets"] = [target for target in targets if isinstance(target, dict)]
+    historical = contract.get("historical_comparison_families")
+    if isinstance(historical, list):
+        updated["historical_comparison_families"] = [str(item) for item in historical]
+    return updated
+
+
+def _generic_row(stage: dict[str, Any]) -> dict[str, Any]:
+    anchor = _resolve_generic_anchor(stage)
+    payload = _read_json_optional(anchor) if anchor else None
+    metrics = _generic_metrics(payload) if isinstance(payload, dict) else {}
+    if anchor is None:
+        surface_kind = "runnable_no_anchor" if int(stage.get("runnable_count") or 0) > 0 else "history_only"
+        notes = ["no canonical anchor report auto-resolved for this stage"]
+    else:
+        surface_kind = "artifact_anchor"
+        notes = []
+    return _row(stage, surface_kind, _repo_relative(anchor) if anchor else None, [], _limit_metrics(metrics), notes)
+
+
+def _resolve_generic_anchor(stage: dict[str, Any]) -> Path | None:
+    candidates: list[Path] = []
+    for raw in stage.get("artifact_roots", []):
+        path = _repo_path(raw)
+        if path.is_file() and path.suffix.lower() == ".json":
+            candidates.append(path)
+        elif path.is_dir():
+            for pattern in PREFERRED_REPORT_GLOBS:
+                candidates.extend(match for match in path.rglob(pattern) if match.is_file())
+    if not candidates:
+        return None
+    candidates.sort(key=lambda item: item.stat().st_mtime, reverse=True)
+    return candidates[0]
+
+
+def _generic_metrics(payload: dict[str, Any]) -> dict[str, float]:
+    metrics: dict[str, float] = {}
+    if isinstance(payload.get("metrics"), dict):
+        metrics.update(_pick_metrics(payload["metrics"]))
+    metrics.update(_pick_metrics(payload))
+    if not metrics and isinstance(payload.get("summary"), dict):
+        metrics.update(_pick_metrics(payload["summary"]))
+    if not metrics and isinstance(payload.get("cells"), dict):
+        best_id, best_cell = _best_cell(payload["cells"])
+        if best_id and isinstance(best_cell, dict):
+            metrics["best_cell_accuracy"] = _float_or_zero(_best_cell_metric(best_cell))
+    if not metrics:
+        metrics.update(_pick_metrics(_numeric_leaves(payload)))
+    return metrics
+
+
+def _explicit_stage_anchor(stage_key: str) -> Path | None:
+    if stage_key == "M14" and DEFAULT_M14_REPORT.exists():
+        return DEFAULT_M14_REPORT
+    if stage_key == "M18" and DEFAULT_M18_REPORT.exists():
+        return DEFAULT_M18_REPORT
+    if stage_key == "M19":
+        direct_anchor = _latest_named_manifest(DEFAULT_DIRECT_UNIFIED_EVAL_ROOT, "direct_unified_eval_manifest.json")
+        if direct_anchor and direct_anchor.exists():
+            return direct_anchor
+        dynamic_anchor = _latest_named_manifest(DEFAULT_M19_4_ROOT, "m19_4_mainline_report.json")
+        if dynamic_anchor and dynamic_anchor.exists():
+            return dynamic_anchor
+        dynamic_benchmark = _latest_named_manifest(DEFAULT_M19_4_BENCH_ROOT, "m19_4_benchmark_report.json")
+        if dynamic_benchmark and dynamic_benchmark.exists():
+            return dynamic_benchmark
+    if stage_key == "M19" and DEFAULT_M19_MAINLINE_REPORT.exists():
+        return DEFAULT_M19_MAINLINE_REPORT
+    return None
+
+
+def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> dict[str, float]:
+    if not isinstance(payload, dict):
+        return {}
+    if stage_key == "M14":
+        cells = payload.get("cells", {})
+        if isinstance(cells, dict):
+            best_id, best_cell = _best_cell(cells)
+            return {
+                "cell_count": float(len(cells)),
+                "best_cell_accuracy": _float_or_zero(best_cell.get("accuracy")) if isinstance(best_cell, dict) else 0.0,
+                "all_cells_zero": 1.0
+                if all(isinstance(cell, dict) and _float_or_zero(cell.get("accuracy")) == 0.0 for cell in cells.values())
+                else 0.0,
+            }
+        return {}
+    if stage_key == "M18":
+        top = payload.get("metrics", {})
+        if isinstance(top, dict):
+            return {
+                "sapir_english_accuracy": _float_or_zero(top.get("sapir_english_accuracy")),
+                "sapir_chinese_accuracy": _float_or_zero(top.get("sapir_chinese_accuracy")),
+                "harmonized_en_concise_accuracy": _float_or_zero(top.get("harmonized_en_concise_accuracy")),
+                "harmonized_l_typed_accuracy": _float_or_zero(top.get("harmonized_l_typed_accuracy")),
+                "hybrid_en_cot_accuracy": _float_or_zero(top.get("hybrid_en_cot_accuracy")),
+            }
+        return {}
+    if stage_key == "M19":
+        metrics = {}
+        top = payload.get("metrics", {})
+        headline = payload.get("headline_metrics", {})
+        if isinstance(headline, dict):
+            _merge_existing_metrics(
+                metrics,
+                headline,
+                {
+                    "mainline_overall_accuracy": "overall_accuracy",
+                    "mainline_avg_tokens": "avg_tokens",
+                    "mainline_lift_vs_en_cot": "lift_vs_en_cot",
+                    "mainline_lift_vs_random": "lift_vs_random",
+                    "mainline_audit_qformer_accuracy": "audit_qformer_accuracy",
+                    "purged_accuracy": "purged_accuracy",
+                    "masked_accuracy": "masked_accuracy",
+                    "replication_mean_accuracy": ("mean_accuracy", "replication_mean_accuracy"),
+                    "replication_std_accuracy": ("std_accuracy", "replication_std_accuracy"),
+                    "kill_entity_accuracy": ("entity_accuracy", "kill_entity_accuracy"),
+                    "kill_entity_renamed_accuracy": ("entity_renamed_accuracy", "kill_entity_renamed_accuracy"),
+                    "kill_format_accuracy": ("format_accuracy", "kill_format_accuracy"),
+                    "kill_numeric_accuracy": ("numeric_accuracy", "kill_numeric_accuracy"),
+                },
+            )
+        if isinstance(top, dict):
+            _merge_existing_metrics(
+                metrics,
+                top,
+                {
+                    "mainline_overall_accuracy": "overall_accuracy",
+                    "mainline_avg_tokens": "avg_tokens",
+                    "mainline_lift_vs_en_cot": "lift_vs_en_cot",
+                    "mainline_lift_vs_random": "lift_vs_random",
+                    "mainline_audit_qformer_accuracy": "audit_qformer_accuracy",
+                    "mainline_premature_stop_rate": "premature_stop_rate",
+                    "mainline_max_cap_hit_rate": "max_cap_hit_rate",
+                    "mainline_caa_entanglement": "caa_manifold_entanglement_score",
+                },
+            )
+        isolation = _read_json_optional(DEFAULT_M19_ISOLATION_REPORT)
+        if isinstance(isolation, dict) and isinstance(isolation.get("cells"), dict):
+            best_id, best_cell = _best_cell(isolation["cells"])
+            metrics["best_isolation_accuracy"] = _best_cell_metric(best_cell) if isinstance(best_cell, dict) else 0.0
+            if isinstance(best_cell, dict) and isinstance(best_cell.get("metrics"), dict):
+                metrics["best_isolation_avg_tokens"] = _float_or_zero(best_cell["metrics"].get("avg_tokens"))
+        zh = _read_json_optional(DEFAULT_M19_ZH_SUMMARY)
+        if isinstance(zh, dict) and isinstance(zh.get("mainline"), dict):
+            metrics["zh_cot_accuracy"] = _float_or_zero(zh["mainline"].get("zh_cot_accuracy"))
+            metrics["lift_vs_zh"] = _float_or_zero(zh["mainline"].get("lift_vs_zh_cot"))
+        replication = _latest_named_manifest(DEFAULT_M19_REPLICATION_ROOT, "m19_replication_report.json")
+        replication_payload = _read_json_optional(replication)
+        if isinstance(replication_payload, dict) and isinstance(replication_payload.get("metrics"), dict):
+            metrics["replication_mean_accuracy"] = _float_or_zero(replication_payload["metrics"].get("mean_accuracy"))
+            metrics["replication_std_accuracy"] = _float_or_zero(replication_payload["metrics"].get("std_accuracy"))
+        kill_report = _latest_named_manifest(DEFAULT_M19_KILL_ROOT, "m19_kill_test_report.json")
+        kill_payload = _read_json_optional(kill_report)
+        if isinstance(kill_payload, dict) and isinstance(kill_payload.get("metrics"), dict):
+            metrics["kill_entity_accuracy"] = _float_or_zero(kill_payload["metrics"].get("entity_accuracy"))
+            metrics["kill_format_accuracy"] = _float_or_zero(kill_payload["metrics"].get("format_accuracy"))
+        return metrics
+    return _generic_metrics(payload)
+
+
+def _merge_existing_metrics(
+    target: dict[str, float],
+    source: dict[str, Any],
+    mapping: dict[str, str | tuple[str, ...]],
+) -> None:
+    for out_key, raw_keys in mapping.items():
+        candidates = (raw_keys,) if isinstance(raw_keys, str) else raw_keys
+        for raw_key in candidates:
+            if raw_key in source:
+                target[out_key] = _float_or_zero(source.get(raw_key))
+                break
+
+
+def _best_cell(cells: dict[str, Any]) -> tuple[str | None, dict[str, Any] | None]:
+    best_id = None
+    best_cell = None
+    best_value = float("-inf")
+    for cell_id, cell in cells.items():
+        if not isinstance(cell, dict):
+            continue
+        value = _best_cell_metric(cell)
+        if value > best_value:
+            best_id = str(cell_id)
+            best_cell = cell
+            best_value = value
+    return best_id, best_cell
+
+
+def _best_cell_metric(cell: dict[str, Any]) -> float:
+    metrics = cell.get("metrics", {})
+    if isinstance(metrics, dict):
+        for key in ("overall_accuracy", "held_out_accuracy", "accuracy"):
+            if key in metrics:
+                return _float_or_zero(metrics[key])
+    for key in ("accuracy", "overall_accuracy", "held_out_accuracy"):
+        if key in cell:
+            return _float_or_zero(cell[key])
+    return float("-inf")
+
+
+def _pick_metrics(values: dict[str, Any]) -> dict[str, float]:
+    picked: dict[str, float] = {}
+    for wanted in KEY_METRICS:
+        for key, value in values.items():
+            if isinstance(key, str) and (key == wanted or key.endswith(f".{wanted}")) and isinstance(value, (int, float)):
+                picked[wanted] = float(value)
+                break
+    return picked
+
+
+def _numeric_leaves(payload: Any, prefix: str = "") -> dict[str, float]:
+    leaves: dict[str, float] = {}
+    if isinstance(payload, dict):
+        for key, value in payload.items():
+            child = f"{prefix}.{key}" if prefix else str(key)
+            leaves.update(_numeric_leaves(value, child))
+    elif isinstance(payload, list):
+        for idx, value in enumerate(payload):
+            leaves.update(_numeric_leaves(value, f"{prefix}[{idx}]"))
+    elif isinstance(payload, (int, float)):
+        leaves[prefix] = float(payload)
+    return leaves
+
+
+def _phase_eval_metrics(legacy_grid: dict[str, Any] | None) -> dict[str, float]:
+    metrics: dict[str, float] = {}
+    phase5_train = _legacy_lane(legacy_grid, "phase5_train")
+    if isinstance(phase5_train, dict) and isinstance(phase5_train.get("metrics_digest"), dict):
+        digest = phase5_train["metrics_digest"]
+        metrics["phase5_train_executed_variants"] = _float_or_zero(digest.get("executed_variants"))
+        metrics["phase5_train_mean_total_loss"] = _float_or_zero(digest.get("mean_total_loss"))
+    english_duel = _legacy_lane(legacy_grid, "english_cot_duel")
+    if isinstance(english_duel, dict) and isinstance(english_duel.get("metrics_digest"), dict):
+        digest = english_duel["metrics_digest"]
+        metrics["english_cot_base_acc"] = _float_or_zero(digest.get("base_acc"))
+        metrics["english_cot_adapter_acc"] = _float_or_zero(digest.get("english_cot_adapter_acc"))
+        metrics["english_cot_lojban_adapter_acc"] = _float_or_zero(digest.get("lojban_adapter_acc"))
+    return metrics
+
+
+def _legacy_lane(legacy_grid: dict[str, Any] | None, lane_name: str | None) -> dict[str, Any] | None:
+    if not lane_name or not isinstance(legacy_grid, dict):
+        return None
+    lanes = legacy_grid.get("lanes", [])
+    if not isinstance(lanes, list):
+        return None
+    for lane in lanes:
+        if isinstance(lane, dict) and str(lane.get("lane", "")) == lane_name:
+            return lane
+    return None
+
+
+def _legacy_grid_status(legacy_grid: dict[str, Any] | None) -> dict[str, Any]:
+    if not isinstance(legacy_grid, dict):
+        return {"available": False}
+    statuses: dict[str, str] = {}
+    for lane in legacy_grid.get("lanes", []):
+        if isinstance(lane, dict):
+            statuses[str(lane.get("lane", ""))] = str(lane.get("status", ""))
+    return {"available": True, "run_id": legacy_grid.get("run_id"), "statuses": statuses}
+
+
+def _coverage_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    surface_counts: dict[str, int] = {}
+    for row in rows:
+        surface = str(row.get("surface_kind", "unknown"))
+        surface_counts[surface] = surface_counts.get(surface, 0) + 1
+    return {
+        "stage_count": len(rows),
+        "surface_counts": surface_counts,
+        "fresh_stage_count": surface_counts.get("fresh_legacy_lane", 0),
+        "artifact_anchor_count": surface_counts.get("artifact_anchor", 0),
+        "history_only_count": surface_counts.get("history_only", 0),
+    }
+
+
+def _row(
+    stage: dict[str, Any],
+    surface_kind: str,
+    anchor_path: str | None,
+    supplemental_paths: list[str],
+    headline_metrics: dict[str, float],
+    notes: list[str],
+) -> dict[str, Any]:
+    return {
+        "stage_key": stage.get("stage_key"),
+        "title": stage.get("title"),
+        "stage_kind": stage.get("stage_kind"),
+        "program_layer": stage.get("program_layer"),
+        "entry_count": int(stage.get("entry_count") or 0),
+        "runnable_count": int(stage.get("runnable_count") or 0),
+        "artifact_only_count": int(stage.get("artifact_only_count") or 0),
+        "doc_only_count": int(stage.get("doc_only_count") or 0),
+        "legacy_origin": stage.get("legacy_origin"),
+        "selected_upstream": stage.get("selected_upstream"),
+        "question_boundary": stage.get("question_boundary"),
+        "architectural_thesis": stage.get("architectural_thesis") or stage.get("objective"),
+        "historical_comparison_families": list(stage.get("historical_comparison_families", [])),
+        "required_test_contracts": list(stage.get("required_test_contracts", [])),
+        "comparison_targets": list(stage.get("comparison_targets", [])),
+        "surface_kind": surface_kind,
+        "anchor_path": anchor_path,
+        "supplemental_paths": supplemental_paths,
+        "headline_metrics": headline_metrics,
+        "notes": notes,
+    }
+
+
+def _render_markdown(manifest: dict[str, Any]) -> str:
+    lines = [
+        "# Whole Ablation Grid",
+        "",
+        f"- run_id: `{manifest.get('run_id', '')}`",
+        f"- generated: `{manifest.get('timestamp', '')}`",
+        f"- history manifest: `{manifest.get('source_manifests', {}).get('history_manifest', '')}`",
+        f"- program spine manifest: `{manifest.get('source_manifests', {}).get('program_spine_manifest', '')}`",
+        "",
+        "## Coverage",
+        "",
+        f"- stages: `{manifest.get('coverage_summary', {}).get('stage_count', 0)}`",
+        f"- fresh legacy surfaces: `{manifest.get('coverage_summary', {}).get('fresh_stage_count', 0)}`",
+        f"- artifact anchors: `{manifest.get('coverage_summary', {}).get('artifact_anchor_count', 0)}`",
+        f"- history-only stages: `{manifest.get('coverage_summary', {}).get('history_only_count', 0)}`",
+        "",
+        "## Legacy Grid Status",
+        "",
+    ]
+    legacy_status = manifest.get("legacy_grid_status", {})
+    if legacy_status.get("available"):
+        lines.append(f"- legacy run_id: `{legacy_status.get('run_id', '')}`")
+        for lane, status in sorted((legacy_status.get("statuses") or {}).items()):
+            lines.append(f"- `{lane}`: `{status}`")
+    else:
+        lines.append("- no legacy grid manifest available")
+
+    lines.extend(["", "## Stage Table", "", "| stage | surface | counts | anchor | headline |", "|---|---|---|---|---|"])
+    for row in manifest.get("stage_rows", []):
+        if not isinstance(row, dict):
+            continue
+        counts = f"e={row.get('entry_count', 0)} r={row.get('runnable_count', 0)} a={row.get('artifact_only_count', 0)} d={row.get('doc_only_count', 0)}"
+        anchor = str(row.get("anchor_path") or "")
+        headline = ", ".join(f"{k}={_fmt_metric(v)}" for k, v in list((row.get("headline_metrics") or {}).items())[:4])
+        lines.append(f"| `{row.get('stage_key', '')}` | `{row.get('surface_kind', '')}` | `{counts}` | `{anchor}` | {headline} |")
+
+    lines.extend(["", "## Comparison Policy", ""])
+    for row in manifest.get("stage_rows", []):
+        if not isinstance(row, dict):
+            continue
+        compare_targets = [
+            str(target.get("target", ""))
+            for target in row.get("comparison_targets", [])
+            if isinstance(target, dict) and str(target.get("target", "")).strip()
+        ]
+        required_tests = row.get("required_test_contracts", [])
+        if not compare_targets and not required_tests:
+            continue
+        lines.append(f"### {row.get('stage_key', '')}")
+        lines.append("")
+        if compare_targets:
+            lines.append(f"- automatic compare-against: `{', '.join(compare_targets)}`")
+        if row.get("historical_comparison_families"):
+            lines.append(f"- historical families carried forward: `{', '.join(row.get('historical_comparison_families', []))}`")
+        if required_tests:
+            lines.append(f"- required test contracts: `{', '.join(required_tests)}`")
+        lines.append("")
+
+    lines.extend(["", "## Read", ""])
+    lines.append("- The fresh part of the whole grid is now the recovered legacy runnable surface: A-G, H/H5/J, L6, and the phase-eval lanes under one manifest.")
+    lines.append("- The modern M rows are represented through artifact-backed anchors and the control-plane lineage manifests, so the whole program is visible without pretending every stage was freshly retrained.")
+    lines.append("- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, and M19 the current bounded runway mainline.")
+    return "\n".join(lines) + "\n"
+
+
+def _limit_metrics(metrics: dict[str, float], limit: int = 8) -> dict[str, float]:
+    out: dict[str, float] = {}
+    for key, value in metrics.items():
+        if len(out) >= limit:
+            break
+        out[key] = value
+    return out
+
+
+def _read_json_required(path: Path | None) -> dict[str, Any]:
+    payload = _read_json_optional(path)
+    if payload is None:
+        raise FileNotFoundError(f"Required JSON not found: {path}")
+    return payload
+
+
+def _read_json_optional(path: Path | None) -> dict[str, Any] | None:
+    if path is None or not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def _latest_named_manifest(root: Path, filename: str) -> Path | None:
+    if not root.exists():
+        return None
+    matches = sorted(root.glob(f"*/{filename}"), key=lambda path: path.stat().st_mtime)
+    return matches[-1] if matches else None
+
+
+def _repo_path(value: str | Path) -> Path:
+    path = Path(value)
+    return path if path.is_absolute() else (REPO_ROOT / path)
+
+
+def _repo_relative(path: Path | None) -> str | None:
+    if path is None:
+        return None
+    try:
+        return path.resolve().relative_to(REPO_ROOT.resolve()).as_posix()
+    except ValueError:
+        return str(path).replace("\\", "/")
+
+
+def _string_or_none(value: Any) -> str | None:
+    if value is None:
+        return None
+    text = str(value).strip()
+    return text or None
+
+
+def _float_or_zero(value: Any) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _fmt_metric(value: Any) -> str:
+    try:
+        return f"{float(value):.4f}"
+    except (TypeError, ValueError):
+        return str(value)
+
+
+if __name__ == "__main__":
+    main()

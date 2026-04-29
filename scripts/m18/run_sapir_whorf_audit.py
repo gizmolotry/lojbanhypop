@@ -1,6 +1,7 @@
 import argparse
 import json
 import torch
+from datetime import datetime, timezone
 from pathlib import Path
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from tqdm import tqdm
@@ -69,8 +70,10 @@ def run_sapir_whorf_audit(args):
                     correct += 1
             
             if total_tokens < 500: # Only print a few
-                print(f"\nPrompt: {item['prompt']}")
-                print(f"Gen: {gen_text}")
+                safe_prompt = str(item["prompt"]).encode("unicode_escape").decode("ascii")
+                safe_gen = str(gen_text).encode("unicode_escape").decode("ascii")
+                print(f"\nPrompt: {safe_prompt}")
+                print(f"Gen: {safe_gen}")
 
         results[lang] = {
             "accuracy": correct / len(samples),
@@ -96,8 +99,37 @@ def run_sapir_whorf_audit(args):
     print(f"Token Inflation Factor:  {efficiency:.2f}x (EN is {efficiency:.2f}x larger)")
     print("="*40)
 
+    report = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "track": "M18",
+        "series": {
+            "series_id": "M",
+            "track": "M18",
+            "script": "scripts/m18/run_sapir_whorf_audit.py",
+        },
+        "surface": "sapir_whorf_audit",
+        "config": {
+            "base_model": str(args.base_model),
+        },
+        "results": results,
+        "metrics": {
+            "english_accuracy": en["accuracy"],
+            "chinese_accuracy": zh["accuracy"],
+            "english_avg_tokens": en["avg_tokens"],
+            "chinese_avg_tokens": zh["avg_tokens"],
+            "language_tax_tokens": delta,
+            "token_inflation_factor": efficiency,
+        },
+    }
+    if args.output_path:
+        output_path = Path(args.output_path)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+        print(f"M18 sapir-whorf audit report written to {output_path}")
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-model", required=True)
+    parser.add_argument("--output-path", type=str, default="")
     args = parser.parse_args()
     run_sapir_whorf_audit(args)

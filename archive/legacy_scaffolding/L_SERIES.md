@@ -42,6 +42,6 @@ python scripts/train_l_series_mvs.py \
 
 DAG wrapper:
 
-- `airflow/dags/lojban_l_series_dag.py`
+- `airflow/dags/legacy/lojban_l_series_dag.py`
 
 The DAG follows existing utility patterns (`merge_conf`, `sanitize_run_id`, `validate_output_partition`, `run_repo_script`) and currently writes to local output paths.

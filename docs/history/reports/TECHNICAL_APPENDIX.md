@@ -54,7 +54,7 @@ This document lists the exact data locations, hyperparameters, and numerical out
 
 ## 3. Training Infrastructure
 
-- **Master Script:** `scripts/train_h5_persistent_vq_advisor.py`
+- **Master Script:** `scripts/legacy/train_h5_persistent_vq_advisor.py`
   - Implements: Council Cross-Attention, Iron Collar, Handshake Enforcement, Distillation.
 - **Eval Engine:** `scripts/verify_h5_ablation.py`
   - Calculates grounded accuracy and surgery trigger rates.

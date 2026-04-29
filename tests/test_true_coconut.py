@@ -8,7 +8,7 @@ import torch
 from conftest import load_script_module
 
 
-mod = load_script_module("true_coconut", "scripts/true_coconut.py")
+mod = load_script_module("true_coconut", "scripts/legacy/true_coconut.py")
 
 
 class _TokenizerStub:

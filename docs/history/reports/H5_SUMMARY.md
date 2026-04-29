@@ -14,7 +14,7 @@
 - **Arity Violations:** 0.0
 
 ## Key Artifacts
-- **Trainer Script:** `scripts/train_h5_persistent_vq_advisor.py`
+- **Trainer Script:** `scripts/legacy/train_h5_persistent_vq_advisor.py`
 - **Model Checkpoint:** `runs/true_coconut_h5/20260302_011819/h5_codebook_advisor.pt`
 - **Detailed Report:** `runs/true_coconut_h5/20260302_011819/h5_slice1_report.json`
 - **Ablation Extension:** `runs/coconut_ablation_matrix/20260226_090029/ablation_matrix_extensions.json`

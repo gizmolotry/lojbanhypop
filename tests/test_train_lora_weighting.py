@@ -4,7 +4,7 @@ from conftest import load_script_module
 
 
 def test_loss_weighting_application():
-    mod = load_script_module("train_lora", "scripts/train_lora.py")
+    mod = load_script_module("train_lora", "scripts/training/train_lora.py")
 
     trace_multiplier = 2.0
     answer_multiplier = 1.0
@@ -32,4 +32,3 @@ def test_loss_weighting_application():
     assert weights[0] == 0.2
     assert weights[trace_start] == trace_multiplier
     assert weights[answer_start] == answer_multiplier
-

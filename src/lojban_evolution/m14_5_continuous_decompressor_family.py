@@ -12,8 +12,8 @@ M14_5_REGISTRY: dict[str, dict[str, Any]] = {
     "M14.5": {
         "family": "continuous_decompressor",
         "implementation_label": "hybrid_decompression_runway",
-        "runner_script": "scripts/run_m14_5_decompressor.py",
-        "dag": "airflow/dags/lojban_m14_5_decompressor_dag.py",
+        "runner_script": "scripts/m14/run_m14_5_decompressor.py",
+        "dag": "airflow/dags/m14/lojban_m14_5_decompressor_dag.py",
         "output_root": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_5_decompressor",
         "report_name": "m14_5_report.json",
         "baseline_manifest": "RESULTS_M10_FINAL_AUDIT/m11_discriminative_manifest.json",

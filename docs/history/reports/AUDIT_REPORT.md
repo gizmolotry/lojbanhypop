@@ -29,13 +29,13 @@
 To restore the exact mathematical state of the lost control group, we must execute:
 ```powershell
 # Step A: Restore Compositional Anchors
-python scripts/mine_compositional_anchors.py `
+python scripts/data/mine_compositional_anchors.py `
   --dataset runs/lora_sft_dataset.jsonl `
   --output runs/compositional_anchors_lora_sft.json `
   --top-k 64
 
 # Step B: Execute Two-Stage Recovery
-python scripts/run_phase5_two_stage_recovery.py `
+python scripts/legacy/run_phase5_two_stage_recovery.py `
   --base-model "C:\Users\Andrew\hf_models\Qwen2.5-0.5B-Instruct" `
   --dataset "runs/lora_sft_dataset.jsonl" `
   --output-root "runs/phase5_two_stage_recovery_anchors" `
@@ -62,9 +62,9 @@ python scripts/run_phase5_two_stage_recovery.py `
 ## 3. Pipeline Integrity Verification
 
 I acknowledge the following immutable infrastructure and will not mutate them:
-- `scripts/run_coconut_ablation_matrix.py`: Master grid logic remains intact.
-- `scripts/build_full_coconut_report.py`: Aggregator logic is preserved.
-- `scripts/true_coconut.py`: H-Series logic is preserved.
+- `scripts/legacy/run_coconut_ablation_matrix.py`: Master grid logic remains intact.
+- `scripts/control_plane/build_full_coconut_report.py`: Aggregator logic is preserved.
+- `scripts/legacy/true_coconut.py`: H-Series logic is preserved.
 - `scripts/eval_hf_adapter.py`: Evaluation engine is preserved.
 
 **Preserved Ablation Grid:**

@@ -9,7 +9,7 @@ from conftest import load_script_module
 
 
 def test_mixed_curriculum_integrity(monkeypatch):
-    mod = load_script_module("build_mixed_curriculum_dataset", "scripts/build_mixed_curriculum_dataset.py")
+    mod = load_script_module("build_mixed_curriculum_dataset", "scripts/data/build_mixed_curriculum_dataset.py")
     out_dir = Path(__file__).resolve().parents[1] / "src" / ".tmp_test"
     out_dir.mkdir(parents=True, exist_ok=True)
     out = out_dir / "mixed_curriculum_integrity.jsonl"

@@ -12,6 +12,18 @@ Promotion from one major family to the next must declare:
 
 No component is assumed to flow forward just because it happened to be locally best.
 
+## Comparison Is Explicit Too
+
+A new branch is not scientifically complete just because it has a normalized ID.
+It must also inherit an automatic comparison contract that declares:
+
+- which peer rows inside the same major family it must be compared against
+- which ancestor major families it must still be compared against
+- which historical families such as `J` or `L` remain mandatory comparators
+- which family-specific test contracts must still run
+
+This is how we stop losing J-series obligations when later branches look modern.
+
 ## Required Entry Metadata
 
 Every canonical experiment row should expose:

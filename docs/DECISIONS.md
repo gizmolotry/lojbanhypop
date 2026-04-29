@@ -3,7 +3,7 @@
 ## 2026-02-26 - Artifact Layout
 - Decision: Default experiment outputs move to `artifacts/runs/` for core run scripts.
 - Why: Keep generated data separate from source and reduce accidental commits.
-- Impact: `scripts/run_experiment.py` and `scripts/run_phase_ablation.py` now default to `artifacts/runs`.
+- Impact: `scripts/legacy/run_experiment.py` and `scripts/run_phase_ablation.py` now default to `artifacts/runs`.
 
 ## 2026-02-26 - Reproducibility Manifest
 - Decision: Each primary run writes `run_manifest.json` with args, git commit, dataset fingerprint, and output paths.

@@ -9,10 +9,15 @@ __pycache__/
 .env
 config/
 !config/*.example
+!config/README.md
+archive/lineage/local_cache/
+archive/lineage/**/__pycache__/
+archive/lineage/**/.pytest_cache/
 
 # Experiment and model artifacts
 artifacts/
 runs/
+!runs/README.md
 src/runs/
 *.safetensors
 *.pt
@@ -27,6 +32,10 @@ src/pytest-cache-files-*/
 src/.pytest_tmp/
 src/.tmp_pytest/
 src/pytest-cache-files-*/
+archive/**/cachepytest/
+archive/**/pytest-cache-files-*/
+archive/**/.pytest_tmp/
+archive/**/.tmp_pytest/
 
 # Prevent top-level output clutter from reappearing
 RESULTS_*/

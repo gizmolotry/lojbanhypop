@@ -11,7 +11,7 @@ from lojban_evolution.series_contract import (
 
 
 def test_series_metadata_shape() -> None:
-    meta = series_metadata("J", "invariance_data", "scripts/eval_j_5.py")
+    meta = series_metadata("J", "invariance_data", "scripts/legacy/eval_j_5.py")
     assert meta["series_id"] == "J"
     assert meta["track"] == "invariance_data"
     assert meta["script"].endswith("eval_j_5.py")

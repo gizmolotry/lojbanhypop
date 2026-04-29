@@ -25,18 +25,64 @@ def _run_help(script_rel_path: str) -> str:
 
 
 def test_run_experiment_help() -> None:
-    out = _run_help("scripts/run_experiment.py")
+    out = _run_help("scripts/legacy/run_experiment.py")
     assert "usage:" in out.lower()
     assert "--iterations" in out
 
 
 def test_run_phase_ablation_help() -> None:
-    out = _run_help("scripts/run_phase_ablation.py")
+    out = _run_help("scripts/control_plane/pipeline_eval_manifold.py")
     assert "usage:" in out.lower()
-    assert "--dataset-size" in out
+    assert "--input-artifact" in out
+    assert "--output" in out
 
 
 def test_build_mixed_dataset_help() -> None:
-    out = _run_help("scripts/build_mixed_curriculum_dataset.py")
+    out = _run_help("scripts/data/build_mixed_curriculum_dataset.py")
     assert "usage:" in out.lower()
     assert "--output" in out
+
+
+def test_run_direct_unified_eval_help() -> None:
+    out = _run_help("scripts/control_plane/run_direct_unified_eval.py")
+    assert "usage:" in out.lower()
+    assert "--family" in out
+    assert "--execute-m19-direct" in out
+
+
+def test_run_m19_integrity_suite_help() -> None:
+    out = _run_help("scripts/m19/run_m19_integrity_suite.py")
+    assert "usage:" in out.lower()
+    assert "--train-data-path" in out
+    assert "--bridge-path" in out
+
+
+def test_run_m19_replication_suite_help() -> None:
+    out = _run_help("scripts/m19/run_m19_replication_suite.py")
+    assert "usage:" in out.lower()
+    assert "--seed-list" in out
+    assert "--eval-data-path" in out
+    assert "--checkpoint-selection-policy" in out
+    assert "--query-repulsion-weight" in out
+
+
+def test_run_m19_stability_microgrid_help() -> None:
+    out = _run_help("scripts/m19/run_m19_stability_microgrid.py")
+    assert "usage:" in out.lower()
+    assert "--learning-rate-list" in out
+    assert "--augmentation-prob-list" in out
+    assert "--format-augmentation-prob-list" in out
+
+
+def test_run_m19_kill_test_suite_help() -> None:
+    out = _run_help("scripts/m19/run_m19_kill_test_suite.py")
+    assert "usage:" in out.lower()
+    assert "--train-data-path" in out
+    assert "--bridge-path" in out
+
+
+def test_run_m19_dictionary_audit_help() -> None:
+    out = _run_help("scripts/m19/run_m19_dictionary_audit.py")
+    assert "usage:" in out.lower()
+    assert "--bridge-spec" in out
+    assert "--dataset-path" in out

@@ -12,8 +12,8 @@ BRIDGE_ABLATION_REGISTRY: dict[str, dict[str, Any]] = {
     "M3.15d": {
         "family": "bridge_ablation",
         "implementation_label": "answer_path_forcing",
-        "runner_script": "scripts/run_m3_15d_answer_path_forcing.py",
-        "dag": "airflow/dags/lojban_m3_15d_answer_path_forcing_dag.py",
+        "runner_script": "scripts/m3/run_m3_15d_answer_path_forcing.py",
+        "dag": "airflow/dags/m3/lojban_m3_15d_answer_path_forcing_dag.py",
         "search_root": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_15d_answer_path_forcing",
         "report_name": "m3_15d_report.json",
         "tensor_flow": {
@@ -75,8 +75,8 @@ BRIDGE_ABLATION_REGISTRY: dict[str, dict[str, Any]] = {
     "M3.16": {
         "family": "bridge_ablation",
         "implementation_label": "continuous_graph_bias",
-        "runner_script": "scripts/run_m3_16_continuous_graph_bias.py",
-        "dag": "airflow/dags/lojban_m3_16_continuous_graph_bias_dag.py",
+        "runner_script": "scripts/m3/run_m3_16_continuous_graph_bias.py",
+        "dag": "airflow/dags/m3/lojban_m3_16_continuous_graph_bias_dag.py",
         "search_root": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_16_continuous_graph_bias",
         "report_name": "m3_16_report.json",
         "tensor_flow": {
@@ -123,8 +123,8 @@ BRIDGE_ABLATION_REGISTRY: dict[str, dict[str, Any]] = {
     "M3.17": {
         "family": "bridge_ablation",
         "implementation_label": "advisor_reentry_bridge",
-        "runner_script": "scripts/run_m3_17_advisor_reentry_bridge.py",
-        "dag": "airflow/dags/lojban_m3_17_advisor_reentry_bridge_dag.py",
+        "runner_script": "scripts/m3/run_m3_17_advisor_reentry_bridge.py",
+        "dag": "airflow/dags/m3/lojban_m3_17_advisor_reentry_bridge_dag.py",
         "search_root": "artifacts/runs/telemetry/raw/ablation/hypercube/m3_17_advisor_reentry_bridge",
         "report_name": "m3_17_report.json",
         "tensor_flow": {
@@ -171,8 +171,8 @@ BRIDGE_ABLATION_REGISTRY: dict[str, dict[str, Any]] = {
     "M11.discriminative": {
         "family": "m11_native_eval",
         "implementation_label": "native_discriminative_bridge",
-        "runner_script": "scripts/run_m11_discriminative_suite.py",
-        "dag": "airflow/dags/lojban_m11_discriminative_suite_dag.py",
+        "runner_script": "scripts/m11/run_m11_discriminative_suite.py",
+        "dag": "airflow/dags/m11/lojban_m11_discriminative_suite_dag.py",
         "search_root": "artifacts/runs/telemetry/raw/ablation/hypercube/m11_discriminative_suite",
         "manifest_name": "m11_discriminative_suite_manifest.json",
         "tensor_flow": {

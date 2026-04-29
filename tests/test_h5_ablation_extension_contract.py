@@ -8,7 +8,7 @@ import pytest
 from conftest import load_script_module
 
 
-mod = load_script_module("run_coconut_ablation_matrix", "scripts/run_coconut_ablation_matrix.py")
+mod = load_script_module("run_coconut_ablation_matrix", "scripts/legacy/run_coconut_ablation_matrix.py")
 
 REQUIRED_EXTENSION_RUN_IDS = {"H5-PROV", "H5-OOD", "H5-DPTR", "J-1", "J-2", "J-3", "J-4"}
 REQUIRED_EXTENSION_KEYS = {"run_id", "name", "status", "return_code", "output", "metrics", "notes"}

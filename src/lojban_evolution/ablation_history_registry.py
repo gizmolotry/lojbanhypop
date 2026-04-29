@@ -329,6 +329,13 @@ def flatten_history_rows(entries: list[dict[str, Any]], mode: str = "all") -> li
                 "changed_components": "|".join(entry.get("changed_components", [])),
                 "dropped_components": "|".join(entry.get("dropped_components", [])),
                 "baseline_manifest": entry.get("baseline_manifest"),
+                "required_test_contracts": "|".join(entry.get("required_test_contracts", [])),
+                "historical_comparison_families": "|".join(entry.get("historical_comparison_families", [])),
+                "comparison_targets": "|".join(
+                    str(target.get("target", ""))
+                    for target in entry.get("comparison_contract", {}).get("comparison_targets", [])
+                    if isinstance(target, dict)
+                ),
                 "archive_path": entry.get("archive_path"),
                 "active_doc_path": entry.get("active_doc_path"),
                 "derived_from": "|".join(entry.get("derived_from", [])),

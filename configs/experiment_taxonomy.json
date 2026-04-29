@@ -322,6 +322,351 @@
         "scratchpad_bleed_rate"
       ],
       "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
+    },
+    "M18": {
+      "question_boundary": "two-pass salience controller steering",
+      "architectural_thesis": "extract salient hidden-state structure, induce a compact relation graph, and steer a second decoder pass with compiled attention bias instead of raw foreign-state injection.",
+      "allowed_ablation_axes": [
+        "salience selector training",
+        "ontology choice",
+        "interpreter warm start",
+        "bias compiler and intervention layers",
+        "hybrid cot comparison"
+      ],
+      "forbidden_drift_axes": [
+        "raw scratchpad runway injection as the main intervention surface",
+        "headline accuracy claims without kill or random controls"
+      ],
+      "promotion_basis": [
+        "u_typed_accuracy",
+        "l_typed_accuracy",
+        "kill_random_gap"
+      ],
+      "metrics_primary": [
+        "u_typed_accuracy",
+        "l_typed_accuracy"
+      ],
+      "metrics_guardrail": [
+        "kill_random_accuracy",
+        "language_tax_tokens"
+      ],
+      "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
+    },
+    "M19": {
+      "question_boundary": "bounded continuous scratchpad runway",
+      "architectural_thesis": "compress tapped hidden state into a learned continuous runway over repeated <symbiote> token positions so the decoder gets multiple normal attention hops before final-answer English resumption.",
+      "allowed_ablation_axes": [
+        "query count",
+        "bottleneck width",
+        "scratchpad runway length",
+        "random-control comparison",
+        "mainline benchmark replication"
+      ],
+      "forbidden_drift_axes": [
+        "generic checkpoint renaming after train time",
+        "console-only reporting without per-cell json artifacts"
+      ],
+      "promotion_basis": [
+        "overall_accuracy",
+        "lift_vs_en_cot",
+        "lift_vs_random"
+      ],
+      "metrics_primary": [
+        "overall_accuracy",
+        "lift_vs_en_cot"
+      ],
+      "metrics_guardrail": [
+        "lift_vs_random",
+        "avg_tokens",
+        "audit_qformer_accuracy"
+      ],
+      "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
+    }
+  },
+  "comparison_defaults": {
+    "compare_within_family": true,
+    "compare_against_ancestors": true,
+    "inherit_required_test_contracts": true
+  },
+  "test_contract_catalog": {
+    "j.accept_rate_by_depth": {
+      "test_id": "j.accept_rate_by_depth",
+      "family": "J",
+      "description": "Depth-conditioned acceptance profile from the J-series adversarial synthesis ladder.",
+      "metrics": ["accept_rate_by_depth"],
+      "surface": "legacy_j_series"
+    },
+    "j.accepted_foil_pair_accuracy": {
+      "test_id": "j.accepted_foil_pair_accuracy",
+      "family": "J",
+      "description": "Accepted foil pair accuracy from J-5 and the M1 normalization.",
+      "metrics": ["accepted_foil_pair_accuracy"],
+      "surface": "legacy_j_series"
+    },
+    "j.invariance_rate": {
+      "test_id": "j.invariance_rate",
+      "family": "J",
+      "description": "Invariance and paraphrase robustness checks inherited from the J family.",
+      "metrics": ["invariance rate"],
+      "surface": "legacy_j_series"
+    },
+    "j.schema_validity": {
+      "test_id": "j.schema_validity",
+      "family": "J",
+      "description": "Schema-valid synthetic reasoning outputs, especially important when later families claim structured cognition.",
+      "metrics": ["schema_valid_rate"],
+      "surface": "legacy_j_series"
+    },
+    "l.constraint_scope": {
+      "test_id": "l.constraint_scope",
+      "family": "L",
+      "description": "Scope preservation from the Lagrangian L-series and normalized M2 family.",
+      "metrics": ["constraint_scope"],
+      "surface": "legacy_l_series"
+    },
+    "l.constraint_identity": {
+      "test_id": "l.constraint_identity",
+      "family": "L",
+      "description": "Identity preservation and anti-collapse constraint auditing from the L-series.",
+      "metrics": ["constraint_identity"],
+      "surface": "legacy_l_series"
+    },
+    "l.constraint_arity_strict": {
+      "test_id": "l.constraint_arity_strict",
+      "family": "L",
+      "description": "Strict arity-lock discipline from the L-series controller regime.",
+      "metrics": ["constraint_arity_strict"],
+      "surface": "legacy_l_series"
+    },
+    "m3.reentry_intervention": {
+      "test_id": "m3.reentry_intervention",
+      "family": "M3",
+      "description": "Gold-answer intervention effect across generative re-entry bridge families.",
+      "metrics": ["mean_intervention_delta_gold"],
+      "surface": "m_bridge_ablation_suite"
+    },
+    "m3.reentry_fluency": {
+      "test_id": "m3.reentry_fluency",
+      "family": "M3",
+      "description": "Fluency, contamination, and loop guardrails for generative bridge experiments.",
+      "metrics": ["english_fluency_score", "contamination_rate", "loop_rate"],
+      "surface": "m_bridge_ablation_suite"
+    },
+    "m4.operator_family_consistency": {
+      "test_id": "m4.operator_family_consistency",
+      "family": "M4",
+      "description": "Predicate-family and operator-family consistency checks from M4 semantic grounding work.",
+      "metrics": ["held_out_accuracy", "logical_accuracy"],
+      "surface": "m4_series"
+    },
+    "m5.chain_serialization": {
+      "test_id": "m5.chain_serialization",
+      "family": "M5",
+      "description": "Structured chain serialization performance and loss behavior across the M5 family.",
+      "metrics": ["held_out_accuracy", "logical_accuracy", "final_ce_loss"],
+      "surface": "m5_series"
+    },
+    "m11.native_discriminative_oracle": {
+      "test_id": "m11.native_discriminative_oracle",
+      "family": "M11",
+      "description": "Native discriminative oracle metrics that prove manifold cognition exists even without fluent generative re-entry.",
+      "metrics": ["mean_accuracy", "macro_f1"],
+      "surface": "m11_discriminative_suite"
+    },
+    "m14.scratchpad_bleed": {
+      "test_id": "m14.scratchpad_bleed",
+      "family": "M14",
+      "description": "Scratchpad bleed, fluency preservation, and resumptive stability after bounded re-entry.",
+      "metrics": ["scratchpad_bleed_rate", "english_fluency_score", "loop_rate", "resume_first_token_accuracy"],
+      "surface": "m14_symbiote_scratchpad"
+    },
+    "m18.kill_random_gap": {
+      "test_id": "m18.kill_random_gap",
+      "family": "M18",
+      "description": "Kill/random comparison discipline from the M18 controller family.",
+      "metrics": ["kill_random_gap", "kill_random_accuracy"],
+      "surface": "m18_controller_family"
+    },
+    "m18.language_tax_compactness": {
+      "test_id": "m18.language_tax_compactness",
+      "family": "M18",
+      "description": "English vs Chinese vs typed-control comparisons with token-efficiency awareness.",
+      "metrics": ["u_typed_accuracy", "l_typed_accuracy", "language_tax_tokens"],
+      "surface": "m18_controller_family"
+    },
+    "m19.runway_efficiency": {
+      "test_id": "m19.runway_efficiency",
+      "family": "M19",
+      "description": "Runway mainline efficiency against concise, EN-CoT, ZH-CoT, and random controls.",
+      "metrics": ["overall_accuracy", "avg_tokens", "lift_vs_en_cot", "lift_vs_random"],
+      "surface": "m19_family"
+    },
+    "m19.zh_branch_control": {
+      "test_id": "m19.zh_branch_control",
+      "family": "M19",
+      "description": "Chinese CoT branch comparison as a compact-reasoning control branch rather than a replacement baseline.",
+      "metrics": ["zh_cot_accuracy", "lift_vs_zh_cot"],
+      "surface": "m19_zh_comparison"
+    },
+    "m19.dynamic_pacing_guardrails": {
+      "test_id": "m19.dynamic_pacing_guardrails",
+      "family": "M19",
+      "description": "Dynamic pacing guardrails for autoregressive symbiote halt behavior, cap discipline, and passive CAA entanglement telemetry.",
+      "metrics": ["premature_stop_rate", "max_cap_hit_rate", "caa_manifold_entanglement_score", "scratchpad_bleed_rate"],
+      "surface": "m19_dynamic_pacing"
+    },
+    "m19.integrity_controls": {
+      "test_id": "m19.integrity_controls",
+      "family": "M19",
+      "description": "Leakage-aware integrity suite using full, purged, overlap, masked-blindfold, and audit controls for the active M19 checkpoint.",
+      "metrics": [
+        "purged_accuracy",
+        "overlap_gap",
+        "masked_accuracy",
+        "purged_lift_vs_random",
+        "purged_lift_vs_scratchpad_only",
+        "audit_qformer_accuracy",
+        "audit_lift_vs_random"
+      ],
+      "surface": "m19_integrity_suite"
+    },
+    "m19.replication_stability": {
+      "test_id": "m19.replication_stability",
+      "family": "M19",
+      "description": "Seed-by-seed retraining stability for the active M19 mainline cell under the current training contract.",
+      "metrics": [
+        "mean_accuracy",
+        "std_accuracy",
+        "mean_avg_tokens",
+        "mean_audit_qformer_accuracy"
+      ],
+      "surface": "m19_replication_suite"
+    },
+    "m19.kill_test_suite": {
+      "test_id": "m19.kill_test_suite",
+      "family": "M19",
+      "description": "Broader anti-shortcut kill tests on the purged slice, including entity anonymization, format flattening, numeric normalization, and masked blindfold carryover.",
+      "metrics": [
+        "entity_accuracy",
+        "format_accuracy",
+        "numeric_accuracy",
+        "masked_accuracy"
+      ],
+      "surface": "m19_kill_test_suite"
+    }
+  },
+  "family_comparison_contracts": {
+    "M1": {
+      "historical_comparison_families": ["J"],
+      "required_test_contracts": [
+        "j.accept_rate_by_depth",
+        "j.accepted_foil_pair_accuracy",
+        "j.invariance_rate",
+        "j.schema_validity"
+      ],
+      "explicit_compare_entries": ["M1.1", "M1.5"]
+    },
+    "M2": {
+      "historical_comparison_families": ["J", "L"],
+      "required_test_contracts": [
+        "j.accepted_foil_pair_accuracy",
+        "j.invariance_rate",
+        "l.constraint_scope",
+        "l.constraint_identity",
+        "l.constraint_arity_strict"
+      ],
+      "explicit_compare_entries": ["M2.1", "M2.3"]
+    },
+    "M3": {
+      "historical_comparison_families": ["J", "L"],
+      "required_test_contracts": [
+        "m3.reentry_intervention",
+        "m3.reentry_fluency"
+      ],
+      "explicit_compare_entries": ["M3.15d", "M3.17", "M3.18", "M3.19"]
+    },
+    "M4": {
+      "historical_comparison_families": ["J", "L"],
+      "required_test_contracts": [
+        "m4.operator_family_consistency"
+      ],
+      "explicit_compare_entries": ["M4.0", "M4.2"]
+    },
+    "M5": {
+      "historical_comparison_families": ["J", "L"],
+      "required_test_contracts": [
+        "m5.chain_serialization"
+      ],
+      "explicit_compare_entries": ["M5.1", "M5.2", "M5.3"]
+    },
+    "M6": {
+      "historical_comparison_families": ["J", "L"],
+      "required_test_contracts": [
+        "j.accepted_foil_pair_accuracy",
+        "l.constraint_scope"
+      ]
+    },
+    "M7": {
+      "historical_comparison_families": ["J", "L"],
+      "required_test_contracts": [
+        "j.accepted_foil_pair_accuracy",
+        "l.constraint_scope"
+      ]
+    },
+    "M8": {
+      "historical_comparison_families": ["J", "L"],
+      "required_test_contracts": [
+        "j.accepted_foil_pair_accuracy",
+        "l.constraint_scope"
+      ]
+    },
+    "M9": {
+      "historical_comparison_families": ["J", "L"],
+      "required_test_contracts": [
+        "j.accepted_foil_pair_accuracy",
+        "l.constraint_scope"
+      ]
+    },
+    "M10": {
+      "historical_comparison_families": ["J", "L"],
+      "required_test_contracts": [
+        "j.accepted_foil_pair_accuracy",
+        "l.constraint_scope"
+      ]
+    },
+    "M11": {
+      "historical_comparison_families": ["J", "L"],
+      "required_test_contracts": [
+        "m11.native_discriminative_oracle"
+      ],
+      "explicit_compare_entries": ["M11"]
+    },
+    "M14": {
+      "historical_comparison_families": ["J", "L"],
+      "required_test_contracts": [
+        "m14.scratchpad_bleed"
+      ],
+      "explicit_compare_entries": ["M3.18.D", "M3.19.D0", "M11", "M14.C"]
+    },
+    "M18": {
+      "historical_comparison_families": ["J", "L"],
+      "required_test_contracts": [
+        "m18.kill_random_gap",
+        "m18.language_tax_compactness"
+      ],
+      "explicit_compare_entries": ["M14.D", "M18"]
+    },
+    "M19": {
+      "historical_comparison_families": ["J", "L"],
+      "required_test_contracts": [
+        "m19.runway_efficiency",
+        "m19.zh_branch_control",
+        "m19.dynamic_pacing_guardrails",
+        "m19.integrity_controls",
+        "m19.replication_stability",
+        "m19.kill_test_suite"
+      ],
+      "explicit_compare_entries": ["M18", "M19", "M19.3.A", "M19.3.B"]
     }
   },
   "entry_overrides": {
@@ -417,6 +762,29 @@
         "evaluation_harness": "m_bridge_ablation_test_suite",
         "discriminator_head": "M11 native discriminative head",
         "archive_reporting_path": "artifacts/runs/telemetry/raw/ablation/hypercube/m14_symbiote_scratchpad"
+      }
+    },
+    "m.track.m19_4": {
+      "normalized_canonical_id": "M19.4",
+      "series_major": 19,
+      "series_minor": 4,
+      "inherits_from": ["M19.3.B"],
+      "inherits_components": ["layer-12 injection", "magnetic collar topology loss", "anti-collapse discipline", "Q-former extraction bottleneck"],
+      "changed_components": ["dynamic generative pacing loop", "<symbiote_end> tokenizer path", "dynamic positional reservoir", "passive halt telemetry"],
+      "frozen_components": ["M14.5 unified benchmark surface", "EN-COT and ZH-COT comparator policy", "whole-grid control-plane reporting"],
+      "dropped_components": ["fixed scratchpad runway length as the only pacing mechanism"],
+      "promotion_basis": ["strict_accuracy", "accuracy_per_token", "premature_stop_rate", "max_cap_hit_rate"],
+      "component_inventory": {
+        "prompt_format": "question -> autoregressive <symbiote>* -> <symbiote_end> -> Final answer:",
+        "tokenizer_additions": "<symbiote>, <symbiote_end>",
+        "adapter_type": "Q-former runway bridge",
+        "residual_gate_type": "scratchpad-only layer-12 injection during latent pacing",
+        "injection_layer": "12",
+        "loss_objective": "autoregressive CE over latent pacing plus final answer, with topology and anti-collapse regularization",
+        "data_pack": "m19_mixed_curriculum_v1 with heuristic stop-length curriculum",
+        "kill_test_suite": "EN-COT, ZH-COT, random-dynamic, static M19.3, scratchpad bleed telemetry",
+        "evaluation_harness": "scripts/m19/run_m19_godtier_benchmark.py",
+        "archive_reporting_path": "artifacts/runs/telemetry/raw/ablation/hypercube/m19_dynamic_pacing_suite"
       }
     }
   },
@@ -541,6 +909,28 @@
       "reopened_components": ["generative return path", "scratchpad compute horizon", "residual injection locality"],
       "rejected_components": ["raw direct sidecar exposure during answer rollout"],
       "promotion_basis": ["mean_accuracy", "macro_f1", "m3.18 and m3.19 re-entry diagnostics"]
+    },
+    {
+      "transition_id": "M14_to_M18",
+      "status": "frontier_inferred",
+      "from_major": "M14",
+      "to_major": "M18",
+      "selected_upstream": "M14.D",
+      "inherits_components": ["bounded-intervention discipline", "scratchpad-era causal skepticism", "fluency and loop guardrails"],
+      "reopened_components": ["controller extraction path", "salience typing", "attention bias steering"],
+      "rejected_components": ["direct residual scratchpad injection as the only post-M14 strategy"],
+      "promotion_basis": ["mean_intervention_delta_gold", "scratchpad_bleed_rate"]
+    },
+    {
+      "transition_id": "M18_to_M19",
+      "status": "frontier_inferred",
+      "from_major": "M18",
+      "to_major": "M19",
+      "selected_upstream": "M18",
+      "inherits_components": ["two-pass discipline", "explicit random and kill controls", "bounded intervention locality"],
+      "reopened_components": ["continuous runway carrier", "query bottleneck width", "scratchpad runway length"],
+      "rejected_components": ["global attention biasing as the only coupling surface"],
+      "promotion_basis": ["u_typed_accuracy", "kill_random_gap", "controller audit flatness"]
     }
   ]
 }

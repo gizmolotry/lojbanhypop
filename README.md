@@ -12,7 +12,7 @@ The goal is to pressure the system toward low-cost identity pointers, not arithm
 
 ```powershell
 $env:PYTHONPATH="src"
-python scripts/run_experiment.py --iterations 6 --dataset-size 1000
+python scripts/legacy/run_experiment.py --iterations 6 --dataset-size 1000
 ```
 
 Outputs are written to `artifacts/runs/<timestamp>/`:
@@ -24,16 +24,16 @@ Outputs are written to `artifacts/runs/<timestamp>/`:
 One-command task entrypoint:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\tasks.ps1 -Task run
+powershell -ExecutionPolicy Bypass -File scripts\legacy\tasks.ps1 -Task run
 ```
 
 ## Airflow Orchestration
 
 Airflow DAG wrappers are available for the canonical train/eval pipelines:
 
-- `airflow/dags/lojban_experiment_dag.py` (`scripts/pipeline_train_grounded_reasoner.py`)
-- `airflow/dags/lojban_phase_ablation_dag.py` (`scripts/pipeline_eval_manifold.py`)
-- `airflow/dags/lojban_l_series_dag.py` (`scripts/train_l_series_mvs.py`)
+- `airflow/dags/control_plane/lojban_experiment_dag.py` (`scripts/control_plane/pipeline_train_grounded_reasoner.py`)
+- `airflow/dags/control_plane/lojban_phase_ablation_dag.py` (`scripts/control_plane/pipeline_eval_manifold.py`)
+- `airflow/dags/legacy/lojban_l_series_dag.py` (`scripts/legacy/train_l_series_mvs.py`)
 
 Setup and runtime configuration are documented in:
 
@@ -60,7 +60,7 @@ Entrypoint:
 
 ```powershell
 $env:PYTHONPATH="src"
-python scripts/train_l_series_mvs.py --base-model <model_or_path> --adapter <adapter_path>
+python scripts/legacy/train_l_series_mvs.py --base-model <model_or_path> --adapter <adapter_path>
 ```
 
 See `docs/L_SERIES.md` for objective details and runtime knobs.
@@ -71,7 +71,7 @@ Build an SFT dataset from Phase 3 successful runs:
 
 ```powershell
 $env:PYTHONPATH="src"
-python scripts/build_lora_dataset.py \
+python scripts/data/build_lora_dataset.py \
   --eval-json C:\Users\Andrew\lm_runs\lm_eval_20260219_221552.json \
              C:\Users\Andrew\lm_runs\lm_eval_20260219_222027.json \
   --mode phase3_fewshot \
@@ -82,15 +82,15 @@ Train a LoRA adapter (PEFT) on the symbolic traces:
 
 ```powershell
 $env:PYTHONPATH="src"
-python scripts/train_lora.py \
+python scripts/training/train_lora.py \
   --base-model Qwen/Qwen2.5-Coder-14B-Instruct \
   --dataset runs/lora_sft_dataset.jsonl \
   --output-dir runs/lora_qwen25_14b_symbolic
 ```
 
 Notes:
-- `build_lora_dataset.py` reconstructs canonical symbolic traces from `problem_id` and dataset seed, then pairs them with gold answers.
-- `train_lora.py` trains LoRA adapters only (base model weights remain frozen).
+- `scripts/data/build_lora_dataset.py` reconstructs canonical symbolic traces from `problem_id` and dataset seed, then pairs them with gold answers.
+- `scripts/training/train_lora.py` trains LoRA adapters only (base model weights remain frozen).
 - Required packages: `transformers`, `datasets`, `peft`, `accelerate`, `torch`.
 
 ### Offline / Local Model Path
@@ -101,7 +101,7 @@ Example (cached phi-2):
 
 ```powershell
 $env:PYTHONPATH="src"
-C:\Users\Andrew\miniconda3\envs\belief\python.exe scripts\train_lora.py \
+C:\Users\Andrew\miniconda3\envs\belief\python.exe scripts\training\train_lora.py \
   --base-model C:\Users\Andrew\.cache\huggingface\hub\models--microsoft--phi-2\snapshots\ef382358ec9e382308935a992d908de099b64c23 \
   --dataset runs/lora_sft_dataset.jsonl \
   --output-dir C:\Users\Andrew\lm_runs\lora_phi2_symbolic \
@@ -118,7 +118,7 @@ Build the pack from successful eval traces:
 
 ```powershell
 $env:PYTHONPATH="src"
-python scripts/build_gguf_pack.py \
+python scripts/data/build_gguf_pack.py \
   --eval-json C:\Users\Andrew\lm_runs\lm_eval_20260219_221552.json \
   --mode phase3_fewshot \
   --max-examples 8 \
@@ -129,7 +129,7 @@ Evaluate GGUF with the pack:
 
 ```powershell
 $env:PYTHONPATH="src"
-python scripts/eval_with_lms.py \
+python scripts/legacy/eval_with_lms.py \
   --model qwen2.5-coder-14b-instruct \
   --sample-size 24 \
   --modes baseline gguf_pack \
@@ -149,7 +149,7 @@ Recommended command (cache on D: to avoid C: disk exhaustion):
 $env:PYTHONPATH="src"
 $env:HF_HOME="D:\hf_cache"
 $env:HUGGINGFACE_HUB_CACHE="D:\hf_cache\hub"
-C:\Users\Andrew\miniconda3\envs\belief\python.exe scripts\train_lora.py \
+C:\Users\Andrew\miniconda3\envs\belief\python.exe scripts\training\train_lora.py \
   --base-model Qwen/Qwen2.5-Coder-14B-Instruct \
   --dataset runs/lora_sft_dataset.jsonl \
   --output-dir runs/lora_qwen25_14b_symbolic_qlora \
@@ -167,13 +167,13 @@ C:\Users\Andrew\miniconda3\envs\belief\python.exe scripts\train_lora.py \
 Run CPU-only training with local HF model files:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\train_cpu_hf.ps1
+powershell -ExecutionPolicy Bypass -File scripts\training\train_cpu_hf.ps1
 ```
 
 Optional overrides:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\train_cpu_hf.ps1 \
+powershell -ExecutionPolicy Bypass -File scripts\training\train_cpu_hf.ps1 \
   -BaseModel "C:\Users\Andrew\hf_models\Qwen2.5-0.5B-Instruct" \
   -OutputDir "C:\Users\Andrew\lm_runs\lora_qwen25_05b_symbolic_cpu"
 ```
@@ -328,5 +328,5 @@ Each extension row follows:
 - `J-3`: Stop-grad isolation gate
 - `J-4`: Operator curriculum build
 
-Airflow wrapper for J-series is available at `airflow/dags/lojban_j_series_dag.py` and follows the same helper utilities as existing DAGs.
+Airflow wrapper for J-series is available at `airflow/dags/legacy/lojban_j_series_dag.py` and follows the same helper utilities as existing DAGs.
 See `docs/H5_ABLATION_EXTENSION.md` for the compact contract and example.

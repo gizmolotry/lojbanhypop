@@ -2,18 +2,22 @@
 
 Airflow DAGs in this repository are thin wrappers around canonical scripts only:
 
-- `airflow/dags/lojban_ablation_master_spine_dag.py` -> canonical overview DAG spanning letter-era foundations, normalized M-series progression, and control-plane refresh
-- `airflow/dags/lojban_ablation_program_spine_dag.py` -> `scripts/run_ablation_history_backfill.py`, `scripts/build_ablation_program_map.py`, `scripts/build_ablation_program_spine.py`, `scripts/render_ablation_history_catalog.py`, `scripts/run_m_bridge_ablation_test_suite.py`
-- `airflow/dags/lojban_experiment_dag.py` -> `scripts/pipeline_train_grounded_reasoner.py`
-- `airflow/dags/lojban_phase_ablation_dag.py` -> `scripts/pipeline_eval_manifold.py`
-- `airflow/dags/lojban_ablation_matrix_dag.py` -> `scripts/run_coconut_ablation_matrix.py`
-- `airflow/dags/lojban_j_series_dag.py` -> `scripts/eval_j_1.py`, `scripts/eval_j_2.py`, `scripts/eval_j_3.py`, `scripts/eval_j_4.py`, `scripts/eval_j_5.py`
-- `airflow/dags/lojban_l_series_dag.py` -> `scripts/train_l_series_mvs.py`
-- `airflow/dags/lojban_ablation_hypercube_report_dag.py` -> `scripts/build_airflow_ablation_hypercube_report.py`
-- `airflow/dags/lojban_m3_plus_dag.py` -> `scripts/run_m3_plus_family.py`
-- `airflow/dags/lojban_m3_5_symmetry_dag.py` -> `scripts/run_m3_5_symmetry.py`
-- `airflow/dags/lojban_m3_6_symmetry_oracle_dag.py` -> `scripts/run_m3_6_symmetry_oracle.py`
-- `airflow/dags/lojban_m4_series_dag.py` -> `scripts/run_m4_series.py`
+- `airflow/dags/control_plane/lojban_ablation_master_spine_dag.py` -> canonical overview DAG spanning letter-era foundations, normalized M-series progression, and control-plane refresh
+- `airflow/dags/control_plane/lojban_ablation_program_spine_dag.py` -> `scripts/control_plane/run_ablation_history_backfill.py`, `scripts/control_plane/build_ablation_program_map.py`, `scripts/control_plane/build_ablation_program_spine.py`, `scripts/control_plane/render_ablation_history_catalog.py`, `scripts/m_bridge/run_m_bridge_ablation_test_suite.py`
+- `airflow/dags/control_plane/lojban_experiment_dag.py` -> `scripts/control_plane/pipeline_train_grounded_reasoner.py`
+- `airflow/dags/control_plane/lojban_phase_ablation_dag.py` -> `scripts/control_plane/pipeline_eval_manifold.py`
+- `airflow/dags/control_plane/lojban_ablation_matrix_dag.py` -> `scripts/legacy/run_coconut_ablation_matrix.py`
+- `airflow/dags/legacy/lojban_j_series_dag.py` -> `scripts/legacy/eval_j_1.py`, `scripts/legacy/eval_j_2.py`, `scripts/legacy/eval_j_3.py`, `scripts/legacy/eval_j_4.py`, `scripts/legacy/eval_j_5.py`
+- `airflow/dags/legacy/lojban_l_series_dag.py` -> `scripts/legacy/train_l_series_mvs.py`
+- `airflow/dags/control_plane/lojban_ablation_hypercube_report_dag.py` -> `scripts/control_plane/build_airflow_ablation_hypercube_report.py`
+- `airflow/dags/m3/lojban_m3_plus_dag.py` -> `scripts/m3/run_m3_plus_family.py`
+- `airflow/dags/m3/lojban_m3_5_symmetry_dag.py` -> `scripts/m3/run_m3_5_symmetry.py`
+- `airflow/dags/m3/lojban_m3_6_symmetry_oracle_dag.py` -> `scripts/m3/run_m3_6_symmetry_oracle.py`
+- `airflow/dags/m4/lojban_m4_series_dag.py` -> `scripts/m4/run_m4_series.py`
+- `airflow/dags/m18/lojban_m18_controller_family_dag.py` -> `scripts/m18/run_m18_controller_family.py`
+- `airflow/dags/m19/lojban_m19_mainline_suite_dag.py` -> `scripts/m19/run_m19_mainline_suite.py`
+- `airflow/dags/m19/lojban_m19_isolation_grid_dag.py` -> `scripts/m19/run_m19_isolation_grid.py`
+- `airflow/dags/m19/lojban_m19_family_dag.py` -> `scripts/m19/run_m19_mainline_suite.py` then `scripts/m19/run_m19_isolation_grid.py`
 
 No training/eval business logic is implemented in DAG code.
 Series semantics are governed by `docs/SERIES_CHARTER.md` and enforced in script runtime via `series_contract.py`.
@@ -47,6 +51,7 @@ That gives one auditable control plane for:
 - family-level lineage
 - normalized M-major progression
 - current runnable-suite diagnosis
+- live frontier families (`M18` controller steering and `M19` neuro-symbolic runway)
 
 ## Contract-First Artifact Flow
 
@@ -104,7 +109,7 @@ airflow db init
 
 - Schedule: `@daily`
 - Task: `run_train_grounded_reasoner`
-- Script: `scripts/pipeline_train_grounded_reasoner.py`
+- Script: `scripts/control_plane/pipeline_train_grounded_reasoner.py`
 - Required partition: `models/frozen_manifolds`
 - Backfill: disabled (`catchup=False`)
 
@@ -146,7 +151,7 @@ airflow dags trigger lojban_train_grounded_reasoner \
 
 - Schedule: manual (`schedule=None`)
 - Task: `run_eval_manifold`
-- Script: `scripts/pipeline_eval_manifold.py`
+- Script: `scripts/control_plane/pipeline_eval_manifold.py`
 - Required partition: `telemetry/raw`
 - Backfill: disabled (`catchup=False`)
 
@@ -184,7 +189,7 @@ airflow dags trigger lojban_eval_manifold \
 
 - Schedule: manual (`schedule=None`)
 - Task: `run_ablation_a_to_g`
-- Script: `scripts/run_coconut_ablation_matrix.py`
+- Script: `scripts/legacy/run_coconut_ablation_matrix.py`
 - Required partition: `telemetry/raw` (recommended subpath: `telemetry/raw/ablation/a_to_g`)
 - Backfill: disabled (`catchup=False`)
 
@@ -232,7 +237,7 @@ airflow dags trigger lojban_ablation_a_to_g \
 
 - Schedule: manual (`schedule=None`)
 - Task: `build_hypercube_report`
-- Script: `scripts/build_airflow_ablation_hypercube_report.py`
+- Script: `scripts/control_plane/build_airflow_ablation_hypercube_report.py`
 - Required partition: `telemetry/raw` (recommended subpath: `telemetry/raw/ablation/hypercube`)
 - Backfill: disabled (`catchup=False`)
 
@@ -263,7 +268,7 @@ airflow dags trigger lojban_ablation_hypercube_report \
 
 - Schedule: manual (`schedule=None`)
 - Tasks: `validate_j_series_contract`, `run_j1_graph_target`, `run_j2_paraphrase_explosion`, `run_j3_stopgrad_gate`, `run_j4_operator_curriculum`, `run_j5_adversarial_synthesis`
-- Scripts: `scripts/eval_j_1.py`, `scripts/eval_j_2.py`, `scripts/eval_j_3.py`, `scripts/eval_j_4.py`, `scripts/eval_j_5.py`
+- Scripts: `scripts/legacy/eval_j_1.py`, `scripts/legacy/eval_j_2.py`, `scripts/legacy/eval_j_3.py`, `scripts/legacy/eval_j_4.py`, `scripts/legacy/eval_j_5.py`
 - Required partition: `telemetry/raw`
 - Backfill: disabled (`catchup=False`)
 
@@ -304,7 +309,7 @@ airflow dags trigger lojban_j_series_invariance \
 
 - Schedule: manual (`schedule=None`)
 - Task: `run_m3_plus_family`
-- Script: `scripts/run_m3_plus_family.py`
+- Script: `scripts/m3/run_m3_plus_family.py`
 - Required partition: `telemetry/raw` for report outputs (recommended subpath: `telemetry/raw/ablation/hypercube/m3_plus`)
 - Backfill: disabled (`catchup=False`)
 

@@ -20,6 +20,7 @@ def enrich_history_entries(entries: list[dict[str, Any]], taxonomy: dict[str, An
     taxonomy = taxonomy or load_taxonomy_config()
     major_families = taxonomy.get("major_families", {})
     entry_overrides = taxonomy.get("entry_overrides", {})
+    comparison_index = build_comparison_index(taxonomy)
 
     for entry in entries:
         normalized = _normalized_identity(entry, entry_overrides)
@@ -52,6 +53,10 @@ def enrich_history_entries(entries: list[dict[str, Any]], taxonomy: dict[str, An
         entry["changed_components"] = list(override.get("changed_components", []))
         entry["dropped_components"] = list(override.get("dropped_components", []))
         entry["component_inventory"] = dict(override.get("component_inventory", {}))
+        comparison_contract = deepcopy_dict(comparison_index.get(family_key or "", {}))
+        entry["comparison_contract"] = comparison_contract
+        entry["required_test_contracts"] = list(comparison_contract.get("required_test_contract_ids", []))
+        entry["historical_comparison_families"] = list(comparison_contract.get("historical_comparison_families", []))
         entry["active_doc_path"] = _derive_active_doc_path(entry)
         entry["archive_path"] = _derive_archive_path(entry)
     return entries
@@ -60,6 +65,57 @@ def enrich_history_entries(entries: list[dict[str, Any]], taxonomy: dict[str, An
 def build_transition_index(taxonomy: dict[str, Any] | None = None) -> list[dict[str, Any]]:
     taxonomy = taxonomy or load_taxonomy_config()
     return list(taxonomy.get("transition_manifests", []))
+
+
+def build_comparison_index(taxonomy: dict[str, Any] | None = None) -> dict[str, dict[str, Any]]:
+    taxonomy = taxonomy or load_taxonomy_config()
+    defaults = taxonomy.get("comparison_defaults", {})
+    contracts = taxonomy.get("family_comparison_contracts", {})
+    test_catalog = taxonomy.get("test_contract_catalog", {})
+    transition_map = {str(row.get("to_major") or ""): row for row in taxonomy.get("transition_manifests", [])}
+    major_families = taxonomy.get("major_families", {})
+
+    output: dict[str, dict[str, Any]] = {}
+    for family_key in major_families:
+        contract = dict(defaults)
+        contract.update(contracts.get(family_key, {}))
+        ancestors = _ancestor_majors(family_key, transition_map) if contract.get("compare_against_ancestors", True) else []
+        comparison_targets: list[dict[str, Any]] = []
+        if contract.get("compare_within_family", True):
+            comparison_targets.append({"kind": "same_major_family", "target": family_key, "reason": "peer ablations inside the same question boundary"})
+        for ancestor in ancestors:
+            transition = transition_map.get(ancestor["child"])
+            comparison_targets.append(
+                {
+                    "kind": "ancestor_major_family",
+                    "target": ancestor["major"],
+                    "selected_upstream": transition.get("selected_upstream") if isinstance(transition, dict) else None,
+                    "reason": "upstream promoted family in the declared lineage chain",
+                }
+            )
+        for legacy_family in contract.get("historical_comparison_families", []):
+            comparison_targets.append(
+                {"kind": "legacy_family", "target": legacy_family, "reason": "historical comparator family carried forward by policy"}
+            )
+        for explicit_entry in contract.get("explicit_compare_entries", []):
+            comparison_targets.append({"kind": "explicit_entry", "target": explicit_entry, "reason": "family-specific explicit comparator"})
+
+        required_ids = list(contract.get("required_test_contracts", []))
+        if contract.get("inherit_required_test_contracts", True):
+            for ancestor in ancestors:
+                required_ids.extend(contracts.get(ancestor["major"], {}).get("required_test_contracts", []))
+        required_ids = unique_strings(required_ids)
+        output[family_key] = {
+            "family_key": family_key,
+            "compare_within_family": bool(contract.get("compare_within_family", True)),
+            "compare_against_ancestors": bool(contract.get("compare_against_ancestors", True)),
+            "inherit_required_test_contracts": bool(contract.get("inherit_required_test_contracts", True)),
+            "historical_comparison_families": list(contract.get("historical_comparison_families", [])),
+            "comparison_targets": _dedupe_comparison_targets(comparison_targets),
+            "required_test_contract_ids": required_ids,
+            "required_test_contracts": [deepcopy_dict(test_catalog.get(test_id, {"test_id": test_id})) for test_id in required_ids],
+        }
+    return output
 
 
 def _normalized_identity(entry: dict[str, Any], overrides: dict[str, Any]) -> dict[str, Any]:
@@ -208,3 +264,46 @@ def _derive_archive_path(entry: dict[str, Any]) -> str | None:
         except ValueError:
             continue
     return None
+
+
+def _ancestor_majors(family_key: str, transition_map: dict[str, dict[str, Any]]) -> list[dict[str, str]]:
+    ancestors: list[dict[str, str]] = []
+    current = family_key
+    seen: set[str] = set()
+    while current in transition_map:
+        transition = transition_map[current]
+        parent = str(transition.get("from_major") or "").strip()
+        if not parent or parent in seen:
+            break
+        ancestors.append({"major": parent, "child": current})
+        seen.add(parent)
+        current = parent
+    return ancestors
+
+
+def unique_strings(values: list[Any]) -> list[str]:
+    seen: set[str] = set()
+    output: list[str] = []
+    for value in values:
+        text = str(value).strip()
+        if not text or text in seen:
+            continue
+        seen.add(text)
+        output.append(text)
+    return output
+
+
+def deepcopy_dict(value: Any) -> Any:
+    return json.loads(json.dumps(value))
+
+
+def _dedupe_comparison_targets(values: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    seen: set[str] = set()
+    output: list[dict[str, Any]] = []
+    for row in values:
+        target = str(row.get("target", "")).strip()
+        if not target or target in seen:
+            continue
+        seen.add(target)
+        output.append(row)
+    return output

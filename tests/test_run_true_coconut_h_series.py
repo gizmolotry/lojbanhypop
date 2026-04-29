@@ -8,7 +8,7 @@ import uuid
 from conftest import load_script_module
 
 
-mod = load_script_module("run_true_coconut_h_series_testmod", "scripts/run_true_coconut_h_series.py")
+mod = load_script_module("run_true_coconut_h_series_testmod", "scripts/legacy/run_true_coconut_h_series.py")
 
 
 def _mk_tmp_root() -> Path:

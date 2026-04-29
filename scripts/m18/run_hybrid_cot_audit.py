@@ -1,6 +1,7 @@
 import argparse
 import json
 import torch
+from datetime import datetime, timezone
 from pathlib import Path
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from tqdm import tqdm
@@ -115,8 +116,37 @@ def run_hybrid_cot_audit(args):
         print(f"{k:<20} | {v['acc']:<10.4f} | {v['tokens']:<10.2f} | {v['loops']:<10.2f}")
     print("="*70)
 
+    report = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "track": "M18",
+        "series": {
+            "series_id": "M",
+            "track": "M18",
+            "script": "scripts/m18/run_hybrid_cot_audit.py",
+        },
+        "surface": "hybrid_cot_audit",
+        "config": {
+            "base_model": str(args.base_model),
+        },
+        "cells": results,
+        "metrics": {
+            "en_concise_accuracy": results.get("EN-CONCISE", {}).get("acc"),
+            "en_cot_accuracy": results.get("EN-COT", {}).get("acc"),
+            "zh_cot_accuracy": results.get("ZH-COT", {}).get("acc"),
+            "kill_random_accuracy": results.get("EN-COT+KILL-RANDOM", {}).get("acc"),
+            "u_typed_accuracy": results.get("EN-COT+U-TYPED", {}).get("acc"),
+            "l_typed_accuracy": results.get("EN-COT+L-TYPED", {}).get("acc"),
+        },
+    }
+    if args.output_path:
+        output_path = Path(args.output_path)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+        print(f"M18 hybrid CoT audit report written to {output_path}")
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-model", required=True)
+    parser.add_argument("--output-path", type=str, default="")
     args = parser.parse_args()
     run_hybrid_cot_audit(args)

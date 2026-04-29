@@ -47,5 +47,24 @@ Every major family must declare:
 - the promotion basis
 - the primary and guardrail metrics
 - the baseline manifest
+- the automatic comparison targets
+- the required family-specific test contracts that must travel with new branches
 
 These machine-readable definitions live in `configs/experiment_taxonomy.json`.
+
+## Automatic Comparison Contract
+
+When a new branch or ablation row is added to a normalized major family, the control plane should be able to resolve automatically:
+
+- peer comparisons inside the same major family
+- ancestor-family comparisons from the declared transition chain
+- historical comparison families such as `J` and `L` when policy requires them
+- family-specific test contracts, for example J-series invariance and foil checks
+
+This comparison policy is machine-readable in:
+
+- `comparison_defaults`
+- `family_comparison_contracts`
+- `test_contract_catalog`
+
+inside `configs/experiment_taxonomy.json`.

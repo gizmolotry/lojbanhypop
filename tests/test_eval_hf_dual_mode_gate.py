@@ -4,7 +4,7 @@ from conftest import load_script_module
 
 
 def test_dual_mode_gate_lift_detects_over_specialization():
-    mod = load_script_module("eval_hf_dual_mode_gate", "scripts/eval_hf_dual_mode_gate.py")
+    mod = load_script_module("eval_hf_dual_mode_gate", "scripts/legacy/eval_hf_dual_mode_gate.py")
 
     final_lift = -0.094
     symbolic_lift = 0.979
