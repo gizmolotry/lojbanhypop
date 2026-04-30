@@ -1,7 +1,7 @@
 # Whole Ablation Grid
 
-- run_id: `whole_ablation_grid_20260425_m19_fmt05_select_format`
-- generated: `2026-04-25T17:05:41.365282+00:00`
+- run_id: `whole_ablation_grid_20260429_typed_physics_refresh`
+- generated: `2026-04-30T13:34:09.202800+00:00`
 - history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m19_4_train_refresh_20260416/ablation_history_manifest.json`
 - program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m19_4_train_refresh_20260416/ablation_program_spine_manifest.json`
 
@@ -46,7 +46,7 @@
 | `M11` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `archive/results/m10/active/RESULTS_M10_FINAL_AUDIT/m11_discriminative_manifest.json` | headline_accuracy=0.8592, headline_macro_f1=0.6287, bridge_audit_accuracy=0.8333, floor_lock_accuracy=0.7800 |
 | `M14` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m14_5_decompressor/m14_5_report.json` | cell_count=4.0000, best_cell_accuracy=0.0000, all_cells_zero=1.0000 |
 | `M18` | `artifact_anchor` | `e=14 r=14 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m18_controller_family/m18_frontier_audits_20260409/m18_family_report.json` | sapir_english_accuracy=0.1000, sapir_chinese_accuracy=0.5000, harmonized_en_concise_accuracy=0.6000, harmonized_l_typed_accuracy=0.6000 |
-| `M19` | `artifact_anchor` | `e=12 r=12 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m19_3_b_robustness_seed23_package_20260424/direct_unified_eval_manifest.json` | mainline_overall_accuracy=0.3950, mainline_avg_tokens=22.5525, mainline_lift_vs_random=0.3750, mainline_audit_qformer_accuracy=0.8000 |
+| `M19` | `artifact_anchor` | `e=12 r=12 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m19_32_seed23_partial_package_20260429/direct_unified_eval_manifest.json` | mainline_overall_accuracy=0.0175, mainline_avg_tokens=32.0000, mainline_lift_vs_random=-0.0025, mainline_audit_qformer_accuracy=0.0000 |
 | `Control Plane` | `control_plane_manifest` | `e=0 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m19_4_train_refresh_20260416/ablation_history_manifest.json` |  |
 
 ## Comparison Policy
@@ -131,9 +131,9 @@
 
 ### M19
 
-- automatic compare-against: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B`
+- automatic compare-against: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B, M19.31, M19.32`
 - historical families carried forward: `J, L`
-- required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m19.integrity_controls, m19.replication_stability, m19.kill_test_suite, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m19.integrity_controls, m19.replication_stability, m19.kill_test_suite, m19.typed_faithfulness, m19.hyperbolic_geometry, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
 
 
 ## Read

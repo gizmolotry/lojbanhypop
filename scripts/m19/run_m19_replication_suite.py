@@ -18,6 +18,74 @@ from lojban_evolution.m19.training import checkpoint_selection_score, select_bes
 from lojban_evolution.series_contract import assert_output_path_allowed, series_metadata, validate_series_outputs
 
 
+def _track_key(track: str) -> str:
+    candidate = str(track or "").strip()
+    return candidate if candidate in M19_REGISTRY else "M19"
+
+
+def _resolve_output_root(track: str, output_root: Path) -> Path:
+    track_key = _track_key(track)
+    registry = M19_REGISTRY[track_key]
+    default_root = Path(M19_REGISTRY["M19"]["output_roots"]["replication"])
+    if track_key != "M19" and Path(output_root) == default_root:
+        return Path(registry["output_roots"]["replication"])
+    return Path(output_root)
+
+
+def _apply_track_defaults(args: argparse.Namespace) -> argparse.Namespace:
+    defaults = M19_REGISTRY.get(_track_key(args.track), {}).get("defaults", {})
+    if defaults:
+        if not str(args.typed_physics_config).strip() and defaults.get("typed_physics_config"):
+            args.typed_physics_config = str(defaults["typed_physics_config"])
+        if not str(args.typed_slot_layout).strip() and defaults.get("typed_slot_layout"):
+            args.typed_slot_layout = str(defaults["typed_slot_layout"])
+        if str(args.arity_router_mode).strip() == "soft" and defaults.get("arity_router_mode"):
+            args.arity_router_mode = str(defaults["arity_router_mode"])
+        if str(args.geometry_mode).strip() == "euclidean" and defaults.get("geometry_mode"):
+            args.geometry_mode = str(defaults["geometry_mode"])
+        if not args.gumbel_hard and str(defaults.get("arity_router_mode", "")).strip() == "gumbel_hard":
+            args.gumbel_hard = True
+    return args
+
+
+def _typed_train_cli_args(args: argparse.Namespace) -> list[str]:
+    cli_args = [
+        "--typed-physics-config",
+        str(args.typed_physics_config),
+        "--typed-slot-layout",
+        str(args.typed_slot_layout),
+        "--arity-router-mode",
+        str(args.arity_router_mode),
+        "--gumbel-temp-end",
+        str(float(args.gumbel_temp_end)),
+        "--geometry-mode",
+        str(args.geometry_mode),
+        "--poincare-curvature",
+        str(float(args.poincare_curvature)),
+    ]
+    if args.gumbel_hard:
+        cli_args.append("--gumbel-hard")
+    return cli_args
+
+
+def _typed_eval_cli_args(args: argparse.Namespace) -> list[str]:
+    cli_args = [
+        "--typed-slot-layout",
+        str(args.typed_slot_layout),
+        "--arity-router-mode",
+        str(args.arity_router_mode),
+        "--gumbel-temp-end",
+        str(float(args.gumbel_temp_end)),
+        "--geometry-mode",
+        str(args.geometry_mode),
+        "--poincare-curvature",
+        str(float(args.poincare_curvature)),
+    ]
+    if args.gumbel_hard:
+        cli_args.append("--gumbel-hard")
+    return cli_args
+
+
 def parse_args() -> argparse.Namespace:
     registry = M19_REGISTRY["M19"]
     parser = argparse.ArgumentParser(description="Run seed replications for the active M19 mainline cell.")
@@ -39,6 +107,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--format-flatten-augmentation-prob", type=float, default=0.0)
     parser.add_argument("--query-repulsion-weight", type=float, default=0.0)
     parser.add_argument("--query-repulsion-margin", type=float, default=0.15)
+    parser.add_argument("--typed-physics-config", type=str, default="")
+    parser.add_argument("--typed-slot-layout", type=str, default="")
+    parser.add_argument("--arity-router-mode", type=str, default="soft")
+    parser.add_argument("--gumbel-hard", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--gumbel-temp-end", type=float, default=0.35)
+    parser.add_argument("--geometry-mode", type=str, default="euclidean")
+    parser.add_argument("--poincare-curvature", type=float, default=1.0)
     parser.add_argument("--checkpoint-selection-policy", type=str, default="final_only")
     parser.add_argument("--selection-purged-eval-size", type=int, default=100)
     parser.add_argument("--track", type=str, default="M19")
@@ -46,13 +121,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-root", type=Path, default=Path(registry["output_roots"]["replication"]))
     parser.add_argument("--output-path", type=Path, default=None)
     parser.add_argument("--run-id", type=str, default="")
-    return parser.parse_args()
+    return _apply_track_defaults(parser.parse_args())
 
 
 def main() -> None:
     args = parse_args()
     repo_root = Path(__file__).resolve().parents[2]
-    output_root = Path(args.output_root)
+    output_root = _resolve_output_root(str(args.track), Path(args.output_root))
     assert_output_path_allowed("M", output_root)
     run_id = args.run_id.strip() or datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     run_dir = output_root / run_id
@@ -115,6 +190,7 @@ def main() -> None:
                 str(checkpoint_path),
                 "--report-output-path",
                 str(train_report_path),
+                *_typed_train_cli_args(args),
             ],
             repo_root,
         )
@@ -162,6 +238,7 @@ def main() -> None:
                 f"BASE,RANDOM-SHAPE,SCRATCHPAD-ONLY,{args.cell_id}",
                 "--output-path",
                 str(benchmark_report_path),
+                *_typed_eval_cli_args(args),
             ],
             repo_root,
         )
@@ -196,6 +273,7 @@ def main() -> None:
                 str(args.cell_id),
                 "--output-path",
                 str(audit_report_path),
+                *_typed_eval_cli_args(args),
             ],
             repo_root,
         )
@@ -434,6 +512,7 @@ def _select_checkpoint_if_needed(
                 f"BASE,RANDOM-SHAPE,SCRATCHPAD-ONLY,{args.cell_id}",
                 "--output-path",
                 str(epoch_purged_report_path),
+                *_typed_eval_cli_args(args),
             ],
             repo_root,
         )
@@ -471,6 +550,7 @@ def _select_checkpoint_if_needed(
                     f"BASE,RANDOM-SHAPE,SCRATCHPAD-ONLY,{args.cell_id}",
                     "--output-path",
                     str(epoch_format_report_path),
+                    *_typed_eval_cli_args(args),
                 ],
                 repo_root,
             )
@@ -505,6 +585,7 @@ def _select_checkpoint_if_needed(
                 str(args.cell_id),
                 "--output-path",
                 str(epoch_audit_report_path),
+                *_typed_eval_cli_args(args),
             ],
             repo_root,
         )

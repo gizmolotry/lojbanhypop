@@ -22,6 +22,52 @@ from lojban_evolution.m19.integrity import (
 from lojban_evolution.series_contract import assert_output_path_allowed, series_metadata, validate_series_outputs
 
 
+def _track_key(track: str) -> str:
+    candidate = str(track or "").strip()
+    return candidate if candidate in M19_REGISTRY else "M19"
+
+
+def _resolve_output_root(track: str, output_root: Path) -> Path:
+    track_key = _track_key(track)
+    registry = M19_REGISTRY[track_key]
+    default_root = Path(M19_REGISTRY["M19"]["output_roots"]["integrity"])
+    if track_key != "M19" and Path(output_root) == default_root:
+        return Path(registry["output_roots"]["integrity"])
+    return Path(output_root)
+
+
+def _apply_track_defaults(args: argparse.Namespace) -> argparse.Namespace:
+    defaults = M19_REGISTRY.get(_track_key(args.track), {}).get("defaults", {})
+    if defaults:
+        if not str(args.typed_slot_layout).strip() and defaults.get("typed_slot_layout"):
+            args.typed_slot_layout = str(defaults["typed_slot_layout"])
+        if str(args.arity_router_mode).strip() == "soft" and defaults.get("arity_router_mode"):
+            args.arity_router_mode = str(defaults["arity_router_mode"])
+        if str(args.geometry_mode).strip() == "euclidean" and defaults.get("geometry_mode"):
+            args.geometry_mode = str(defaults["geometry_mode"])
+        if not args.gumbel_hard and str(defaults.get("arity_router_mode", "")).strip() == "gumbel_hard":
+            args.gumbel_hard = True
+    return args
+
+
+def _typed_bridge_cli_args(args: argparse.Namespace) -> list[str]:
+    cli_args = [
+        "--typed-slot-layout",
+        str(args.typed_slot_layout),
+        "--arity-router-mode",
+        str(args.arity_router_mode),
+        "--gumbel-temp-end",
+        str(float(args.gumbel_temp_end)),
+        "--geometry-mode",
+        str(args.geometry_mode),
+        "--poincare-curvature",
+        str(float(args.poincare_curvature)),
+    ]
+    if args.gumbel_hard:
+        cli_args.append("--gumbel-hard")
+    return cli_args
+
+
 def parse_args() -> argparse.Namespace:
     registry = M19_REGISTRY["M19"]
     parser = argparse.ArgumentParser(description="Run the M19 integrity suite with full, purged, overlap, masked, and audit controls.")
@@ -40,6 +86,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--seed", type=int, default=19)
     parser.add_argument("--track", type=str, default="M19")
     parser.add_argument("--cell-id", type=str, default="M19.3_8Q_128D_8S")
+    parser.add_argument("--typed-slot-layout", type=str, default="")
+    parser.add_argument("--arity-router-mode", type=str, default="soft")
+    parser.add_argument("--gumbel-hard", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--gumbel-temp-end", type=float, default=0.35)
+    parser.add_argument("--geometry-mode", type=str, default="euclidean")
+    parser.add_argument("--poincare-curvature", type=float, default=1.0)
     parser.add_argument("--full-report-path", type=Path, default=None)
     parser.add_argument("--purged-report-path", type=Path, default=None)
     parser.add_argument("--overlap-report-path", type=Path, default=None)
@@ -48,13 +100,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-root", type=Path, default=Path("artifacts/runs/telemetry/raw/ablation/hypercube/m19_integrity_suite"))
     parser.add_argument("--output-path", type=Path, default=None)
     parser.add_argument("--run-id", type=str, default="")
-    return parser.parse_args()
+    return _apply_track_defaults(parser.parse_args())
 
 
 def main() -> None:
     args = parse_args()
     repo_root = Path(__file__).resolve().parents[2]
-    output_root = Path(args.output_root)
+    output_root = _resolve_output_root(str(args.track), Path(args.output_root))
     assert_output_path_allowed("M", output_root)
     run_id = args.run_id.strip() or datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     run_dir = output_root / run_id
@@ -82,6 +134,7 @@ def main() -> None:
     _run_benchmark_if_needed(
         output_path=benchmark_full_path,
         repo_root=repo_root,
+        args=args,
         base_model=args.base_model,
         bridge_path=args.bridge_path,
         eval_data_path=full_eval_path,
@@ -98,6 +151,7 @@ def main() -> None:
     _run_benchmark_if_needed(
         output_path=benchmark_purged_path,
         repo_root=repo_root,
+        args=args,
         base_model=args.base_model,
         bridge_path=args.bridge_path,
         eval_data_path=purged_eval_path,
@@ -114,6 +168,7 @@ def main() -> None:
     _run_benchmark_if_needed(
         output_path=benchmark_overlap_path,
         repo_root=repo_root,
+        args=args,
         base_model=args.base_model,
         bridge_path=args.bridge_path,
         eval_data_path=overlap_eval_path,
@@ -130,6 +185,7 @@ def main() -> None:
     _run_benchmark_if_needed(
         output_path=benchmark_masked_path,
         repo_root=repo_root,
+        args=args,
         base_model=args.base_model,
         bridge_path=args.bridge_path,
         eval_data_path=masked_eval_path,
@@ -147,6 +203,7 @@ def main() -> None:
     _run_audit_if_needed(
         output_path=audit_report_path,
         repo_root=repo_root,
+        args=args,
         base_model=args.base_model,
         bridge_path=args.bridge_path,
         audit_data_path=args.audit_data_path,
@@ -238,6 +295,7 @@ def _run_benchmark_if_needed(
     *,
     output_path: Path,
     repo_root: Path,
+    args: argparse.Namespace,
     base_model: str,
     bridge_path: Path,
     eval_data_path: Path,
@@ -257,6 +315,7 @@ def _run_benchmark_if_needed(
     _run_benchmark(
         output_path=output_path,
         repo_root=repo_root,
+        args=args,
         base_model=base_model,
         bridge_path=bridge_path,
         eval_data_path=eval_data_path,
@@ -277,6 +336,7 @@ def _run_benchmark(
     *,
     output_path: Path,
     repo_root: Path,
+    args: argparse.Namespace,
     base_model: str,
     bridge_path: Path,
     eval_data_path: Path,
@@ -320,6 +380,7 @@ def _run_benchmark(
         str(cell_id),
         "--output-path",
         str(output_path),
+        *_typed_bridge_cli_args(args),
     ]
     if str(regimes).strip():
         cmd.extend(["--regimes", str(regimes).strip()])
@@ -330,6 +391,7 @@ def _run_audit_if_needed(
     *,
     output_path: Path,
     repo_root: Path,
+    args: argparse.Namespace,
     base_model: str,
     bridge_path: Path,
     audit_data_path: Path,
@@ -348,6 +410,7 @@ def _run_audit_if_needed(
     _run_audit(
         output_path=output_path,
         repo_root=repo_root,
+        args=args,
         base_model=base_model,
         bridge_path=bridge_path,
         audit_data_path=audit_data_path,
@@ -367,6 +430,7 @@ def _run_audit(
     *,
     output_path: Path,
     repo_root: Path,
+    args: argparse.Namespace,
     base_model: str,
     bridge_path: Path,
     audit_data_path: Path,
@@ -409,6 +473,7 @@ def _run_audit(
         str(cell_id),
         "--output-path",
         str(output_path),
+        *_typed_bridge_cli_args(args),
     ]
     subprocess.run(cmd, cwd=str(repo_root), check=True)
 
