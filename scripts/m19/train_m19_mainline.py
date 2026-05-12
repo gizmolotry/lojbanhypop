@@ -31,13 +31,17 @@ from lojban_evolution.m19.family import (
     M19_SCRATCHPAD_TOKEN,
     M19_SYMBIOTE_END_TOKEN,
 )
-from lojban_evolution.m19.training import maybe_apply_surface_augmentations
+from lojban_evolution.m19.training import (
+    build_surface_consistency_variants,
+    maybe_apply_surface_augmentations,
+)
 from lojban_evolution.m19.typed_physics import (
     FAMILY_TO_ID,
     build_typed_targets,
     family_separation_loss,
     load_typed_physics_config,
     mean_entropy_from_logits,
+    operator_confidence_cap_loss,
     parse_typed_slot_layout,
     slot_usage_balance_loss,
     symbolic_trace_alignment_score,
@@ -139,6 +143,148 @@ def _heuristic_target_steps(question: str, answer: str, min_steps: int, max_step
     return int(allowed[idx])
 
 
+def _build_bridge_prompt(question: str, scratchpad_token: str, target_steps: int) -> tuple[str, str]:
+    prompt_core = f"Solve the logic question.\n\nQuestion: {question}\n"
+    scratch_tokens = " ".join([str(scratchpad_token)] * int(target_steps))
+    return prompt_core, f"{prompt_core}{scratch_tokens}"
+
+
+def _mean_pool_masked_logits(logits: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
+    active_mask = labels.ne(-100)
+    if not bool(active_mask.any()):
+        return logits.new_zeros((logits.shape[0], logits.shape[-1]))
+    masked_logits = logits.masked_fill(~active_mask.unsqueeze(-1), 0.0)
+    counts = active_mask.sum(dim=1, keepdim=True).clamp_min(1).to(logits.dtype)
+    return masked_logits.sum(dim=1) / counts
+
+
+def _pointer_necessity_contrast_loss(
+    full_loss: torch.Tensor,
+    ablated_loss: torch.Tensor,
+    margin: float,
+) -> torch.Tensor:
+    return torch.relu(full_loss + full_loss.new_tensor(float(margin)) - ablated_loss)
+
+
+def _forward_surface(
+    *,
+    backbone: AutoModelForCausalLM,
+    tokenizer: AutoTokenizer,
+    bridge: M19SymbioteBridge,
+    question: str,
+    answer: str,
+    target_steps: int,
+    args: argparse.Namespace,
+    device: str,
+    scratchpad_token_id: int,
+    lengths: torch.Tensor,
+    gumbel_temperature: float,
+    typed_slot_layout: list[str],
+    slot_family_targets: torch.Tensor | None,
+    typed_physics_config: Any,
+    mode: str,
+    raw_text: str,
+    bridge_channel_mode: str = "full",
+) -> dict[str, Any]:
+    prompt_core, bridge_prompt = _build_bridge_prompt(question, str(args.scratchpad_token), int(target_steps))
+    prompt = f"{bridge_prompt} {str(args.symbiote_end_token)}\nFinal answer:"
+    full_text = f"{prompt} {answer}"
+
+    inputs_prompt = tokenizer(bridge_prompt, return_tensors="pt").to(device)
+    inputs_full = tokenizer(full_text, return_tensors="pt").to(device)
+
+    with torch.no_grad():
+        out_prompt = backbone(**inputs_prompt, output_hidden_states=True)
+        h_tap = out_prompt.hidden_states[int(args.tap_layer)]
+
+    delta, l_topo, op_logits, telemetry = bridge(
+        h_tap,
+        active_steps=int(target_steps),
+        lengths=lengths,
+        gumbel_temperature=gumbel_temperature,
+        bridge_channel_mode=bridge_channel_mode,
+    )
+
+    scratchpad_mask = inputs_full.input_ids.eq(scratchpad_token_id)
+    labels = inputs_full.input_ids.clone()
+    labels[0, : len(tokenizer(prompt_core, return_tensors="pt").input_ids[0])] = -100
+
+    with m19_injection_hook(backbone, int(args.tap_layer), scratchpad_mask, delta):
+        out_full = backbone(**inputs_full, labels=labels)
+
+    typed_family_loss = torch.zeros((), device=device, dtype=delta.dtype)
+    arity_loss = torch.zeros((), device=device, dtype=delta.dtype)
+    family_sep_loss = torch.zeros((), device=device, dtype=delta.dtype)
+    slot_balance = torch.zeros((), device=device, dtype=delta.dtype)
+    operator_balance = torch.zeros((), device=device, dtype=delta.dtype)
+    typed_family_accuracy = 0.0
+    symbolic_alignment = 0.0
+    arity_violation = 0.0
+    masked_zero_metric = telemetry.get("masked_pointer_zero_rate")
+    masked_zero_rate = float(masked_zero_metric) if masked_zero_metric is not None else 0.0
+    hyper_metrics = telemetry.get("hyperbolic_metrics", {})
+
+    if typed_slot_layout and telemetry.get("slot_family_logits") is not None and slot_family_targets is not None:
+        slot_family_logits = telemetry["slot_family_logits"][0]
+        typed_family_loss = F.cross_entropy(slot_family_logits, slot_family_targets)
+        typed_family_accuracy = float((slot_family_logits.argmax(dim=-1) == slot_family_targets).float().mean().item())
+        family_sep_loss = family_separation_loss(telemetry["query_state"], typed_slot_layout)
+        if telemetry.get("judri_mask") is not None:
+            slot_balance = slot_usage_balance_loss(telemetry["judri_mask"])
+
+    targets = (
+        build_typed_targets(raw_text=raw_text, mode=mode, config=typed_physics_config, row={"text": raw_text, "mode": mode})
+        if typed_physics_config is not None
+        else None
+    )
+    typed_supervision_step = 0
+    if targets is not None and targets.has_supervision and telemetry.get("slot_family_logits") is not None:
+        typed_supervision_step = 1
+        family_hist = torch.tensor(targets.family_histogram, device=device, dtype=delta.dtype)
+        symbolic_alignment = float(
+            symbolic_trace_alignment_score(telemetry["slot_family_logits"][0], family_hist).detach().item()
+        )
+        if telemetry.get("arity_logits") is not None and targets.primary_arity is not None:
+            arity_target = torch.tensor([int(targets.primary_arity) - 1], device=device, dtype=torch.long)
+            arity_logits = telemetry["arity_logits"]
+            arity_loss = F.cross_entropy(arity_logits, arity_target)
+            arity_prediction = int(arity_logits.argmax(dim=-1)[0].item()) + 1
+            arity_violation = 0.0 if arity_prediction == int(targets.primary_arity) else 1.0
+
+    pooled_logits = _mean_pool_masked_logits(out_full.logits.float(), labels)
+    operator_balance = operator_confidence_cap_loss(
+        op_logits,
+        max_top1_share=float(args.operator_top1_cap),
+    )
+
+    return {
+        "prompt_core": prompt_core,
+        "bridge_prompt": bridge_prompt,
+        "prompt": prompt,
+        "full_text": full_text,
+        "inputs_full": inputs_full,
+        "labels": labels,
+        "delta": delta,
+        "l_topo": l_topo,
+        "op_logits": op_logits,
+        "telemetry": telemetry,
+        "out_full": out_full,
+        "typed_family_loss": typed_family_loss,
+        "arity_loss": arity_loss,
+        "family_sep_loss": family_sep_loss,
+        "slot_balance": slot_balance,
+        "operator_balance": operator_balance,
+        "typed_family_accuracy": typed_family_accuracy,
+        "symbolic_alignment": symbolic_alignment,
+        "arity_violation": arity_violation,
+        "masked_zero_rate": masked_zero_rate,
+        "hyper_metrics": hyper_metrics,
+        "bridge_channel_mode": telemetry.get("bridge_channel_mode", bridge_channel_mode),
+        "typed_supervision_step": typed_supervision_step,
+        "pooled_logits": pooled_logits,
+    }
+
+
 def train_m19(args: argparse.Namespace) -> dict[str, Any]:
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model_dtype = _dtype_for_runtime(device)
@@ -223,6 +369,12 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
         arity_sum = 0.0
         family_sep_sum = 0.0
         slot_balance_sum = 0.0
+        operator_balance_sum = 0.0
+        surface_consistency_sum = 0.0
+        pointer_necessity_sum = 0.0
+        pointer_necessity_gap_sum = 0.0
+        pointer_necessity_active_count = 0
+        consistency_variant_count = 0
         typed_accuracy_sum = 0.0
         typed_alignment_sum = 0.0
         typed_violation_sum = 0.0
@@ -242,10 +394,10 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
             row = _materialize_row(batch_dict)
             raw_text = str(row["text"])
             mode = str(row["mode"])
-            question, answer = _split_sample(raw_text, mode)
+            base_question, base_answer = _split_sample(raw_text, mode)
             question, answer, augmentation_flags = maybe_apply_surface_augmentations(
-                question,
-                answer,
+                base_question,
+                base_answer,
                 entity_rename_probability=float(args.entity_rename_augmentation_prob),
                 format_flatten_probability=float(args.format_flatten_augmentation_prob),
             )
@@ -268,73 +420,132 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
             gumbel_temperature = float(args.gumbel_temp_start) + (
                 (float(args.gumbel_temp_end) - float(args.gumbel_temp_start)) * progress
             )
-            scratch_tokens = " ".join([str(args.scratchpad_token)] * int(target_steps))
-            prompt_core = f"Solve the logic question.\n\nQuestion: {question}\n"
-            bridge_prompt = f"{prompt_core}{scratch_tokens}"
-            prompt = f"{bridge_prompt} {str(args.symbiote_end_token)}\nFinal answer:"
-            full_text = f"{prompt} {answer}"
-
-            inputs_prompt = tokenizer(bridge_prompt, return_tensors="pt").to(device)
-            inputs_full = tokenizer(full_text, return_tensors="pt").to(device)
-
-            with torch.no_grad():
-                out_prompt = backbone(**inputs_prompt, output_hidden_states=True)
-                h_tap = out_prompt.hidden_states[int(args.tap_layer)]
-
             lengths = torch.tensor([int(target_steps)], device=device, dtype=torch.long)
-            delta, l_topo, op_logits, telemetry = bridge(
-                h_tap,
-                active_steps=int(target_steps),
+            primary_surface = _forward_surface(
+                backbone=backbone,
+                tokenizer=tokenizer,
+                bridge=bridge,
+                question=question,
+                answer=answer,
+                target_steps=int(target_steps),
+                args=args,
+                device=device,
+                scratchpad_token_id=scratchpad_token_id,
                 lengths=lengths,
                 gumbel_temperature=gumbel_temperature,
+                typed_slot_layout=typed_slot_layout,
+                slot_family_targets=slot_family_targets,
+                typed_physics_config=typed_physics_config,
+                mode=mode,
+                raw_text=raw_text,
             )
+            delta = primary_surface["delta"]
+            l_topo = primary_surface["l_topo"]
+            op_logits = primary_surface["op_logits"]
+            telemetry = primary_surface["telemetry"]
+            out_full = primary_surface["out_full"]
             bridge.update_halt_centroid(telemetry["trace"], lengths=lengths)
             l_repulse = compute_query_repulsion_loss(
                 bridge.query_dictionary(),
                 margin=float(args.query_repulsion_margin),
             )
-            typed_family_loss = torch.zeros((), device=device, dtype=delta.dtype)
-            arity_loss = torch.zeros((), device=device, dtype=delta.dtype)
-            family_sep_loss = torch.zeros((), device=device, dtype=delta.dtype)
-            slot_balance = torch.zeros((), device=device, dtype=delta.dtype)
-            typed_family_accuracy = 0.0
-            symbolic_alignment = 0.0
-            arity_violation = 0.0
-            masked_zero_rate = float(telemetry.get("masked_pointer_zero_rate", 0.0))
-            hyper_metrics = telemetry.get("hyperbolic_metrics", {})
-            if typed_slot_layout and telemetry.get("slot_family_logits") is not None and slot_family_targets is not None:
-                slot_family_logits = telemetry["slot_family_logits"][0]
-                typed_family_loss = F.cross_entropy(slot_family_logits, slot_family_targets)
-                typed_family_accuracy = float((slot_family_logits.argmax(dim=-1) == slot_family_targets).float().mean().item())
-                family_sep_loss = family_separation_loss(telemetry["query_state"], typed_slot_layout)
-                if telemetry.get("judri_mask") is not None:
-                    slot_balance = slot_usage_balance_loss(telemetry["judri_mask"])
-            targets = (
-                build_typed_targets(raw_text=raw_text, mode=mode, config=typed_physics_config, row=row)
-                if typed_physics_config is not None
-                else None
-            )
-            if targets is not None and targets.has_supervision and telemetry.get("slot_family_logits") is not None:
-                typed_supervision_steps += 1
-                family_hist = torch.tensor(targets.family_histogram, device=device, dtype=delta.dtype)
-                symbolic_alignment = float(
-                    symbolic_trace_alignment_score(telemetry["slot_family_logits"][0], family_hist).detach().item()
-                )
-                if telemetry.get("arity_logits") is not None and targets.primary_arity is not None:
-                    arity_target = torch.tensor([int(targets.primary_arity) - 1], device=device, dtype=torch.long)
-                    arity_logits = telemetry["arity_logits"]
-                    arity_loss = F.cross_entropy(arity_logits, arity_target)
-                    arity_prediction = int(arity_logits.argmax(dim=-1)[0].item()) + 1
-                    arity_violation = 0.0 if arity_prediction == int(targets.primary_arity) else 1.0
-            scratchpad_mask = inputs_full.input_ids.eq(scratchpad_token_id)
-            labels = inputs_full.input_ids.clone()
-            labels[0, : len(tokenizer(prompt_core, return_tensors="pt").input_ids[0])] = -100
-
-            with m19_injection_hook(backbone, int(args.tap_layer), scratchpad_mask, delta):
-                out_full = backbone(**inputs_full, labels=labels)
-
             l_task = out_full.loss
             l_ac = compute_m19_anti_collapse(op_logits, min_entropy=float(args.min_entropy))
+            typed_family_loss = primary_surface["typed_family_loss"]
+            arity_loss = primary_surface["arity_loss"]
+            family_sep_loss = primary_surface["family_sep_loss"]
+            slot_balance = primary_surface["slot_balance"]
+            operator_balance = primary_surface["operator_balance"]
+            typed_family_accuracy = float(primary_surface["typed_family_accuracy"])
+            symbolic_alignment = float(primary_surface["symbolic_alignment"])
+            arity_violation = float(primary_surface["arity_violation"])
+            masked_zero_rate = float(primary_surface["masked_zero_rate"])
+            hyper_metrics = primary_surface["hyper_metrics"]
+            typed_supervision_steps += int(primary_surface["typed_supervision_step"])
+
+            surface_consistency_loss = torch.zeros((), device=device, dtype=delta.dtype)
+            consistency_variants = build_surface_consistency_variants(
+                base_question,
+                base_answer,
+                include_entity_rename=bool(args.surface_consistency_entity_rename),
+                include_format_flatten=bool(args.surface_consistency_format_flatten),
+                include_combined=bool(args.surface_consistency_combined),
+            )
+            if float(args.surface_consistency_weight) > 0.0 and consistency_variants:
+                variant_losses: list[torch.Tensor] = []
+                max_variants = max(1, int(args.surface_consistency_max_variants))
+                for variant in consistency_variants[:max_variants]:
+                    variant_surface = _forward_surface(
+                        backbone=backbone,
+                        tokenizer=tokenizer,
+                        bridge=bridge,
+                        question=str(variant["question"]),
+                        answer=str(variant["answer"]),
+                        target_steps=int(target_steps),
+                        args=args,
+                        device=device,
+                        scratchpad_token_id=scratchpad_token_id,
+                        lengths=lengths,
+                        gumbel_temperature=gumbel_temperature,
+                        typed_slot_layout=typed_slot_layout,
+                        slot_family_targets=slot_family_targets,
+                        typed_physics_config=typed_physics_config,
+                        mode=mode,
+                        raw_text=raw_text,
+                    )
+                    variant_loss = F.mse_loss(variant_surface["delta"].float(), delta.float())
+                    variant_loss = variant_loss + F.mse_loss(
+                        variant_surface["pooled_logits"],
+                        primary_surface["pooled_logits"],
+                    )
+                    if float(args.surface_consistency_task_weight) > 0.0:
+                        variant_loss = variant_loss + (
+                            float(args.surface_consistency_task_weight) * variant_surface["out_full"].loss
+                        )
+                    if telemetry.get("slot_family_logits") is not None and variant_surface["telemetry"].get("slot_family_logits") is not None:
+                        variant_loss = variant_loss + F.mse_loss(
+                            variant_surface["telemetry"]["slot_family_logits"].float(),
+                            telemetry["slot_family_logits"].float(),
+                        )
+                    if telemetry.get("judri_mask") is not None and variant_surface["telemetry"].get("judri_mask") is not None:
+                        variant_loss = variant_loss + F.mse_loss(
+                            variant_surface["telemetry"]["judri_mask"].float(),
+                            telemetry["judri_mask"].float(),
+                        )
+                    variant_losses.append(variant_loss)
+                if variant_losses:
+                    surface_consistency_loss = torch.stack(variant_losses).mean()
+                    consistency_variant_count += len(variant_losses)
+            pointer_necessity_loss = torch.zeros((), device=device, dtype=delta.dtype)
+            pointer_necessity_gap = 0.0
+            if float(args.pointer_necessity_weight) > 0.0 and "judri" in typed_slot_layout:
+                ablated_surface = _forward_surface(
+                    backbone=backbone,
+                    tokenizer=tokenizer,
+                    bridge=bridge,
+                    question=question,
+                    answer=answer,
+                    target_steps=int(target_steps),
+                    args=args,
+                    device=device,
+                    scratchpad_token_id=scratchpad_token_id,
+                    lengths=lengths,
+                    gumbel_temperature=gumbel_temperature,
+                    typed_slot_layout=typed_slot_layout,
+                    slot_family_targets=slot_family_targets,
+                    typed_physics_config=typed_physics_config,
+                    mode=mode,
+                    raw_text=raw_text,
+                    bridge_channel_mode=str(args.pointer_necessity_ablation_mode),
+                )
+                ablated_task_loss = ablated_surface["out_full"].loss
+                pointer_necessity_loss = _pointer_necessity_contrast_loss(
+                    l_task,
+                    ablated_task_loss,
+                    margin=float(args.pointer_necessity_margin),
+                )
+                pointer_necessity_gap = float((ablated_task_loss.detach() - l_task.detach()).item())
+                pointer_necessity_active_count += 1
             loss = (
                 l_task
                 + float(args.topology_weight) * l_topo
@@ -344,6 +555,9 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
                 + float(args.typed_arity_weight) * arity_loss
                 + float(args.family_separation_weight) * family_sep_loss
                 + float(args.slot_usage_balance_weight) * slot_balance
+                + float(args.operator_balance_weight) * operator_balance
+                + float(args.surface_consistency_weight) * surface_consistency_loss
+                + float(args.pointer_necessity_weight) * pointer_necessity_loss
             )
             loss.backward()
             optimizer.step()
@@ -357,6 +571,10 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
             arity_sum += float(arity_loss.detach().item())
             family_sep_sum += float(family_sep_loss.detach().item())
             slot_balance_sum += float(slot_balance.detach().item())
+            operator_balance_sum += float(operator_balance.detach().item())
+            surface_consistency_sum += float(surface_consistency_loss.detach().item())
+            pointer_necessity_sum += float(pointer_necessity_loss.detach().item())
+            pointer_necessity_gap_sum += float(pointer_necessity_gap)
             typed_accuracy_sum += float(typed_family_accuracy)
             typed_alignment_sum += float(symbolic_alignment)
             typed_violation_sum += float(arity_violation)
@@ -385,6 +603,12 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
                 "mean_typed_arity_loss": arity_sum / denom,
                 "mean_family_separation_loss": family_sep_sum / denom,
                 "mean_slot_usage_balance_loss": slot_balance_sum / denom,
+                "mean_operator_balance_loss": operator_balance_sum / denom,
+                "mean_surface_consistency_loss": surface_consistency_sum / denom,
+                "mean_pointer_necessity_loss": pointer_necessity_sum / denom,
+                "mean_pointer_necessity_gap": pointer_necessity_gap_sum / max(1, pointer_necessity_active_count),
+                "pointer_necessity_active_steps": float(pointer_necessity_active_count),
+                "surface_consistency_variant_count": float(consistency_variant_count),
                 "mean_target_steps": float(sum(curriculum_targets[-denom:]) / max(1, min(denom, len(curriculum_targets)))),
                 "mean_query_embed_pairwise_cosine": query_embed_cosine_sum / denom,
                 "mean_scratch_trace_pairwise_cosine": scratch_trace_cosine_sum / denom,
@@ -462,6 +686,17 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
             "typed_arity_weight": float(args.typed_arity_weight),
             "family_separation_weight": float(args.family_separation_weight),
             "slot_usage_balance_weight": float(args.slot_usage_balance_weight),
+            "operator_balance_weight": float(args.operator_balance_weight),
+            "operator_top1_cap": float(args.operator_top1_cap),
+            "surface_consistency_weight": float(args.surface_consistency_weight),
+            "surface_consistency_entity_rename": bool(args.surface_consistency_entity_rename),
+            "surface_consistency_format_flatten": bool(args.surface_consistency_format_flatten),
+            "surface_consistency_combined": bool(args.surface_consistency_combined),
+            "surface_consistency_max_variants": int(args.surface_consistency_max_variants),
+            "surface_consistency_task_weight": float(args.surface_consistency_task_weight),
+            "pointer_necessity_weight": float(args.pointer_necessity_weight),
+            "pointer_necessity_margin": float(args.pointer_necessity_margin),
+            "pointer_necessity_ablation_mode": str(args.pointer_necessity_ablation_mode),
             "geometry_mode": str(args.geometry_mode),
             "poincare_curvature": float(args.poincare_curvature),
             "local_files_only": bool(args.local_files_only),
@@ -527,6 +762,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--typed-arity-weight", type=float, default=0.05)
     parser.add_argument("--family-separation-weight", type=float, default=0.02)
     parser.add_argument("--slot-usage-balance-weight", type=float, default=0.01)
+    parser.add_argument("--operator-balance-weight", type=float, default=0.0)
+    parser.add_argument("--operator-top1-cap", type=float, default=0.30)
+    parser.add_argument("--surface-consistency-weight", type=float, default=0.0)
+    parser.add_argument("--surface-consistency-entity-rename", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--surface-consistency-format-flatten", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--surface-consistency-combined", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--surface-consistency-max-variants", type=int, default=2)
+    parser.add_argument("--surface-consistency-task-weight", type=float, default=0.0)
+    parser.add_argument("--pointer-necessity-weight", type=float, default=0.0)
+    parser.add_argument("--pointer-necessity-margin", type=float, default=0.05)
+    parser.add_argument("--pointer-necessity-ablation-mode", type=str, default="no_judri")
     parser.add_argument("--geometry-mode", type=str, default="euclidean")
     parser.add_argument("--poincare-curvature", type=float, default=1.0)
     parser.add_argument("--scratchpad-token", type=str, default=M19_SCRATCHPAD_TOKEN)

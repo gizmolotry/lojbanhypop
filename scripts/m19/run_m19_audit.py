@@ -211,7 +211,9 @@ def run_m19_audit(args: argparse.Namespace) -> dict[str, Any]:
                     typed_family_values.append(
                         float((slot_family_logits[0].argmax(dim=-1) == family_targets).float().mean().item())
                     )
-                masked_pointer_values.append(float(telemetry.get("masked_pointer_zero_rate", 0.0)))
+                masked_pointer_zero_rate = telemetry.get("masked_pointer_zero_rate")
+                if masked_pointer_zero_rate is not None:
+                    masked_pointer_values.append(float(masked_pointer_zero_rate))
                 family_entropy_values.append(float(telemetry.get("slot_family_entropy", 0.0)))
                 hyper_metrics = telemetry.get("hyperbolic_metrics", {})
                 radial_gap_values.append(float(hyper_metrics.get("predicate_pointer_radial_gap", 0.0)))

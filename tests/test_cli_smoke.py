@@ -64,6 +64,7 @@ def test_run_m19_replication_suite_help() -> None:
     assert "--eval-data-path" in out
     assert "--checkpoint-selection-policy" in out
     assert "--query-repulsion-weight" in out
+    assert "--pointer-necessity-weight" in out
 
 
 def test_run_m19_stability_microgrid_help() -> None:
@@ -72,6 +73,7 @@ def test_run_m19_stability_microgrid_help() -> None:
     assert "--learning-rate-list" in out
     assert "--augmentation-prob-list" in out
     assert "--format-augmentation-prob-list" in out
+    assert "--pointer-necessity-weight-list" in out
 
 
 def test_run_m19_kill_test_suite_help() -> None:
@@ -94,6 +96,20 @@ def test_run_m19_typed_physics_suite_help() -> None:
     assert "usage:" in out.lower()
     assert "--track" in out
     assert "--typed-slot-layout" in out
+
+
+def test_run_m19_bridge_channel_suite_help() -> None:
+    out = _run_help("scripts/m19/run_m19_bridge_channel_suite.py")
+    assert "usage:" in out.lower()
+    assert "--mode-list" in out
+    assert "--channel-causality-threshold" in out
+
+
+def test_run_m19_order_sensitivity_suite_help() -> None:
+    out = _run_help("scripts/m19/run_m19_order_sensitivity_suite.py")
+    assert "usage:" in out.lower()
+    assert "--slice-list" in out
+    assert "--order-sensitivity-threshold" in out
 
 
 def test_run_m19_gumbel_and_hyperbolic_suite_help() -> None:

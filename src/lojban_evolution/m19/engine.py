@@ -18,6 +18,22 @@ from .typed_physics import (
 )
 
 
+BRIDGE_CHANNEL_MODES = {
+    "full",
+    "zero_all",
+    "gismu_only",
+    "cmavo_only",
+    "judri_only",
+    "control_only",
+    "op_only",
+    "pointer_only",
+    "no_gismu",
+    "no_cmavo",
+    "no_judri",
+    "no_control",
+}
+
+
 def _off_diagonal_cosines(vectors: torch.Tensor) -> torch.Tensor:
     if vectors.ndim != 2:
         raise ValueError(f"Expected 2D tensor for pairwise cosine stats, got shape {tuple(vectors.shape)}")
@@ -259,6 +275,8 @@ class M19SymbioteBridge(nn.Module):
         self,
         query_state: torch.Tensor,
         gumbel_temperature: float,
+        arity_override: int | None = None,
+        disable_arity_mask: bool = False,
     ) -> tuple[torch.Tensor, dict[str, Any]]:
         if not self.typed_physics_enabled or self.family_head is None:
             return query_state, {
@@ -268,7 +286,10 @@ class M19SymbioteBridge(nn.Module):
                 "arity_logits": None,
                 "arity_distribution": None,
                 "active_predicate_slot": None,
-                "masked_pointer_zero_rate": 0.0,
+                "active_arity_budget": None,
+                "arity_override": None,
+                "arity_mask_disabled": False,
+                "masked_pointer_zero_rate": None,
                 "hyperbolic_metrics": {},
             }
 
@@ -280,7 +301,10 @@ class M19SymbioteBridge(nn.Module):
             "arity_logits": None,
             "arity_distribution": None,
             "active_predicate_slot": None,
-            "masked_pointer_zero_rate": 0.0,
+            "active_arity_budget": None,
+            "arity_override": None,
+            "arity_mask_disabled": False,
+            "masked_pointer_zero_rate": None,
             "hyperbolic_metrics": {},
         }
         telemetry["slot_family_entropy"] = float(mean_entropy_from_logits(telemetry["slot_family_logits"]).detach().item())
@@ -324,6 +348,13 @@ class M19SymbioteBridge(nn.Module):
                 active_budget = pointer_budget.round().to(dtype=torch.long)
             else:
                 active_budget = pointer_budget.round().clamp_min(1.0).to(dtype=torch.long)
+            if arity_override is not None:
+                override_budget = max(1, min(len(judri_indices), int(arity_override)))
+                active_budget = torch.full_like(active_budget, int(override_budget))
+                pointer_budget = torch.full_like(pointer_budget, float(override_budget))
+            if disable_arity_mask:
+                active_budget = torch.full_like(active_budget, int(len(judri_indices)))
+                pointer_budget = torch.full_like(pointer_budget, float(len(judri_indices)))
             hard_mask = torch.zeros(
                 routed_state.shape[0],
                 len(judri_indices),
@@ -334,8 +365,12 @@ class M19SymbioteBridge(nn.Module):
                 budget = min(len(judri_indices), int(active_budget[batch_idx].item()))
                 if budget > 0:
                     hard_mask[batch_idx, :budget] = 1.0
+            if disable_arity_mask:
+                hard_mask = torch.ones_like(hard_mask)
             positions = torch.arange(1, len(judri_indices) + 1, device=routed_state.device, dtype=routed_state.dtype).unsqueeze(0)
             soft_mask = torch.sigmoid((pointer_budget.unsqueeze(-1) - positions + 0.5) * 8.0)
+            if disable_arity_mask:
+                soft_mask = torch.ones_like(soft_mask)
             if self.arity_router_mode == "gumbel_hard":
                 judri_mask = hard_mask + soft_mask - soft_mask.detach()
             else:
@@ -346,12 +381,86 @@ class M19SymbioteBridge(nn.Module):
             telemetry["arity_logits"] = arity_logits
             telemetry["arity_distribution"] = arity_distribution
             telemetry["active_predicate_slot"] = active_local
+            telemetry["active_arity_budget"] = active_budget
+            telemetry["arity_override"] = arity_override
+            telemetry["arity_mask_disabled"] = bool(disable_arity_mask)
             if len(judri_indices) > 0:
-                zero_mask = (1.0 - hard_mask).unsqueeze(-1)
-                masked_values = routed_state[:, judri_indices, :] * zero_mask
-                telemetry["masked_pointer_zero_rate"] = float((masked_values.abs() < 1e-8).float().mean().detach().item())
+                forbidden_mask = hard_mask < 0.5
+                if bool(forbidden_mask.any().detach().item()):
+                    forbidden_values = routed_state[:, judri_indices, :][forbidden_mask]
+                    forbidden_zero = forbidden_values.detach().float().norm(dim=-1) < 1e-8
+                    telemetry["masked_pointer_zero_rate"] = float(forbidden_zero.float().mean().item())
+                else:
+                    telemetry["masked_pointer_zero_rate"] = None
 
         return routed_state, telemetry
+
+    def _family_energy(self, query_state: torch.Tensor) -> dict[str, float]:
+        if not self.typed_physics_enabled:
+            return {}
+        energy: dict[str, float] = {}
+        norms = query_state.detach().float().norm(dim=-1)
+        for family, indices in self.family_indices.items():
+            if indices:
+                energy[family] = float(norms[:, indices].mean().item())
+        return energy
+
+    def _apply_bridge_channel_mask(
+        self,
+        query_state: torch.Tensor,
+        bridge_channel_mode: str,
+    ) -> tuple[torch.Tensor, dict[str, Any]]:
+        mode = str(bridge_channel_mode or "full").strip().lower()
+        aliases = {
+            "predicate_only": "gismu_only",
+            "operator_only": "gismu_only",
+            "op_only": "gismu_only",
+            "pointer_only": "judri_only",
+            "argument_only": "judri_only",
+            "arg_only": "judri_only",
+            "none": "zero_all",
+            "zero": "zero_all",
+        }
+        mode = aliases.get(mode, mode)
+        if mode not in BRIDGE_CHANNEL_MODES:
+            raise ValueError(f"unsupported bridge_channel_mode: {bridge_channel_mode}")
+
+        before_energy = self._family_energy(query_state)
+        if not self.typed_physics_enabled or mode == "full":
+            return query_state, {
+                "bridge_channel_mode": mode,
+                "bridge_channel_retained_slot_fraction": 1.0,
+                "bridge_channel_family_energy_before": before_energy,
+                "bridge_channel_family_energy_after": before_energy,
+            }
+
+        if mode == "zero_all":
+            keep_families: set[str] = set()
+            drop_families: set[str] = set(self.family_indices.keys())
+        elif mode.endswith("_only"):
+            keep_families = {mode.removesuffix("_only")}
+            drop_families = set()
+        elif mode.startswith("no_"):
+            keep_families = set(self.family_indices.keys())
+            drop_families = {mode.removeprefix("no_")}
+        else:
+            keep_families = set(self.family_indices.keys())
+            drop_families = set()
+
+        slot_mask = torch.ones(len(self.typed_slot_layout), device=query_state.device, dtype=query_state.dtype)
+        for idx, family in enumerate(self.typed_slot_layout):
+            if keep_families and family not in keep_families:
+                slot_mask[idx] = 0.0
+            if family in drop_families:
+                slot_mask[idx] = 0.0
+
+        masked = query_state * slot_mask.view(1, -1, 1)
+        return masked, {
+            "bridge_channel_mode": mode,
+            "bridge_channel_retained_slot_fraction": float(slot_mask.detach().float().mean().item()) if slot_mask.numel() else 1.0,
+            "bridge_channel_family_energy_before": before_energy,
+            "bridge_channel_family_energy_after": self._family_energy(masked),
+        }
 
     def forward(
         self,
@@ -359,6 +468,9 @@ class M19SymbioteBridge(nn.Module):
         active_steps: int | None = None,
         lengths: torch.Tensor | None = None,
         gumbel_temperature: float = 1.0,
+        arity_override: int | None = None,
+        disable_arity_mask: bool = False,
+        bridge_channel_mode: str = "full",
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, Dict[str, Any]]:
         b = h_tap.shape[0]
         target_steps = int(active_steps or self.scratchpad_len)
@@ -367,7 +479,13 @@ class M19SymbioteBridge(nn.Module):
         
         queries = self.query_dictionary().unsqueeze(0).expand(b, -1, -1)
         h_query, _ = self.cross_attn(queries, h_bottleneck, h_bottleneck)
-        h_query, typed_telemetry = self._apply_typed_routing(h_query, gumbel_temperature=gumbel_temperature)
+        h_query, typed_telemetry = self._apply_typed_routing(
+            h_query,
+            gumbel_temperature=gumbel_temperature,
+            arity_override=arity_override,
+            disable_arity_mask=disable_arity_mask,
+        )
+        h_query, channel_telemetry = self._apply_bridge_channel_mask(h_query, bridge_channel_mode)
         if self.geometry_mode == "hyperbolic" and self.typed_physics_enabled:
             h_reservoir = self.output_map(logmap0(h_query, self.poincare_curvature).transpose(1, 2)).transpose(1, 2)
             h_scratch = logmap0(
@@ -404,8 +522,15 @@ class M19SymbioteBridge(nn.Module):
             "arity_logits": typed_telemetry.get("arity_logits").detach() if typed_telemetry.get("arity_logits") is not None else None,
             "arity_distribution": typed_telemetry.get("arity_distribution").detach() if typed_telemetry.get("arity_distribution") is not None else None,
             "active_predicate_slot": typed_telemetry.get("active_predicate_slot").detach() if typed_telemetry.get("active_predicate_slot") is not None else None,
-            "masked_pointer_zero_rate": typed_telemetry.get("masked_pointer_zero_rate", 0.0),
+            "active_arity_budget": typed_telemetry.get("active_arity_budget").detach() if typed_telemetry.get("active_arity_budget") is not None else None,
+            "arity_override": typed_telemetry.get("arity_override"),
+            "arity_mask_disabled": bool(typed_telemetry.get("arity_mask_disabled", False)),
+            "masked_pointer_zero_rate": typed_telemetry.get("masked_pointer_zero_rate"),
             "geometry_mode": self.geometry_mode,
+            "bridge_channel_mode": channel_telemetry.get("bridge_channel_mode", "full"),
+            "bridge_channel_retained_slot_fraction": channel_telemetry.get("bridge_channel_retained_slot_fraction", 1.0),
+            "bridge_channel_family_energy_before": channel_telemetry.get("bridge_channel_family_energy_before", {}),
+            "bridge_channel_family_energy_after": channel_telemetry.get("bridge_channel_family_energy_after", {}),
             "hyperbolic_metrics": typed_telemetry.get("hyperbolic_metrics", {}),
             "dictionary_health": dictionary_health_metrics(
                 self.query_dictionary().detach(),
@@ -418,7 +543,10 @@ class M19SymbioteBridge(nn.Module):
         }
         if self.typed_physics_enabled:
             dictionary_health = telemetry["dictionary_health"]
-            dictionary_health["masked_pointer_zero_rate"] = float(typed_telemetry.get("masked_pointer_zero_rate", 0.0))
+            masked_pointer_zero_rate = typed_telemetry.get("masked_pointer_zero_rate")
+            dictionary_health["masked_pointer_zero_rate"] = (
+                float(masked_pointer_zero_rate) if masked_pointer_zero_rate is not None else None
+            )
             dictionary_health["family_slot_entropy"] = float(typed_telemetry.get("slot_family_entropy", 0.0))
             for key, value in typed_telemetry.get("hyperbolic_metrics", {}).items():
                 dictionary_health[key] = float(value)

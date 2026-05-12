@@ -106,12 +106,14 @@ def phrase_scoring_fn(prediction: str, target: str) -> bool:
 
 
 def _prediction_record(item: dict[str, Any], reg_id: str, gen_text: str, token_count: int, extra: dict[str, Any] | None = None) -> dict[str, Any]:
+    runway_token_count = int((extra or {}).get("runway_token_count", token_count))
     row = {
         "regime": reg_id,
         "prompt": item["prompt"],
         "answer": item["answer"],
         "prediction": gen_text,
         "token_count": token_count,
+        "runway_token_count": runway_token_count,
         "correct": scoring_fn(gen_text, str(item["answer"])),
         "phrase_correct": phrase_scoring_fn(gen_text, str(item["answer"])),
     }
@@ -153,6 +155,44 @@ def _safe_div(numerator: float | None, denominator: float | None) -> float | Non
     return float(numerator) / float(denominator)
 
 
+def _max_judri_slots(typed_slot_layout: str | list[str]) -> int:
+    layout = parse_typed_slot_layout(typed_slot_layout) if str(typed_slot_layout).strip() else []
+    return max(1, sum(1 for item in layout if str(item) == "judri"))
+
+
+def _oracle_arity_from_item(item: dict[str, Any], max_judri_slots: int) -> int | None:
+    logic = str(item.get("target_logic") or "")
+    if not logic:
+        return None
+    active = 0
+    for raw in re.findall(r"<loj_(\d+)>", logic):
+        value = int(raw)
+        if value > 2000:
+            active += 1
+    if active <= 0:
+        return None
+    return max(1, min(int(max_judri_slots), active))
+
+
+def _arity_override_for_item(
+    args: argparse.Namespace,
+    item: dict[str, Any],
+    item_index: int,
+    max_judri_slots: int,
+) -> int | None:
+    mode = str(args.arity_override_mode).strip().lower()
+    if mode in {"", "predicted", "no_mask"}:
+        return None
+    if mode == "oracle":
+        return _oracle_arity_from_item(item, max_judri_slots)
+    if mode == "random":
+        rng = random.Random((int(args.seed) * 1000003) + int(item_index))
+        return rng.randint(1, max(1, int(max_judri_slots)))
+    if mode == "force":
+        return max(1, min(int(max_judri_slots), int(args.force_arity)))
+    raise ValueError(f"unsupported arity override mode: {args.arity_override_mode}")
+
+
 def _result_metric(results: dict[str, dict[str, float]], regime_id: str | None, metric: str) -> float | None:
     if not regime_id:
         return None
@@ -174,20 +214,29 @@ def _efficiency_row(
     regime = results[regime_id]
     accuracy = regime.get("accuracy")
     avg_tokens = regime.get("avg_tokens")
+    avg_runway_tokens = regime.get("avg_runway_tokens")
     retention_vs_en_cot = _safe_div(accuracy, en_cot_accuracy)
     token_ratio_vs_en_cot = _safe_div(avg_tokens, en_cot_tokens)
+    runway_token_ratio_vs_en_cot = _safe_div(avg_runway_tokens, en_cot_tokens)
     compression_adjusted_retention = None
     if retention_vs_en_cot is not None and token_ratio_vs_en_cot not in (None, 0):
         compression_adjusted_retention = retention_vs_en_cot / token_ratio_vs_en_cot
+    runway_compression_adjusted_retention = None
+    if retention_vs_en_cot is not None and runway_token_ratio_vs_en_cot not in (None, 0):
+        runway_compression_adjusted_retention = retention_vs_en_cot / runway_token_ratio_vs_en_cot
     return {
         "regime": regime_id,
         "accuracy": accuracy,
         "phrase_accuracy": regime.get("phrase_accuracy"),
         "avg_tokens": avg_tokens,
         "accuracy_per_token": _safe_div(accuracy, avg_tokens),
+        "avg_runway_tokens": avg_runway_tokens,
+        "accuracy_per_runway_token": _safe_div(accuracy, avg_runway_tokens),
         "retention_vs_en_cot": retention_vs_en_cot,
         "token_ratio_vs_en_cot": token_ratio_vs_en_cot,
+        "runway_token_ratio_vs_en_cot": runway_token_ratio_vs_en_cot,
         "compression_adjusted_retention": compression_adjusted_retention,
+        "runway_compression_adjusted_retention": runway_compression_adjusted_retention,
     }
 
 
@@ -278,6 +327,9 @@ def _run_static_bridge_regime(
     max_new_tokens: int,
     mode: str,
     gumbel_temperature: float,
+    arity_override: int | None,
+    disable_arity_mask: bool,
+    bridge_channel_mode: str,
 ) -> tuple[str, int, dict[str, Any]]:
     prompt = _build_static_prompt(question, scratchpad_token, scratchpad_length)
     inputs = tokenizer(prompt, return_tensors="pt").to(device)
@@ -303,6 +355,9 @@ def _run_static_bridge_regime(
                 h_tap,
                 active_steps=int(scratchpad_length),
                 gumbel_temperature=gumbel_temperature,
+                arity_override=arity_override,
+                disable_arity_mask=disable_arity_mask,
+                bridge_channel_mode=bridge_channel_mode,
             )
 
     extra = {
@@ -329,9 +384,20 @@ def _run_static_bridge_regime(
             extra["typed_family_accuracy"] = float(
                 (slot_family_logits[0].argmax(dim=-1) == family_targets).float().mean().item()
             )
-        extra["masked_pointer_zero_rate"] = float(telemetry.get("masked_pointer_zero_rate", 0.0))
+        masked_pointer_zero_rate = telemetry.get("masked_pointer_zero_rate")
+        extra["masked_pointer_zero_rate"] = (
+            float(masked_pointer_zero_rate) if masked_pointer_zero_rate is not None else None
+        )
         extra["family_slot_entropy"] = float(telemetry.get("slot_family_entropy", 0.0))
+        active_budget = telemetry.get("active_arity_budget")
+        if active_budget is not None:
+            extra["active_arity_budget"] = int(active_budget.detach().cpu().flatten()[0].item())
+        extra["arity_mask_disabled"] = bool(telemetry.get("arity_mask_disabled", False))
         hyper_metrics = telemetry.get("hyperbolic_metrics", {})
+        extra["bridge_channel_mode"] = str(telemetry.get("bridge_channel_mode", bridge_channel_mode))
+        extra["bridge_channel_retained_slot_fraction"] = float(telemetry.get("bridge_channel_retained_slot_fraction", 1.0))
+        extra["bridge_channel_family_energy_before"] = telemetry.get("bridge_channel_family_energy_before", {})
+        extra["bridge_channel_family_energy_after"] = telemetry.get("bridge_channel_family_energy_after", {})
         for key in (
             "predicate_pointer_radial_gap",
             "family_radius_violation_rate",
@@ -370,6 +436,9 @@ def _run_dynamic_bridge_regime(
     max_new_tokens: int,
     mode: str,
     gumbel_temperature: float,
+    arity_override: int | None,
+    disable_arity_mask: bool,
+    bridge_channel_mode: str,
 ) -> tuple[str, int, dict[str, Any]]:
     prompt_core = _build_prompt_core(question)
     current_ids = tokenizer(prompt_core, return_tensors="pt").input_ids[0].tolist() + [int(scratchpad_token_id)]
@@ -380,6 +449,11 @@ def _run_dynamic_bridge_regime(
     family_accuracy_values: list[float] = []
     masked_zero_values: list[float] = []
     family_entropy_values: list[float] = []
+    active_budget_values: list[float] = []
+    channel_retained_values: list[float] = []
+    channel_mode_value = str(bridge_channel_mode)
+    channel_energy_before: dict[str, float] = {}
+    channel_energy_after: dict[str, float] = {}
     hyper_metrics_rollup: dict[str, list[float]] = {
         "predicate_pointer_radial_gap": [],
         "family_radius_violation_rate": [],
@@ -415,6 +489,9 @@ def _run_dynamic_bridge_regime(
                     active_steps=active_steps,
                     lengths=lengths,
                     gumbel_temperature=gumbel_temperature,
+                    arity_override=arity_override,
+                    disable_arity_mask=disable_arity_mask,
+                    bridge_channel_mode=bridge_channel_mode,
                 )
                 sim_row = telemetry["halt_cosine_per_step"][0, :active_steps].detach().float().cpu().tolist()
                 if sim_row:
@@ -426,8 +503,19 @@ def _run_dynamic_bridge_regime(
                     family_accuracy_values.append(
                         float((slot_family_logits[0].argmax(dim=-1) == family_targets).float().mean().item())
                     )
-                masked_zero_values.append(float(telemetry.get("masked_pointer_zero_rate", 0.0)))
+                masked_pointer_zero_rate = telemetry.get("masked_pointer_zero_rate")
+                if masked_pointer_zero_rate is not None:
+                    masked_zero_values.append(float(masked_pointer_zero_rate))
                 family_entropy_values.append(float(telemetry.get("slot_family_entropy", 0.0)))
+                active_budget = telemetry.get("active_arity_budget")
+                if active_budget is not None:
+                    active_budget_values.append(float(active_budget.detach().cpu().flatten()[0].item()))
+                channel_mode_value = str(telemetry.get("bridge_channel_mode", bridge_channel_mode))
+                channel_retained_values.append(float(telemetry.get("bridge_channel_retained_slot_fraction", 1.0)))
+                if isinstance(telemetry.get("bridge_channel_family_energy_before"), dict):
+                    channel_energy_before = telemetry.get("bridge_channel_family_energy_before", {})
+                if isinstance(telemetry.get("bridge_channel_family_energy_after"), dict):
+                    channel_energy_after = telemetry.get("bridge_channel_family_energy_after", {})
                 hyper_metrics = telemetry.get("hyperbolic_metrics", {})
                 for key in hyper_metrics_rollup:
                     if key in hyper_metrics:
@@ -480,9 +568,15 @@ def _run_dynamic_bridge_regime(
         "halt_similarity_last": float(halt_similarity_trace[-1]) if halt_similarity_trace else 0.0,
         "typed_family_accuracy": (sum(family_accuracy_values) / max(1, len(family_accuracy_values))) if family_accuracy_values else None,
         "arity_violation_rate": None,
+        "active_arity_budget": int(round(sum(active_budget_values) / max(1, len(active_budget_values)))) if active_budget_values else None,
+        "arity_mask_disabled": bool(disable_arity_mask),
         "masked_pointer_zero_rate": (sum(masked_zero_values) / max(1, len(masked_zero_values))) if masked_zero_values else None,
         "family_slot_entropy": (sum(family_entropy_values) / max(1, len(family_entropy_values))) if family_entropy_values else None,
         "symbolic_trace_alignment": None,
+        "bridge_channel_mode": channel_mode_value,
+        "bridge_channel_retained_slot_fraction": (sum(channel_retained_values) / max(1, len(channel_retained_values))) if channel_retained_values else None,
+        "bridge_channel_family_energy_before": channel_energy_before,
+        "bridge_channel_family_energy_after": channel_energy_after,
     }
     for key, values in hyper_metrics_rollup.items():
         extra[key] = (sum(values) / max(1, len(values))) if values else None
@@ -556,6 +650,8 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
         static_bridge.eval()
 
     samples = _load_samples(Path(args.dataset_path), int(args.eval_size))
+    max_judri_slots = _max_judri_slots(args.typed_slot_layout)
+    disable_arity_mask = str(args.arity_override_mode).strip().lower() == "no_mask"
     regimes: list[dict[str, Any]] = [
         {"id": "BASE", "kind": "instruction", "instruction": "\nAnswer with one word or short phrase.", "max_new_tokens": 32},
         {"id": "EN-COT", "kind": "instruction", "instruction": "\nThink step-by-step. Final answer after 'Answer: '.", "max_new_tokens": 128},
@@ -586,9 +682,12 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
         correct = 0
         phrase_correct = 0
         total_tokens = 0
+        total_runway_tokens = 0
         typed_family_values: list[float] = []
         masked_pointer_values: list[float] = []
         family_entropy_values: list[float] = []
+        arity_violation_values: list[float] = []
+        channel_retained_values: list[float] = []
         radial_gap_values: list[float] = []
         radial_violation_values: list[float] = []
         geodesic_margin_values: list[float] = []
@@ -600,7 +699,8 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
         entanglement_values: list[float] = []
         rows: list[dict[str, Any]] = []
         print(f"\n--- RUNNING REGIME: {reg['id']} ---")
-        for item in tqdm(samples, desc=reg["id"]):
+        for item_index, item in enumerate(tqdm(samples, desc=reg["id"])):
+            arity_override = _arity_override_for_item(args, item, item_index, max_judri_slots)
             if reg["kind"] == "instruction":
                 gen_text, token_count = _run_instruction_regime(
                     backbone,
@@ -630,7 +730,11 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
                     int(reg["max_new_tokens"]),
                     str(reg["mode"]),
                     float(args.gumbel_temp_end),
+                    arity_override,
+                    disable_arity_mask,
+                    str(args.bridge_channel_mode),
                 )
+                extra["runway_token_count"] = int(token_count) + int(extra.get("latent_steps") or active_scratchpad_len)
             else:
                 gen_text, token_count, extra = _run_dynamic_bridge_regime(
                     backbone,
@@ -649,6 +753,9 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
                     int(reg["max_new_tokens"]),
                     str(reg["mode"]),
                     float(args.gumbel_temp_end),
+                    arity_override,
+                    disable_arity_mask,
+                    str(args.bridge_channel_mode),
                 )
                 total_premature += 1 if bool(extra.get("premature_stop")) else 0
                 total_cap += 1 if bool(extra.get("max_cap_hit")) else 0
@@ -657,14 +764,24 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
                 halt_trace = [float(v) for v in extra.get("halt_similarity_trace", [])]
                 if halt_trace:
                     entanglement_values.append(sum(halt_trace[:-1]) / max(1, len(halt_trace[:-1])))
+                extra["runway_token_count"] = int(token_count)
 
             total_tokens += token_count
+            if "runway_token_count" not in extra:
+                extra["runway_token_count"] = int(token_count)
+            total_runway_tokens += int(extra["runway_token_count"])
             if isinstance(extra.get("typed_family_accuracy"), (int, float)):
                 typed_family_values.append(float(extra["typed_family_accuracy"]))
             if isinstance(extra.get("masked_pointer_zero_rate"), (int, float)):
                 masked_pointer_values.append(float(extra["masked_pointer_zero_rate"]))
             if isinstance(extra.get("family_slot_entropy"), (int, float)):
                 family_entropy_values.append(float(extra["family_slot_entropy"]))
+            if isinstance(extra.get("bridge_channel_retained_slot_fraction"), (int, float)):
+                channel_retained_values.append(float(extra["bridge_channel_retained_slot_fraction"]))
+            oracle_arity = _oracle_arity_from_item(item, max_judri_slots)
+            active_budget = extra.get("active_arity_budget")
+            if oracle_arity is not None and isinstance(active_budget, (int, float)):
+                arity_violation_values.append(0.0 if int(round(float(active_budget))) == int(oracle_arity) else 1.0)
             if isinstance(extra.get("predicate_pointer_radial_gap"), (int, float)):
                 radial_gap_values.append(float(extra["predicate_pointer_radial_gap"]))
             if isinstance(extra.get("family_radius_violation_rate"), (int, float)):
@@ -684,13 +801,18 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
         acc = correct / max(1, len(samples))
         phrase_acc = phrase_correct / max(1, len(samples))
         tok = total_tokens / max(1, len(samples))
+        runway_tok = total_runway_tokens / max(1, len(samples))
         results[str(reg["id"])] = {
             "accuracy": acc,
             "phrase_accuracy": phrase_acc,
             "avg_tokens": tok,
+            "avg_runway_tokens": runway_tok,
+            "accuracy_per_runway_token": _safe_div(acc, runway_tok),
             "typed_family_accuracy": (sum(typed_family_values) / max(1, len(typed_family_values))) if typed_family_values else None,
+            "arity_violation_rate": (sum(arity_violation_values) / max(1, len(arity_violation_values))) if arity_violation_values else None,
             "masked_pointer_zero_rate": (sum(masked_pointer_values) / max(1, len(masked_pointer_values))) if masked_pointer_values else None,
             "family_slot_entropy": (sum(family_entropy_values) / max(1, len(family_entropy_values))) if family_entropy_values else None,
+            "bridge_channel_retained_slot_fraction": (sum(channel_retained_values) / max(1, len(channel_retained_values))) if channel_retained_values else None,
             "predicate_pointer_radial_gap": (sum(radial_gap_values) / max(1, len(radial_gap_values))) if radial_gap_values else None,
             "family_radius_violation_rate": (sum(radial_violation_values) / max(1, len(radial_violation_values))) if radial_violation_values else None,
             "hyperbolic_geodesic_margin": (sum(geodesic_margin_values) / max(1, len(geodesic_margin_values))) if geodesic_margin_values else None,
@@ -720,11 +842,13 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
     mainline_accuracy = _result_metric(results, mainline_key, "accuracy")
     mainline_phrase_accuracy = _result_metric(results, mainline_key, "phrase_accuracy")
     mainline_tokens = _result_metric(results, mainline_key, "avg_tokens")
+    mainline_runway_tokens = _result_metric(results, mainline_key, "avg_runway_tokens")
     base_accuracy = _result_metric(results, "BASE", "accuracy")
     zh_cot_accuracy = _result_metric(results, "ZH-COT", "accuracy")
     zh_cot_tokens = _result_metric(results, "ZH-COT", "avg_tokens")
     static_accuracy = _result_metric(results, static_key, "accuracy")
     static_tokens = _result_metric(results, static_key, "avg_tokens")
+    static_runway_tokens = _result_metric(results, static_key, "avg_runway_tokens")
     random_dynamic_accuracy = _result_metric(results, "RANDOM-DYNAMIC", "accuracy")
     random_shape_accuracy = _result_metric(results, "RANDOM-SHAPE", "accuracy")
     random_accuracy = random_dynamic_accuracy if random_dynamic_accuracy is not None else random_shape_accuracy
@@ -773,11 +897,14 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             "random_scale": float(args.random_scale),
             "typed_slot_layout": parse_typed_slot_layout(args.typed_slot_layout) if str(args.typed_slot_layout).strip() else [],
             "arity_router_mode": str(args.arity_router_mode),
+            "arity_override_mode": str(args.arity_override_mode),
+            "force_arity": int(args.force_arity),
             "gumbel_hard": bool(args.gumbel_hard),
             "gumbel_temp_start": float(args.gumbel_temp_start),
             "gumbel_temp_end": float(args.gumbel_temp_end),
             "geometry_mode": str(args.geometry_mode),
             "poincare_curvature": float(args.poincare_curvature),
+            "bridge_channel_mode": str(args.bridge_channel_mode),
         },
         "results": results,
         "dynamic_rollup": dynamic_rollup,
@@ -788,6 +915,7 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             "mainline_vs_static_m19_3_accuracy_delta": (mainline_accuracy - static_accuracy if mainline_accuracy is not None and static_accuracy is not None else None),
             "mainline_vs_static_m19_3_token_ratio": _safe_div(mainline_tokens, static_tokens),
             "mainline_vs_en_cot_token_ratio": _safe_div(mainline_tokens, en_cot_tokens),
+            "mainline_vs_en_cot_runway_token_ratio": _safe_div(mainline_runway_tokens, en_cot_tokens),
             "mainline_vs_zh_cot_token_ratio": _safe_div(mainline_tokens, zh_cot_tokens),
         },
         "efficiency_table": efficiency_table,
@@ -798,6 +926,8 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             "overall_phrase_accuracy": mainline_phrase_accuracy,
             "avg_tokens": mainline_tokens,
             "accuracy_per_token": _safe_div(mainline_accuracy, mainline_tokens),
+            "avg_runway_tokens": mainline_runway_tokens,
+            "accuracy_per_runway_token": _safe_div(mainline_accuracy, mainline_runway_tokens),
             "base_accuracy": base_accuracy,
             "en_cot_accuracy": en_cot_accuracy,
             "en_cot_avg_tokens": en_cot_tokens,
@@ -805,6 +935,7 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             "zh_cot_avg_tokens": zh_cot_tokens,
             "static_m19_3_accuracy": static_accuracy,
             "static_m19_3_avg_tokens": static_tokens,
+            "static_m19_3_avg_runway_tokens": static_runway_tokens,
             "random_accuracy": random_accuracy,
             "lift_vs_base": (mainline_accuracy - base_accuracy if mainline_accuracy is not None and base_accuracy is not None else None),
             "lift_vs_en_cot": (mainline_accuracy - en_cot_accuracy if mainline_accuracy is not None and en_cot_accuracy is not None else None),
@@ -813,10 +944,17 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             "lift_vs_random": (mainline_accuracy - random_accuracy if mainline_accuracy is not None and random_accuracy is not None else None),
             "retention_vs_en_cot": _safe_div(mainline_accuracy, en_cot_accuracy),
             "token_ratio_vs_en_cot": _safe_div(mainline_tokens, en_cot_tokens),
+            "runway_token_ratio_vs_en_cot": _safe_div(mainline_runway_tokens, en_cot_tokens),
             "compression_adjusted_retention": (
                 _safe_div(
                     _safe_div(mainline_accuracy, en_cot_accuracy),
                     _safe_div(mainline_tokens, en_cot_tokens),
+                )
+            ),
+            "runway_compression_adjusted_retention": (
+                _safe_div(
+                    _safe_div(mainline_accuracy, en_cot_accuracy),
+                    _safe_div(mainline_runway_tokens, en_cot_tokens),
                 )
             ),
             "premature_stop_rate": _result_metric(results, mainline_key, "premature_stop_rate"),
@@ -827,6 +965,7 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             "arity_violation_rate": _result_metric(results, mainline_key, "arity_violation_rate"),
             "masked_pointer_zero_rate": _result_metric(results, mainline_key, "masked_pointer_zero_rate"),
             "family_slot_entropy": _result_metric(results, mainline_key, "family_slot_entropy"),
+            "bridge_channel_retained_slot_fraction": _result_metric(results, mainline_key, "bridge_channel_retained_slot_fraction"),
             "symbolic_trace_alignment": _result_metric(results, mainline_key, "symbolic_trace_alignment"),
             "predicate_pointer_radial_gap": _result_metric(results, mainline_key, "predicate_pointer_radial_gap"),
             "family_radius_violation_rate": _result_metric(results, mainline_key, "family_radius_violation_rate"),
@@ -837,12 +976,15 @@ def run_godtier_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             "overall_accuracy": mainline_accuracy,
             "avg_tokens": mainline_tokens,
             "accuracy_per_token": _safe_div(mainline_accuracy, mainline_tokens),
+            "avg_runway_tokens": mainline_runway_tokens,
+            "accuracy_per_runway_token": _safe_div(mainline_accuracy, mainline_runway_tokens),
             "en_cot_accuracy": en_cot_accuracy,
             "zh_cot_accuracy": zh_cot_accuracy,
             "static_m19_3_accuracy": static_accuracy,
             "typed_family_accuracy": _result_metric(results, mainline_key, "typed_family_accuracy"),
             "masked_pointer_zero_rate": _result_metric(results, mainline_key, "masked_pointer_zero_rate"),
             "family_slot_entropy": _result_metric(results, mainline_key, "family_slot_entropy"),
+            "bridge_channel_retained_slot_fraction": _result_metric(results, mainline_key, "bridge_channel_retained_slot_fraction"),
         },
         "sample_predictions": sample_predictions,
         "report_path": str(report_path).replace("\\", "/"),
@@ -879,11 +1021,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--random-scale", type=float, default=0.05)
     parser.add_argument("--typed-slot-layout", type=str, default="")
     parser.add_argument("--arity-router-mode", type=str, default="soft")
+    parser.add_argument("--arity-override-mode", type=str, default="predicted", choices=["predicted", "oracle", "random", "force", "no_mask"])
+    parser.add_argument("--force-arity", type=int, default=1)
     parser.add_argument("--gumbel-hard", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--gumbel-temp-start", type=float, default=1.0)
     parser.add_argument("--gumbel-temp-end", type=float, default=0.35)
     parser.add_argument("--geometry-mode", type=str, default="euclidean")
     parser.add_argument("--poincare-curvature", type=float, default=1.0)
+    parser.add_argument("--bridge-channel-mode", type=str, default="full")
     parser.add_argument("--seed", type=int, default=19)
     parser.add_argument("--track", type=str, default="")
     parser.add_argument("--run-id", type=str, default=datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S"))

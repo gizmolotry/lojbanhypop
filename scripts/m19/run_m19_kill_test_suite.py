@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import argparse
 import json
-import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parents[2] / "src"))
 
+from lojban_evolution.m19.artifact_contract import run_if_needed
 from lojban_evolution.m19.family import M19_REGISTRY
 from lojban_evolution.m19.kill_tests import (
     build_entity_anonymized_rows,
@@ -67,6 +67,129 @@ def _typed_bridge_cli_args(args: argparse.Namespace) -> list[str]:
     if args.gumbel_hard:
         cli_args.append("--gumbel-hard")
     return cli_args
+
+
+def _progress_report_path(run_dir: Path) -> Path:
+    return run_dir / "m19_kill_test_progress.json"
+
+
+def _build_report(
+    *,
+    args: argparse.Namespace,
+    purged_rows: list[dict[str, object]],
+    purged_eval_path: Path,
+    entity_eval_path: Path,
+    entity_renamed_eval_path: Path,
+    format_eval_path: Path,
+    numeric_eval_path: Path,
+    purged_report_path: Path,
+    masked_report_path: Path,
+    entity_report_path: Path,
+    entity_renamed_report_path: Path,
+    format_report_path: Path,
+    numeric_report_path: Path,
+    metrics: dict[str, object] | None,
+    kill_test_status: str | None,
+    stage_status: dict[str, str],
+) -> dict[str, object]:
+    headline = {
+        "purged_accuracy": metrics.get("purged_accuracy") if metrics else None,
+        "entity_accuracy": metrics.get("entity_accuracy") if metrics else None,
+        "entity_renamed_accuracy": metrics.get("entity_renamed_accuracy") if metrics else None,
+        "format_accuracy": metrics.get("format_accuracy") if metrics else None,
+        "numeric_accuracy": metrics.get("numeric_accuracy") if metrics else None,
+        "masked_accuracy": metrics.get("masked_accuracy") if metrics else None,
+        "kill_test_status": kill_test_status,
+    }
+    return {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "series": series_metadata("M", "M19.kill_tests", "scripts/m19/run_m19_kill_test_suite.py"),
+        "track": str(args.track),
+        "config": {
+            "base_model": str(args.base_model),
+            "bridge_path": str(args.bridge_path).replace("\\", "/"),
+            "train_data_path": str(args.train_data_path).replace("\\", "/"),
+            "eval_data_path": str(args.eval_data_path).replace("\\", "/"),
+            "eval_size": int(args.eval_size),
+            "num_queries": int(args.num_queries),
+            "bottleneck_dim": int(args.bottleneck_dim),
+            "scratchpad_length": int(args.scratchpad_length),
+            "max_latent_steps": int(args.max_latent_steps),
+            "random_scale": float(args.random_scale),
+            "seed": int(args.seed),
+            "cell_id": str(args.cell_id),
+        },
+        "dataset_slices": {
+            "purged_count": len(purged_rows),
+            "purged_eval_path": str(purged_eval_path).replace("\\", "/"),
+            "entity_eval_path": str(entity_eval_path).replace("\\", "/"),
+            "entity_renamed_eval_path": str(entity_renamed_eval_path).replace("\\", "/"),
+            "format_eval_path": str(format_eval_path).replace("\\", "/"),
+            "numeric_eval_path": str(numeric_eval_path).replace("\\", "/"),
+        },
+        "reports": {
+            "purged": str(purged_report_path).replace("\\", "/"),
+            "masked": str(masked_report_path).replace("\\", "/") if masked_report_path else None,
+            "entity": str(entity_report_path).replace("\\", "/"),
+            "entity_renamed": str(entity_renamed_report_path).replace("\\", "/"),
+            "format": str(format_report_path).replace("\\", "/"),
+            "numeric": str(numeric_report_path).replace("\\", "/"),
+        },
+        "metrics": metrics or {},
+        "headline": headline,
+        "progress": {
+            "stage_status": stage_status,
+            "complete": all(value == "done" for value in stage_status.values()),
+        },
+        "notes": [
+            "Kill tests are evaluated on the purged slice only so train-eval overlap does not inflate robustness claims.",
+            "Entity anonymization, format flattening, and numeric normalization preserve task semantics while removing easy lexical anchors.",
+            "Masked accuracy is imported from the integrity suite when available so the broader kill surface stays ledger-compatible.",
+        ],
+    }
+
+
+def _write_progress_report(
+    *,
+    run_dir: Path,
+    args: argparse.Namespace,
+    purged_rows: list[dict[str, object]],
+    purged_eval_path: Path,
+    entity_eval_path: Path,
+    entity_renamed_eval_path: Path,
+    format_eval_path: Path,
+    numeric_eval_path: Path,
+    purged_report_path: Path,
+    masked_report_path: Path,
+    entity_report_path: Path,
+    entity_renamed_report_path: Path,
+    format_report_path: Path,
+    numeric_report_path: Path,
+    metrics: dict[str, object] | None,
+    kill_test_status: str | None,
+    stage_status: dict[str, str],
+) -> Path:
+    report = _build_report(
+        args=args,
+        purged_rows=purged_rows,
+        purged_eval_path=purged_eval_path,
+        entity_eval_path=entity_eval_path,
+        entity_renamed_eval_path=entity_renamed_eval_path,
+        format_eval_path=format_eval_path,
+        numeric_eval_path=numeric_eval_path,
+        purged_report_path=purged_report_path,
+        masked_report_path=masked_report_path,
+        entity_report_path=entity_report_path,
+        entity_renamed_report_path=entity_renamed_report_path,
+        format_report_path=format_report_path,
+        numeric_report_path=numeric_report_path,
+        metrics=metrics,
+        kill_test_status=kill_test_status,
+        stage_status=stage_status,
+    )
+    output_path = _progress_report_path(run_dir)
+    output_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    return output_path
 
 
 def parse_args() -> argparse.Namespace:
@@ -128,6 +251,32 @@ def main() -> None:
     entity_renamed_report_path = run_dir / "benchmark_entity_renamed.json"
     format_report_path = run_dir / "benchmark_format.json"
     numeric_report_path = run_dir / "benchmark_numeric.json"
+    stage_status = {
+        "purged": "pending",
+        "entity": "pending",
+        "entity_renamed": "pending",
+        "format": "pending",
+        "numeric": "pending",
+    }
+    _write_progress_report(
+        run_dir=run_dir,
+        args=args,
+        purged_rows=purged_rows,
+        purged_eval_path=purged_eval_path,
+        entity_eval_path=entity_eval_path,
+        entity_renamed_eval_path=entity_renamed_eval_path,
+        format_eval_path=format_eval_path,
+        numeric_eval_path=numeric_eval_path,
+        purged_report_path=purged_report_path,
+        masked_report_path=masked_report_path,
+        entity_report_path=entity_report_path,
+        entity_renamed_report_path=entity_renamed_report_path,
+        format_report_path=format_report_path,
+        numeric_report_path=numeric_report_path,
+        metrics=None,
+        kill_test_status=None,
+        stage_status=stage_status,
+    )
 
     _run_benchmark_if_needed(
         output_path=purged_report_path,
@@ -135,11 +284,51 @@ def main() -> None:
         args=args,
         eval_data_path=purged_eval_path,
     )
+    stage_status["purged"] = "done"
+    _write_progress_report(
+        run_dir=run_dir,
+        args=args,
+        purged_rows=purged_rows,
+        purged_eval_path=purged_eval_path,
+        entity_eval_path=entity_eval_path,
+        entity_renamed_eval_path=entity_renamed_eval_path,
+        format_eval_path=format_eval_path,
+        numeric_eval_path=numeric_eval_path,
+        purged_report_path=purged_report_path,
+        masked_report_path=masked_report_path,
+        entity_report_path=entity_report_path,
+        entity_renamed_report_path=entity_renamed_report_path,
+        format_report_path=format_report_path,
+        numeric_report_path=numeric_report_path,
+        metrics=None,
+        kill_test_status=None,
+        stage_status=stage_status,
+    )
     _run_benchmark_if_needed(
         output_path=entity_report_path,
         repo_root=repo_root,
         args=args,
         eval_data_path=entity_eval_path,
+    )
+    stage_status["entity"] = "done"
+    _write_progress_report(
+        run_dir=run_dir,
+        args=args,
+        purged_rows=purged_rows,
+        purged_eval_path=purged_eval_path,
+        entity_eval_path=entity_eval_path,
+        entity_renamed_eval_path=entity_renamed_eval_path,
+        format_eval_path=format_eval_path,
+        numeric_eval_path=numeric_eval_path,
+        purged_report_path=purged_report_path,
+        masked_report_path=masked_report_path,
+        entity_report_path=entity_report_path,
+        entity_renamed_report_path=entity_renamed_report_path,
+        format_report_path=format_report_path,
+        numeric_report_path=numeric_report_path,
+        metrics=None,
+        kill_test_status=None,
+        stage_status=stage_status,
     )
     _run_benchmark_if_needed(
         output_path=entity_renamed_report_path,
@@ -147,17 +336,77 @@ def main() -> None:
         args=args,
         eval_data_path=entity_renamed_eval_path,
     )
+    stage_status["entity_renamed"] = "done"
+    _write_progress_report(
+        run_dir=run_dir,
+        args=args,
+        purged_rows=purged_rows,
+        purged_eval_path=purged_eval_path,
+        entity_eval_path=entity_eval_path,
+        entity_renamed_eval_path=entity_renamed_eval_path,
+        format_eval_path=format_eval_path,
+        numeric_eval_path=numeric_eval_path,
+        purged_report_path=purged_report_path,
+        masked_report_path=masked_report_path,
+        entity_report_path=entity_report_path,
+        entity_renamed_report_path=entity_renamed_report_path,
+        format_report_path=format_report_path,
+        numeric_report_path=numeric_report_path,
+        metrics=None,
+        kill_test_status=None,
+        stage_status=stage_status,
+    )
     _run_benchmark_if_needed(
         output_path=format_report_path,
         repo_root=repo_root,
         args=args,
         eval_data_path=format_eval_path,
     )
+    stage_status["format"] = "done"
+    _write_progress_report(
+        run_dir=run_dir,
+        args=args,
+        purged_rows=purged_rows,
+        purged_eval_path=purged_eval_path,
+        entity_eval_path=entity_eval_path,
+        entity_renamed_eval_path=entity_renamed_eval_path,
+        format_eval_path=format_eval_path,
+        numeric_eval_path=numeric_eval_path,
+        purged_report_path=purged_report_path,
+        masked_report_path=masked_report_path,
+        entity_report_path=entity_report_path,
+        entity_renamed_report_path=entity_renamed_report_path,
+        format_report_path=format_report_path,
+        numeric_report_path=numeric_report_path,
+        metrics=None,
+        kill_test_status=None,
+        stage_status=stage_status,
+    )
     _run_benchmark_if_needed(
         output_path=numeric_report_path,
         repo_root=repo_root,
         args=args,
         eval_data_path=numeric_eval_path,
+    )
+    stage_status["numeric"] = "done"
+    _write_progress_report(
+        run_dir=run_dir,
+        args=args,
+        purged_rows=purged_rows,
+        purged_eval_path=purged_eval_path,
+        entity_eval_path=entity_eval_path,
+        entity_renamed_eval_path=entity_renamed_eval_path,
+        format_eval_path=format_eval_path,
+        numeric_eval_path=numeric_eval_path,
+        purged_report_path=purged_report_path,
+        masked_report_path=masked_report_path,
+        entity_report_path=entity_report_path,
+        entity_renamed_report_path=entity_renamed_report_path,
+        format_report_path=format_report_path,
+        numeric_report_path=numeric_report_path,
+        metrics=None,
+        kill_test_status=None,
+        stage_status=stage_status,
     )
 
     purged_report = _read_json(purged_report_path)
@@ -176,56 +425,25 @@ def main() -> None:
         numeric_report=numeric_report,
     )
 
-    report = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "series": series_metadata("M", "M19.kill_tests", "scripts/m19/run_m19_kill_test_suite.py"),
-        "track": str(args.track),
-        "config": {
-            "base_model": str(args.base_model),
-            "bridge_path": str(args.bridge_path).replace("\\", "/"),
-            "train_data_path": str(args.train_data_path).replace("\\", "/"),
-            "eval_data_path": str(args.eval_data_path).replace("\\", "/"),
-            "eval_size": int(args.eval_size),
-            "num_queries": int(args.num_queries),
-            "bottleneck_dim": int(args.bottleneck_dim),
-            "scratchpad_length": int(args.scratchpad_length),
-            "max_latent_steps": int(args.max_latent_steps),
-            "random_scale": float(args.random_scale),
-            "seed": int(args.seed),
-            "cell_id": str(args.cell_id),
-        },
-        "dataset_slices": {
-            "purged_count": len(purged_rows),
-            "purged_eval_path": str(purged_eval_path).replace("\\", "/"),
-            "entity_eval_path": str(entity_eval_path).replace("\\", "/"),
-            "entity_renamed_eval_path": str(entity_renamed_eval_path).replace("\\", "/"),
-            "format_eval_path": str(format_eval_path).replace("\\", "/"),
-            "numeric_eval_path": str(numeric_eval_path).replace("\\", "/"),
-        },
-        "reports": {
-            "purged": str(purged_report_path).replace("\\", "/"),
-            "masked": str(masked_report_path).replace("\\", "/") if masked_report_path else None,
-            "entity": str(entity_report_path).replace("\\", "/"),
-            "entity_renamed": str(entity_renamed_report_path).replace("\\", "/"),
-            "format": str(format_report_path).replace("\\", "/"),
-            "numeric": str(numeric_report_path).replace("\\", "/"),
-        },
-        "metrics": metrics,
-        "headline": {
-            "purged_accuracy": metrics.get("purged_accuracy"),
-            "entity_accuracy": metrics.get("entity_accuracy"),
-            "entity_renamed_accuracy": metrics.get("entity_renamed_accuracy"),
-            "format_accuracy": metrics.get("format_accuracy"),
-            "numeric_accuracy": metrics.get("numeric_accuracy"),
-            "masked_accuracy": metrics.get("masked_accuracy"),
-            "kill_test_status": classify_kill_test_status(metrics),
-        },
-        "notes": [
-            "Kill tests are evaluated on the purged slice only so train-eval overlap does not inflate robustness claims.",
-            "Entity anonymization, format flattening, and numeric normalization preserve task semantics while removing easy lexical anchors.",
-            "Masked accuracy is imported from the integrity suite when available so the broader kill surface stays ledger-compatible.",
-        ],
-    }
+    kill_test_status = classify_kill_test_status(metrics)
+    report = _build_report(
+        args=args,
+        purged_rows=purged_rows,
+        purged_eval_path=purged_eval_path,
+        entity_eval_path=entity_eval_path,
+        entity_renamed_eval_path=entity_renamed_eval_path,
+        format_eval_path=format_eval_path,
+        numeric_eval_path=numeric_eval_path,
+        purged_report_path=purged_report_path,
+        masked_report_path=masked_report_path,
+        entity_report_path=entity_report_path,
+        entity_renamed_report_path=entity_renamed_report_path,
+        format_report_path=format_report_path,
+        numeric_report_path=numeric_report_path,
+        metrics=metrics,
+        kill_test_status=kill_test_status,
+        stage_status=stage_status,
+    )
 
     report_path = Path(args.output_path) if args.output_path else (run_dir / M19_REGISTRY["M19"]["report_names"]["kill_tests"])
     report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
@@ -239,8 +457,6 @@ def _run_benchmark_if_needed(
     args: argparse.Namespace,
     eval_data_path: Path,
 ) -> None:
-    if Path(output_path).exists():
-        return
     cmd = [
         sys.executable,
         str(repo_root / "scripts" / "m19" / "run_m19_godtier_benchmark.py"),
@@ -274,7 +490,7 @@ def _run_benchmark_if_needed(
         str(output_path),
         *_typed_bridge_cli_args(args),
     ]
-    subprocess.run(cmd, cwd=str(repo_root), check=True)
+    run_if_needed(Path(output_path), cmd, Path(repo_root))
 
 
 def _count_rows(path: Path) -> int:

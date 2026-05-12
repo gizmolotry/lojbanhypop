@@ -498,7 +498,7 @@
       "test_id": "m19.runway_efficiency",
       "family": "M19",
       "description": "Runway mainline efficiency against concise, EN-CoT, ZH-CoT, and random controls.",
-      "metrics": ["overall_accuracy", "avg_tokens", "lift_vs_en_cot", "lift_vs_random"],
+      "metrics": ["overall_accuracy", "avg_tokens", "avg_runway_tokens", "accuracy_per_runway_token", "lift_vs_en_cot", "lift_vs_random"],
       "surface": "m19_family"
     },
     "m19.zh_branch_control": {
@@ -578,6 +578,44 @@
         "hyperbolic_projection_clip_rate"
       ],
       "surface": "m19_dictionary_audit"
+    },
+    "m19.bridge_channel_isolation": {
+      "test_id": "m19.bridge_channel_isolation",
+      "family": "M19",
+      "description": "Eval-only typed bridge channel ablations that remove or isolate gismu, judri, cmavo, random-shape, and scratchpad-only paths.",
+      "metrics": [
+        "full_accuracy",
+        "no_judri_accuracy",
+        "judri_only_accuracy",
+        "gismu_only_accuracy",
+        "scratchpad_only_accuracy"
+      ],
+      "surface": "m19_bridge_channel_suite"
+    },
+    "m19.arity_causal": {
+      "test_id": "m19.arity_causal",
+      "family": "M19",
+      "description": "Eval-only arity override suite comparing predicted, oracle, random, forced, and no-mask arity budgets.",
+      "metrics": [
+        "predicted_accuracy",
+        "oracle_accuracy",
+        "oracle_delta_vs_predicted",
+        "arity_router_bottleneck"
+      ],
+      "surface": "m19_arity_causal_suite"
+    },
+    "m19.order_sensitivity": {
+      "test_id": "m19.order_sensitivity",
+      "family": "M19",
+      "description": "No-retrain benchmark order sensitivity across first-N, reversed-N, shuffled, and stratified evaluation slices.",
+      "metrics": [
+        "accuracy_spread",
+        "order_sensitive",
+        "first_accuracy",
+        "reversed_accuracy",
+        "shuffled_accuracy"
+      ],
+      "surface": "m19_order_sensitivity_suite"
     }
   },
   "family_comparison_contracts": {
@@ -691,7 +729,10 @@
         "m19.replication_stability",
         "m19.kill_test_suite",
         "m19.typed_faithfulness",
-        "m19.hyperbolic_geometry"
+        "m19.hyperbolic_geometry",
+        "m19.bridge_channel_isolation",
+        "m19.arity_causal",
+        "m19.order_sensitivity"
       ],
       "explicit_compare_entries": ["M18", "M19", "M19.3.A", "M19.3.B", "M19.31", "M19.32"]
     }

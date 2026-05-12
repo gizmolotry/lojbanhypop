@@ -112,10 +112,61 @@ def test_gumbel_hard_routing_zeroes_unused_judri_slots_and_keeps_gradients() -> 
     assert judri_mask.shape[-1] == 4
     assert judri_mask[0].tolist() == [1.0, 0.0, 0.0, 0.0]
     assert torch.allclose(query_state[0, 5:, :], torch.zeros_like(query_state[0, 5:, :]))
+    assert telemetry["masked_pointer_zero_rate"] == 1.0
 
     loss = delta.sum()
     loss.backward()
     assert bridge.arity_head.weight.grad is not None
+
+
+def test_arity_override_and_no_mask_modes_are_eval_only_routing_controls() -> None:
+    bridge = M19SymbioteBridge(
+        hidden_size=16,
+        bottleneck_dim=8,
+        scratchpad_len=4,
+        num_queries=8,
+        typed_slot_layout=["gismu", "gismu", "cmavo", "cmavo", "judri", "judri", "judri", "judri"],
+        arity_router_mode="gumbel_hard",
+        gumbel_hard=True,
+    )
+    h_tap = torch.randn(1, 6, 16, requires_grad=False)
+
+    _, _, _, forced = bridge(h_tap, active_steps=4, gumbel_temperature=0.05, arity_override=3)
+    _, _, _, no_mask = bridge(h_tap, active_steps=4, gumbel_temperature=0.05, disable_arity_mask=True)
+
+    assert forced["judri_mask"][0].tolist() == [1.0, 1.0, 1.0, 0.0]
+    assert int(forced["active_arity_budget"][0].item()) == 3
+    assert forced["masked_pointer_zero_rate"] == 1.0
+    assert no_mask["judri_mask"][0].tolist() == [1.0, 1.0, 1.0, 1.0]
+    assert int(no_mask["active_arity_budget"][0].item()) == 4
+    assert no_mask["arity_mask_disabled"] is True
+    assert no_mask["masked_pointer_zero_rate"] is None
+
+
+def test_bridge_channel_masks_are_eval_only_family_interventions() -> None:
+    bridge = M19SymbioteBridge(
+        hidden_size=16,
+        bottleneck_dim=8,
+        scratchpad_len=4,
+        num_queries=8,
+        typed_slot_layout=["gismu", "gismu", "cmavo", "cmavo", "judri", "judri", "judri", "judri"],
+        arity_router_mode="gumbel_hard",
+        gumbel_hard=True,
+    )
+    h_tap = torch.randn(1, 6, 16, requires_grad=False)
+
+    _, _, _, gismu_only = bridge(h_tap, active_steps=4, gumbel_temperature=0.05, bridge_channel_mode="gismu_only")
+    _, _, _, no_judri = bridge(h_tap, active_steps=4, gumbel_temperature=0.05, bridge_channel_mode="no_judri")
+    _, _, _, zero_all = bridge(h_tap, active_steps=4, gumbel_temperature=0.05, bridge_channel_mode="zero_all")
+
+    assert gismu_only["bridge_channel_mode"] == "gismu_only"
+    assert gismu_only["bridge_channel_retained_slot_fraction"] == 0.25
+    assert gismu_only["bridge_channel_family_energy_after"]["gismu"] > 0.0
+    assert gismu_only["bridge_channel_family_energy_after"]["judri"] == 0.0
+    assert no_judri["bridge_channel_retained_slot_fraction"] == 0.5
+    assert no_judri["bridge_channel_family_energy_after"]["judri"] == 0.0
+    assert zero_all["bridge_channel_retained_slot_fraction"] == 0.0
+    assert all(value == 0.0 for value in zero_all["bridge_channel_family_energy_after"].values())
 
 
 def test_hyperbolic_projection_and_logexp_are_well_behaved() -> None:

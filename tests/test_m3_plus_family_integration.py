@@ -8,7 +8,7 @@ import sys
 from types import SimpleNamespace
 import uuid
 
-_MOD_PATH = Path(__file__).resolve().parents[1] / "scripts" / "run_m3_plus_family.py"
+_MOD_PATH = Path(__file__).resolve().parents[1] / "scripts" / "m3" / "run_m3_plus_family.py"
 _SPEC = importlib.util.spec_from_file_location("run_m3_plus_family", _MOD_PATH)
 assert _SPEC is not None and _SPEC.loader is not None
 mod = importlib.util.module_from_spec(_SPEC)

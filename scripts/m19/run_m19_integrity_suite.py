@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import argparse
 import json
-import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parents[2] / "src"))
 
+from lojban_evolution.m19.artifact_contract import run_if_needed
 from lojban_evolution.m19.family import M19_REGISTRY
 from lojban_evolution.m19.integrity import (
     build_masked_eval_rows,
@@ -66,6 +66,133 @@ def _typed_bridge_cli_args(args: argparse.Namespace) -> list[str]:
     if args.gumbel_hard:
         cli_args.append("--gumbel-hard")
     return cli_args
+
+
+def _progress_report_path(run_dir: Path) -> Path:
+    return run_dir / "m19_integrity_progress.json"
+
+
+def _build_report(
+    *,
+    args: argparse.Namespace,
+    full_rows: list[dict[str, object]],
+    overlap_rows: list[dict[str, object]],
+    purged_rows: list[dict[str, object]],
+    masked_purged_rows: list[dict[str, object]],
+    full_eval_path: Path,
+    overlap_eval_path: Path,
+    purged_eval_path: Path,
+    masked_eval_path: Path,
+    benchmark_full_path: Path,
+    benchmark_purged_path: Path,
+    benchmark_overlap_path: Path,
+    benchmark_masked_path: Path,
+    audit_report_path: Path,
+    metrics: dict[str, object] | None,
+    integrity_status: str | None,
+    stage_status: dict[str, str],
+) -> dict[str, object]:
+    headline = {
+        "purged_accuracy": metrics.get("purged_accuracy") if metrics else None,
+        "overlap_gap": metrics.get("overlap_gap") if metrics else None,
+        "masked_accuracy": metrics.get("masked_accuracy") if metrics else None,
+        "audit_qformer_accuracy": metrics.get("audit_qformer_accuracy") if metrics else None,
+        "integrity_status": integrity_status,
+    }
+    return {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "series": series_metadata("M", "M19.integrity", "scripts/m19/run_m19_integrity_suite.py"),
+        "track": str(args.track),
+        "config": {
+            "base_model": str(args.base_model),
+            "bridge_path": str(args.bridge_path).replace("\\", "/"),
+            "train_data_path": str(args.train_data_path).replace("\\", "/"),
+            "eval_data_path": str(args.eval_data_path).replace("\\", "/"),
+            "audit_data_path": str(args.audit_data_path).replace("\\", "/"),
+            "eval_size": int(args.eval_size),
+            "audit_eval_size": int(args.audit_eval_size),
+            "num_queries": int(args.num_queries),
+            "bottleneck_dim": int(args.bottleneck_dim),
+            "scratchpad_length": int(args.scratchpad_length),
+            "max_latent_steps": int(args.max_latent_steps),
+            "random_scale": float(args.random_scale),
+            "seed": int(args.seed),
+            "cell_id": str(args.cell_id),
+        },
+        "dataset_slices": {
+            "full_count": len(full_rows),
+            "overlap_count": len(overlap_rows),
+            "purged_count": len(purged_rows),
+            "masked_purged_count": len(masked_purged_rows),
+            "full_eval_path": str(full_eval_path).replace("\\", "/"),
+            "overlap_eval_path": str(overlap_eval_path).replace("\\", "/"),
+            "purged_eval_path": str(purged_eval_path).replace("\\", "/"),
+            "masked_eval_path": str(masked_eval_path).replace("\\", "/"),
+        },
+        "reports": {
+            "benchmark_full": str(benchmark_full_path).replace("\\", "/"),
+            "benchmark_purged": str(benchmark_purged_path).replace("\\", "/"),
+            "benchmark_overlap": str(benchmark_overlap_path).replace("\\", "/"),
+            "benchmark_masked_purged": str(benchmark_masked_path).replace("\\", "/"),
+            "audit": str(audit_report_path).replace("\\", "/"),
+        },
+        "metrics": metrics or {},
+        "headline": headline,
+        "progress": {
+            "stage_status": stage_status,
+            "complete": all(value == "done" for value in stage_status.values()),
+        },
+        "notes": [
+            "Purged and overlap slices are built from exact prompt-answer overlap against the current M19 training curriculum.",
+            "Masked control is applied only to the purged slice so lexical blindfolding is not confounded by train-eval overlap.",
+            "The suite reuses the standard M19 benchmark and audit runners so all regime metrics stay contract-comparable.",
+        ],
+    }
+
+
+def _write_progress_report(
+    *,
+    run_dir: Path,
+    args: argparse.Namespace,
+    full_rows: list[dict[str, object]],
+    overlap_rows: list[dict[str, object]],
+    purged_rows: list[dict[str, object]],
+    masked_purged_rows: list[dict[str, object]],
+    full_eval_path: Path,
+    overlap_eval_path: Path,
+    purged_eval_path: Path,
+    masked_eval_path: Path,
+    benchmark_full_path: Path,
+    benchmark_purged_path: Path,
+    benchmark_overlap_path: Path,
+    benchmark_masked_path: Path,
+    audit_report_path: Path,
+    metrics: dict[str, object] | None,
+    integrity_status: str | None,
+    stage_status: dict[str, str],
+) -> Path:
+    report = _build_report(
+        args=args,
+        full_rows=full_rows,
+        overlap_rows=overlap_rows,
+        purged_rows=purged_rows,
+        masked_purged_rows=masked_purged_rows,
+        full_eval_path=full_eval_path,
+        overlap_eval_path=overlap_eval_path,
+        purged_eval_path=purged_eval_path,
+        masked_eval_path=masked_eval_path,
+        benchmark_full_path=benchmark_full_path,
+        benchmark_purged_path=benchmark_purged_path,
+        benchmark_overlap_path=benchmark_overlap_path,
+        benchmark_masked_path=benchmark_masked_path,
+        audit_report_path=audit_report_path,
+        metrics=metrics,
+        integrity_status=integrity_status,
+        stage_status=stage_status,
+    )
+    output_path = _progress_report_path(run_dir)
+    output_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    return output_path
 
 
 def parse_args() -> argparse.Namespace:
@@ -130,6 +257,33 @@ def main() -> None:
     benchmark_overlap_path = args.overlap_report_path or (run_dir / "benchmark_overlap.json")
     benchmark_masked_path = args.masked_report_path or (run_dir / "benchmark_masked_purged.json")
     audit_report_path = args.audit_report_path or (run_dir / "audit_report.json")
+    stage_status = {
+        "benchmark_full": "pending",
+        "benchmark_purged": "pending",
+        "benchmark_overlap": "pending",
+        "benchmark_masked_purged": "pending",
+        "audit": "pending",
+    }
+    _write_progress_report(
+        run_dir=run_dir,
+        args=args,
+        full_rows=full_rows,
+        overlap_rows=overlap_rows,
+        purged_rows=purged_rows,
+        masked_purged_rows=masked_purged_rows,
+        full_eval_path=full_eval_path,
+        overlap_eval_path=overlap_eval_path,
+        purged_eval_path=purged_eval_path,
+        masked_eval_path=masked_eval_path,
+        benchmark_full_path=benchmark_full_path,
+        benchmark_purged_path=benchmark_purged_path,
+        benchmark_overlap_path=benchmark_overlap_path,
+        benchmark_masked_path=benchmark_masked_path,
+        audit_report_path=audit_report_path,
+        metrics=None,
+        integrity_status=None,
+        stage_status=stage_status,
+    )
 
     _run_benchmark_if_needed(
         output_path=benchmark_full_path,
@@ -148,6 +302,27 @@ def main() -> None:
         track=args.track,
         cell_id=args.cell_id,
     )
+    stage_status["benchmark_full"] = "done"
+    _write_progress_report(
+        run_dir=run_dir,
+        args=args,
+        full_rows=full_rows,
+        overlap_rows=overlap_rows,
+        purged_rows=purged_rows,
+        masked_purged_rows=masked_purged_rows,
+        full_eval_path=full_eval_path,
+        overlap_eval_path=overlap_eval_path,
+        purged_eval_path=purged_eval_path,
+        masked_eval_path=masked_eval_path,
+        benchmark_full_path=benchmark_full_path,
+        benchmark_purged_path=benchmark_purged_path,
+        benchmark_overlap_path=benchmark_overlap_path,
+        benchmark_masked_path=benchmark_masked_path,
+        audit_report_path=audit_report_path,
+        metrics=None,
+        integrity_status=None,
+        stage_status=stage_status,
+    )
     _run_benchmark_if_needed(
         output_path=benchmark_purged_path,
         repo_root=repo_root,
@@ -165,6 +340,27 @@ def main() -> None:
         track=args.track,
         cell_id=args.cell_id,
     )
+    stage_status["benchmark_purged"] = "done"
+    _write_progress_report(
+        run_dir=run_dir,
+        args=args,
+        full_rows=full_rows,
+        overlap_rows=overlap_rows,
+        purged_rows=purged_rows,
+        masked_purged_rows=masked_purged_rows,
+        full_eval_path=full_eval_path,
+        overlap_eval_path=overlap_eval_path,
+        purged_eval_path=purged_eval_path,
+        masked_eval_path=masked_eval_path,
+        benchmark_full_path=benchmark_full_path,
+        benchmark_purged_path=benchmark_purged_path,
+        benchmark_overlap_path=benchmark_overlap_path,
+        benchmark_masked_path=benchmark_masked_path,
+        audit_report_path=audit_report_path,
+        metrics=None,
+        integrity_status=None,
+        stage_status=stage_status,
+    )
     _run_benchmark_if_needed(
         output_path=benchmark_overlap_path,
         repo_root=repo_root,
@@ -181,6 +377,27 @@ def main() -> None:
         seed=args.seed,
         track=args.track,
         cell_id=args.cell_id,
+    )
+    stage_status["benchmark_overlap"] = "done"
+    _write_progress_report(
+        run_dir=run_dir,
+        args=args,
+        full_rows=full_rows,
+        overlap_rows=overlap_rows,
+        purged_rows=purged_rows,
+        masked_purged_rows=masked_purged_rows,
+        full_eval_path=full_eval_path,
+        overlap_eval_path=overlap_eval_path,
+        purged_eval_path=purged_eval_path,
+        masked_eval_path=masked_eval_path,
+        benchmark_full_path=benchmark_full_path,
+        benchmark_purged_path=benchmark_purged_path,
+        benchmark_overlap_path=benchmark_overlap_path,
+        benchmark_masked_path=benchmark_masked_path,
+        audit_report_path=audit_report_path,
+        metrics=None,
+        integrity_status=None,
+        stage_status=stage_status,
     )
     _run_benchmark_if_needed(
         output_path=benchmark_masked_path,
@@ -200,6 +417,27 @@ def main() -> None:
         cell_id=args.cell_id,
         regimes=f"BASE,RANDOM-SHAPE,SCRATCHPAD-ONLY,{args.cell_id}",
     )
+    stage_status["benchmark_masked_purged"] = "done"
+    _write_progress_report(
+        run_dir=run_dir,
+        args=args,
+        full_rows=full_rows,
+        overlap_rows=overlap_rows,
+        purged_rows=purged_rows,
+        masked_purged_rows=masked_purged_rows,
+        full_eval_path=full_eval_path,
+        overlap_eval_path=overlap_eval_path,
+        purged_eval_path=purged_eval_path,
+        masked_eval_path=masked_eval_path,
+        benchmark_full_path=benchmark_full_path,
+        benchmark_purged_path=benchmark_purged_path,
+        benchmark_overlap_path=benchmark_overlap_path,
+        benchmark_masked_path=benchmark_masked_path,
+        audit_report_path=audit_report_path,
+        metrics=None,
+        integrity_status=None,
+        stage_status=stage_status,
+    )
     _run_audit_if_needed(
         output_path=audit_report_path,
         repo_root=repo_root,
@@ -216,6 +454,27 @@ def main() -> None:
         seed=args.seed,
         track=args.track,
         cell_id=args.cell_id,
+    )
+    stage_status["audit"] = "done"
+    _write_progress_report(
+        run_dir=run_dir,
+        args=args,
+        full_rows=full_rows,
+        overlap_rows=overlap_rows,
+        purged_rows=purged_rows,
+        masked_purged_rows=masked_purged_rows,
+        full_eval_path=full_eval_path,
+        overlap_eval_path=overlap_eval_path,
+        purged_eval_path=purged_eval_path,
+        masked_eval_path=masked_eval_path,
+        benchmark_full_path=benchmark_full_path,
+        benchmark_purged_path=benchmark_purged_path,
+        benchmark_overlap_path=benchmark_overlap_path,
+        benchmark_masked_path=benchmark_masked_path,
+        audit_report_path=audit_report_path,
+        metrics=None,
+        integrity_status=None,
+        stage_status=stage_status,
     )
 
     full_report = _read_json(benchmark_full_path)
@@ -234,57 +493,26 @@ def main() -> None:
         eval_size=len(full_rows),
     )
 
-    report = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "series": series_metadata("M", "M19.integrity", "scripts/m19/run_m19_integrity_suite.py"),
-        "track": str(args.track),
-        "config": {
-            "base_model": str(args.base_model),
-            "bridge_path": str(args.bridge_path).replace("\\", "/"),
-            "train_data_path": str(args.train_data_path).replace("\\", "/"),
-            "eval_data_path": str(args.eval_data_path).replace("\\", "/"),
-            "audit_data_path": str(args.audit_data_path).replace("\\", "/"),
-            "eval_size": int(args.eval_size),
-            "audit_eval_size": int(args.audit_eval_size),
-            "num_queries": int(args.num_queries),
-            "bottleneck_dim": int(args.bottleneck_dim),
-            "scratchpad_length": int(args.scratchpad_length),
-            "max_latent_steps": int(args.max_latent_steps),
-            "random_scale": float(args.random_scale),
-            "seed": int(args.seed),
-            "cell_id": str(args.cell_id),
-        },
-        "dataset_slices": {
-            "full_count": len(full_rows),
-            "overlap_count": len(overlap_rows),
-            "purged_count": len(purged_rows),
-            "masked_purged_count": len(masked_purged_rows),
-            "full_eval_path": str(full_eval_path).replace("\\", "/"),
-            "overlap_eval_path": str(overlap_eval_path).replace("\\", "/"),
-            "purged_eval_path": str(purged_eval_path).replace("\\", "/"),
-            "masked_eval_path": str(masked_eval_path).replace("\\", "/"),
-        },
-        "reports": {
-            "benchmark_full": str(benchmark_full_path).replace("\\", "/"),
-            "benchmark_purged": str(benchmark_purged_path).replace("\\", "/"),
-            "benchmark_overlap": str(benchmark_overlap_path).replace("\\", "/"),
-            "benchmark_masked_purged": str(benchmark_masked_path).replace("\\", "/"),
-            "audit": str(audit_report_path).replace("\\", "/"),
-        },
-        "metrics": metrics,
-        "headline": {
-            "purged_accuracy": metrics.get("purged_accuracy"),
-            "overlap_gap": metrics.get("overlap_gap"),
-            "masked_accuracy": metrics.get("masked_accuracy"),
-            "audit_qformer_accuracy": metrics.get("audit_qformer_accuracy"),
-            "integrity_status": classify_integrity_status(metrics),
-        },
-        "notes": [
-            "Purged and overlap slices are built from exact prompt-answer overlap against the current M19 training curriculum.",
-            "Masked control is applied only to the purged slice so lexical blindfolding is not confounded by train-eval overlap.",
-            "The suite reuses the standard M19 benchmark and audit runners so all regime metrics stay contract-comparable.",
-        ],
-    }
+    integrity_status = classify_integrity_status(metrics)
+    report = _build_report(
+        args=args,
+        full_rows=full_rows,
+        overlap_rows=overlap_rows,
+        purged_rows=purged_rows,
+        masked_purged_rows=masked_purged_rows,
+        full_eval_path=full_eval_path,
+        overlap_eval_path=overlap_eval_path,
+        purged_eval_path=purged_eval_path,
+        masked_eval_path=masked_eval_path,
+        benchmark_full_path=benchmark_full_path,
+        benchmark_purged_path=benchmark_purged_path,
+        benchmark_overlap_path=benchmark_overlap_path,
+        benchmark_masked_path=benchmark_masked_path,
+        audit_report_path=audit_report_path,
+        metrics=metrics,
+        integrity_status=integrity_status,
+        stage_status=stage_status,
+    )
 
     report_path = Path(args.output_path) if args.output_path else (run_dir / "m19_integrity_report.json")
     report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
@@ -310,8 +538,6 @@ def _run_benchmark_if_needed(
     cell_id: str,
     regimes: str = "",
 ) -> None:
-    if Path(output_path).exists():
-        return
     _run_benchmark(
         output_path=output_path,
         repo_root=repo_root,
@@ -384,7 +610,7 @@ def _run_benchmark(
     ]
     if str(regimes).strip():
         cmd.extend(["--regimes", str(regimes).strip()])
-    subprocess.run(cmd, cwd=str(repo_root), check=True)
+    run_if_needed(Path(output_path), cmd, Path(repo_root))
 
 
 def _run_audit_if_needed(
@@ -405,8 +631,6 @@ def _run_audit_if_needed(
     track: str,
     cell_id: str,
 ) -> None:
-    if Path(output_path).exists():
-        return
     _run_audit(
         output_path=output_path,
         repo_root=repo_root,
@@ -475,7 +699,7 @@ def _run_audit(
         str(output_path),
         *_typed_bridge_cli_args(args),
     ]
-    subprocess.run(cmd, cwd=str(repo_root), check=True)
+    run_if_needed(Path(output_path), cmd, Path(repo_root))
 
 
 def _read_json(path: Path) -> dict[str, object]:

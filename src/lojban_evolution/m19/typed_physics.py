@@ -209,6 +209,14 @@ def slot_usage_balance_loss(judri_mask: torch.Tensor | None) -> torch.Tensor:
     return ((mean_use - target) ** 2).mean()
 
 
+def operator_confidence_cap_loss(op_logits: torch.Tensor, max_top1_share: float = 0.30) -> torch.Tensor:
+    if op_logits.ndim != 3 or op_logits.numel() == 0:
+        return torch.zeros((), device=op_logits.device, dtype=op_logits.dtype)
+    probs = F.softmax(op_logits, dim=-1)
+    top1 = probs.max(dim=-1).values.mean()
+    return torch.relu(top1 - float(max_top1_share))
+
+
 def project_poincare_ball(x: torch.Tensor, curvature: float, eps: float = DEFAULT_POINCARE_EPS) -> tuple[torch.Tensor, torch.Tensor]:
     c = max(float(curvature), eps)
     max_norm = (1.0 - eps) / math.sqrt(c)

@@ -206,7 +206,9 @@ def run_m19_dictionary_audit(args: argparse.Namespace) -> dict[str, Any]:
                 typed_family_acc_values.append(
                     float((slot_family_logits[0].argmax(dim=-1) == family_targets).float().mean().item())
                 )
-            masked_zero_values.append(float(telemetry.get("masked_pointer_zero_rate", 0.0)))
+            masked_pointer_zero_rate = telemetry.get("masked_pointer_zero_rate")
+            if masked_pointer_zero_rate is not None:
+                masked_zero_values.append(float(masked_pointer_zero_rate))
             family_entropy_values.append(float(telemetry.get("slot_family_entropy", 0.0)))
             hyper_metrics = telemetry.get("hyperbolic_metrics", {})
             radial_gap_values.append(float(hyper_metrics.get("predicate_pointer_radial_gap", 0.0)))
@@ -250,7 +252,7 @@ def run_m19_dictionary_audit(args: argparse.Namespace) -> dict[str, Any]:
                 "typed_faithfulness": {
                     "typed_family_accuracy": (sum(typed_family_acc_values) / max(1, len(typed_family_acc_values))) if typed_family_acc_values else 0.0,
                     "arity_violation_rate": (sum(arity_violation_values) / max(1, len(arity_violation_values))) if arity_violation_values else 0.0,
-                    "masked_pointer_zero_rate": (sum(masked_zero_values) / max(1, len(masked_zero_values))) if masked_zero_values else 0.0,
+                    "masked_pointer_zero_rate": (sum(masked_zero_values) / max(1, len(masked_zero_values))) if masked_zero_values else None,
                     "family_slot_entropy": (sum(family_entropy_values) / max(1, len(family_entropy_values))) if family_entropy_values else 0.0,
                     "symbolic_trace_alignment": (sum(symbolic_alignment_values) / max(1, len(symbolic_alignment_values))) if symbolic_alignment_values else 0.0,
                     "predicate_pointer_radial_gap": (sum(radial_gap_values) / max(1, len(radial_gap_values))) if radial_gap_values else 0.0,
