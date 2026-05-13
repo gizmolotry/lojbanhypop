@@ -169,6 +169,43 @@ def test_bridge_channel_masks_are_eval_only_family_interventions() -> None:
     assert all(value == 0.0 for value in zero_all["bridge_channel_family_energy_after"].values())
 
 
+def test_bridge_channel_judri_counterfactuals_rewire_pointer_slots() -> None:
+    torch.manual_seed(7)
+    bridge = M19SymbioteBridge(
+        hidden_size=16,
+        bottleneck_dim=8,
+        scratchpad_len=4,
+        num_queries=8,
+        typed_slot_layout=["gismu", "gismu", "cmavo", "cmavo", "judri", "judri", "judri", "judri"],
+        arity_router_mode="soft",
+    )
+    h_tap = torch.randn(1, 6, 16, requires_grad=False)
+
+    _, _, _, full = bridge(h_tap, active_steps=4, disable_arity_mask=True, bridge_channel_mode="full")
+    _, _, _, swap = bridge(h_tap, active_steps=4, disable_arity_mask=True, bridge_channel_mode="swap_judri")
+    _, _, _, reverse = bridge(h_tap, active_steps=4, disable_arity_mask=True, bridge_channel_mode="reverse_judri")
+    _, _, _, rotate = bridge(h_tap, active_steps=4, disable_arity_mask=True, bridge_channel_mode="rotate_judri")
+
+    full_q = full["query_state"]
+    swap_q = swap["query_state"]
+    reverse_q = reverse["query_state"]
+    rotate_q = rotate["query_state"]
+
+    assert swap["bridge_channel_mode"] == "swap_judri"
+    assert reverse["bridge_channel_mode"] == "reverse_judri"
+    assert rotate["bridge_channel_mode"] == "rotate_judri"
+    assert swap["bridge_channel_retained_slot_fraction"] == 1.0
+    assert torch.allclose(swap_q[:, 4, :], full_q[:, 5, :])
+    assert torch.allclose(swap_q[:, 5, :], full_q[:, 4, :])
+    assert torch.allclose(swap_q[:, 6:, :], full_q[:, 6:, :])
+    assert torch.allclose(reverse_q[:, 4:8, :], torch.flip(full_q[:, 4:8, :], dims=[1]))
+    assert torch.allclose(rotate_q[:, 4, :], full_q[:, 7, :])
+    assert torch.allclose(rotate_q[:, 5, :], full_q[:, 4, :])
+    assert torch.allclose(rotate_q[:, 6, :], full_q[:, 5, :])
+    assert torch.allclose(rotate_q[:, 7, :], full_q[:, 6, :])
+    assert swap["bridge_channel_family_energy_after"]["judri"] > 0.0
+
+
 def test_hyperbolic_projection_and_logexp_are_well_behaved() -> None:
     x = torch.randn(2, 8, 6) * 0.3
     y = expmap0(logmap0(x, curvature=1.0), curvature=1.0)

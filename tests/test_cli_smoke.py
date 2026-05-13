@@ -105,6 +105,13 @@ def test_run_m19_bridge_channel_suite_help() -> None:
     assert "--channel-causality-threshold" in out
 
 
+def test_run_m19_pointer_counterfactual_suite_help() -> None:
+    out = _run_help("scripts/m19/run_m19_pointer_counterfactual_suite.py")
+    assert "usage:" in out.lower()
+    assert "--mode-list" in out
+    assert "--pointer-causality-threshold" in out
+
+
 def test_run_m19_order_sensitivity_suite_help() -> None:
     out = _run_help("scripts/m19/run_m19_order_sensitivity_suite.py")
     assert "usage:" in out.lower()

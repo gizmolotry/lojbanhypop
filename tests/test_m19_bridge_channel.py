@@ -57,6 +57,10 @@ def _bridge_args(**overrides):
 def test_bridge_channel_modes_route_to_expected_benchmark_regimes() -> None:
     assert _bridge_channel_mode("full") == "full"
     assert _bridge_channel_mode("gismu_only") == "gismu_only"
+    assert _bridge_channel_mode("drop_judri") == "drop_judri"
+    assert _bridge_channel_mode("swap_judri") == "swap_judri"
+    assert _bridge_channel_mode("reverse_judri") == "reverse_judri"
+    assert _bridge_channel_mode("rotate_judri") == "rotate_judri"
     assert _bridge_channel_mode("none") == "full"
     assert _regime_for_mode("none", "M19.3_8Q_128D_8S") == "SCRATCHPAD-ONLY"
     assert _regime_for_mode("random", "M19.3_8Q_128D_8S") == "RANDOM-SHAPE"

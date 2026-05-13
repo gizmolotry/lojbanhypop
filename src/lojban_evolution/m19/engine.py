@@ -31,6 +31,9 @@ BRIDGE_CHANNEL_MODES = {
     "no_cmavo",
     "no_judri",
     "no_control",
+    "swap_judri",
+    "reverse_judri",
+    "rotate_judri",
 }
 
 
@@ -420,6 +423,8 @@ class M19SymbioteBridge(nn.Module):
             "arg_only": "judri_only",
             "none": "zero_all",
             "zero": "zero_all",
+            "drop_judri": "no_judri",
+            "shuffle_judri": "reverse_judri",
         }
         mode = aliases.get(mode, mode)
         if mode not in BRIDGE_CHANNEL_MODES:
@@ -432,6 +437,29 @@ class M19SymbioteBridge(nn.Module):
                 "bridge_channel_retained_slot_fraction": 1.0,
                 "bridge_channel_family_energy_before": before_energy,
                 "bridge_channel_family_energy_after": before_energy,
+            }
+
+        if mode in {"swap_judri", "reverse_judri", "rotate_judri"}:
+            judri_indices = list(self.family_indices.get("judri", []))
+            transformed = query_state.clone()
+            if len(judri_indices) >= 2:
+                index_tensor = torch.tensor(judri_indices, device=query_state.device, dtype=torch.long)
+                if mode == "swap_judri":
+                    permuted = index_tensor.clone()
+                    first_index = index_tensor[0].clone()
+                    permuted[0] = index_tensor[1]
+                    permuted[1] = first_index
+                elif mode == "reverse_judri":
+                    permuted = torch.flip(index_tensor, dims=[0])
+                else:
+                    permuted = torch.roll(index_tensor, shifts=1, dims=0)
+                transformed[:, index_tensor, :] = query_state[:, permuted, :]
+            return transformed, {
+                "bridge_channel_mode": mode,
+                "bridge_channel_retained_slot_fraction": 1.0,
+                "bridge_channel_family_energy_before": before_energy,
+                "bridge_channel_family_energy_after": self._family_energy(transformed),
+                "bridge_channel_counterfactual_family": "judri",
             }
 
         if mode == "zero_all":

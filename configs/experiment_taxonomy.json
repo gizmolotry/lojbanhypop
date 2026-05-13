@@ -604,6 +604,21 @@
       ],
       "surface": "m19_arity_causal_suite"
     },
+    "m19.pointer_counterfactual": {
+      "test_id": "m19.pointer_counterfactual",
+      "family": "M19",
+      "description": "Eval-only judri pointer counterfactual suite that drops, swaps, reverses, and rotates argument slots while preserving predicate channels.",
+      "metrics": [
+        "full_accuracy",
+        "drop_judri_accuracy",
+        "swap_judri_accuracy",
+        "reverse_judri_accuracy",
+        "rotate_judri_accuracy",
+        "pointer_binding_causal",
+        "pointer_counterfactual_shortcut_warning"
+      ],
+      "surface": "m19_pointer_counterfactual_suite"
+    },
     "m19.order_sensitivity": {
       "test_id": "m19.order_sensitivity",
       "family": "M19",
@@ -732,6 +747,7 @@
         "m19.hyperbolic_geometry",
         "m19.bridge_channel_isolation",
         "m19.arity_causal",
+        "m19.pointer_counterfactual",
         "m19.order_sensitivity"
       ],
       "explicit_compare_entries": ["M18", "M19", "M19.3.A", "M19.3.B", "M19.31", "M19.32"]
