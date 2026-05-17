@@ -1,7 +1,7 @@
 # Ablation Program Map
 
-- Generated UTC: `2026-05-17T19:17:10.553093+00:00`
-- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m21_hyperbolic_tangent_history_20260517/ablation_history_manifest.json`
+- Generated UTC: `2026-05-17T23:08:33.404516+00:00`
+- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m21_judri_gate_history_20260517/ablation_history_manifest.json`
 - Concentrated family count: `37`
 
 ## Program Layers
@@ -518,15 +518,15 @@
 
 - Layer: `dynamic_bridi_substrate`
 - Status: `runnable`
-- Normalized IDs: `M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F`
-- Legacy aliases: `A, B, C, D, E, F`
-- Entry count: `7`
-- Runnable rows: `7`
-- Brief: Actual bridge adapter + 6 more
+- Normalized IDs: `M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G`
+- Legacy aliases: `A, B, C, D, E, F, G`
+- Entry count: `8`
+- Runnable rows: `8`
+- Brief: Actual bridge adapter + 7 more
 - Family groups: `m_track`
 - Scripts: `scripts/m21/run_m21_actual_bridge_suite.py, scripts/m21/run_m21_dynamic_bridi_suite.py, scripts/m21/run_m21_lock_suite.py, scripts/m21/run_m21_synthetic_assay_suite.py`
 - DAGs: `airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py`
-- Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_actual_bridge_full_20260515, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_actual_bridge_full_20260515/m21_actual_bridge_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_actual_bridge_vram_48e_20260515, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_actual_bridge_vram_48e_20260515/m21_actual_bridge_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_hyperbolic_tangent_actual_48e_20260517, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_hyperbolic_tangent_actual_48e_20260517/m21_actual_bridge_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_smoke_actual_20260515, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_smoke_actual_20260515/m21_actual_bridge_report.json`
+- Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_actual_bridge_full_20260515, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_actual_bridge_full_20260515/m21_actual_bridge_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_actual_bridge_vram_48e_20260515, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_actual_bridge_vram_48e_20260515/m21_actual_bridge_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_hyperbolic_tangent_actual_48e_20260517, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_hyperbolic_tangent_actual_48e_20260517/m21_actual_bridge_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_judri_gate_actual_48e_20260517, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_judri_gate_actual_48e_20260517/m21_actual_bridge_report.json`
 
 ### History
 

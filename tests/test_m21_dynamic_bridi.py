@@ -10,6 +10,7 @@ from lojban_evolution.m21 import (
     clamp_poincare_norm,
     compute_m21_loss,
     generate_dynamic_bridi_examples,
+    judri_grounding_gate_from_logits,
     m21_collate,
     poincare_tangent_handoff,
     pointer_necessity_contrast_loss,
@@ -100,6 +101,39 @@ def test_pointer_necessity_hinge_matches_m19_contract() -> None:
     assert torch.isclose(loss.detach(), torch.tensor(0.07), atol=1e-6)
     assert full_loss.grad is not None and full_loss.grad.item() > 0
     assert no_judri_loss.grad is not None and no_judri_loss.grad.item() < 0
+
+
+def test_judri_grounding_gate_tracks_non_pad_mass() -> None:
+    logits = torch.full((2, 3, 4, 5), -10.0)
+    logits[0, :, :, 0] = 10.0
+    logits[1, :, :, 2] = 10.0
+
+    gate = judri_grounding_gate_from_logits(logits)
+
+    assert gate.shape == (2, 3)
+    assert float(gate[0].max().item()) < 1e-3
+    assert float(gate[1].min().item()) > 0.999
+
+
+def test_judri_bridge_gate_silences_ablated_predicate_paths() -> None:
+    examples = generate_dynamic_bridi_examples(48, seed=57, floating_fraction=0.0)
+    vocab = build_vocab(examples)
+    dataset = M21BridiDataset(examples, vocab)
+    batch = m21_collate([dataset[i] for i in range(16)])
+    model = M21DynamicBridiQFormer(
+        vocab_size=len(vocab),
+        embedding_dim=16,
+        hidden_dim=32,
+        judri_bridge_gate=True,
+    )
+
+    outputs = model(batch["input_ids"])
+
+    assert outputs["judri_bridge_gate_enabled"].item() == 1.0
+    assert torch.isfinite(outputs["judri_bridge_gate_active_mean"])
+    assert torch.isfinite(outputs["judri_bridge_gate_silenced_predicate_energy_mean"])
+    assert torch.allclose(outputs["no_judri_answer_logits"], outputs["gismu_only_answer_logits"])
+    assert not torch.allclose(outputs["answer_logits"], outputs["no_judri_answer_logits"])
 
 
 def test_poincare_guardrail_and_forward_are_finite() -> None:

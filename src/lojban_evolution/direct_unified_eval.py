@@ -72,6 +72,10 @@ KEY_METRICS = (
     "hyperbolic_projection_clip_rate",
     "hyperbolic_tangent_handoff_norm_mean",
     "hyperbolic_tangent_handoff_finite_rate",
+    "judri_bridge_gate_enabled",
+    "judri_bridge_gate_mean",
+    "judri_bridge_gate_active_mean",
+    "judri_bridge_gate_silenced_predicate_energy_mean",
     "integrity_overlap_flag",
     "integrity_mask_flag",
     "integrity_audit_flag",
@@ -1315,6 +1319,10 @@ def _m21_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("pointer_necessity_gap", aggregate.get("mean_pointer_necessity_gap"))
         metrics.setdefault("hyperbolic_tangent_handoff_norm_mean", aggregate.get("mean_hyperbolic_tangent_handoff_norm_mean"))
         metrics.setdefault("hyperbolic_tangent_handoff_finite_rate", aggregate.get("mean_hyperbolic_tangent_handoff_finite_rate"))
+        metrics.setdefault("judri_bridge_gate_enabled", aggregate.get("mean_judri_bridge_gate_enabled"))
+        metrics.setdefault("judri_bridge_gate_mean", aggregate.get("mean_judri_bridge_gate_mean"))
+        metrics.setdefault("judri_bridge_gate_active_mean", aggregate.get("mean_judri_bridge_gate_active_mean"))
+        metrics.setdefault("judri_bridge_gate_silenced_predicate_energy_mean", aggregate.get("mean_judri_bridge_gate_silenced_predicate_energy_mean"))
         metrics.setdefault("mean_active_frames", aggregate.get("mean_active_frames"))
         metrics.setdefault("active_code_fraction_reachable", aggregate.get("mean_active_code_fraction_reachable"))
     cells = payload.get("cells", {})

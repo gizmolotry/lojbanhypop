@@ -56,6 +56,7 @@ def _statuses(metrics: dict[str, float]) -> dict[str, bool]:
         "bridi_trace_reconstruction": float(metrics.get("bridi_trace_exact_accuracy", 0.0)) >= 0.55,
         "cmavo_causality": float(metrics.get("cmavo_accuracy", 0.0)) >= 0.55 or float(metrics.get("cmavo_causal_delta", 0.0)) >= 0.02,
         "judri_binding_causality": float(metrics.get("judri_binding_accuracy", 0.0)) >= 0.55 or float(metrics.get("judri_causal_delta", 0.0)) >= 0.02,
+        "judri_gated_bridge": float(metrics.get("judri_bridge_gate_enabled", 0.0)) >= 0.5 and float(metrics.get("judri_bridge_gate_active_mean", 0.0)) > 0.05,
         "brivi_lock": float(metrics.get("brivi_lock_violation_rate", 1.0)) <= 0.10 or float(metrics.get("brivi_gate_accuracy", 0.0)) >= 0.90,
         "actual_bridge_transfer": strict >= max(0.15, float(metrics.get("random_trace_accuracy", 0.0)) + 0.10),
     }

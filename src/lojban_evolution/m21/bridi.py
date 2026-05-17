@@ -19,6 +19,7 @@ M21_LOCKS: dict[str, str] = {
     "bridi_trace_reconstruction": "reconstruct gismu, cmavo, judri bindings, and STOP from controlled traces",
     "cmavo_causality": "cmavo modifiers must be causally useful rather than decorative",
     "judri_binding_causality": "judri/entity-place bindings must carry downstream answer information",
+    "judri_gated_bridge": "downstream predicate energy is silenced unless judri bindings ground the frame",
     "brivi_lock": "a predicate frame is silent unless it binds at least one judri argument",
     "actual_bridge_transfer": "dynamic traces transfer through a minimal downstream bridge-style adapter",
 }
@@ -97,6 +98,21 @@ def pointer_necessity_contrast_loss(
     """M19 hinge: full trace must beat the no-pointer ablation by a margin."""
 
     return torch.relu(full_loss + full_loss.new_tensor(float(margin)) - ablated_loss)
+
+
+def judri_grounding_gate_from_logits(
+    judri_logits: torch.Tensor,
+    *,
+    temperature: float = 1.0,
+    pad_entity_id: int = 0,
+) -> torch.Tensor:
+    """Return per-frame non-PAD judri mass used to gate downstream predicate energy."""
+
+    temp = max(float(temperature), 1e-6)
+    probs = torch.softmax(judri_logits / temp, dim=-1)
+    pad_mass = probs[..., int(pad_entity_id)].clamp(0.0, 1.0)
+    non_pad_mass = 1.0 - pad_mass
+    return non_pad_mass.mean(dim=-1).clamp(0.0, 1.0)
 
 
 def clamp_poincare_norm(
@@ -532,6 +548,8 @@ class M21DynamicBridiQFormer(nn.Module):
         poincare_curvature: float = 1.0,
         poincare_max_norm: float = DEFAULT_POINCARE_MAX_NORM,
         riemannian_gradient_scale: bool = True,
+        judri_bridge_gate: bool = False,
+        judri_bridge_gate_temperature: float = 1.0,
     ):
         super().__init__()
         self.max_frames = int(max_frames)
@@ -541,6 +559,8 @@ class M21DynamicBridiQFormer(nn.Module):
         self.poincare_curvature = float(poincare_curvature)
         self.poincare_max_norm = float(poincare_max_norm)
         self.riemannian_gradient_scale = bool(riemannian_gradient_scale)
+        self.judri_bridge_gate = bool(judri_bridge_gate)
+        self.judri_bridge_gate_temperature = float(judri_bridge_gate_temperature)
         self.embedding = nn.Embedding(int(vocab_size), int(embedding_dim), padding_idx=0)
         self.encoder = nn.Sequential(nn.Linear(int(embedding_dim), int(hidden_dim)), nn.Tanh(), nn.Linear(int(hidden_dim), int(hidden_dim)), nn.Tanh())
         self.frame_queries = nn.Parameter(torch.randn(self.max_frames, int(hidden_dim)) * 0.02)
@@ -602,10 +622,25 @@ class M21DynamicBridiQFormer(nn.Module):
         gismu_state = torch.softmax(gismu_logits, dim=-1) @ self.gismu_embed
         cmavo_state = torch.sigmoid(cmavo_logits) @ self.cmavo_embed
         judri_state = (torch.softmax(judri_logits, dim=-1) @ self.entity_embed).mean(dim=2)
-        full_component = gismu_state + cmavo_state + judri_state
-        no_cmavo_component = gismu_state + judri_state
-        no_judri_component = gismu_state + cmavo_state
-        gismu_only_component = gismu_state
+        predicate_state = gismu_state + cmavo_state
+        judri_gate = judri_grounding_gate_from_logits(
+            judri_logits,
+            temperature=self.judri_bridge_gate_temperature,
+        )
+        judri_gate_expanded = judri_gate.unsqueeze(-1)
+        if self.judri_bridge_gate:
+            gated_predicate_state = predicate_state * judri_gate_expanded
+            full_component = gated_predicate_state + judri_state
+            no_cmavo_component = (gismu_state * judri_gate_expanded) + judri_state
+            no_judri_component = predicate_state * 0.0
+            gismu_only_component = gismu_state * 0.0
+            silenced_predicate_energy = (predicate_state.norm(dim=-1) * (1.0 - judri_gate) * active_prob.squeeze(-1)).sum() / active_prob.squeeze(-1).sum().clamp_min(1.0)
+        else:
+            full_component = predicate_state + judri_state
+            no_cmavo_component = gismu_state + judri_state
+            no_judri_component = predicate_state
+            gismu_only_component = gismu_state
+            silenced_predicate_energy = prompt_state.new_zeros(())
         if self.geometry_mode == "poincare":
             full_component, full_clip = self._to_poincare(full_component)
             no_cmavo_component, no_cmavo_clip = self._to_poincare(no_cmavo_component)
@@ -692,6 +727,10 @@ class M21DynamicBridiQFormer(nn.Module):
             "hyperbolic_distance_mean": hyperbolic_distance_mean,
             "hyperbolic_tangent_handoff_norm_mean": hyperbolic_tangent_handoff_norm_mean,
             "hyperbolic_tangent_handoff_finite_rate": hyperbolic_tangent_handoff_finite_rate,
+            "judri_bridge_gate_mean": judri_gate.mean(),
+            "judri_bridge_gate_active_mean": (judri_gate * active_prob.squeeze(-1)).sum() / active_prob.squeeze(-1).sum().clamp_min(1.0),
+            "judri_bridge_gate_silenced_predicate_energy_mean": silenced_predicate_energy,
+            "judri_bridge_gate_enabled": prompt_state.new_tensor(1.0 if self.judri_bridge_gate else 0.0),
         }
 
 
@@ -796,6 +835,10 @@ def compute_m21_loss(
         "hyperbolic_distance_mean": float(outputs.get("hyperbolic_distance_mean", answer_loss.new_zeros(())).detach().cpu().item()),
         "hyperbolic_tangent_handoff_norm_mean": float(outputs.get("hyperbolic_tangent_handoff_norm_mean", answer_loss.new_zeros(())).detach().cpu().item()),
         "hyperbolic_tangent_handoff_finite_rate": float(outputs.get("hyperbolic_tangent_handoff_finite_rate", answer_loss.new_zeros(())).detach().cpu().item()),
+        "judri_bridge_gate_mean": float(outputs.get("judri_bridge_gate_mean", answer_loss.new_zeros(())).detach().cpu().item()),
+        "judri_bridge_gate_active_mean": float(outputs.get("judri_bridge_gate_active_mean", answer_loss.new_zeros(())).detach().cpu().item()),
+        "judri_bridge_gate_silenced_predicate_energy_mean": float(outputs.get("judri_bridge_gate_silenced_predicate_energy_mean", answer_loss.new_zeros(())).detach().cpu().item()),
+        "judri_bridge_gate_enabled": float(outputs.get("judri_bridge_gate_enabled", answer_loss.new_zeros(())).detach().cpu().item()),
         "loss_mdl": float(mdl_loss.detach().cpu().item()),
     }
 
@@ -862,6 +905,10 @@ def evaluate_model(
             "hyperbolic_topology_loss",
             "hyperbolic_tangent_handoff_norm_mean",
             "hyperbolic_tangent_handoff_finite_rate",
+            "judri_bridge_gate_mean",
+            "judri_bridge_gate_active_mean",
+            "judri_bridge_gate_silenced_predicate_energy_mean",
+            "judri_bridge_gate_enabled",
         ):
             value = outputs.get(key)
             if isinstance(value, torch.Tensor):
@@ -953,6 +1000,10 @@ def evaluate_model(
         "hyperbolic_distance_mean": hyper_sums["hyperbolic_distance_mean"] / max(1, hyper_batches),
         "hyperbolic_tangent_handoff_norm_mean": hyper_sums["hyperbolic_tangent_handoff_norm_mean"] / max(1, hyper_batches),
         "hyperbolic_tangent_handoff_finite_rate": hyper_sums["hyperbolic_tangent_handoff_finite_rate"] / max(1, hyper_batches),
+        "judri_bridge_gate_mean": hyper_sums["judri_bridge_gate_mean"] / max(1, hyper_batches),
+        "judri_bridge_gate_active_mean": hyper_sums["judri_bridge_gate_active_mean"] / max(1, hyper_batches),
+        "judri_bridge_gate_silenced_predicate_energy_mean": hyper_sums["judri_bridge_gate_silenced_predicate_energy_mean"] / max(1, hyper_batches),
+        "judri_bridge_gate_enabled": hyper_sums["judri_bridge_gate_enabled"] / max(1, hyper_batches),
         "loss_hyperbolic_topology": hyper_sums["hyperbolic_topology_loss"] / max(1, hyper_batches),
     }
 
@@ -985,6 +1036,8 @@ def train_m21_dynamic_bridi(
     poincare_curvature: float = 1.0,
     poincare_max_norm: float = DEFAULT_POINCARE_MAX_NORM,
     riemannian_gradient_scale: bool = True,
+    judri_bridge_gate: bool = False,
+    judri_bridge_gate_temperature: float = 1.0,
     device: str | torch.device = "cpu",
 ) -> dict[str, Any]:
     del max_cmavo_per_frame
@@ -1006,6 +1059,8 @@ def train_m21_dynamic_bridi(
         poincare_curvature=float(poincare_curvature),
         poincare_max_norm=float(poincare_max_norm),
         riemannian_gradient_scale=bool(riemannian_gradient_scale),
+        judri_bridge_gate=bool(judri_bridge_gate),
+        judri_bridge_gate_temperature=float(judri_bridge_gate_temperature),
     ).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=float(learning_rate), weight_decay=1e-4)
     history: list[dict[str, float]] = []
@@ -1079,5 +1134,7 @@ def train_m21_dynamic_bridi(
             "poincare_curvature": float(poincare_curvature),
             "poincare_max_norm": float(poincare_max_norm),
             "riemannian_gradient_scale": bool(riemannian_gradient_scale),
+            "judri_bridge_gate": bool(judri_bridge_gate),
+            "judri_bridge_gate_temperature": float(judri_bridge_gate_temperature),
         },
     }

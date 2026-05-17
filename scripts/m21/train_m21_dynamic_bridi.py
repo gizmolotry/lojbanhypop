@@ -43,6 +43,7 @@ def _lock_status(metrics: dict[str, Any]) -> dict[str, bool]:
         "bridi_trace_reconstruction": _metric(metrics, "bridi_trace_exact_accuracy", 0.0) >= 0.55,
         "cmavo_causality": _metric(metrics, "cmavo_accuracy", 0.0) >= 0.55 or _metric(metrics, "cmavo_causal_delta", 0.0) >= 0.02,
         "judri_binding_causality": _metric(metrics, "judri_binding_accuracy", 0.0) >= 0.55 or _metric(metrics, "judri_causal_delta", 0.0) >= 0.02,
+        "judri_gated_bridge": _metric(metrics, "judri_bridge_gate_enabled", 0.0) >= 0.5 and _metric(metrics, "judri_bridge_gate_active_mean", 0.0) > 0.05,
         "brivi_lock": _metric(metrics, "brivi_lock_violation_rate", 1.0) <= 0.10,
         "actual_bridge_transfer": strict >= max(0.15, _metric(metrics, "random_trace_accuracy", 0.0) + 0.10),
     }
@@ -84,6 +85,8 @@ def run_train(args: argparse.Namespace) -> dict[str, Any]:
         poincare_curvature=float(args.poincare_curvature),
         poincare_max_norm=float(args.poincare_max_norm),
         riemannian_gradient_scale=bool(args.riemannian_gradient_scale),
+        judri_bridge_gate=bool(args.judri_bridge_gate),
+        judri_bridge_gate_temperature=float(args.judri_bridge_gate_temperature),
         device=str(args.device),
     )
     metrics = dict(result["metrics"])
@@ -172,6 +175,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--poincare-curvature", type=float, default=1.0)
     parser.add_argument("--poincare-max-norm", type=float, default=0.99)
     parser.add_argument("--riemannian-gradient-scale", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--judri-bridge-gate", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--judri-bridge-gate-temperature", type=float, default=1.0)
     parser.add_argument("--device", type=str, default="cpu")
     parser.add_argument("--output-root", type=Path, default=Path(registry["output_roots"]["train"]))
     parser.add_argument("--output-path", type=Path, default=None)

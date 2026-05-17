@@ -90,6 +90,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--poincare-curvature", type=float, default=1.0)
     parser.add_argument("--poincare-max-norm", type=float, default=0.99)
     parser.add_argument("--hyperbolic-topology-weight", type=float, default=0.0)
+    parser.add_argument("--judri-bridge-gate", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--judri-bridge-gate-temperature", type=float, default=1.0)
     parser.add_argument("--device", type=str, default="cpu")
     parser.add_argument("--output-root", type=Path, default=Path(registry["output_roots"]["pointer_microgrid"]))
     parser.add_argument("--run-id", type=str, default="")
@@ -153,6 +155,9 @@ def run_microgrid(args: argparse.Namespace) -> dict[str, Any]:
                     str(float(args.poincare_max_norm)),
                     "--hyperbolic-topology-weight",
                     str(float(args.hyperbolic_topology_weight)),
+                    "--judri-bridge-gate" if bool(args.judri_bridge_gate) else "--no-judri-bridge-gate",
+                    "--judri-bridge-gate-temperature",
+                    str(float(args.judri_bridge_gate_temperature)),
                     "--device",
                     str(args.device),
                     "--output-root",

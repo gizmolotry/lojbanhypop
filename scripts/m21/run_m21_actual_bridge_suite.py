@@ -78,6 +78,10 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
         "accuracy_per_token": float(metrics.get("accuracy_per_token", 0.0)),
         "trace_tokens": float(metrics.get("trace_tokens", 0.0)),
         "accuracy_per_trace_token": float(metrics.get("accuracy_per_trace_token", 0.0)),
+        "judri_bridge_gate_enabled": float(metrics.get("judri_bridge_gate_enabled", 0.0)),
+        "judri_bridge_gate_mean": float(metrics.get("judri_bridge_gate_mean", 0.0)),
+        "judri_bridge_gate_active_mean": float(metrics.get("judri_bridge_gate_active_mean", 0.0)),
+        "judri_bridge_gate_silenced_predicate_energy_mean": float(metrics.get("judri_bridge_gate_silenced_predicate_energy_mean", 0.0)),
     }
     report_path = Path(args.output_path) if args.output_path else run_dir / registry["report_names"]["actual_bridge"]
     validate_series_outputs("M", [registry["output_roots"]["actual_bridge"], str(run_dir)], [report_path])

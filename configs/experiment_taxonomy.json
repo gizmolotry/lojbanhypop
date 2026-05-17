@@ -425,6 +425,7 @@
         "dynamic frame count",
         "cmavo causality",
         "judri binding causality",
+        "judri gated bridge",
         "brivi lock",
         "frame necessity",
         "actual bridge transfer"
@@ -450,6 +451,8 @@
       "metrics_guardrail": [
         "cmavo_causal_delta",
         "judri_causal_delta",
+        "judri_bridge_gate_active_mean",
+        "judri_bridge_gate_silenced_predicate_energy_mean",
         "brivi_lock_violation_rate",
         "accuracy_per_trace_token"
       ],
@@ -894,6 +897,20 @@
       ],
       "surface": "m21_pointer_necessity_microgrid"
     },
+    "m21.judri_gated_bridge": {
+      "test_id": "m21.judri_gated_bridge",
+      "family": "M21",
+      "description": "Euclidean M21.1.G bridge gate: downstream gismu/cmavo predicate energy is silenced unless judri place bindings ground the frame.",
+      "metrics": [
+        "judri_bridge_gate_enabled",
+        "judri_bridge_gate_mean",
+        "judri_bridge_gate_active_mean",
+        "judri_bridge_gate_silenced_predicate_energy_mean",
+        "no_judri_accuracy",
+        "judri_causal_delta"
+      ],
+      "surface": "m21_dynamic_bridi_suite"
+    },
     "m21.m19_gauntlet_port": {
       "test_id": "m21.m19_gauntlet_port",
       "family": "M21",
@@ -1163,6 +1180,7 @@
         "m21.bridi_reconstruction",
         "m21.cmavo_causality",
         "m21.judri_binding",
+        "m21.judri_gated_bridge",
         "m21.pointer_necessity",
         "m21.m19_gauntlet_port",
         "m21.frame_necessity",
@@ -1177,7 +1195,8 @@
         "M21.1.C",
         "M21.1.D",
         "M21.1.E",
-        "M21.1.F"
+        "M21.1.F",
+        "M21.1.G"
       ],
       "inherit_required_test_contracts": false
     }

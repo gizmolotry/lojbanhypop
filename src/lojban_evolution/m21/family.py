@@ -66,6 +66,22 @@ M21_DYNAMIC_BRIDI_GRID: list[dict[str, Any]] = [
             "mdl_weight": 0.01,
         },
     },
+    {
+        "cell_key": "G",
+        "cell_id": m21_cell_id("G"),
+        "lock": "judri_gated_bridge",
+        "label": "Judri-gated bridge",
+        "variant": {
+            "trace_weight": 1.25,
+            "answer_weight": 1.25,
+            "counterfactual_weight": 1.25,
+            "brivi_lock_weight": 1.5,
+            "frame_necessity_weight": 1.0,
+            "mdl_weight": 0.01,
+            "judri_bridge_gate": True,
+            "judri_bridge_gate_temperature": 1.0,
+        },
+    },
 ]
 
 
@@ -133,12 +149,14 @@ M21_REGISTRY: dict[str, dict[str, Any]] = {
             "brivi_lock_weight",
             "frame_necessity_weight",
             "pointer_necessity_weight",
+            "judri_bridge_gate",
+            "judri_bridge_gate_temperature",
             "geometry_mode",
             "poincare_curvature",
             "mdl_weight",
             "seed",
         ],
-        "comparison_targets": ["M20", "M19.31", "M21.1.A", "M21.1.F"],
+        "comparison_targets": ["M20", "M19.31", "M21.1.A", "M21.1.F", "M21.1.G"],
         "default_grid": deepcopy(M21_DYNAMIC_BRIDI_GRID),
     }
 }
