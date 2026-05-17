@@ -17,6 +17,13 @@ DEFAULTS = {
     "history_manifest": "",
     "benchmark_report": "",
     "audit_report": "",
+    "m20_suite_report": "",
+    "m20_lock_report": "",
+    "m20_induction_report": "",
+    "m21_suite_report": "",
+    "m21_synthetic_assay_report": "",
+    "m21_actual_bridge_report": "",
+    "m21_lock_report": "",
     "execute_m19_direct": False,
     "base_model": "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
     "bridge_path": "artifacts/models/m19/grid/m19_isolation_grid_20260409_v3/M19.3_8Q_128D_8S.pt",
@@ -57,6 +64,20 @@ def _run_direct_unified_eval(**context: object) -> None:
         args.extend(["--benchmark-report", str(cfg.get("benchmark_report"))])
     if str(cfg.get("audit_report", "")).strip():
         args.extend(["--audit-report", str(cfg.get("audit_report"))])
+    if str(cfg.get("m20_suite_report", "")).strip():
+        args.extend(["--m20-suite-report", str(cfg.get("m20_suite_report"))])
+    if str(cfg.get("m20_lock_report", "")).strip():
+        args.extend(["--m20-lock-report", str(cfg.get("m20_lock_report"))])
+    if str(cfg.get("m20_induction_report", "")).strip():
+        args.extend(["--m20-induction-report", str(cfg.get("m20_induction_report"))])
+    if str(cfg.get("m21_suite_report", "")).strip():
+        args.extend(["--m21-suite-report", str(cfg.get("m21_suite_report"))])
+    if str(cfg.get("m21_synthetic_assay_report", "")).strip():
+        args.extend(["--m21-synthetic-assay-report", str(cfg.get("m21_synthetic_assay_report"))])
+    if str(cfg.get("m21_actual_bridge_report", "")).strip():
+        args.extend(["--m21-actual-bridge-report", str(cfg.get("m21_actual_bridge_report"))])
+    if str(cfg.get("m21_lock_report", "")).strip():
+        args.extend(["--m21-lock-report", str(cfg.get("m21_lock_report"))])
     if bool(cfg.get("execute_m19_direct", False)):
         args.extend(
             [
@@ -96,12 +117,12 @@ def _run_direct_unified_eval(**context: object) -> None:
 
 with DAG(
     dag_id="lojban_direct_unified_eval",
-    description="Contract-aware direct unified eval surface for modern families, with M19 as the initial checkpoint-backed implementation.",
+    description="Contract-aware direct unified eval surface for modern families.",
     start_date=datetime(2026, 1, 1),
     schedule=None,
     catchup=False,
     max_active_runs=1,
-    tags=["lojban", "control-plane", "direct-eval", "m19", "lineage"],
+    tags=["lojban", "control-plane", "direct-eval", "m19", "m20", "m21", "lineage"],
     params={
         "family": Param("M19", type="string", minLength=1),
         "track": Param("M19", type="string", minLength=1),
@@ -110,6 +131,13 @@ with DAG(
         "history_manifest": Param("", type="string"),
         "benchmark_report": Param("", type="string"),
         "audit_report": Param("", type="string"),
+        "m20_suite_report": Param("", type="string"),
+        "m20_lock_report": Param("", type="string"),
+        "m20_induction_report": Param("", type="string"),
+        "m21_suite_report": Param("", type="string"),
+        "m21_synthetic_assay_report": Param("", type="string"),
+        "m21_actual_bridge_report": Param("", type="string"),
+        "m21_lock_report": Param("", type="string"),
         "execute_m19_direct": Param(False, type="boolean"),
         "base_model": Param("C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct", type="string", minLength=1),
         "bridge_path": Param("artifacts/models/m19/grid/m19_isolation_grid_20260409_v3/M19.3_8Q_128D_8S.pt", type="string", minLength=1),

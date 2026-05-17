@@ -138,6 +138,15 @@ PATH_CANONICALIZATION: dict[str, str] = {
     "scripts/run_m19_mainline_suite.py": "scripts/m19/run_m19_mainline_suite.py",
     "scripts/run_m19_isolation_grid.py": "scripts/m19/run_m19_isolation_grid.py",
     "scripts/run_m19_mainline_symbiote.py": "scripts/m19/run_m19_mainline_symbiote.py",
+    "scripts/run_m20_dictionary_first_suite.py": "scripts/m20/run_m20_dictionary_first_suite.py",
+    "scripts/train_m20_dictionary.py": "scripts/m20/train_m20_dictionary.py",
+    "scripts/run_m20_lock_suite.py": "scripts/m20/run_m20_lock_suite.py",
+    "scripts/run_m20_predicate_induction.py": "scripts/m20/run_m20_predicate_induction.py",
+    "scripts/train_m21_dynamic_bridi.py": "scripts/m21/train_m21_dynamic_bridi.py",
+    "scripts/run_m21_dynamic_bridi_suite.py": "scripts/m21/run_m21_dynamic_bridi_suite.py",
+    "scripts/run_m21_synthetic_assay_suite.py": "scripts/m21/run_m21_synthetic_assay_suite.py",
+    "scripts/run_m21_actual_bridge_suite.py": "scripts/m21/run_m21_actual_bridge_suite.py",
+    "scripts/run_m21_lock_suite.py": "scripts/m21/run_m21_lock_suite.py",
     "scripts/run_m3_plus_family.py": "scripts/m3/run_m3_plus_family.py",
     "scripts/run_m3_5_symmetry.py": "scripts/m3/run_m3_5_symmetry.py",
     "scripts/run_m3_6_symmetry_oracle.py": "scripts/m3/run_m3_6_symmetry_oracle.py",
@@ -208,6 +217,8 @@ PATH_CANONICALIZATION: dict[str, str] = {
     "airflow/dags/lojban_ablation_program_spine_dag.py": "airflow/dags/control_plane/lojban_ablation_program_spine_dag.py",
     "airflow/dags/lojban_experiment_dag.py": "airflow/dags/control_plane/lojban_experiment_dag.py",
     "airflow/dags/lojban_phase_ablation_dag.py": "airflow/dags/control_plane/lojban_phase_ablation_dag.py",
+    "airflow/dags/lojban_m20_dictionary_first_dag.py": "airflow/dags/m20/lojban_m20_dictionary_first_dag.py",
+    "airflow/dags/lojban_m21_dynamic_bridi_dag.py": "airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py",
     "airflow/dags/lojban_j_series_dag.py": "airflow/dags/legacy/lojban_j_series_dag.py",
     "airflow/dags/lojban_l_series_dag.py": "airflow/dags/legacy/lojban_l_series_dag.py",
     "airflow/dags/lojban_m_bridge_ablation_test_suite_dag.py": "airflow/dags/m_bridge/lojban_m_bridge_ablation_test_suite_dag.py",
@@ -1452,6 +1463,14 @@ def _collect_telemetry_reports(registry: dict[str, dict[str, Any]], source_paths
                 report_script_paths.append(runner_script)
             if dag_path:
                 report_dag_paths.append(dag_path)
+        report_registry = payload.get("registry")
+        if isinstance(report_registry, dict):
+            runner_script = str(report_registry.get("runner_script") or "").strip()
+            dag_path = str(report_registry.get("dag") or "").strip()
+            if runner_script:
+                report_script_paths.append(runner_script)
+            if dag_path:
+                report_dag_paths.append(dag_path)
         source_paths.add(_path_str(path))
         if track == "M11.discriminative":
             _register_family_level_manifest(
@@ -1483,6 +1502,8 @@ def _collect_telemetry_reports(registry: dict[str, dict[str, Any]], source_paths
                 metrics = cell_payload.get("metrics") if isinstance(cell_payload.get("metrics"), dict) else {}
                 if not metrics and isinstance(cell_payload.get("validation_metrics"), dict):
                     metrics = cell_payload.get("validation_metrics")
+                if not metrics and isinstance(cell_payload.get("aggregate_metrics"), dict):
+                    metrics = cell_payload.get("aggregate_metrics")
                 surface = str(payload.get("surface") or "").strip()
                 if track == "M18" and surface in M18_SURFACE_MINOR:
                     cell_code = M18_SURFACE_CELL_CODES.get(surface, {}).get(str(cell_name), slugify(str(cell_name)).upper())
@@ -1511,7 +1532,7 @@ def _collect_telemetry_reports(registry: dict[str, dict[str, Any]], source_paths
                         source_paths=[_path_str(path)],
                         evidence_class="artifact",
                         confidence_level="high",
-                        reproducibility_status="runnable" if track in {"M3.18", "M3.19", "M14", "M18", "M19", "M19.3", "M19.4"} else "artifact_only",
+                        reproducibility_status="runnable" if track in {"M3.18", "M3.19", "M14", "M18", "M19", "M19.3", "M19.4", "M20", "M20.1", "M21", "M21.1"} else "artifact_only",
                         metrics=metrics,
                         normalized_metrics=normalize_metric_surface(metrics),
                         reported_at=str(payload.get("timestamp") or payload.get("generated_utc") or "") or None,

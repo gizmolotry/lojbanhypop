@@ -310,6 +310,18 @@ M_STAGE_SPECS: list[dict[str, Any]] = [
         "title": "M19",
         "child_dags": ["lojban_m19_family"],
     },
+    {
+        "task_id": "m20_dictionary_first_substrate",
+        "stage_key": "M20",
+        "title": "M20",
+        "child_dags": ["lojban_m20_dictionary_first"],
+    },
+    {
+        "task_id": "m21_dynamic_bridi_substrate",
+        "stage_key": "M21",
+        "title": "M21",
+        "child_dags": ["lojban_m21_dynamic_bridi"],
+    },
 ]
 
 

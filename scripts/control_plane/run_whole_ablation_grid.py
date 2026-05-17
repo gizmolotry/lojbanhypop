@@ -30,6 +30,13 @@ DEFAULT_M19_ISOLATION_REPORT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / 
 DEFAULT_M19_ZH_SUMMARY = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m19_zh_comparison" / "m19_zh_comparison_20260409" / "m19_zh_comparison_summary.json"
 DEFAULT_M19_REPLICATION_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m19_replication_suite"
 DEFAULT_M19_KILL_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m19_kill_test_suite"
+DEFAULT_M20_SUITE_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m20_dictionary_first_suite"
+DEFAULT_M20_LOCK_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m20_lock_suite"
+DEFAULT_M20_INDUCTION_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m20_predicate_induction"
+DEFAULT_M21_SUITE_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m21_dynamic_bridi_suite"
+DEFAULT_M21_SYNTHETIC_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m21_synthetic_assay_suite"
+DEFAULT_M21_ACTUAL_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m21_actual_bridge_suite"
+DEFAULT_M21_LOCK_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m21_lock_suite"
 
 STAGE_ORDER = [
     "A-G",
@@ -53,6 +60,8 @@ STAGE_ORDER = [
     "M14",
     "M18",
     "M19",
+    "M20",
+    "M21",
     "Control Plane",
 ]
 
@@ -76,6 +85,14 @@ KEY_METRICS = [
     "masked_pointer_zero_rate",
     "family_slot_entropy",
     "symbolic_trace_alignment",
+    "strict_accuracy",
+    "lock_pass_rate",
+    "dictionary_coverage",
+    "factorized_exact_accuracy",
+    "predicate_identity_stability",
+    "brivi_gate_accuracy",
+    "argument_binding_accuracy",
+    "accuracy_per_token",
     "predicate_pointer_radial_gap",
     "family_radius_violation_rate",
     "hyperbolic_geodesic_margin",
@@ -83,6 +100,28 @@ KEY_METRICS = [
     "constraint_scope",
     "constraint_identity",
     "full_total_regularizer",
+    "bridi_trace_exact_accuracy",
+    "gismu_accuracy",
+    "cmavo_accuracy",
+    "judri_binding_accuracy",
+    "frame_count_mae",
+    "stop_accuracy",
+    "mean_active_frames",
+    "active_gismu_count",
+    "active_cmavo_count",
+    "active_code_fraction_reachable",
+    "active_code_fraction_total",
+    "actual_bridge_transfer_score",
+    "no_cmavo_accuracy",
+    "no_judri_accuracy",
+    "gismu_only_accuracy",
+    "random_trace_accuracy",
+    "scratchpad_only_accuracy",
+    "frame_drop_delta",
+    "cmavo_causal_delta",
+    "judri_causal_delta",
+    "trace_tokens",
+    "accuracy_per_trace_token",
 ]
 
 
@@ -139,7 +178,7 @@ def main() -> None:
             row = _m3_row(stage, m_bridge)
         elif stage_key == "M11":
             row = _m11_row(stage, m_bridge)
-        elif stage_key in {"M14", "M18", "M19"}:
+        elif stage_key in {"M14", "M18", "M19", "M20", "M21"}:
             row = _special_stage_row(stage)
         elif stage_key == "Control Plane":
             row = _control_plane_row(stage, history_manifest, program_spine_manifest, legacy_grid_manifest, m_bridge_manifest)
@@ -293,7 +332,7 @@ def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
     anchor = _explicit_stage_anchor(stage_key) or _resolve_generic_anchor(stage)
     payload = _read_json_optional(anchor) if anchor else None
     metrics = _special_stage_metrics(stage_key, payload)
-    stage_for_row = _stage_with_direct_contract(stage, payload) if stage_key == "M19" else stage
+    stage_for_row = _stage_with_direct_contract(stage, payload) if stage_key in {"M19", "M20", "M21"} else stage
     supplemental: list[str] = []
     notes: list[str] = []
     if stage_key == "M14":
@@ -312,12 +351,31 @@ def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
             supplemental.append(_repo_relative(DEFAULT_M19_ISOLATION_REPORT) or "")
         if DEFAULT_M19_ZH_SUMMARY.exists():
             supplemental.append(_repo_relative(DEFAULT_M19_ZH_SUMMARY) or "")
+    if stage_key == "M20":
+        notes.append("M20 anchor captures dictionary-first substrate metrics; it is not a downstream English bridge claim")
+        lock_anchor = _latest_named_manifest(DEFAULT_M20_LOCK_ROOT, "m20_lock_suite_report.json")
+        if lock_anchor and lock_anchor.exists():
+            supplemental.append(_repo_relative(lock_anchor) or "")
+        induction_anchor = _latest_named_manifest(DEFAULT_M20_INDUCTION_ROOT, "m20_predicate_induction_report.json")
+        if induction_anchor and induction_anchor.exists():
+            supplemental.append(_repo_relative(induction_anchor) or "")
+    if stage_key == "M21":
+        notes.append("M21 anchor captures dynamic bridi Q-former metrics; promotion still requires actual bridge causality, not synthetic trace accuracy alone")
+        synthetic_anchor = _latest_named_manifest(DEFAULT_M21_SYNTHETIC_ROOT, "m21_synthetic_assay_report.json")
+        if synthetic_anchor and synthetic_anchor.exists():
+            supplemental.append(_repo_relative(synthetic_anchor) or "")
+        actual_anchor = _latest_named_manifest(DEFAULT_M21_ACTUAL_ROOT, "m21_actual_bridge_report.json")
+        if actual_anchor and actual_anchor.exists():
+            supplemental.append(_repo_relative(actual_anchor) or "")
+        lock_anchor = _latest_named_manifest(DEFAULT_M21_LOCK_ROOT, "m21_lock_suite_report.json")
+        if lock_anchor and lock_anchor.exists():
+            supplemental.append(_repo_relative(lock_anchor) or "")
     return _row(
         stage_for_row,
         "artifact_anchor" if anchor else "runnable_no_anchor",
         _repo_relative(anchor) if anchor else None,
         [path for path in supplemental if path],
-        _limit_metrics(metrics),
+        _limit_metrics(metrics, limit=18 if stage_key == "M21" else 8),
         notes,
     )
 
@@ -399,6 +457,8 @@ def _generic_metrics(payload: dict[str, Any]) -> dict[str, float]:
     metrics.update(_pick_metrics(payload))
     if not metrics and isinstance(payload.get("summary"), dict):
         metrics.update(_pick_metrics(payload["summary"]))
+    if isinstance(payload.get("aggregate_metrics"), dict):
+        metrics.update(_pick_metrics(payload["aggregate_metrics"]))
     if not metrics and isinstance(payload.get("cells"), dict):
         best_id, best_cell = _best_cell(payload["cells"])
         if best_id and isinstance(best_cell, dict):
@@ -414,7 +474,7 @@ def _explicit_stage_anchor(stage_key: str) -> Path | None:
     if stage_key == "M18" and DEFAULT_M18_REPORT.exists():
         return DEFAULT_M18_REPORT
     if stage_key == "M19":
-        direct_anchor = _latest_named_manifest(DEFAULT_DIRECT_UNIFIED_EVAL_ROOT, "direct_unified_eval_manifest.json")
+        direct_anchor = _latest_direct_unified_eval_anchor("M19")
         if direct_anchor and direct_anchor.exists():
             return direct_anchor
         dynamic_anchor = _latest_named_manifest(DEFAULT_M19_4_ROOT, "m19_4_mainline_report.json")
@@ -425,6 +485,20 @@ def _explicit_stage_anchor(stage_key: str) -> Path | None:
             return dynamic_benchmark
     if stage_key == "M19" and DEFAULT_M19_MAINLINE_REPORT.exists():
         return DEFAULT_M19_MAINLINE_REPORT
+    if stage_key == "M20":
+        direct_anchor = _latest_direct_unified_eval_anchor("M20")
+        if direct_anchor and direct_anchor.exists():
+            return direct_anchor
+        suite_anchor = _latest_named_manifest(DEFAULT_M20_SUITE_ROOT, "m20_dictionary_first_suite_report.json")
+        if suite_anchor and suite_anchor.exists():
+            return suite_anchor
+    if stage_key == "M21":
+        direct_anchor = _latest_direct_unified_eval_anchor("M21")
+        if direct_anchor and direct_anchor.exists():
+            return direct_anchor
+        suite_anchor = _latest_named_manifest(DEFAULT_M21_SUITE_ROOT, "m21_dynamic_bridi_suite_report.json")
+        if suite_anchor and suite_anchor.exists():
+            return suite_anchor
     return None
 
 
@@ -530,6 +604,108 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
             metrics["kill_entity_accuracy"] = _float_or_zero(kill_payload["metrics"].get("entity_accuracy"))
             metrics["kill_format_accuracy"] = _float_or_zero(kill_payload["metrics"].get("format_accuracy"))
         return metrics
+    if stage_key == "M20":
+        metrics: dict[str, float] = {}
+        headline = payload.get("headline_metrics", {})
+        aggregate = payload.get("aggregate_metrics", {})
+        top = payload.get("metrics", {})
+        for source in (headline, aggregate, top, payload):
+            if not isinstance(source, dict):
+                continue
+            _merge_existing_metrics(
+                metrics,
+                source,
+                {
+                    "strict_accuracy": ("strict_accuracy", "mean_strict_accuracy", "synthetic_world_accuracy"),
+                    "synthetic_world_accuracy": ("synthetic_world_accuracy", "mean_synthetic_world_accuracy"),
+                    "dictionary_coverage": ("dictionary_coverage", "mean_dictionary_coverage"),
+                    "factorized_exact_accuracy": ("factorized_exact_accuracy", "mean_factorized_exact_accuracy"),
+                    "brivi_gate_accuracy": ("brivi_gate_accuracy", "mean_brivi_gate_accuracy"),
+                    "predicate_identity_stability": (
+                        "predicate_identity_stability",
+                        "mean_predicate_identity_stability",
+                    ),
+                    "lock_pass_rate": ("lock_pass_rate", "mean_lock_pass_rate"),
+                    "masked_accuracy": ("masked_accuracy", "mean_masked_accuracy"),
+                    "entity_leakage_proxy": ("entity_leakage_proxy", "mean_entity_leakage_proxy"),
+                    "active_code_fraction": ("active_code_fraction", "mean_active_code_fraction"),
+                    "hard_code_utilization_count": (
+                        "hard_code_utilization_count",
+                        "mean_hard_code_utilization_count",
+                    ),
+                    "soft_hard_dictionary_agreement": (
+                        "soft_hard_dictionary_agreement",
+                        "mean_soft_hard_dictionary_agreement",
+                    ),
+                    "stable_seed_rate": "stable_seed_rate",
+                },
+            )
+        if isinstance(payload.get("cells"), dict):
+            best_id, best_cell = _best_cell(payload["cells"])
+            if best_id and isinstance(best_cell, dict):
+                metrics["best_cell_accuracy"] = _best_cell_metric(best_cell)
+        return metrics
+    if stage_key == "M21":
+        metrics: dict[str, float] = {}
+        headline = payload.get("headline_metrics", {})
+        aggregate = payload.get("aggregate_metrics", {})
+        top = payload.get("metrics", {})
+        for source in (headline, aggregate, top, payload):
+            if not isinstance(source, dict):
+                continue
+            _merge_existing_metrics(
+                metrics,
+                source,
+                {
+                    "strict_accuracy": ("strict_accuracy", "mean_strict_accuracy"),
+                    "bridi_trace_exact_accuracy": ("bridi_trace_exact_accuracy", "mean_bridi_trace_exact_accuracy"),
+                    "gismu_accuracy": ("gismu_accuracy", "mean_gismu_accuracy"),
+                    "cmavo_accuracy": ("cmavo_accuracy", "mean_cmavo_accuracy"),
+                    "judri_binding_accuracy": ("judri_binding_accuracy", "mean_judri_binding_accuracy"),
+                    "frame_count_mae": ("frame_count_mae", "mean_frame_count_mae"),
+                    "lock_pass_rate": ("lock_pass_rate", "mean_lock_pass_rate"),
+                    "actual_bridge_transfer_score": "actual_bridge_transfer_score",
+                    "full_accuracy": ("full_accuracy", "mean_full_accuracy"),
+                    "no_cmavo_accuracy": ("no_cmavo_accuracy", "mean_no_cmavo_accuracy"),
+                    "no_judri_accuracy": ("no_judri_accuracy", "mean_no_judri_accuracy"),
+                    "gismu_only_accuracy": ("gismu_only_accuracy", "mean_gismu_only_accuracy"),
+                    "random_trace_accuracy": "random_trace_accuracy",
+                    "scratchpad_only_accuracy": "scratchpad_only_accuracy",
+                    "frame_drop_delta": ("frame_drop_delta", "mean_frame_drop_delta"),
+                    "cmavo_causal_delta": ("cmavo_causal_delta", "mean_cmavo_causal_delta"),
+                    "judri_causal_delta": ("judri_causal_delta", "mean_judri_causal_delta"),
+                    "mean_active_frames": "mean_active_frames",
+                    "active_code_fraction_reachable": ("active_code_fraction_reachable", "mean_active_code_fraction_reachable"),
+                    "avg_tokens": "avg_tokens",
+                    "accuracy_per_token": "accuracy_per_token",
+                    "trace_tokens": "trace_tokens",
+                    "accuracy_per_trace_token": "accuracy_per_trace_token",
+                },
+            )
+        actual_anchor = _latest_named_manifest(DEFAULT_M21_ACTUAL_ROOT, "m21_actual_bridge_report.json")
+        actual_payload = _read_json_optional(actual_anchor)
+        if isinstance(actual_payload, dict) and isinstance(actual_payload.get("metrics"), dict):
+            _merge_existing_metrics(
+                metrics,
+                actual_payload["metrics"],
+                {
+                    "actual_bridge_transfer_score": "actual_bridge_transfer_score",
+                    "strict_accuracy": "strict_accuracy",
+                    "random_trace_accuracy": "random_trace_accuracy",
+                    "scratchpad_only_accuracy": "scratchpad_only_accuracy",
+                    "cmavo_causal_delta": "cmavo_causal_delta",
+                    "judri_causal_delta": "judri_causal_delta",
+                },
+            )
+        lock_anchor = _latest_named_manifest(DEFAULT_M21_LOCK_ROOT, "m21_lock_suite_report.json")
+        lock_payload = _read_json_optional(lock_anchor)
+        if isinstance(lock_payload, dict) and isinstance(lock_payload.get("metrics"), dict):
+            _merge_existing_metrics(metrics, lock_payload["metrics"], {"lock_pass_rate": "lock_pass_rate", "brivi_lock_violation_rate": "brivi_lock_violation_rate"})
+        if isinstance(payload.get("cells"), dict):
+            best_id, best_cell = _best_cell(payload["cells"])
+            if best_id and isinstance(best_cell, dict):
+                metrics["best_cell_accuracy"] = _best_cell_metric(best_cell)
+        return metrics
     return _generic_metrics(payload)
 
 
@@ -567,6 +743,11 @@ def _best_cell_metric(cell: dict[str, Any]) -> float:
         for key in ("overall_accuracy", "held_out_accuracy", "accuracy"):
             if key in metrics:
                 return _float_or_zero(metrics[key])
+    aggregate = cell.get("aggregate_metrics", {})
+    if isinstance(aggregate, dict):
+            for key in ("strict_accuracy", "mean_strict_accuracy", "synthetic_world_accuracy", "factorized_exact_accuracy", "bridi_trace_exact_accuracy", "mean_bridi_trace_exact_accuracy"):
+                if key in aggregate:
+                    return _float_or_zero(aggregate[key])
     for key in ("accuracy", "overall_accuracy", "held_out_accuracy"):
         if key in cell:
             return _float_or_zero(cell[key])
@@ -742,7 +923,7 @@ def _render_markdown(manifest: dict[str, Any]) -> str:
     lines.extend(["", "## Read", ""])
     lines.append("- The fresh part of the whole grid is now the recovered legacy runnable surface: A-G, H/H5/J, L6, and the phase-eval lanes under one manifest.")
     lines.append("- The modern M rows are represented through artifact-backed anchors and the control-plane lineage manifests, so the whole program is visible without pretending every stage was freshly retrained.")
-    lines.append("- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, and M19 the current bounded runway mainline.")
+    lines.append("- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, and M21 the dynamic bridi substrate branch.")
     return "\n".join(lines) + "\n"
 
 
@@ -777,6 +958,21 @@ def _latest_named_manifest(root: Path, filename: str) -> Path | None:
         return None
     matches = sorted(root.glob(f"*/{filename}"), key=lambda path: path.stat().st_mtime)
     return matches[-1] if matches else None
+
+
+def _latest_direct_unified_eval_anchor(family_key: str) -> Path | None:
+    if not DEFAULT_DIRECT_UNIFIED_EVAL_ROOT.exists():
+        return None
+    matches = sorted(
+        DEFAULT_DIRECT_UNIFIED_EVAL_ROOT.glob("*/direct_unified_eval_manifest.json"),
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
+    )
+    for path in matches:
+        payload = _read_json_optional(path)
+        if isinstance(payload, dict) and str(payload.get("family_key") or "").upper() == family_key.upper():
+            return path
+    return None
 
 
 def _repo_path(value: str | Path) -> Path:

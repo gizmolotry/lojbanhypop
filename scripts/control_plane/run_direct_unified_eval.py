@@ -36,6 +36,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--stability-report", type=Path, default=None)
     parser.add_argument("--kill-test-report", type=Path, default=None)
     parser.add_argument("--dictionary-audit-report", type=Path, default=None)
+    parser.add_argument("--m20-suite-report", type=Path, default=None)
+    parser.add_argument("--m20-lock-report", type=Path, default=None)
+    parser.add_argument("--m20-induction-report", type=Path, default=None)
+    parser.add_argument("--m21-suite-report", type=Path, default=None)
+    parser.add_argument("--m21-synthetic-assay-report", type=Path, default=None)
+    parser.add_argument("--m21-actual-bridge-report", type=Path, default=None)
+    parser.add_argument("--m21-lock-report", type=Path, default=None)
+    parser.add_argument("--m21-pointer-microgrid-report", type=Path, default=None)
+    parser.add_argument("--m21-gauntlet-report", type=Path, default=None)
 
     parser.add_argument("--execute-m19-direct", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--base-model", type=str, default="C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct")
@@ -63,8 +72,11 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    if str(args.family).strip().upper() != "M19":
-        raise NotImplementedError("Direct unified eval runner currently supports the M19 family only.")
+    family_key = str(args.family).strip().upper()
+    if family_key not in {"M19", "M20", "M21"}:
+        raise NotImplementedError("Direct unified eval runner currently supports the M19, M20, and M21 families only.")
+    if family_key != "M19" and bool(args.execute_m19_direct):
+        raise ValueError("--execute-m19-direct is only valid for family M19.")
 
     output_root, output_root_rel = _validated_output_root(args.output_root)
     run_id = args.run_id.strip() or datetime.now(timezone.utc).strftime("direct_unified_eval_%Y%m%d_%H%M%S")
@@ -75,14 +87,14 @@ def main() -> None:
     benchmark_report = args.benchmark_report
     audit_report = args.audit_report
     integrity_report = args.integrity_report
-    if bool(args.execute_m19_direct):
+    if family_key == "M19" and bool(args.execute_m19_direct):
         direct_dir = output_dir / "direct"
         direct_dir.mkdir(parents=True, exist_ok=True)
         benchmark_report, audit_report = _run_m19_direct(args, direct_dir)
 
     history_manifest = args.history_manifest or _latest_named_manifest(DEFAULT_HISTORY_ROOT, "ablation_history_manifest.json")
     manifest = build_direct_unified_eval_manifest(
-        family_key="M19",
+        family_key=family_key,
         track=str(args.track),
         benchmark_report_path=benchmark_report,
         audit_report_path=audit_report,
@@ -91,6 +103,15 @@ def main() -> None:
         stability_report_path=args.stability_report,
         kill_test_report_path=args.kill_test_report,
         dictionary_audit_report_path=args.dictionary_audit_report,
+        m20_suite_report_path=args.m20_suite_report,
+        m20_lock_report_path=args.m20_lock_report,
+        m20_induction_report_path=args.m20_induction_report,
+        m21_suite_report_path=args.m21_suite_report,
+        m21_synthetic_assay_report_path=args.m21_synthetic_assay_report,
+        m21_actual_bridge_report_path=args.m21_actual_bridge_report,
+        m21_lock_report_path=args.m21_lock_report,
+        m21_pointer_microgrid_report_path=args.m21_pointer_microgrid_report,
+        m21_gauntlet_report_path=args.m21_gauntlet_report,
         history_manifest_path=history_manifest,
     )
     manifest["run_id"] = run_id
@@ -106,6 +127,15 @@ def main() -> None:
         "stability_report": _repo_string(args.stability_report) if args.stability_report else None,
         "kill_test_report": _repo_string(args.kill_test_report) if args.kill_test_report else None,
         "dictionary_audit_report": _repo_string(args.dictionary_audit_report) if args.dictionary_audit_report else None,
+        "m20_suite_report": _repo_string(args.m20_suite_report) if args.m20_suite_report else None,
+        "m20_lock_report": _repo_string(args.m20_lock_report) if args.m20_lock_report else None,
+        "m20_induction_report": _repo_string(args.m20_induction_report) if args.m20_induction_report else None,
+        "m21_suite_report": _repo_string(args.m21_suite_report) if args.m21_suite_report else None,
+        "m21_synthetic_assay_report": _repo_string(args.m21_synthetic_assay_report) if args.m21_synthetic_assay_report else None,
+        "m21_actual_bridge_report": _repo_string(args.m21_actual_bridge_report) if args.m21_actual_bridge_report else None,
+        "m21_lock_report": _repo_string(args.m21_lock_report) if args.m21_lock_report else None,
+        "m21_pointer_microgrid_report": _repo_string(args.m21_pointer_microgrid_report) if args.m21_pointer_microgrid_report else None,
+        "m21_gauntlet_report": _repo_string(args.m21_gauntlet_report) if args.m21_gauntlet_report else None,
     }
 
     manifest_path = output_dir / "direct_unified_eval_manifest.json"

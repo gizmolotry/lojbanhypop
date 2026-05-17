@@ -1,9 +1,9 @@
 # Ablation Program Spine
 
-- Generated UTC: `2026-04-16T09:00:06.991844+00:00`
-- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m19_4_train_refresh_20260416/ablation_history_manifest.json`
+- Generated UTC: `2026-05-17T19:17:10.692829+00:00`
+- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m21_hyperbolic_tangent_history_20260517/ablation_history_manifest.json`
 - Source taxonomy config: `configs/experiment_taxonomy.json`
-- Stage count: `22`
+- Stage count: `24`
 
 This is the ordered research spine of the project: legacy letter-series families, normalized M-major families, and the control plane that keeps the program auditable.
 
@@ -445,29 +445,79 @@ This is the ordered research spine of the project: legacy letter-series families
 - Kind: `major_series`
 - Layer: `manifold_and_return_path`
 - Objective: compress tapped hidden state into a learned continuous runway over repeated <symbiote> token positions so the decoder gets multiple normal attention hops before final-answer English resumption.
-- Entry count: `12`
-- Runnable rows: `12`
+- Entry count: `14`
+- Runnable rows: `14`
 - Question boundary: bounded continuous scratchpad runway
 - Thesis: compress tapped hidden state into a learned continuous runway over repeated <symbiote> token positions so the decoder gets multiple normal attention hops before final-answer English resumption.
 - Selected upstream: `M18`
 - Inherits: `two-pass discipline, explicit random and kill controls, bounded intervention locality`
 - Reopens: `continuous runway carrier, query bottleneck width, scratchpad runway length`
 - Rejects: `global attention biasing as the only coupling surface`
-- IDs: `M19, M19.3.A, M19.3.B, M19.3.C, M19.3.D, M19.3.E, M19.3.F, M19.3.R11, M19.3.R12, M19.3.R21, M19.3.R22, M19.4`
-- Aliases: `A, B, C, D, E, F, M19, M19.3.A, M19.3.B, M19.3.C, M19.3.D, M19.3.E, M19.3.F, M19.3.R11, M19.3.R12, M19.3.R21, M19.3.R22, M19.4, R11, R12, R21, R22`
+- IDs: `M19, M19.3.A, M19.3.B, M19.3.C, M19.3.D, M19.3.E, M19.3.F, M19.3.R11, M19.3.R12, M19.3.R21, M19.3.R22, M19.31, M19.32, M19.4`
+- Aliases: `A, B, C, D, E, F, M19, M19.3.A, M19.3.B, M19.3.C, M19.3.D, M19.3.E, M19.3.F, M19.3.R11, M19.3.R12, M19.3.R21, M19.3.R22, M19.31, M19.32, M19.4, R11, R12, R21, R22`
 - Allowed axes: `query count, bottleneck width, scratchpad runway length, random-control comparison, mainline benchmark replication`
 - Frozen/forbidden drift: `generic checkpoint renaming after train time, console-only reporting without per-cell json artifacts`
 - Promotion basis: `overall_accuracy, lift_vs_en_cot, lift_vs_random`
 - Primary metrics: `overall_accuracy, lift_vs_en_cot`
 - Guardrail metrics: `lift_vs_random, avg_tokens, audit_qformer_accuracy`
 - Historical comparison families: `J, L`
-- Required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
-- Automatic comparison targets: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B`
+- Required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m19.integrity_controls, m19.replication_stability, m19.kill_test_suite, m19.typed_faithfulness, m19.hyperbolic_geometry, m19.bridge_channel_isolation, m19.arity_causal, m19.pointer_counterfactual, m19.order_sensitivity, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
+- Automatic comparison targets: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B, M19.31, M19.32`
 - Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
-- Scripts: `scripts/m19/run_isolation_grid.py, scripts/m19/run_m19_godtier_benchmark.py, scripts/m19/run_m19_mainline_suite.py`
+- Scripts: `scripts/m19/run_isolation_grid.py, scripts/m19/run_m19_arity_causal_suite.py, scripts/m19/run_m19_bridge_channel_suite.py, scripts/m19/run_m19_godtier_benchmark.py, scripts/m19/run_m19_integrity_suite.py, scripts/m19/run_m19_kill_test_suite.py, scripts/m19/run_m19_mainline_suite.py, scripts/m19/run_m19_order_sensitivity_suite.py, scripts/m19/run_m19_pointer_counterfactual_suite.py, scripts/m19/run_m19_replication_suite.py, scripts/m19/run_m19_stability_microgrid.py`
 - DAGs: `airflow/dags/m19/lojban_m19_family_dag.py, airflow/dags/m19/lojban_m19_isolation_grid_dag.py, airflow/dags/m19/lojban_m19_mainline_suite_dag.py`
 
-## 22. Control Plane
+## 22. M20
+
+- Kind: `major_series`
+- Layer: `dictionary_first_substrate`
+- Objective: pretrain a factorized predicate dictionary before bridge work so code tokens carry causal properties, stay invariant under entity swaps, and remain silent without grounded brivi arguments.
+- Entry count: `7`
+- Runnable rows: `7`
+- Question boundary: dictionary-first Lojbanic predicate induction
+- Thesis: pretrain a factorized predicate dictionary before bridge work so code tokens carry causal properties, stay invariant under entity swaps, and remain silent without grounded brivi arguments.
+- IDs: `M20.1, M20.1.A, M20.1.B, M20.1.C, M20.1.D, M20.1.E, M20.1.F`
+- Aliases: `A, B, C, D, E, F, M20.1, M20.1.A, M20.1.B, M20.1.C, M20.1.D, M20.1.E, M20.1.F`
+- Allowed axes: `dictionary-first pretraining, factorized predicate heads, counterfactual quotient invariance, brivi grounding gate, synthetic world curriculum, soft-to-hard dictionary annealing`
+- Frozen/forbidden drift: `M19 runway patching as the main intervention, phrase accuracy as canonical accuracy, entity-name dictionary memorization as a success criterion`
+- Promotion basis: `strict_accuracy, lock_pass_rate, predicate_identity_stability, brivi_gate_accuracy`
+- Primary metrics: `strict_accuracy, lock_pass_rate, factorized_exact_accuracy, predicate_identity_stability`
+- Guardrail metrics: `brivi_gate_accuracy, masked_accuracy, entity_leakage_proxy, accuracy_per_token`
+- Historical comparison families: `M19`
+- Required test contracts: `m20.dictionary_precedence, m20.factorized_predicate_dictionary, m20.counterfactual_quotient, m20.brivi_lock, m20.synthetic_world_pretraining, m20.soft_dictionary_annealing`
+- Automatic comparison targets: `M20, M19, M19.31, M20.1.A, M20.1.B, M20.1.C, M20.1.D, M20.1.E, M20.1.F`
+- Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
+- Scripts: `scripts/m20/run_m20_dictionary_first_suite.py, scripts/m20/run_m20_lock_suite.py, scripts/m20/run_m20_predicate_induction.py`
+- DAGs: `airflow/dags/m20/lojban_m20_dictionary_first_dag.py`
+
+## 23. M21
+
+- Kind: `major_series`
+- Layer: `dynamic_bridi_substrate`
+- Objective: replace fixed typed slots with variable-length bridi traces so the model learns how many gismu predicates, cmavo modifiers, and judri bindings are needed, then proves those frames are causally useful.
+- Entry count: `7`
+- Runnable rows: `7`
+- Question boundary: dynamic Lojbanic bridi Q-former
+- Thesis: replace fixed typed slots with variable-length bridi traces so the model learns how many gismu predicates, cmavo modifiers, and judri bindings are needed, then proves those frames are causally useful.
+- Selected upstream: `M20.1.F`
+- Inherits: `dictionary-first causal predicate discipline, counterfactual quotient invariance, brivi lock skepticism`
+- Reopens: `fixed typed slot count, fixed predicate target set, static dictionary trace shape`
+- Rejects: `decorative slot occupancy as semantic evidence, dictionary spread without causal utility`
+- IDs: `M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F`
+- Aliases: `A, B, C, D, E, F, M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F`
+- Allowed axes: `dynamic frame count, cmavo causality, judri binding causality, brivi lock, frame necessity, actual bridge transfer`
+- Frozen/forbidden drift: `fixed typed-slot layout as main result, decorative frame occupancy, phrase accuracy as canonical accuracy, mass deletion of M20 control assets`
+- Promotion basis: `strict_accuracy, bridi_trace_exact_accuracy, lock_pass_rate, actual_bridge_transfer_score`
+- Primary metrics: `strict_accuracy, bridi_trace_exact_accuracy, gismu_accuracy, judri_binding_accuracy`
+- Guardrail metrics: `cmavo_causal_delta, judri_causal_delta, brivi_lock_violation_rate, accuracy_per_trace_token`
+- Historical comparison families: `M19, M20`
+- Required test contracts: `m21.dynamic_frame_count, m21.bridi_reconstruction, m21.cmavo_causality, m21.judri_binding, m21.pointer_necessity, m21.m19_gauntlet_port, m21.frame_necessity, m21.actual_bridge_transfer`
+- Automatic comparison targets: `M21, M20, M19, M19.31, M20.1.F, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F`
+- Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
+- Scripts: `scripts/m21/run_m21_actual_bridge_suite.py, scripts/m21/run_m21_dynamic_bridi_suite.py, scripts/m21/run_m21_lock_suite.py, scripts/m21/run_m21_synthetic_assay_suite.py`
+- DAGs: `airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py`
+
+## 24. Control Plane
 
 - Kind: `control_plane`
 - Layer: `control_plane`

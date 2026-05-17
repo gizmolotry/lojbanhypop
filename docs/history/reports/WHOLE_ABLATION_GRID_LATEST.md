@@ -1,15 +1,15 @@
 # Whole Ablation Grid
 
-- run_id: `whole_ablation_grid_20260506_155308`
-- generated: `2026-05-06T15:53:08.714321+00:00`
-- history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m19_4_train_refresh_20260416/ablation_history_manifest.json`
-- program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m19_4_train_refresh_20260416/ablation_program_spine_manifest.json`
+- run_id: `m21_hyperbolic_tangent_whole_grid_20260517`
+- generated: `2026-05-17T19:17:11.421979+00:00`
+- history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m21_hyperbolic_tangent_history_20260517/ablation_history_manifest.json`
+- program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m21_hyperbolic_tangent_spine_20260517/ablation_program_spine_manifest.json`
 
 ## Coverage
 
-- stages: `22`
+- stages: `24`
 - fresh legacy surfaces: `6`
-- artifact anchors: `14`
+- artifact anchors: `16`
 - history-only stages: `1`
 
 ## Legacy Grid Status
@@ -33,7 +33,7 @@
 | `L` | `fresh_legacy_lane` | `e=21 r=3 a=17 d=1` | `runs/l_series/l6_ablation/legacy_grid/legacy_grid_retrospective_20260413/20260414_004443/l6_ablation_manifest.json` | executed_rows=3.0000, mean_scope_constraint=0.3432, best_scope_constraint=0.3810 |
 | `J/L Hypercube` | `history_only` | `e=0 r=0 a=0 d=0` | `` |  |
 | `Phase Eval` | `fresh_legacy_lane` | `e=14 r=14 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/legacy_grid/legacy_grid_retrospective_20260413/phase5_objective_ablation.json` | full_total_regularizer=2.9140, dead_term_count=0.0000, dominant_term=0.0000, dominant_term_value=56.2299 |
-| `M1` | `artifact_anchor` | `e=5 r=5 a=0 d=0` | `runs/j_series/test_run_true_coconut_8a672829b620413eb8dff3496eed6488/20260311_010645/run_h_series.json` |  |
+| `M1` | `artifact_anchor` | `e=5 r=5 a=0 d=0` | `runs/j_series/test_run_true_coconut_41a141c53aa64445acbac76c5362d043/20260517_101842/run_h_series.json` |  |
 | `M2` | `artifact_anchor` | `e=3 r=3 a=0 d=0` | `runs/l_series/l6_ablation/legacy_grid/legacy_grid_retrospective_20260413/20260414_004443/l6_ablation_manifest.json` |  |
 | `M3` | `artifact_anchor` | `e=48 r=12 a=36 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m_bridge_ablation_test_suite/full_program_probe_20260413/m_bridge_ablation_suite_manifest.json` | bridge_track_count=3.0000, harmful_track_count=1.0000 |
 | `M4` | `artifact_anchor` | `e=2 r=2 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m4_2_predicate_grounding/bridge_base_v1/m4_2_20260312_bridge_base_v1/m4_2_predicate_grounding_report.json` |  |
@@ -46,8 +46,10 @@
 | `M11` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `archive/results/m10/active/RESULTS_M10_FINAL_AUDIT/m11_discriminative_manifest.json` | headline_accuracy=0.8592, headline_macro_f1=0.6287, bridge_audit_accuracy=0.8333, floor_lock_accuracy=0.7800 |
 | `M14` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m14_5_decompressor/m14_5_report.json` | cell_count=4.0000, best_cell_accuracy=0.0000, all_cells_zero=1.0000 |
 | `M18` | `artifact_anchor` | `e=14 r=14 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m18_controller_family/m18_frontier_audits_20260409/m18_family_report.json` | sapir_english_accuracy=0.1000, sapir_chinese_accuracy=0.5000, harmonized_en_concise_accuracy=0.6000, harmonized_l_typed_accuracy=0.6000 |
-| `M19` | `artifact_anchor` | `e=12 r=12 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m19_31_e2_promoted_package_20260506/direct_unified_eval_manifest.json` | mainline_overall_accuracy=0.6000, mainline_avg_tokens=30.8400, mainline_lift_vs_random=0.5700, mainline_audit_qformer_accuracy=0.6000, may8_surface_contract_mean=0.4350, bridge_channel_seed23_e20_full=0.7500, bridge_channel_seed23_e20_no_judri=0.7000, verdict=promising_but_unstable |
-| `Control Plane` | `control_plane_manifest` | `e=0 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m19_4_train_refresh_20260416/ablation_history_manifest.json` |  |
+| `M19` | `artifact_anchor` | `e=14 r=14 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m19_31_e2_promoted_package_20260506/direct_unified_eval_manifest.json` | mainline_overall_accuracy=0.6000, mainline_avg_tokens=30.8400, mainline_lift_vs_random=0.5700, mainline_audit_qformer_accuracy=0.6000 |
+| `M20` | `artifact_anchor` | `e=7 r=7 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/direct_m20_whole_ledger_20260514/direct_unified_eval_manifest.json` | strict_accuracy=0.9998, synthetic_world_accuracy=0.9998, dictionary_coverage=0.9998, factorized_exact_accuracy=0.9998 |
+| `M21` | `artifact_anchor` | `e=7 r=7 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m21_hyperbolic_tangent_direct_48e_20260517/direct_unified_eval_manifest.json` | strict_accuracy=0.0564, bridi_trace_exact_accuracy=0.0000, gismu_accuracy=0.2585, cmavo_accuracy=0.0000 |
+| `Control Plane` | `control_plane_manifest` | `e=0 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m21_hyperbolic_tangent_history_20260517/ablation_history_manifest.json` |  |
 
 ## Comparison Policy
 
@@ -134,17 +136,22 @@
 - automatic compare-against: `M19, M18, M14, M11, M10, M9, M8, M7, M6, M5, M4, M3, M2, M1, J, L, M19.3.A, M19.3.B, M19.31, M19.32`
 - historical families carried forward: `J, L`
 - required test contracts: `m19.runway_efficiency, m19.zh_branch_control, m19.dynamic_pacing_guardrails, m19.integrity_controls, m19.replication_stability, m19.kill_test_suite, m19.typed_faithfulness, m19.hyperbolic_geometry, m18.kill_random_gap, m18.language_tax_compactness, m14.scratchpad_bleed, m11.native_discriminative_oracle, j.accepted_foil_pair_accuracy, l.constraint_scope, m5.chain_serialization, m4.operator_family_consistency, m3.reentry_intervention, m3.reentry_fluency, j.invariance_rate, l.constraint_identity, l.constraint_arity_strict, j.accept_rate_by_depth, j.schema_validity`
-- current narrative status: `promising_but_unstable`
-- negative robustness result: `m19_31_e2_weakseed_surface_contract_bg_20260508` finished at mean strict accuracy `0.4350`, std `0.1650`, seed 23 `0.6000`, seed 29 `0.2700`, stable seed rate `0.0000`; it is explicitly not promoted.
-- central M19.31 finding: stronger or later training can improve familiar/purged surfaces while damaging renamed-entity/format robustness and arity discipline, so strict accuracy remains canonical and phrase/token-efficiency metrics stay diagnostic.
-- bridge/channel isolation finding: promoted seed 23 on the `e20` diagnostic retains most accuracy without judri pointers (`full=0.7500`, `no_judri=0.7000`, `judri_only=0.0500`), while weak seed 29 shows a stronger predicate-channel shortcut (`full=0.3000`, `gismu_only=0.6500`, `no_judri=0.5500`). Treat the bridge signal as real but not yet grounded in pointer binding.
-- active corrective loss: `pointer_necessity_weight` adds a hinge contrast requiring full bridge gold loss to beat a `no_judri` bridge ablation by `pointer_necessity_margin`; this is the next surgical training intervention, not a new architecture family.
-- expanded testing contract: M19 now requires bridge-channel isolation, arity-causal overrides, order-sensitivity slices, and runway-adjusted token accounting before strengthening the `promising_but_unstable` claim.
-- smoke-only order-sensitivity warning: weak-seed pointer baseline at `eval_size=4` showed first=`0.5000`, reversed=`0.7500`, shuffled=`0.5000`, spread=`0.2500`; treat this as validation of the diagnostic, not as a headline benchmark result.
+
+### M20
+
+- automatic compare-against: `M20, M19, M19.31, M20.1.A, M20.1.B, M20.1.C, M20.1.D, M20.1.E, M20.1.F`
+- historical families carried forward: `M19`
+- required test contracts: `m20.dictionary_precedence, m20.factorized_predicate_dictionary, m20.counterfactual_quotient, m20.brivi_lock, m20.synthetic_world_pretraining, m20.soft_dictionary_annealing`
+
+### M21
+
+- automatic compare-against: `M21, M20, M19, M19.31, M20.1.F, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F`
+- historical families carried forward: `M19, M20`
+- required test contracts: `m21.dynamic_frame_count, m21.bridi_reconstruction, m21.cmavo_causality, m21.judri_binding, m21.pointer_necessity, m21.m19_gauntlet_port, m21.frame_necessity, m21.actual_bridge_transfer`
 
 
 ## Read
 
 - The fresh part of the whole grid is now the recovered legacy runnable surface: A-G, H/H5/J, L6, and the phase-eval lanes under one manifest.
 - The modern M rows are represented through artifact-backed anchors and the control-plane lineage manifests, so the whole program is visible without pretending every stage was freshly retrained.
-- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, and M19 the current bounded runway mainline.
+- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, and M21 the dynamic bridi substrate branch.

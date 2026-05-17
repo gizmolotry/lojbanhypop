@@ -260,3 +260,262 @@ def test_build_direct_unified_eval_manifest_dynamic_m19() -> None:
     assert guardrails["status"] == "available"
     assert guardrails["metrics"]["premature_stop_rate"] == 0.02
     assert guardrails["metrics"]["mean_latent_steps"] == 8.4
+
+
+def test_m21_direct_eval_keeps_pointer_gauntlet_surfaces_separate() -> None:
+    tmp_path = _scratch_dir()
+    suite_path = _write_json(
+        tmp_path / "m21_suite.json",
+        {
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.8,
+                "mean_frame_count_mae": 0.1,
+                "mean_active_frames": 1.5,
+                "mean_bridi_trace_exact_accuracy": 0.9,
+                "mean_gismu_accuracy": 0.91,
+                "mean_cmavo_accuracy": 0.92,
+                "mean_judri_binding_accuracy": 0.93,
+            },
+            "cells": {"F": {"seed_reports": [{"metrics": {"strict_accuracy": 0.8, "mean_active_frames": 1.5}}]}},
+        },
+    )
+    actual_path = _write_json(
+        tmp_path / "m21_actual.json",
+        {
+            "metrics": {
+                "full_accuracy": 0.81,
+                "no_cmavo_accuracy": 0.4,
+                "cmavo_causal_delta": 0.41,
+                "no_judri_accuracy": 0.5,
+                "judri_causal_delta": 0.31,
+                "gismu_only_accuracy": 0.45,
+                "actual_bridge_transfer_score": 0.31,
+                "scratchpad_only_accuracy": 0.0,
+                "accuracy_per_trace_token": 0.08,
+            }
+        },
+    )
+    pointer_path = _write_json(
+        tmp_path / "m21_pointer.json",
+        {
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.2,
+                "mean_active_frames": 0.0,
+                "mean_loss_pointer_necessity": 0.07,
+                "mean_pointer_necessity_gap": 0.03,
+            }
+        },
+    )
+    gauntlet_path = _write_json(
+        tmp_path / "m21_gauntlet.json",
+        {
+            "metrics": {
+                "purged_accuracy": 0.78,
+                "format_accuracy": 0.77,
+                "entity_accuracy": 0.76,
+                "entity_renamed_accuracy": 0.75,
+                "numeric_accuracy": 0.74,
+                "m19_gauntlet_worst_surface_accuracy": 0.74,
+                "m19_gauntlet_order_sensitivity_spread": 0.02,
+            }
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M21",
+        track="M21.1",
+        m21_suite_report_path=suite_path,
+        m21_actual_bridge_report_path=actual_path,
+        m21_pointer_microgrid_report_path=pointer_path,
+        m21_gauntlet_report_path=gauntlet_path,
+        history_manifest_path=None,
+    )
+
+    dynamic = next(row for row in manifest["contract_results"] if row["test_id"] == "m21.dynamic_frame_count")
+    assert dynamic["metrics"]["mean_active_frames"] == 1.5
+    pointer = next(row for row in manifest["contract_results"] if row["test_id"] == "m21.pointer_necessity")
+    assert pointer["metrics"]["loss_pointer_necessity"] == 0.07
+    assert pointer["metrics"]["full_accuracy"] == 0.81
+    gauntlet = next(row for row in manifest["contract_results"] if row["test_id"] == "m21.m19_gauntlet_port")
+    assert gauntlet["metrics"]["m19_gauntlet_worst_surface_accuracy"] == 0.74
+
+
+def test_build_direct_unified_eval_manifest_m20_dictionary_first() -> None:
+    tmp_path = _scratch_dir()
+    suite_path = _write_json(
+        tmp_path / "m20_dictionary_first_suite_report.json",
+        {
+            "track": "M20.1",
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 1.0,
+                "mean_lock_pass_rate": 1.0,
+                "mean_factorized_exact_accuracy": 1.0,
+                "mean_brivi_gate_accuracy": 1.0,
+                "mean_predicate_identity_stability": 0.999,
+                "avg_tokens": 8.6,
+                "accuracy_per_token": 0.11,
+            },
+            "cells": {
+                "A": {
+                    "seed_reports": [
+                        {
+                            "metrics": {
+                                "dictionary_coverage": 1.0,
+                                "factorized_exact_accuracy": 1.0,
+                                "predicate_identity_stability": 0.999,
+                                "synthetic_world_accuracy": 1.0,
+                                "soft_dictionary_entropy": 0.7,
+                                "soft_hard_dictionary_agreement": 1.0,
+                                "hard_dictionary_activation_rate": 0.007,
+                                "active_code_fraction": 0.007,
+                            }
+                        }
+                    ]
+                }
+            },
+        },
+    )
+    lock_path = _write_json(
+        tmp_path / "m20_lock_suite_report.json",
+        {
+            "metrics": {
+                "brivi_gate_accuracy": 1.0,
+                "brivi_formation_valid_rate": 1.0,
+                "brivi_lock_violation_rate": 0.0,
+                "ungrounded_predicate_energy_mean": 0.0001,
+                "lock_pass_rate": 1.0,
+            }
+        },
+    )
+    induction_path = _write_json(
+        tmp_path / "m20_predicate_induction_report.json",
+        {
+            "metrics": {
+                "dictionary_coverage": 1.0,
+                "oov_predicate_rate": 0.0,
+                "dictionary_precedence_violation_rate": 0.0,
+                "counterfactual_quotient_consistency": 1.0,
+                "quotient_collision_rate": 0.0,
+            }
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M20",
+        track="M20.1",
+        m20_suite_report_path=suite_path,
+        m20_lock_report_path=lock_path,
+        m20_induction_report_path=induction_path,
+        history_manifest_path=None,
+    )
+
+    assert manifest["family_key"] == "M20"
+    assert manifest["track"] == "M20.1"
+    assert manifest["headline_metrics"]["strict_accuracy"] == 1.0
+    assert manifest["headline_metrics"]["lock_pass_rate"] == 1.0
+
+    statuses = {row["test_id"]: row["status"] for row in manifest["contract_results"]}
+    assert statuses["m20.dictionary_precedence"] == "available"
+    assert statuses["m20.factorized_predicate_dictionary"] == "available"
+    assert statuses["m20.counterfactual_quotient"] == "available"
+    assert statuses["m20.brivi_lock"] == "available"
+    assert statuses["m20.synthetic_world_pretraining"] == "available"
+    assert statuses["m20.soft_dictionary_annealing"] == "available"
+
+    rendered = render_direct_unified_eval_markdown(manifest)
+    assert "Direct Unified Eval: M20 (M20.1)" in rendered
+    assert "m20.dictionary_precedence" in rendered
+
+
+def test_build_direct_unified_eval_manifest_m21_dynamic_bridi() -> None:
+    tmp_path = _scratch_dir()
+    suite_path = _write_json(
+        tmp_path / "m21_dynamic_bridi_suite_report.json",
+        {
+            "track": "M21.1",
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.82,
+                "mean_bridi_trace_exact_accuracy": 0.76,
+                "mean_gismu_accuracy": 0.91,
+                "mean_cmavo_accuracy": 0.84,
+                "mean_judri_binding_accuracy": 0.79,
+                "mean_frame_count_mae": 0.18,
+                "mean_lock_pass_rate": 0.83,
+                "mean_frame_drop_delta": 0.12,
+                "accuracy_per_trace_token": 0.09,
+            },
+            "cells": {
+                "F": {
+                    "seed_reports": [
+                        {
+                            "metrics": {
+                                "strict_accuracy": 0.82,
+                                "bridi_trace_exact_accuracy": 0.76,
+                                "gismu_accuracy": 0.91,
+                                "cmavo_accuracy": 0.84,
+                                "judri_binding_accuracy": 0.79,
+                                "stop_accuracy": 0.95,
+                                "mean_active_frames": 2.1,
+                                "active_code_fraction_reachable": 0.64,
+                            }
+                        }
+                    ]
+                }
+            },
+        },
+    )
+    actual_path = _write_json(
+        tmp_path / "m21_actual_bridge_report.json",
+        {
+            "metrics": {
+                "strict_accuracy": 0.68,
+                "full_accuracy": 0.68,
+                "no_cmavo_accuracy": 0.43,
+                "no_judri_accuracy": 0.52,
+                "gismu_only_accuracy": 0.39,
+                "random_trace_accuracy": 0.06,
+                "scratchpad_only_accuracy": 0.12,
+                "frame_drop_delta": 0.14,
+                "cmavo_causal_delta": 0.25,
+                "judri_causal_delta": 0.16,
+                "actual_bridge_transfer_score": 0.16,
+                "accuracy_per_trace_token": 0.08,
+            }
+        },
+    )
+    lock_path = _write_json(
+        tmp_path / "m21_lock_suite_report.json",
+        {
+            "metrics": {
+                "lock_pass_rate": 0.83,
+                "brivi_lock_violation_rate": 0.04,
+            }
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M21",
+        track="M21.1",
+        m21_suite_report_path=suite_path,
+        m21_synthetic_assay_report_path=suite_path,
+        m21_actual_bridge_report_path=actual_path,
+        m21_lock_report_path=lock_path,
+        history_manifest_path=None,
+    )
+
+    assert manifest["family_key"] == "M21"
+    assert manifest["track"] == "M21.1"
+    assert manifest["headline_metrics"]["strict_accuracy"] == 0.68
+    assert manifest["headline_metrics"]["bridi_trace_exact_accuracy"] == 0.76
+
+    statuses = {row["test_id"]: row["status"] for row in manifest["contract_results"]}
+    assert statuses["m21.dynamic_frame_count"] == "available"
+    assert statuses["m21.bridi_reconstruction"] == "available"
+    assert statuses["m21.cmavo_causality"] == "available"
+    assert statuses["m21.judri_binding"] == "available"
+    assert statuses["m21.frame_necessity"] == "available"
+    assert statuses["m21.actual_bridge_transfer"] == "available"
+
+    rendered = render_direct_unified_eval_markdown(manifest)
+    assert "Direct Unified Eval: M21 (M21.1)" in rendered
+    assert "m21.actual_bridge_transfer" in rendered

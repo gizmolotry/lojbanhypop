@@ -111,3 +111,34 @@ def test_m19_direct_contract_updates_stale_spine_policy() -> None:
     ]
     assert [target["target"] for target in updated["comparison_targets"]] == ["M19", "M18"]
     assert updated["historical_comparison_families"] == ["J", "L"]
+
+
+def test_m21_special_stage_metrics_include_dynamic_bridi_and_causal_deltas() -> None:
+    whole_grid = _load_whole_grid_module()
+    whole_grid.DEFAULT_M21_ACTUAL_ROOT = Path("runs") / "missing_m21_actual_for_test"
+    whole_grid.DEFAULT_M21_LOCK_ROOT = Path("runs") / "missing_m21_lock_for_test"
+    payload = {
+        "aggregate_metrics": {
+            "mean_strict_accuracy": 0.72,
+            "mean_bridi_trace_exact_accuracy": 0.66,
+            "mean_gismu_accuracy": 0.89,
+            "mean_cmavo_accuracy": 0.81,
+            "mean_judri_binding_accuracy": 0.77,
+            "mean_frame_drop_delta": 0.11,
+            "mean_cmavo_causal_delta": 0.21,
+            "mean_judri_causal_delta": 0.09,
+            "accuracy_per_trace_token": 0.08,
+        }
+    }
+
+    metrics = whole_grid._special_stage_metrics("M21", payload)
+
+    assert metrics["strict_accuracy"] == 0.72
+    assert metrics["bridi_trace_exact_accuracy"] == 0.66
+    assert metrics["gismu_accuracy"] == 0.89
+    assert metrics["cmavo_accuracy"] == 0.81
+    assert metrics["judri_binding_accuracy"] == 0.77
+    assert metrics["frame_drop_delta"] == 0.11
+    assert metrics["cmavo_causal_delta"] == 0.21
+    assert metrics["judri_causal_delta"] == 0.09
+    assert metrics["accuracy_per_trace_token"] == 0.08

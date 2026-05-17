@@ -20,17 +20,27 @@ PATH_CANONICALIZATION: dict[str, str] = {
     "scripts/run_m3_18_decoder_reentry_resume.py": "scripts/m3/run_m3_18_decoder_reentry_resume.py",
     "scripts/run_m19_mainline_suite.py": "scripts/m19/run_m19_mainline_suite.py",
     "scripts/run_m19_isolation_grid.py": "scripts/m19/run_isolation_grid.py",
+    "scripts/run_m20_dictionary_first_suite.py": "scripts/m20/run_m20_dictionary_first_suite.py",
+    "scripts/train_m21_dynamic_bridi.py": "scripts/m21/train_m21_dynamic_bridi.py",
+    "scripts/run_m21_dynamic_bridi_suite.py": "scripts/m21/run_m21_dynamic_bridi_suite.py",
+    "scripts/run_m21_synthetic_assay_suite.py": "scripts/m21/run_m21_synthetic_assay_suite.py",
+    "scripts/run_m21_actual_bridge_suite.py": "scripts/m21/run_m21_actual_bridge_suite.py",
+    "scripts/run_m21_lock_suite.py": "scripts/m21/run_m21_lock_suite.py",
     "airflow/dags/lojban_ablation_history_backfill_dag.py": "airflow/dags/control_plane/lojban_ablation_history_backfill_dag.py",
     "airflow/dags/lojban_ablation_program_spine_dag.py": "airflow/dags/control_plane/lojban_ablation_program_spine_dag.py",
     "airflow/dags/lojban_m_bridge_ablation_test_suite_dag.py": "airflow/dags/m_bridge/lojban_m_bridge_ablation_test_suite_dag.py",
     "airflow/dags/lojban_m19_mainline_suite_dag.py": "airflow/dags/m19/lojban_m19_mainline_suite_dag.py",
     "airflow/dags/lojban_m19_isolation_grid_dag.py": "airflow/dags/m19/lojban_m19_isolation_grid_dag.py",
+    "airflow/dags/lojban_m20_dictionary_first_dag.py": "airflow/dags/m20/lojban_m20_dictionary_first_dag.py",
+    "airflow/dags/lojban_m21_dynamic_bridi_dag.py": "airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py",
 }
 
 LETTER_STAGE_ORDER = ["A-G", "H", "H5", "J", "L", "J/L Hypercube", "Phase Eval"]
-M_STAGE_ORDER = ["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "M10", "M11", "M14", "M18", "M19"]
+M_STAGE_ORDER = ["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "M10", "M11", "M14", "M18", "M19", "M20", "M21"]
 EXTRA_STAGE_DAGS = {
     "M19": ["airflow/dags/m19/lojban_m19_family_dag.py"],
+    "M20": ["airflow/dags/m20/lojban_m20_dictionary_first_dag.py"],
+    "M21": ["airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py"],
 }
 
 
@@ -251,6 +261,10 @@ def _major_program_layer(major_num: int) -> str:
         return "legacy_orchestration"
     if major_num <= 5:
         return "bridge_and_serialization"
+    if major_num == 20:
+        return "dictionary_first_substrate"
+    if major_num == 21:
+        return "dynamic_bridi_substrate"
     return "manifold_and_return_path"
 
 
