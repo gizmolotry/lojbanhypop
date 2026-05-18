@@ -429,7 +429,8 @@
         "brivi lock",
         "frame necessity",
         "actual bridge transfer",
-        "held-out adversarial prompt audit"
+        "held-out adversarial prompt audit",
+        "adversarial training augmentation"
       ],
       "forbidden_drift_axes": [
         "fixed typed-slot layout as main result",
@@ -966,6 +967,22 @@
         "adversarial_oov_token_rate"
       ],
       "surface": "m21_adversarial_audit"
+    },
+    "m21.adversarial_augmentation": {
+      "test_id": "m21.adversarial_augmentation",
+      "family": "M21",
+      "description": "Training-time adversarial prompt augmentation should improve held-out prompt robustness without erasing judri-gated pointer necessity.",
+      "metrics": [
+        "adversarial_strict_accuracy",
+        "adversarial_worst_surface_accuracy",
+        "adversarial_judri_causal_delta",
+        "adversarial_training_exposure_rate",
+        "mean_adversarial_train_fraction",
+        "adversarial_oov_token_rate",
+        "strict_accuracy",
+        "judri_causal_delta"
+      ],
+      "surface": "m21_adversarial_audit"
     }
   },
   "family_comparison_contracts": {
@@ -1202,7 +1219,8 @@
         "m21.m19_gauntlet_port",
         "m21.frame_necessity",
         "m21.actual_bridge_transfer",
-        "m21.adversarial_heldout"
+        "m21.adversarial_heldout",
+        "m21.adversarial_augmentation"
       ],
       "explicit_compare_entries": [
         "M19.31",
@@ -1214,7 +1232,8 @@
         "M21.1.D",
         "M21.1.E",
         "M21.1.F",
-        "M21.1.G"
+        "M21.1.G",
+        "M21.1.H"
       ],
       "inherit_required_test_contracts": false
     }

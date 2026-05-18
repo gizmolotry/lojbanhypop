@@ -46,17 +46,58 @@ def _merge_metrics(*payloads: dict[str, Any]) -> dict[str, float]:
                 out[name] = float(value)
                 if name.startswith("mean_"):
                     out[name[5:]] = float(value)
+        exposures = _adversarial_exposure_values(payload)
+        if exposures:
+            out.setdefault("mean_adversarial_train_fraction", sum(exposures) / len(exposures))
+            out.setdefault("adversarial_training_exposure_rate", sum(1.0 for value in exposures if value > 0.0) / len(exposures))
     return out
+
+
+def _adversarial_exposure_values(payload: dict[str, Any]) -> list[float]:
+    values: list[float] = []
+
+    def add(source: Any) -> None:
+        if not isinstance(source, dict):
+            return
+        value = source.get("adversarial_train_fraction", source.get("mean_adversarial_train_fraction"))
+        if isinstance(value, (int, float)):
+            values.append(float(value))
+
+    add(payload.get("config"))
+    add(payload.get("metrics"))
+    add(payload.get("aggregate_metrics"))
+    cells = payload.get("cells")
+    if isinstance(cells, dict):
+        for cell in cells.values():
+            if not isinstance(cell, dict):
+                continue
+            add(cell.get("variant_spec"))
+            add(cell.get("aggregate_metrics"))
+            seed_reports = cell.get("seed_reports")
+            if isinstance(seed_reports, list):
+                for report in seed_reports:
+                    if isinstance(report, dict):
+                        add(report.get("config"))
+                        add(report.get("metrics"))
+    return values
 
 
 def _statuses(metrics: dict[str, float]) -> dict[str, bool]:
     strict = float(metrics.get("strict_accuracy", 0.0))
+    adversarial_exposure = max(
+        float(metrics.get("adversarial_training_exposure_rate", 0.0)),
+        float(metrics.get("mean_adversarial_train_fraction", 0.0)),
+        float(metrics.get("adversarial_train_fraction", 0.0)),
+    )
     return {
         "dynamic_frame_count": float(metrics.get("frame_count_mae", 999.0)) <= 0.35 and float(metrics.get("mean_active_frames", 0.0)) > 0.25,
         "bridi_trace_reconstruction": float(metrics.get("bridi_trace_exact_accuracy", 0.0)) >= 0.55,
         "cmavo_causality": float(metrics.get("cmavo_accuracy", 0.0)) >= 0.55 or float(metrics.get("cmavo_causal_delta", 0.0)) >= 0.02,
         "judri_binding_causality": float(metrics.get("judri_binding_accuracy", 0.0)) >= 0.55 or float(metrics.get("judri_causal_delta", 0.0)) >= 0.02,
         "judri_gated_bridge": float(metrics.get("judri_bridge_gate_enabled", 0.0)) >= 0.5 and float(metrics.get("judri_bridge_gate_active_mean", 0.0)) > 0.05,
+        "adversarial_augmented_judri_gated_bridge": adversarial_exposure > 0.0
+        and float(metrics.get("judri_bridge_gate_enabled", 0.0)) >= 0.5
+        and float(metrics.get("judri_causal_delta", 0.0)) >= 0.02,
         "brivi_lock": float(metrics.get("brivi_lock_violation_rate", 1.0)) <= 0.10 or float(metrics.get("brivi_gate_accuracy", 0.0)) >= 0.90,
         "actual_bridge_transfer": strict >= max(0.15, float(metrics.get("random_trace_accuracy", 0.0)) + 0.10),
     }

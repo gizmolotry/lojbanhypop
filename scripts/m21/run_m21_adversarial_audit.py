@@ -151,6 +151,7 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
         return [float(row["metrics"].get(key, 0.0) or 0.0) for row in rows]
 
     strict = collect("adversarial_strict_accuracy")
+    train_fractions = [float(row.get("config", {}).get("adversarial_train_fraction", 0.0) or 0.0) for row in rows]
     return {
         "mean_adversarial_strict_accuracy": mean(strict) if strict else 0.0,
         "std_adversarial_strict_accuracy": pstdev(strict) if len(strict) > 1 else 0.0,
@@ -163,6 +164,8 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
         "mean_adversarial_cmavo_causal_delta": mean(collect("adversarial_cmavo_causal_delta")) if rows else 0.0,
         "mean_adversarial_worst_surface_accuracy": mean(collect("adversarial_worst_surface_accuracy")) if rows else 0.0,
         "mean_adversarial_oov_token_rate": mean(collect("adversarial_oov_token_rate")) if rows else 0.0,
+        "mean_adversarial_train_fraction": mean(train_fractions) if train_fractions else 0.0,
+        "adversarial_training_exposure_rate": sum(1.0 for value in train_fractions if value > 0.0) / max(1, len(train_fractions)),
     }
 
 
@@ -191,6 +194,7 @@ def run_audit(args: argparse.Namespace) -> dict[str, Any]:
         )
         metrics = evaluate_model(model, examples, vocab, batch_size=int(args.batch_size), device=str(args.device))
         audit_metrics = _with_adversarial_prefix(metrics, _oov_metrics(examples, vocab))
+        audit_metrics["adversarial_train_fraction"] = float(config.get("adversarial_train_fraction", 0.0) or 0.0)
         seed_reports.append(
             {
                 **row,

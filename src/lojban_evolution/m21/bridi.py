@@ -20,6 +20,7 @@ M21_LOCKS: dict[str, str] = {
     "cmavo_causality": "cmavo modifiers must be causally useful rather than decorative",
     "judri_binding_causality": "judri/entity-place bindings must carry downstream answer information",
     "judri_gated_bridge": "downstream predicate energy is silenced unless judri bindings ground the frame",
+    "adversarial_augmented_judri_gated_bridge": "held-out prompt augmentation improves surface robustness without losing judri necessity",
     "brivi_lock": "a predicate frame is silent unless it binds at least one judri argument",
     "actual_bridge_transfer": "dynamic traces transfer through a minimal downstream bridge-style adapter",
 }
@@ -278,6 +279,12 @@ def _format(text: str, values: dict[str, str], surface: str) -> str:
     return out
 
 
+def _surface_tuple(surfaces: Sequence[str] | str) -> tuple[str, ...]:
+    if isinstance(surfaces, str):
+        return tuple(item.strip() for item in surfaces.split(",") if item.strip())
+    return tuple(str(item).strip() for item in surfaces if str(item).strip())
+
+
 def _variant_specs() -> list[dict[str, Any]]:
     return [
         {
@@ -534,6 +541,38 @@ def _adversarial_template_bank() -> dict[str, tuple[tuple[str, str], ...]]:
     }
 
 
+def adversarial_surface_names() -> tuple[str, ...]:
+    names = sorted({surface for templates in _adversarial_template_bank().values() for surface, _template in templates})
+    return tuple(names)
+
+
+def adversarial_training_surface_names() -> tuple[str, ...]:
+    return ("heldout_paraphrase", "clausal_permutation")
+
+
+def _validated_adversarial_surfaces(
+    surfaces: Sequence[str] | str,
+    *,
+    allowed_surfaces: Sequence[str] | None = None,
+    purpose: str = "M21 adversarial audit",
+) -> tuple[str, ...]:
+    requested = _surface_tuple(surfaces)
+    valid = set(adversarial_surface_names())
+    invalid = [surface for surface in requested if surface not in valid]
+    if invalid:
+        raise ValueError(f"Unknown M21 adversarial surfaces {invalid}; valid surfaces are {sorted(valid)}.")
+    allowed = set(allowed_surfaces) if allowed_surfaces is not None else valid
+    reserved = [surface for surface in requested if surface not in allowed]
+    if reserved:
+        raise ValueError(
+            f"Reserved M21 adversarial surfaces {reserved} are not allowed for {purpose}; "
+            f"allowed surfaces are {sorted(allowed)}."
+        )
+    if not requested:
+        raise ValueError("At least one M21 adversarial surface is required.")
+    return requested
+
+
 def generate_dynamic_bridi_adversarial_examples(
     size: int,
     *,
@@ -543,14 +582,14 @@ def generate_dynamic_bridi_adversarial_examples(
     rng = random.Random(int(seed))
     specs = {str(spec["name"]): spec for spec in _variant_specs()}
     banks = _adversarial_template_bank()
-    selected_surfaces = tuple(str(surface) for surface in surfaces)
+    selected_surfaces = _validated_adversarial_surfaces(surfaces)
     rows: list[DynamicBridiExample] = []
     labels = list(ANSWER_LABELS)
     for idx in range(int(size)):
         answer_label = labels[idx % len(labels)] if idx < len(labels) * 2 else rng.choice(labels)
         candidates = [item for item in banks[answer_label] if item[0] in selected_surfaces]
         if not candidates:
-            candidates = list(banks[answer_label])
+            raise ValueError(f"No M21 adversarial templates for answer '{answer_label}' on surfaces {selected_surfaces}.")
         surface, template = rng.choice(candidates)
         values = _values(rng, "renamed" if surface == "role_distractor" else "purged")
         entities = _entity_tuple(values)
@@ -1191,14 +1230,32 @@ def train_m21_dynamic_bridi(
     riemannian_gradient_scale: bool = True,
     judri_bridge_gate: bool = False,
     judri_bridge_gate_temperature: float = 1.0,
+    adversarial_train_fraction: float = 0.0,
+    adversarial_train_surfaces: Sequence[str] | str = ("heldout_paraphrase", "clausal_permutation"),
     device: str | torch.device = "cpu",
 ) -> dict[str, Any]:
     del max_cmavo_per_frame
     random.seed(int(seed))
     torch.manual_seed(int(seed))
-    train_examples = generate_dynamic_bridi_examples(int(train_size), seed=int(seed), floating_fraction=0.12)
+    adv_fraction = min(1.0, max(0.0, float(adversarial_train_fraction)))
+    adv_count = int(round(int(train_size) * adv_fraction))
+    base_count = max(0, int(train_size) - adv_count)
+    train_examples = generate_dynamic_bridi_examples(base_count, seed=int(seed), floating_fraction=0.12)
+    adv_surfaces = _validated_adversarial_surfaces(
+        adversarial_train_surfaces,
+        allowed_surfaces=adversarial_training_surface_names(),
+        purpose="training",
+    )
+    if adv_count > 0:
+        adversarial_examples = generate_dynamic_bridi_adversarial_examples(
+            adv_count,
+            seed=int(seed) + 20_000,
+            surfaces=adv_surfaces,
+        )
+        train_examples = [*train_examples, *adversarial_examples]
+        random.Random(int(seed) + 30_000).shuffle(train_examples)
     eval_examples = generate_dynamic_bridi_examples(int(eval_size), seed=int(seed) + 10_000, floating_fraction=0.16)
-    vocab = build_vocab([*train_examples, *eval_examples])
+    vocab = build_vocab(train_examples)
     dataset = M21BridiDataset(train_examples, vocab, max_frames=int(max_frames))
     loader = DataLoader(dataset, batch_size=int(batch_size), shuffle=True, generator=torch.Generator().manual_seed(int(seed)), collate_fn=m21_collate)
     model = M21DynamicBridiQFormer(
@@ -1289,5 +1346,10 @@ def train_m21_dynamic_bridi(
             "riemannian_gradient_scale": bool(riemannian_gradient_scale),
             "judri_bridge_gate": bool(judri_bridge_gate),
             "judri_bridge_gate_temperature": float(judri_bridge_gate_temperature),
+            "adversarial_train_fraction": adv_fraction,
+            "adversarial_train_surfaces": list(adv_surfaces),
+            "base_train_count": int(base_count),
+            "adversarial_train_count": int(adv_count),
+            "effective_train_size": int(len(train_examples)),
         },
     }

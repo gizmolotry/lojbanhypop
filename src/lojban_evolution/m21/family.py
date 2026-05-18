@@ -82,6 +82,24 @@ M21_DYNAMIC_BRIDI_GRID: list[dict[str, Any]] = [
             "judri_bridge_gate_temperature": 1.0,
         },
     },
+    {
+        "cell_key": "H",
+        "cell_id": m21_cell_id("H"),
+        "lock": "adversarial_augmented_judri_gated_bridge",
+        "label": "Adversarial-augmented judri-gated bridge",
+        "variant": {
+            "trace_weight": 1.25,
+            "answer_weight": 1.25,
+            "counterfactual_weight": 1.25,
+            "brivi_lock_weight": 1.5,
+            "frame_necessity_weight": 1.0,
+            "mdl_weight": 0.01,
+            "judri_bridge_gate": True,
+            "judri_bridge_gate_temperature": 1.0,
+            "adversarial_train_fraction": 0.25,
+            "adversarial_train_surfaces": "heldout_paraphrase,clausal_permutation",
+        },
+    },
 ]
 
 
@@ -155,12 +173,14 @@ M21_REGISTRY: dict[str, dict[str, Any]] = {
             "pointer_necessity_weight",
             "judri_bridge_gate",
             "judri_bridge_gate_temperature",
+            "adversarial_train_fraction",
+            "adversarial_train_surfaces",
             "geometry_mode",
             "poincare_curvature",
             "mdl_weight",
             "seed",
         ],
-        "comparison_targets": ["M20", "M19.31", "M21.1.A", "M21.1.F", "M21.1.G"],
+        "comparison_targets": ["M20", "M19.31", "M21.1.A", "M21.1.F", "M21.1.G", "M21.1.H"],
         "default_grid": deepcopy(M21_DYNAMIC_BRIDI_GRID),
     }
 }

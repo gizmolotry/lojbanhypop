@@ -58,6 +58,8 @@ def _variant_args(base: argparse.Namespace, variant: dict[str, Any]) -> dict[str
         "hyperbolic_topology_weight": float(variant.get("hyperbolic_topology_weight", base.hyperbolic_topology_weight)),
         "judri_bridge_gate": bool(variant.get("judri_bridge_gate", base.judri_bridge_gate)),
         "judri_bridge_gate_temperature": float(variant.get("judri_bridge_gate_temperature", base.judri_bridge_gate_temperature)),
+        "adversarial_train_fraction": float(variant.get("adversarial_train_fraction", base.adversarial_train_fraction)),
+        "adversarial_train_surfaces": str(variant.get("adversarial_train_surfaces", base.adversarial_train_surfaces)),
     }
 
 
@@ -98,6 +100,8 @@ def _summarize_seed_reports(seed_reports: list[dict[str, Any]], stable_threshold
         "mean_judri_bridge_gate_active_mean": mean(collect("judri_bridge_gate_active_mean")) if metric_rows else 0.0,
         "mean_judri_bridge_gate_silenced_predicate_energy_mean": mean(collect("judri_bridge_gate_silenced_predicate_energy_mean")) if metric_rows else 0.0,
         "mean_judri_bridge_gate_enabled": mean(collect("judri_bridge_gate_enabled")) if metric_rows else 0.0,
+        "mean_adversarial_train_fraction": mean(collect("adversarial_train_fraction")) if metric_rows else 0.0,
+        "adversarial_training_exposure_rate": sum(1.0 for value in collect("adversarial_train_fraction") if value > 0.0) / max(1, len(metric_rows)),
         "mean_active_code_fraction_reachable": mean(collect("active_code_fraction_reachable")) if metric_rows else 0.0,
         "avg_tokens": mean(collect("avg_tokens")) if metric_rows else 0.0,
         "accuracy_per_token": mean(collect("accuracy_per_token")) if metric_rows else 0.0,
@@ -170,6 +174,10 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
                     "--judri-bridge-gate" if bool(variant["judri_bridge_gate"]) else "--no-judri-bridge-gate",
                     "--judri-bridge-gate-temperature",
                     str(variant["judri_bridge_gate_temperature"]),
+                    "--adversarial-train-fraction",
+                    str(variant["adversarial_train_fraction"]),
+                    "--adversarial-train-surfaces",
+                    str(variant["adversarial_train_surfaces"]),
                     "--geometry-mode",
                     str(args.geometry_mode),
                     "--poincare-curvature",
@@ -231,6 +239,8 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
             "riemannian_gradient_scale": bool(args.riemannian_gradient_scale),
             "judri_bridge_gate": bool(args.judri_bridge_gate),
             "judri_bridge_gate_temperature": float(args.judri_bridge_gate_temperature),
+            "adversarial_train_fraction": float(args.adversarial_train_fraction),
+            "adversarial_train_surfaces": str(args.adversarial_train_surfaces),
         },
         "aggregate_metrics": aggregate,
         "cells": cells,
@@ -254,7 +264,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     defaults = registry["dataset_defaults"]
     parser = argparse.ArgumentParser(description="Run the M21 dynamic bridi Q-former suite.")
     parser.add_argument("--seed-list", type=str, default="23,29")
-    parser.add_argument("--cell-list", type=str, default="A,B,C,D,E,F,G")
+    parser.add_argument("--cell-list", type=str, default="A,B,C,D,E,F,G,H")
     parser.add_argument("--train-size", type=int, default=int(defaults["train_size"]))
     parser.add_argument("--eval-size", type=int, default=int(defaults["eval_size"]))
     parser.add_argument("--epochs", type=int, default=16)
@@ -282,6 +292,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--riemannian-gradient-scale", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--judri-bridge-gate", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--judri-bridge-gate-temperature", type=float, default=1.0)
+    parser.add_argument("--adversarial-train-fraction", type=float, default=0.0)
+    parser.add_argument("--adversarial-train-surfaces", type=str, default="heldout_paraphrase,clausal_permutation")
     parser.add_argument("--stable-threshold", type=float, default=0.70)
     parser.add_argument("--device", type=str, default="cpu")
     parser.add_argument("--output-root", type=Path, default=Path(registry["output_roots"]["suite"]))

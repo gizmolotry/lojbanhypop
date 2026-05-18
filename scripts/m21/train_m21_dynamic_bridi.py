@@ -38,12 +38,20 @@ def _run_dir(args: argparse.Namespace) -> Path:
 
 def _lock_status(metrics: dict[str, Any]) -> dict[str, bool]:
     strict = float(metrics.get("strict_accuracy", 0.0) or 0.0)
+    adversarial_exposure = max(
+        _metric(metrics, "adversarial_training_exposure_rate", 0.0),
+        _metric(metrics, "mean_adversarial_train_fraction", 0.0),
+        _metric(metrics, "adversarial_train_fraction", 0.0),
+    )
     return {
         "dynamic_frame_count": _metric(metrics, "frame_count_mae", 999.0) <= 0.35 and _metric(metrics, "mean_active_frames", 0.0) > 0.25,
         "bridi_trace_reconstruction": _metric(metrics, "bridi_trace_exact_accuracy", 0.0) >= 0.55,
         "cmavo_causality": _metric(metrics, "cmavo_accuracy", 0.0) >= 0.55 or _metric(metrics, "cmavo_causal_delta", 0.0) >= 0.02,
         "judri_binding_causality": _metric(metrics, "judri_binding_accuracy", 0.0) >= 0.55 or _metric(metrics, "judri_causal_delta", 0.0) >= 0.02,
         "judri_gated_bridge": _metric(metrics, "judri_bridge_gate_enabled", 0.0) >= 0.5 and _metric(metrics, "judri_bridge_gate_active_mean", 0.0) > 0.05,
+        "adversarial_augmented_judri_gated_bridge": adversarial_exposure > 0.0
+        and _metric(metrics, "judri_bridge_gate_enabled", 0.0) >= 0.5
+        and _metric(metrics, "judri_causal_delta", 0.0) >= 0.02,
         "brivi_lock": _metric(metrics, "brivi_lock_violation_rate", 1.0) <= 0.10,
         "actual_bridge_transfer": strict >= max(0.15, _metric(metrics, "random_trace_accuracy", 0.0) + 0.10),
     }
@@ -87,9 +95,15 @@ def run_train(args: argparse.Namespace) -> dict[str, Any]:
         riemannian_gradient_scale=bool(args.riemannian_gradient_scale),
         judri_bridge_gate=bool(args.judri_bridge_gate),
         judri_bridge_gate_temperature=float(args.judri_bridge_gate_temperature),
+        adversarial_train_fraction=float(args.adversarial_train_fraction),
+        adversarial_train_surfaces=str(args.adversarial_train_surfaces),
         device=str(args.device),
     )
     metrics = dict(result["metrics"])
+    for key, value in result["config"].items():
+        if isinstance(value, (int, float, bool)):
+            metrics.setdefault(str(key), float(value))
+    metrics.setdefault("adversarial_training_exposure_rate", 1.0 if float(result["config"].get("adversarial_train_fraction", 0.0)) > 0.0 else 0.0)
     if result.get("history"):
         final_epoch = dict(result["history"][-1])
         for key, value in final_epoch.items():
@@ -177,6 +191,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--riemannian-gradient-scale", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--judri-bridge-gate", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--judri-bridge-gate-temperature", type=float, default=1.0)
+    parser.add_argument("--adversarial-train-fraction", type=float, default=0.0)
+    parser.add_argument("--adversarial-train-surfaces", type=str, default="heldout_paraphrase,clausal_permutation")
     parser.add_argument("--device", type=str, default="cpu")
     parser.add_argument("--output-root", type=Path, default=Path(registry["output_roots"]["train"]))
     parser.add_argument("--output-path", type=Path, default=None)

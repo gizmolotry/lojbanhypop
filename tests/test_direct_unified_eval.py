@@ -502,6 +502,8 @@ def test_build_direct_unified_eval_manifest_m21_dynamic_bridi() -> None:
                 "mean_adversarial_judri_causal_delta": 0.55,
                 "mean_adversarial_worst_surface_accuracy": 0.49,
                 "mean_adversarial_oov_token_rate": 0.22,
+                "mean_adversarial_train_fraction": 0.25,
+                "adversarial_training_exposure_rate": 1.0,
             }
         },
     )
@@ -530,8 +532,46 @@ def test_build_direct_unified_eval_manifest_m21_dynamic_bridi() -> None:
     assert statuses["m21.frame_necessity"] == "available"
     assert statuses["m21.actual_bridge_transfer"] == "available"
     assert statuses["m21.adversarial_heldout"] == "available"
+    assert statuses["m21.adversarial_augmentation"] == "available"
 
     rendered = render_direct_unified_eval_markdown(manifest)
     assert "Direct Unified Eval: M21 (M21.1)" in rendered
     assert "m21.actual_bridge_transfer" in rendered
     assert "m21.adversarial_heldout" in rendered
+    assert "m21.adversarial_augmentation" in rendered
+
+
+def test_m21_adversarial_augmentation_requires_training_exposure() -> None:
+    tmp_path = _scratch_dir()
+    suite_path = _write_json(
+        tmp_path / "m21_dynamic_bridi_suite_report.json",
+        {"aggregate_metrics": {"mean_strict_accuracy": 0.82, "mean_judri_causal_delta": 0.6}},
+    )
+    actual_path = _write_json(
+        tmp_path / "m21_actual_bridge_report.json",
+        {"metrics": {"strict_accuracy": 0.82, "judri_causal_delta": 0.6}},
+    )
+    adversarial_path = _write_json(
+        tmp_path / "m21_adversarial_audit_report.json",
+        {
+            "aggregate_metrics": {
+                "mean_adversarial_strict_accuracy": 0.48,
+                "mean_adversarial_judri_causal_delta": 0.42,
+                "mean_adversarial_worst_surface_accuracy": 0.33,
+                "adversarial_training_exposure_rate": 0.0,
+            }
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M21",
+        track="M21.1",
+        m21_suite_report_path=suite_path,
+        m21_actual_bridge_report_path=actual_path,
+        m21_adversarial_audit_report_path=adversarial_path,
+        history_manifest_path=None,
+    )
+
+    statuses = {row["test_id"]: row["status"] for row in manifest["contract_results"]}
+    assert statuses["m21.adversarial_heldout"] == "available"
+    assert statuses["m21.adversarial_augmentation"] == "missing"

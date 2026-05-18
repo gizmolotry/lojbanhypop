@@ -151,6 +151,9 @@ KEY_METRICS = (
     "adversarial_judri_causal_delta",
     "adversarial_worst_surface_accuracy",
     "adversarial_oov_token_rate",
+    "adversarial_train_fraction",
+    "mean_adversarial_train_fraction",
+    "adversarial_training_exposure_rate",
     "gauntlet_integrity_full_accuracy",
     "gauntlet_integrity_purged_accuracy",
     "gauntlet_integrity_masked_accuracy",
@@ -709,8 +712,10 @@ def _evaluate_m21_contract(
         sources = (pointer_metrics, actual_metrics)
     elif test_id == "m21.m19_gauntlet_port" or surface == "m21_gauntlet_suite":
         sources = (gauntlet_metrics,)
-    elif test_id == "m21.adversarial_heldout" or surface == "m21_adversarial_audit":
+    elif test_id == "m21.adversarial_heldout" or (surface == "m21_adversarial_audit" and test_id != "m21.adversarial_augmentation"):
         sources = (adversarial_metrics,)
+    elif test_id == "m21.adversarial_augmentation":
+        sources = (suite_metrics, actual_metrics, adversarial_metrics)
     elif surface == "m21_dynamic_bridi_suite":
         sources = (suite_metrics,)
     elif surface == "m21_actual_bridge_suite":
@@ -723,9 +728,15 @@ def _evaluate_m21_contract(
         sources = (suite_metrics, synthetic_metrics, actual_metrics, lock_metrics, pointer_metrics, gauntlet_metrics, adversarial_metrics)
     for source in sources:
         if isinstance(source, dict):
-            merged.update(source)
+            for key, value in source.items():
+                if value is not None:
+                    merged[key] = value
     metric_keys = tuple(contract.get("metrics", []))
     metrics = _filtered_metrics(merged, metric_keys)
+    if test_id == "m21.adversarial_augmentation" and float(adversarial_metrics.get("adversarial_training_exposure_rate", 0.0) or 0.0) <= 0.0:
+        row = _missing_contract_row(test_id, contract, "missing M21 adversarial training exposure for augmentation contract")
+        row["metrics"] = _filtered_metrics(adversarial_metrics, metric_keys)
+        return row
     if test_id == "m21.dynamic_frame_count" and isinstance(suite_payload, dict):
         metrics["cell_count"] = len(suite_payload.get("cells", {})) if isinstance(suite_payload.get("cells"), dict) else 0
     if not metrics:
@@ -1365,6 +1376,8 @@ def _m21_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("adversarial_judri_causal_delta", aggregate.get("mean_adversarial_judri_causal_delta"))
         metrics.setdefault("adversarial_worst_surface_accuracy", aggregate.get("mean_adversarial_worst_surface_accuracy"))
         metrics.setdefault("adversarial_oov_token_rate", aggregate.get("mean_adversarial_oov_token_rate"))
+        metrics.setdefault("mean_adversarial_train_fraction", aggregate.get("mean_adversarial_train_fraction"))
+        metrics.setdefault("adversarial_training_exposure_rate", aggregate.get("adversarial_training_exposure_rate"))
         metrics.setdefault("mean_active_frames", aggregate.get("mean_active_frames"))
         metrics.setdefault("active_code_fraction_reachable", aggregate.get("mean_active_code_fraction_reachable"))
     seed_rows: list[dict[str, Any]] = []

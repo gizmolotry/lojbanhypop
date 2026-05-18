@@ -102,6 +102,65 @@ def test_tiny_training_renders_token_efficiency_metrics() -> None:
     assert "accuracy_per_trace_token" in metrics
 
 
+def test_tiny_training_accepts_adversarial_augmentation() -> None:
+    result = train_m21_dynamic_bridi(
+        train_size=96,
+        eval_size=48,
+        epochs=1,
+        batch_size=32,
+        seed=25,
+        embedding_dim=16,
+        hidden_dim=32,
+        adversarial_train_fraction=0.25,
+        adversarial_train_surfaces="heldout_paraphrase,clausal_permutation",
+    )
+
+    assert result["config"]["adversarial_train_fraction"] == 0.25
+    assert result["config"]["adversarial_train_surfaces"] == ["heldout_paraphrase", "clausal_permutation"]
+    assert result["config"]["base_train_count"] == 72
+    assert result["config"]["adversarial_train_count"] == 24
+    assert result["config"]["effective_train_size"] == 96
+    assert len(result["train_examples"]) == 96
+
+
+def test_adversarial_training_rejects_reserved_audit_surfaces() -> None:
+    try:
+        train_m21_dynamic_bridi(
+            train_size=32,
+            eval_size=16,
+            epochs=1,
+            batch_size=16,
+            seed=27,
+            embedding_dim=16,
+            hidden_dim=32,
+            adversarial_train_fraction=0.25,
+            adversarial_train_surfaces="oov_synonym",
+        )
+    except ValueError as exc:
+        assert "Reserved M21 adversarial surfaces" in str(exc)
+    else:
+        raise AssertionError("Expected reserved adversarial surface to raise ValueError.")
+
+
+def test_adversarial_training_rejects_unknown_surfaces() -> None:
+    try:
+        train_m21_dynamic_bridi(
+            train_size=32,
+            eval_size=16,
+            epochs=1,
+            batch_size=16,
+            seed=26,
+            embedding_dim=16,
+            hidden_dim=32,
+            adversarial_train_fraction=0.25,
+            adversarial_train_surfaces="typo_surface",
+        )
+    except ValueError as exc:
+        assert "Unknown M21 adversarial surfaces" in str(exc)
+    else:
+        raise AssertionError("Expected invalid adversarial surface to raise ValueError.")
+
+
 def test_pointer_necessity_hinge_matches_m19_contract() -> None:
     full_loss = torch.tensor(1.00, requires_grad=True)
     no_judri_loss = torch.tensor(0.98, requires_grad=True)
