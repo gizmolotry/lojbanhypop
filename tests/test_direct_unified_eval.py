@@ -533,6 +533,7 @@ def test_build_direct_unified_eval_manifest_m21_dynamic_bridi() -> None:
     assert statuses["m21.actual_bridge_transfer"] == "available"
     assert statuses["m21.adversarial_heldout"] == "available"
     assert statuses["m21.adversarial_augmentation"] == "available"
+    assert statuses["m21.semantic_coverage"] == "missing"
 
     rendered = render_direct_unified_eval_markdown(manifest)
     assert "Direct Unified Eval: M21 (M21.1)" in rendered
@@ -575,3 +576,82 @@ def test_m21_adversarial_augmentation_requires_training_exposure() -> None:
     statuses = {row["test_id"]: row["status"] for row in manifest["contract_results"]}
     assert statuses["m21.adversarial_heldout"] == "available"
     assert statuses["m21.adversarial_augmentation"] == "missing"
+
+
+def test_m21_semantic_coverage_requires_semantic_training_exposure() -> None:
+    tmp_path = _scratch_dir()
+    suite_path = _write_json(
+        tmp_path / "m21_dynamic_bridi_suite_report.json",
+        {"aggregate_metrics": {"mean_strict_accuracy": 0.82, "mean_judri_causal_delta": 0.6}},
+    )
+    adversarial_path = _write_json(
+        tmp_path / "m21_adversarial_audit_report.json",
+        {
+            "aggregate_metrics": {
+                "mean_adversarial_strict_accuracy": 0.48,
+                "mean_adversarial_judri_causal_delta": 0.42,
+                "mean_adversarial_worst_surface_accuracy": 0.33,
+                "adversarial_training_exposure_rate": 1.0,
+                "semantic_coverage_training_exposure_rate": 0.0,
+            }
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M21",
+        track="M21.1",
+        m21_suite_report_path=suite_path,
+        m21_adversarial_audit_report_path=adversarial_path,
+        history_manifest_path=None,
+    )
+
+    statuses = {row["test_id"]: row["status"] for row in manifest["contract_results"]}
+    assert statuses["m21.adversarial_augmentation"] == "available"
+    assert statuses["m21.semantic_coverage"] == "missing"
+
+
+def test_m21_semantic_coverage_available_with_prefixed_metrics_only() -> None:
+    tmp_path = _scratch_dir()
+    suite_path = _write_json(
+        tmp_path / "m21_dynamic_bridi_suite_report.json",
+        {"aggregate_metrics": {"mean_strict_accuracy": 0.82, "mean_judri_causal_delta": 0.6}},
+    )
+    actual_path = _write_json(
+        tmp_path / "m21_actual_bridge_report.json",
+        {"metrics": {"strict_accuracy": 0.82, "actual_bridge_transfer_score": 0.4, "judri_causal_delta": 0.6}},
+    )
+    adversarial_path = _write_json(
+        tmp_path / "m21_adversarial_audit_report.json",
+        {
+            "aggregate_metrics": {
+                "mean_adversarial_strict_accuracy": 0.48,
+                "mean_adversarial_judri_causal_delta": 0.42,
+                "mean_adversarial_worst_surface_accuracy": 0.33,
+                "adversarial_training_exposure_rate": 1.0,
+                "semantic_coverage_strict_accuracy": 0.37,
+                "semantic_coverage_worst_surface_accuracy": 0.29,
+                "semantic_coverage_judri_causal_delta": 0.31,
+                "semantic_coverage_training_exposure_rate": 1.0,
+                "semantic_coverage_train_fraction": 0.25,
+                "semantic_coverage_surface_count": 2.0,
+                "semantic_coverage_oov_token_rate": 0.18,
+            }
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M21",
+        track="M21.1",
+        m21_suite_report_path=suite_path,
+        m21_actual_bridge_report_path=actual_path,
+        m21_adversarial_audit_report_path=adversarial_path,
+        history_manifest_path=None,
+    )
+
+    statuses = {row["test_id"]: row["status"] for row in manifest["contract_results"]}
+    assert statuses["m21.semantic_coverage"] == "available"
+    assert manifest["headline_metrics"]["strict_accuracy"] == 0.82
+    assert manifest["headline_metrics"]["actual_bridge_transfer_score"] == 0.4
+    assert manifest["headline_metrics"]["semantic_coverage_strict_accuracy"] == 0.37
+    semantic_row = next(row for row in manifest["contract_results"] if row["test_id"] == "m21.semantic_coverage")
+    assert semantic_row["metrics"]["semantic_coverage_surface_count"] == 2.0

@@ -154,6 +154,13 @@ KEY_METRICS = (
     "adversarial_train_fraction",
     "mean_adversarial_train_fraction",
     "adversarial_training_exposure_rate",
+    "semantic_coverage_strict_accuracy",
+    "semantic_coverage_worst_surface_accuracy",
+    "semantic_coverage_judri_causal_delta",
+    "semantic_coverage_oov_token_rate",
+    "semantic_coverage_training_exposure_rate",
+    "semantic_coverage_train_fraction",
+    "semantic_coverage_surface_count",
     "gauntlet_integrity_full_accuracy",
     "gauntlet_integrity_purged_accuracy",
     "gauntlet_integrity_masked_accuracy",
@@ -712,10 +719,14 @@ def _evaluate_m21_contract(
         sources = (pointer_metrics, actual_metrics)
     elif test_id == "m21.m19_gauntlet_port" or surface == "m21_gauntlet_suite":
         sources = (gauntlet_metrics,)
-    elif test_id == "m21.adversarial_heldout" or (surface == "m21_adversarial_audit" and test_id != "m21.adversarial_augmentation"):
+    elif test_id == "m21.adversarial_heldout" or (
+        surface == "m21_adversarial_audit" and test_id not in {"m21.adversarial_augmentation", "m21.semantic_coverage"}
+    ):
         sources = (adversarial_metrics,)
     elif test_id == "m21.adversarial_augmentation":
         sources = (suite_metrics, actual_metrics, adversarial_metrics)
+    elif test_id == "m21.semantic_coverage":
+        sources = (suite_metrics, adversarial_metrics)
     elif surface == "m21_dynamic_bridi_suite":
         sources = (suite_metrics,)
     elif surface == "m21_actual_bridge_suite":
@@ -735,6 +746,10 @@ def _evaluate_m21_contract(
     metrics = _filtered_metrics(merged, metric_keys)
     if test_id == "m21.adversarial_augmentation" and float(adversarial_metrics.get("adversarial_training_exposure_rate", 0.0) or 0.0) <= 0.0:
         row = _missing_contract_row(test_id, contract, "missing M21 adversarial training exposure for augmentation contract")
+        row["metrics"] = _filtered_metrics(adversarial_metrics, metric_keys)
+        return row
+    if test_id == "m21.semantic_coverage" and float(adversarial_metrics.get("semantic_coverage_training_exposure_rate", 0.0) or 0.0) <= 0.0:
+        row = _missing_contract_row(test_id, contract, "missing M21 semantic-coverage training exposure for semantic coverage contract")
         row["metrics"] = _filtered_metrics(adversarial_metrics, metric_keys)
         return row
     if test_id == "m21.dynamic_frame_count" and isinstance(suite_payload, dict):
@@ -1330,7 +1345,7 @@ def _build_headline_metrics(
                 headline.setdefault(key, value)
     if isinstance(m21_adversarial_payload, dict):
         for key, value in _filtered_metrics(_m21_suite_metrics(m21_adversarial_payload), KEY_METRICS).items():
-            if str(key).startswith("adversarial_"):
+            if str(key).startswith("adversarial_") or str(key).startswith("semantic_coverage_"):
                 headline[key] = value
             else:
                 headline.setdefault(key, value)
@@ -1378,6 +1393,13 @@ def _m21_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("adversarial_oov_token_rate", aggregate.get("mean_adversarial_oov_token_rate"))
         metrics.setdefault("mean_adversarial_train_fraction", aggregate.get("mean_adversarial_train_fraction"))
         metrics.setdefault("adversarial_training_exposure_rate", aggregate.get("adversarial_training_exposure_rate"))
+        metrics.setdefault("semantic_coverage_strict_accuracy", aggregate.get("semantic_coverage_strict_accuracy"))
+        metrics.setdefault("semantic_coverage_worst_surface_accuracy", aggregate.get("semantic_coverage_worst_surface_accuracy"))
+        metrics.setdefault("semantic_coverage_judri_causal_delta", aggregate.get("semantic_coverage_judri_causal_delta"))
+        metrics.setdefault("semantic_coverage_oov_token_rate", aggregate.get("semantic_coverage_oov_token_rate"))
+        metrics.setdefault("semantic_coverage_training_exposure_rate", aggregate.get("semantic_coverage_training_exposure_rate"))
+        metrics.setdefault("semantic_coverage_train_fraction", aggregate.get("semantic_coverage_train_fraction"))
+        metrics.setdefault("semantic_coverage_surface_count", aggregate.get("semantic_coverage_surface_count"))
         metrics.setdefault("mean_active_frames", aggregate.get("mean_active_frames"))
         metrics.setdefault("active_code_fraction_reachable", aggregate.get("mean_active_code_fraction_reachable"))
     seed_rows: list[dict[str, Any]] = []

@@ -1,7 +1,7 @@
 # Ablation Program Spine
 
-- Generated UTC: `2026-05-18T09:04:30.808780+00:00`
-- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m21_advtrain_H_history_contract_fixed_20260518/ablation_history_manifest.json`
+- Generated UTC: `2026-05-18T09:38:12.673475+00:00`
+- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m21_semantic_I_history_20260518/ablation_history_manifest.json`
 - Source taxonomy config: `configs/experiment_taxonomy.json`
 - Stage count: `24`
 
@@ -495,24 +495,24 @@ This is the ordered research spine of the project: legacy letter-series families
 - Kind: `major_series`
 - Layer: `dynamic_bridi_substrate`
 - Objective: replace fixed typed slots with variable-length bridi traces so the model learns how many gismu predicates, cmavo modifiers, and judri bindings are needed, then proves those frames are causally useful.
-- Entry count: `9`
-- Runnable rows: `9`
+- Entry count: `10`
+- Runnable rows: `10`
 - Question boundary: dynamic Lojbanic bridi Q-former
 - Thesis: replace fixed typed slots with variable-length bridi traces so the model learns how many gismu predicates, cmavo modifiers, and judri bindings are needed, then proves those frames are causally useful.
 - Selected upstream: `M20.1.F`
 - Inherits: `dictionary-first causal predicate discipline, counterfactual quotient invariance, brivi lock skepticism`
 - Reopens: `fixed typed slot count, fixed predicate target set, static dictionary trace shape`
 - Rejects: `decorative slot occupancy as semantic evidence, dictionary spread without causal utility`
-- IDs: `M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G, M21.1.H`
-- Aliases: `A, B, C, D, E, F, G, H, M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G, M21.1.H`
-- Allowed axes: `dynamic frame count, cmavo causality, judri binding causality, judri gated bridge, brivi lock, frame necessity, actual bridge transfer, held-out adversarial prompt audit, adversarial training augmentation`
+- IDs: `M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G, M21.1.H, M21.1.I`
+- Aliases: `A, B, C, D, E, F, G, H, I, M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G, M21.1.H, M21.1.I`
+- Allowed axes: `dynamic frame count, cmavo causality, judri binding causality, judri gated bridge, brivi lock, frame necessity, actual bridge transfer, held-out adversarial prompt audit, adversarial training augmentation, semantic coverage augmentation`
 - Frozen/forbidden drift: `fixed typed-slot layout as main result, decorative frame occupancy, phrase accuracy as canonical accuracy, mass deletion of M20 control assets`
 - Promotion basis: `strict_accuracy, bridi_trace_exact_accuracy, lock_pass_rate, actual_bridge_transfer_score`
 - Primary metrics: `strict_accuracy, bridi_trace_exact_accuracy, gismu_accuracy, judri_binding_accuracy`
-- Guardrail metrics: `cmavo_causal_delta, judri_causal_delta, judri_bridge_gate_active_mean, judri_bridge_gate_silenced_predicate_energy_mean, adversarial_strict_accuracy, adversarial_worst_surface_accuracy, brivi_lock_violation_rate, accuracy_per_trace_token`
+- Guardrail metrics: `cmavo_causal_delta, judri_causal_delta, judri_bridge_gate_active_mean, judri_bridge_gate_silenced_predicate_energy_mean, adversarial_strict_accuracy, adversarial_worst_surface_accuracy, semantic_coverage_strict_accuracy, semantic_coverage_worst_surface_accuracy, brivi_lock_violation_rate, accuracy_per_trace_token`
 - Historical comparison families: `M19, M20`
-- Required test contracts: `m21.dynamic_frame_count, m21.bridi_reconstruction, m21.cmavo_causality, m21.judri_binding, m21.judri_gated_bridge, m21.pointer_necessity, m21.m19_gauntlet_port, m21.frame_necessity, m21.actual_bridge_transfer, m21.adversarial_heldout, m21.adversarial_augmentation`
-- Automatic comparison targets: `M21, M20, M19, M19.31, M20.1.F, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G, M21.1.H`
+- Required test contracts: `m21.dynamic_frame_count, m21.bridi_reconstruction, m21.cmavo_causality, m21.judri_binding, m21.judri_gated_bridge, m21.pointer_necessity, m21.m19_gauntlet_port, m21.frame_necessity, m21.actual_bridge_transfer, m21.adversarial_heldout, m21.adversarial_augmentation, m21.semantic_coverage`
+- Automatic comparison targets: `M21, M20, M19, M19.31, M20.1.F, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G, M21.1.H, M21.1.I`
 - Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
 - Scripts: `scripts/m21/run_m21_actual_bridge_suite.py, scripts/m21/run_m21_adversarial_audit.py, scripts/m21/run_m21_dynamic_bridi_suite.py, scripts/m21/run_m21_lock_suite.py, scripts/m21/run_m21_synthetic_assay_suite.py`
 - DAGs: `airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py`

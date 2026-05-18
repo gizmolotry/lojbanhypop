@@ -13,11 +13,19 @@ from lojban_evolution.m21 import (
     generate_dynamic_bridi_examples,
     judri_grounding_gate_from_logits,
     m21_collate,
+    m21_default_grid,
     poincare_tangent_handoff,
     pointer_necessity_contrast_loss,
     train_m21_dynamic_bridi,
 )
-from lojban_evolution.m21.bridi import CMAVO_TO_ID, GISMU_TO_ID, M21BridiDataset
+from lojban_evolution.m21.bridi import (
+    CMAVO_TO_ID,
+    GISMU_TO_ID,
+    M21BridiDataset,
+    RESERVED_ADVERSARIAL_AUDIT_SURFACES,
+    SEMANTIC_COVERAGE_TRAINING_SURFACES,
+    adversarial_training_surface_names,
+)
 from lojban_evolution.m21.gauntlet import build_m21_gauntlet_payload, m21_to_m19_reservoir_shim
 
 
@@ -123,7 +131,74 @@ def test_tiny_training_accepts_adversarial_augmentation() -> None:
     assert len(result["train_examples"]) == 96
 
 
+def test_semantic_training_surfaces_are_explicit_and_accepted() -> None:
+    training_surfaces = set(adversarial_training_surface_names())
+    semantic_surfaces = set(SEMANTIC_COVERAGE_TRAINING_SURFACES)
+    reserved_surfaces = set(RESERVED_ADVERSARIAL_AUDIT_SURFACES)
+
+    assert semantic_surfaces.issubset(training_surfaces)
+    assert semantic_surfaces.isdisjoint(reserved_surfaces)
+    assert training_surfaces.isdisjoint(reserved_surfaces)
+
+    for surface in SEMANTIC_COVERAGE_TRAINING_SURFACES:
+        examples = generate_dynamic_bridi_adversarial_examples(18, seed=28, surfaces=(surface,))
+
+        assert len(examples) == 18
+        assert {row.surface for row in examples} == {surface}
+        assert len({row.answer_label for row in examples}) == 18
+        assert all(any(frame.active for frame in row.frames) for row in examples)
+        if surface == "role_binding_train":
+            assert all(row.entities[0] != row.entities[6] for row in examples)
+
+    result = train_m21_dynamic_bridi(
+        train_size=36,
+        eval_size=18,
+        epochs=1,
+        batch_size=18,
+        seed=28,
+        embedding_dim=16,
+        hidden_dim=32,
+        adversarial_train_fraction=0.5,
+        adversarial_train_surfaces=",".join(SEMANTIC_COVERAGE_TRAINING_SURFACES),
+    )
+
+    assert result["config"]["adversarial_train_surfaces"] == list(SEMANTIC_COVERAGE_TRAINING_SURFACES)
+    assert {row.surface for row in result["train_examples"]}.isdisjoint(reserved_surfaces)
+
+
+def test_m21_grid_contains_single_semantic_coverage_i_cell() -> None:
+    grid = m21_default_grid()
+    cell_ids = [row["cell_id"] for row in grid]
+    i_cells = [row for row in grid if row["cell_key"] == "I"]
+
+    assert len(cell_ids) == len(set(cell_ids))
+    assert len(i_cells) == 1
+    assert i_cells[0]["cell_id"] == "M21.1.I"
+    assert i_cells[0]["variant"]["adversarial_train_surfaces"] == (
+        "heldout_paraphrase,clausal_permutation,lexical_shift_train,role_binding_train"
+    )
+
+
 def test_adversarial_training_rejects_reserved_audit_surfaces() -> None:
+    for surface in RESERVED_ADVERSARIAL_AUDIT_SURFACES:
+        try:
+            train_m21_dynamic_bridi(
+                train_size=32,
+                eval_size=16,
+                epochs=1,
+                batch_size=16,
+                seed=27,
+                embedding_dim=16,
+                hidden_dim=32,
+                adversarial_train_fraction=0.25,
+                adversarial_train_surfaces=surface,
+            )
+        except ValueError as exc:
+            assert "Reserved M21 adversarial surfaces" in str(exc)
+            assert surface in str(exc)
+        else:
+            raise AssertionError(f"Expected reserved adversarial surface {surface!r} to raise ValueError.")
+
     try:
         train_m21_dynamic_bridi(
             train_size=32,
@@ -134,12 +209,13 @@ def test_adversarial_training_rejects_reserved_audit_surfaces() -> None:
             embedding_dim=16,
             hidden_dim=32,
             adversarial_train_fraction=0.25,
-            adversarial_train_surfaces="oov_synonym",
+            adversarial_train_surfaces="lexical_shift_train,oov_synonym",
         )
     except ValueError as exc:
         assert "Reserved M21 adversarial surfaces" in str(exc)
+        assert "oov_synonym" in str(exc)
     else:
-        raise AssertionError("Expected reserved adversarial surface to raise ValueError.")
+        raise AssertionError("Expected mixed semantic and reserved adversarial surfaces to raise ValueError.")
 
 
 def test_adversarial_training_rejects_unknown_surfaces() -> None:

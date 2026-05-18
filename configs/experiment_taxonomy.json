@@ -430,7 +430,8 @@
         "frame necessity",
         "actual bridge transfer",
         "held-out adversarial prompt audit",
-        "adversarial training augmentation"
+        "adversarial training augmentation",
+        "semantic coverage augmentation"
       ],
       "forbidden_drift_axes": [
         "fixed typed-slot layout as main result",
@@ -457,6 +458,8 @@
         "judri_bridge_gate_silenced_predicate_energy_mean",
         "adversarial_strict_accuracy",
         "adversarial_worst_surface_accuracy",
+        "semantic_coverage_strict_accuracy",
+        "semantic_coverage_worst_surface_accuracy",
         "brivi_lock_violation_rate",
         "accuracy_per_trace_token"
       ],
@@ -983,6 +986,21 @@
         "judri_causal_delta"
       ],
       "surface": "m21_adversarial_audit"
+    },
+    "m21.semantic_coverage": {
+      "test_id": "m21.semantic_coverage",
+      "family": "M21",
+      "description": "M21.1.I semantic-coverage training surfaces should improve reserved lexical and role-binding audits without satisfying the claim from generic adversarial exposure.",
+      "metrics": [
+        "semantic_coverage_strict_accuracy",
+        "semantic_coverage_worst_surface_accuracy",
+        "semantic_coverage_judri_causal_delta",
+        "semantic_coverage_training_exposure_rate",
+        "semantic_coverage_train_fraction",
+        "semantic_coverage_surface_count",
+        "semantic_coverage_oov_token_rate"
+      ],
+      "surface": "m21_adversarial_audit"
     }
   },
   "family_comparison_contracts": {
@@ -1220,7 +1238,8 @@
         "m21.frame_necessity",
         "m21.actual_bridge_transfer",
         "m21.adversarial_heldout",
-        "m21.adversarial_augmentation"
+        "m21.adversarial_augmentation",
+        "m21.semantic_coverage"
       ],
       "explicit_compare_entries": [
         "M19.31",
@@ -1233,7 +1252,8 @@
         "M21.1.E",
         "M21.1.F",
         "M21.1.G",
-        "M21.1.H"
+        "M21.1.H",
+        "M21.1.I"
       ],
       "inherit_required_test_contracts": false
     }

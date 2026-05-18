@@ -122,6 +122,11 @@ KEY_METRICS = [
     "judri_causal_delta",
     "trace_tokens",
     "accuracy_per_trace_token",
+    "semantic_coverage_strict_accuracy",
+    "semantic_coverage_worst_surface_accuracy",
+    "semantic_coverage_judri_causal_delta",
+    "semantic_coverage_training_exposure_rate",
+    "semantic_coverage_surface_count",
 ]
 
 
@@ -680,6 +685,11 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                     "accuracy_per_token": "accuracy_per_token",
                     "trace_tokens": "trace_tokens",
                     "accuracy_per_trace_token": "accuracy_per_trace_token",
+                    "semantic_coverage_strict_accuracy": "semantic_coverage_strict_accuracy",
+                    "semantic_coverage_worst_surface_accuracy": "semantic_coverage_worst_surface_accuracy",
+                    "semantic_coverage_judri_causal_delta": "semantic_coverage_judri_causal_delta",
+                    "semantic_coverage_training_exposure_rate": "semantic_coverage_training_exposure_rate",
+                    "semantic_coverage_surface_count": "semantic_coverage_surface_count",
                 },
             )
         actual_anchor = _latest_named_manifest(DEFAULT_M21_ACTUAL_ROOT, "m21_actual_bridge_report.json")

@@ -16,6 +16,7 @@ if str(REPO_ROOT / "src") not in sys.path:
 
 from lojban_evolution.m21.bridi import (  # noqa: E402
     M21DynamicBridiQFormer,
+    SEMANTIC_COVERAGE_TRAINING_SURFACES,
     evaluate_model,
     generate_dynamic_bridi_adversarial_examples,
     tokenize,
@@ -152,7 +153,7 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
 
     strict = collect("adversarial_strict_accuracy")
     train_fractions = [float(row.get("config", {}).get("adversarial_train_fraction", 0.0) or 0.0) for row in rows]
-    return {
+    aggregate = {
         "mean_adversarial_strict_accuracy": mean(strict) if strict else 0.0,
         "std_adversarial_strict_accuracy": pstdev(strict) if len(strict) > 1 else 0.0,
         "mean_adversarial_bridi_trace_exact_accuracy": mean(collect("adversarial_bridi_trace_exact_accuracy")) if rows else 0.0,
@@ -167,6 +168,41 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
         "mean_adversarial_train_fraction": mean(train_fractions) if train_fractions else 0.0,
         "adversarial_training_exposure_rate": sum(1.0 for value in train_fractions if value > 0.0) / max(1, len(train_fractions)),
     }
+    semantic_rows = [row for row in rows if _semantic_coverage_surface_count(row.get("config", {})) > 0]
+    if semantic_rows:
+        semantic_train_fractions = [
+            float(row.get("config", {}).get("adversarial_train_fraction", 0.0) or 0.0) for row in semantic_rows
+        ]
+
+        def semantic_collect(key: str) -> list[float]:
+            return [float(row["metrics"].get(key, 0.0) or 0.0) for row in semantic_rows]
+
+        aggregate.update(
+            {
+                "semantic_coverage_strict_accuracy": mean(semantic_collect("adversarial_strict_accuracy")),
+                "semantic_coverage_worst_surface_accuracy": mean(semantic_collect("adversarial_worst_surface_accuracy")),
+                "semantic_coverage_judri_causal_delta": mean(semantic_collect("adversarial_judri_causal_delta")),
+                "semantic_coverage_oov_token_rate": mean(semantic_collect("adversarial_oov_token_rate")),
+                "semantic_coverage_training_exposure_rate": sum(1.0 for value in semantic_train_fractions if value > 0.0)
+                / max(1, len(semantic_train_fractions)),
+                "semantic_coverage_train_fraction": mean(semantic_train_fractions),
+                "semantic_coverage_surface_count": float(
+                    mean([_semantic_coverage_surface_count(row.get("config", {})) for row in semantic_rows])
+                ),
+            }
+        )
+    return aggregate
+
+
+def _semantic_coverage_surface_count(config: dict[str, Any]) -> int:
+    surfaces = config.get("adversarial_train_surfaces", [])
+    if isinstance(surfaces, str):
+        selected = {item.strip() for item in surfaces.split(",") if item.strip()}
+    elif isinstance(surfaces, (list, tuple, set)):
+        selected = {str(item).strip() for item in surfaces if str(item).strip()}
+    else:
+        selected = set()
+    return len(selected.intersection(set(SEMANTIC_COVERAGE_TRAINING_SURFACES)))
 
 
 def run_audit(args: argparse.Namespace) -> dict[str, Any]:

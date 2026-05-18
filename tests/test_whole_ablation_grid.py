@@ -128,6 +128,11 @@ def test_m21_special_stage_metrics_include_dynamic_bridi_and_causal_deltas() -> 
             "mean_cmavo_causal_delta": 0.21,
             "mean_judri_causal_delta": 0.09,
             "accuracy_per_trace_token": 0.08,
+            "semantic_coverage_strict_accuracy": 0.37,
+            "semantic_coverage_worst_surface_accuracy": 0.29,
+            "semantic_coverage_judri_causal_delta": 0.31,
+            "semantic_coverage_training_exposure_rate": 1.0,
+            "semantic_coverage_surface_count": 2.0,
         }
     }
 
@@ -142,3 +147,8 @@ def test_m21_special_stage_metrics_include_dynamic_bridi_and_causal_deltas() -> 
     assert metrics["cmavo_causal_delta"] == 0.21
     assert metrics["judri_causal_delta"] == 0.09
     assert metrics["accuracy_per_trace_token"] == 0.08
+    assert metrics["semantic_coverage_strict_accuracy"] == 0.37
+    assert metrics["semantic_coverage_worst_surface_accuracy"] == 0.29
+    assert metrics["semantic_coverage_judri_causal_delta"] == 0.31
+    assert metrics["semantic_coverage_training_exposure_rate"] == 1.0
+    assert metrics["semantic_coverage_surface_count"] == 2.0

@@ -90,6 +90,13 @@ PEOPLE = ("Alex", "Riley", "Jordan", "Morgan", "Taylor", "Casey", "Sam", "Quinn"
 ALT_NOUNS = ("lantern", "marble", "folder", "button", "ticket", "cup", "shell", "cable", "key", "map")
 TOKEN_RE = re.compile(r"[a-z0-9_]+", re.IGNORECASE)
 
+RESERVED_ADVERSARIAL_AUDIT_SURFACES = ("oov_synonym", "role_distractor")
+LEGACY_ADVERSARIAL_TRAINING_SURFACES = ("heldout_paraphrase", "clausal_permutation")
+SEMANTIC_COVERAGE_TRAINING_SURFACES = (
+    "lexical_shift_train",
+    "role_binding_train",
+)
+
 
 def pointer_necessity_contrast_loss(
     full_loss: torch.Tensor,
@@ -252,6 +259,11 @@ def _values(rng: random.Random, surface: str) -> dict[str, str]:
         values["object"] = f"object_{rng.randrange(100, 999)}"
         values["object2"] = f"object_{rng.randrange(1000, 1999)}"
         values["container"] = f"container_{rng.randrange(100, 999)}"
+    if values["object2"] == values["object"]:
+        candidates = [item for item in (*OBJECTS, *ALT_NOUNS) if item != values["object"]]
+        values["object2"] = rng.choice(candidates)
+    if values["receiver"] == values["giver"]:
+        values["receiver"] = rng.choice([name for name in PEOPLE if name != values["giver"]])
     return values
 
 
@@ -429,7 +441,7 @@ def _variant_specs() -> list[dict[str, Any]]:
 
 
 def _adversarial_template_bank() -> dict[str, tuple[tuple[str, str], ...]]:
-    return {
+    base = {
         "size_excess": (
             ("heldout_paraphrase", "Because {object} was oversized, {container} rejected it."),
             ("role_distractor", "{object2} was nearby, but {object} was the one too large for {container}."),
@@ -539,6 +551,94 @@ def _adversarial_template_bank() -> dict[str, tuple[tuple[str, str], ...]]:
             ("oov_synonym", "{person} lacked authorization for {object}."),
         ),
     }
+    return _with_semantic_coverage_surfaces(base)
+
+
+def _semantic_coverage_template_bank() -> dict[str, tuple[tuple[str, str], ...]]:
+    return {
+        "size_excess": (
+            ("lexical_shift_train", "{object} was too large, so {container} could not hold it."),
+            ("role_binding_train", "{object2} was nearby, but {object} had excessive dimensions for {container}."),
+        ),
+        "size_deficit": (
+            ("lexical_shift_train", "{object} was too small, leaving unused room in {container}."),
+            ("role_binding_train", "{object2} fit differently; {object} left unused room in {container}."),
+        ),
+        "weight_excess": (
+            ("lexical_shift_train", "{person} could not raise {object} because it was very heavy."),
+            ("role_binding_train", "{object2} was movable, but {person} could not raise {object}."),
+        ),
+        "weight_deficit": (
+            ("lexical_shift_train", "{object} moved with little force because it was very light."),
+            ("role_binding_train", "{object2} stayed still while the light {object} moved."),
+        ),
+        "transfer_success": (
+            ("lexical_shift_train", "{giver} passed {object} to {receiver}, making {receiver} the owner."),
+            ("role_binding_train", "{person} watched as {giver} passed {object} to {receiver}."),
+        ),
+        "transfer_refused": (
+            ("lexical_shift_train", "{receiver} rejected {object}, so {giver}'s transfer did not happen."),
+            ("role_binding_train", "{person} watched; {receiver} rejected {object} from {giver}."),
+        ),
+        "preference_like": (
+            ("lexical_shift_train", "{person} enjoyed {object} and chose to keep it."),
+            ("role_binding_train", "{person} ignored {object2} and chose {object}."),
+        ),
+        "preference_dislike": (
+            ("lexical_shift_train", "{person} disliked {object} and chose to avoid it."),
+            ("role_binding_train", "{person} accepted {object2} but avoided {object}."),
+        ),
+        "containment_success": (
+            ("lexical_shift_train", "{container} held {object} after the placement succeeded."),
+            ("role_binding_train", "{object2} remained elsewhere while {container} held {object}."),
+        ),
+        "containment_blocked": (
+            ("lexical_shift_train", "{container} blocked {object} because the passage was too narrow."),
+            ("role_binding_train", "{object2} was irrelevant; {container} blocked {object}."),
+        ),
+        "visibility_clear": (
+            ("lexical_shift_train", "{observer} saw {object} because nothing blocked the view."),
+            ("role_binding_train", "{observer} missed {object2} but had a clear view of {object}."),
+        ),
+        "visibility_blocked": (
+            ("lexical_shift_train", "{observer} could not see {object} because something hid it."),
+            ("role_binding_train", "{observer} saw {object2}; {object} remained hidden."),
+        ),
+        "quantity_excess": (
+            ("lexical_shift_train", "{count} {object}s were too many for the allowed amount."),
+            ("role_binding_train", "{object2}s were not counted; {count} {object}s were too many."),
+        ),
+        "quantity_deficit": (
+            ("lexical_shift_train", "{count} {object}s were too few for the required amount."),
+            ("role_binding_train", "{object2}s were not counted; {count} {object}s were too few."),
+        ),
+        "motion_allowed": (
+            ("lexical_shift_train", "Permission let {person} move {object} toward {container}."),
+            ("role_binding_train", "{person} moved {object}; {object2} stayed outside {container}."),
+        ),
+        "motion_blocked": (
+            ("lexical_shift_train", "Without permission, {person} left {object} outside {container}."),
+            ("role_binding_train", "{person} moved {object2}, but {object} remained blocked."),
+        ),
+        "permission_granted": (
+            ("lexical_shift_train", "{person} was permitted to use {object}."),
+            ("role_binding_train", "{person} had permission for {object}, not necessarily {object2}."),
+        ),
+        "permission_denied": (
+            ("lexical_shift_train", "{person} was not permitted to use {object}."),
+            ("role_binding_train", "{person} could use {object2}, but not {object}."),
+        ),
+    }
+
+
+def _with_semantic_coverage_surfaces(
+    base: dict[str, tuple[tuple[str, str], ...]],
+) -> dict[str, tuple[tuple[str, str], ...]]:
+    semantic_bank = _semantic_coverage_template_bank()
+    expanded: dict[str, tuple[tuple[str, str], ...]] = {}
+    for answer_label, templates in base.items():
+        expanded[answer_label] = templates + semantic_bank.get(answer_label, tuple())
+    return expanded
 
 
 def adversarial_surface_names() -> tuple[str, ...]:
@@ -547,7 +647,7 @@ def adversarial_surface_names() -> tuple[str, ...]:
 
 
 def adversarial_training_surface_names() -> tuple[str, ...]:
-    return ("heldout_paraphrase", "clausal_permutation")
+    return LEGACY_ADVERSARIAL_TRAINING_SURFACES + SEMANTIC_COVERAGE_TRAINING_SURFACES
 
 
 def _validated_adversarial_surfaces(
@@ -591,7 +691,7 @@ def generate_dynamic_bridi_adversarial_examples(
         if not candidates:
             raise ValueError(f"No M21 adversarial templates for answer '{answer_label}' on surfaces {selected_surfaces}.")
         surface, template = rng.choice(candidates)
-        values = _values(rng, "renamed" if surface == "role_distractor" else "purged")
+        values = _values(rng, "renamed" if surface in {"role_distractor", "role_binding_train"} else "purged")
         entities = _entity_tuple(values)
         prompt = template.format(**values)
         spec = specs[answer_label]

@@ -264,7 +264,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     defaults = registry["dataset_defaults"]
     parser = argparse.ArgumentParser(description="Run the M21 dynamic bridi Q-former suite.")
     parser.add_argument("--seed-list", type=str, default="23,29")
-    parser.add_argument("--cell-list", type=str, default="A,B,C,D,E,F,G,H")
+    parser.add_argument("--cell-list", type=str, default="A,B,C,D,E,F,G,H,I")
     parser.add_argument("--train-size", type=int, default=int(defaults["train_size"]))
     parser.add_argument("--eval-size", type=int, default=int(defaults["eval_size"]))
     parser.add_argument("--epochs", type=int, default=16)
