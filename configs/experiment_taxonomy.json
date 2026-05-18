@@ -990,7 +990,7 @@
     "m21.semantic_coverage": {
       "test_id": "m21.semantic_coverage",
       "family": "M21",
-      "description": "M21.1.I semantic-coverage training surfaces should improve reserved lexical and role-binding audits without satisfying the claim from generic adversarial exposure.",
+      "description": "M21 semantic-coverage training surfaces should improve reserved lexical and role-binding audits without satisfying the claim from generic adversarial exposure.",
       "metrics": [
         "semantic_coverage_strict_accuracy",
         "semantic_coverage_worst_surface_accuracy",
@@ -998,7 +998,12 @@
         "semantic_coverage_training_exposure_rate",
         "semantic_coverage_train_fraction",
         "semantic_coverage_surface_count",
-        "semantic_coverage_oov_token_rate"
+        "semantic_coverage_oov_token_rate",
+        "semantic_isolation_cell_count",
+        "semantic_coverage_lexical_shift_effect_strict_accuracy_delta",
+        "semantic_coverage_role_binding_effect_strict_accuracy_delta",
+        "semantic_coverage_combined_effect_strict_accuracy_delta",
+        "semantic_coverage_fraction_effect_strict_accuracy_delta"
       ],
       "surface": "m21_adversarial_audit"
     }
@@ -1253,7 +1258,10 @@
         "M21.1.F",
         "M21.1.G",
         "M21.1.H",
-        "M21.1.I"
+        "M21.1.I",
+        "M21.1.J",
+        "M21.1.K",
+        "M21.1.L"
       ],
       "inherit_required_test_contracts": false
     }

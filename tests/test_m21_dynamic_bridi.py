@@ -166,17 +166,22 @@ def test_semantic_training_surfaces_are_explicit_and_accepted() -> None:
     assert {row.surface for row in result["train_examples"]}.isdisjoint(reserved_surfaces)
 
 
-def test_m21_grid_contains_single_semantic_coverage_i_cell() -> None:
+def test_m21_grid_contains_semantic_coverage_ablation_cells() -> None:
     grid = m21_default_grid()
     cell_ids = [row["cell_id"] for row in grid]
-    i_cells = [row for row in grid if row["cell_key"] == "I"]
+    cells = {row["cell_key"]: row for row in grid}
 
     assert len(cell_ids) == len(set(cell_ids))
-    assert len(i_cells) == 1
-    assert i_cells[0]["cell_id"] == "M21.1.I"
-    assert i_cells[0]["variant"]["adversarial_train_surfaces"] == (
+    assert cells["I"]["cell_id"] == "M21.1.I"
+    assert cells["I"]["variant"]["adversarial_train_surfaces"] == (
         "heldout_paraphrase,clausal_permutation,lexical_shift_train,role_binding_train"
     )
+    assert cells["J"]["variant"]["adversarial_train_surfaces"] == "heldout_paraphrase,clausal_permutation,lexical_shift_train"
+    assert cells["K"]["variant"]["adversarial_train_surfaces"] == "heldout_paraphrase,clausal_permutation,role_binding_train"
+    assert cells["L"]["variant"]["adversarial_train_surfaces"] == (
+        "heldout_paraphrase,clausal_permutation,lexical_shift_train,role_binding_train"
+    )
+    assert cells["L"]["variant"]["adversarial_train_fraction"] == 0.5
 
 
 def test_adversarial_training_rejects_reserved_audit_surfaces() -> None:

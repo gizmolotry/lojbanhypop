@@ -24,6 +24,19 @@ from lojban_evolution.m21.bridi import (  # noqa: E402
 from lojban_evolution.m21.family import M21_FAMILY_VERSION, M21_REGISTRY  # noqa: E402
 from lojban_evolution.series_contract import assert_output_path_allowed, series_metadata, validate_series_outputs  # noqa: E402
 
+SEMANTIC_ISOLATION_CELLS = ("H", "I", "J", "K", "L")
+SEMANTIC_ISOLATION_EFFECTS = {
+    "lexical_shift": ("J", "H"),
+    "role_binding": ("K", "H"),
+    "combined": ("I", "H"),
+    "fraction": ("L", "I"),
+}
+SEMANTIC_ISOLATION_METRICS = {
+    "strict_accuracy": "adversarial_strict_accuracy",
+    "worst_surface_accuracy": "adversarial_worst_surface_accuracy",
+    "judri_causal_delta": "adversarial_judri_causal_delta",
+}
+
 
 def _timestamp() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
@@ -191,7 +204,31 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
                 ),
             }
         )
+    aggregate.update(_semantic_isolation_metrics(rows))
     return aggregate
+
+
+def _semantic_isolation_metrics(rows: list[dict[str, Any]]) -> dict[str, float]:
+    cell_metrics: dict[str, dict[str, float]] = {}
+    out: dict[str, float] = {}
+    for cell in SEMANTIC_ISOLATION_CELLS:
+        cell_rows = [row for row in rows if str(row.get("cell_key", "")).upper() == cell]
+        if not cell_rows:
+            continue
+        cell_metrics[cell] = {}
+        for short_name, metric_key in SEMANTIC_ISOLATION_METRICS.items():
+            values = [float(row.get("metrics", {}).get(metric_key, 0.0) or 0.0) for row in cell_rows]
+            value = mean(values) if values else 0.0
+            cell_metrics[cell][short_name] = value
+            out[f"semantic_isolation_{cell.lower()}_{short_name}"] = value
+    out["semantic_isolation_cell_count"] = float(len(cell_metrics))
+    if all(cell in cell_metrics for cell in SEMANTIC_ISOLATION_CELLS):
+        for effect_name, (target_cell, baseline_cell) in SEMANTIC_ISOLATION_EFFECTS.items():
+            for short_name in SEMANTIC_ISOLATION_METRICS:
+                target = cell_metrics[target_cell][short_name]
+                baseline = cell_metrics[baseline_cell][short_name]
+                out[f"semantic_coverage_{effect_name}_effect_{short_name}_delta"] = target - baseline
+    return out
 
 
 def _semantic_coverage_surface_count(config: dict[str, Any]) -> int:
@@ -287,7 +324,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     registry = M21_REGISTRY["M21"]
     parser = argparse.ArgumentParser(description="Run M21 held-out adversarial prompt audit on saved dynamic bridi checkpoints.")
     parser.add_argument("--suite-report", type=Path, required=True)
-    parser.add_argument("--cell-list", type=str, default="G")
+    parser.add_argument("--cell-list", type=str, default="H,I,J,K,L")
     parser.add_argument("--eval-size", type=int, default=2048)
     parser.add_argument("--batch-size", type=int, default=512)
     parser.add_argument("--audit-seed", type=int, default=21017)

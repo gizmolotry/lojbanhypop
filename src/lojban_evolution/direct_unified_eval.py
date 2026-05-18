@@ -161,6 +161,19 @@ KEY_METRICS = (
     "semantic_coverage_training_exposure_rate",
     "semantic_coverage_train_fraction",
     "semantic_coverage_surface_count",
+    "semantic_isolation_cell_count",
+    "semantic_coverage_lexical_shift_effect_strict_accuracy_delta",
+    "semantic_coverage_lexical_shift_effect_worst_surface_accuracy_delta",
+    "semantic_coverage_lexical_shift_effect_judri_causal_delta_delta",
+    "semantic_coverage_role_binding_effect_strict_accuracy_delta",
+    "semantic_coverage_role_binding_effect_worst_surface_accuracy_delta",
+    "semantic_coverage_role_binding_effect_judri_causal_delta_delta",
+    "semantic_coverage_combined_effect_strict_accuracy_delta",
+    "semantic_coverage_combined_effect_worst_surface_accuracy_delta",
+    "semantic_coverage_combined_effect_judri_causal_delta_delta",
+    "semantic_coverage_fraction_effect_strict_accuracy_delta",
+    "semantic_coverage_fraction_effect_worst_surface_accuracy_delta",
+    "semantic_coverage_fraction_effect_judri_causal_delta_delta",
     "gauntlet_integrity_full_accuracy",
     "gauntlet_integrity_purged_accuracy",
     "gauntlet_integrity_masked_accuracy",
@@ -748,8 +761,8 @@ def _evaluate_m21_contract(
         row = _missing_contract_row(test_id, contract, "missing M21 adversarial training exposure for augmentation contract")
         row["metrics"] = _filtered_metrics(adversarial_metrics, metric_keys)
         return row
-    if test_id == "m21.semantic_coverage" and float(adversarial_metrics.get("semantic_coverage_training_exposure_rate", 0.0) or 0.0) <= 0.0:
-        row = _missing_contract_row(test_id, contract, "missing M21 semantic-coverage training exposure for semantic coverage contract")
+    if test_id == "m21.semantic_coverage" and not _has_semantic_isolation_evidence(adversarial_metrics):
+        row = _missing_contract_row(test_id, contract, "missing M21 semantic-coverage isolation evidence for semantic coverage contract")
         row["metrics"] = _filtered_metrics(adversarial_metrics, metric_keys)
         return row
     if test_id == "m21.dynamic_frame_count" and isinstance(suite_payload, dict):
@@ -764,6 +777,20 @@ def _evaluate_m21_contract(
         "metrics": metrics,
         "notes": ["M21 contract is evaluated from dynamic bridi suite, synthetic assay, lock-suite, actual bridge, adversarial audit, and gauntlet-adapter reports."],
     }
+
+
+def _has_semantic_isolation_evidence(metrics: dict[str, Any]) -> bool:
+    if float(metrics.get("semantic_coverage_training_exposure_rate", 0.0) or 0.0) <= 0.0:
+        return False
+    if float(metrics.get("semantic_isolation_cell_count", 0.0) or 0.0) < 5.0:
+        return False
+    required = (
+        "semantic_coverage_lexical_shift_effect_strict_accuracy_delta",
+        "semantic_coverage_role_binding_effect_strict_accuracy_delta",
+        "semantic_coverage_combined_effect_strict_accuracy_delta",
+        "semantic_coverage_fraction_effect_strict_accuracy_delta",
+    )
+    return all(metrics.get(key) is not None for key in required)
 
 
 def _evaluate_m20_contract(
@@ -1345,7 +1372,11 @@ def _build_headline_metrics(
                 headline.setdefault(key, value)
     if isinstance(m21_adversarial_payload, dict):
         for key, value in _filtered_metrics(_m21_suite_metrics(m21_adversarial_payload), KEY_METRICS).items():
-            if str(key).startswith("adversarial_") or str(key).startswith("semantic_coverage_"):
+            if (
+                str(key).startswith("adversarial_")
+                or str(key).startswith("semantic_coverage_")
+                or str(key).startswith("semantic_isolation_")
+            ):
                 headline[key] = value
             else:
                 headline.setdefault(key, value)
@@ -1400,6 +1431,12 @@ def _m21_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("semantic_coverage_training_exposure_rate", aggregate.get("semantic_coverage_training_exposure_rate"))
         metrics.setdefault("semantic_coverage_train_fraction", aggregate.get("semantic_coverage_train_fraction"))
         metrics.setdefault("semantic_coverage_surface_count", aggregate.get("semantic_coverage_surface_count"))
+        metrics.setdefault("semantic_isolation_cell_count", aggregate.get("semantic_isolation_cell_count"))
+        for key, value in aggregate.items():
+            if str(key).startswith("semantic_coverage_") and str(key).endswith("_delta"):
+                metrics.setdefault(str(key), value)
+            if str(key).startswith("semantic_isolation_"):
+                metrics.setdefault(str(key), value)
         metrics.setdefault("mean_active_frames", aggregate.get("mean_active_frames"))
         metrics.setdefault("active_code_fraction_reachable", aggregate.get("mean_active_code_fraction_reachable"))
     seed_rows: list[dict[str, Any]] = []

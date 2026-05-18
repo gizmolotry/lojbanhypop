@@ -610,7 +610,7 @@ def test_m21_semantic_coverage_requires_semantic_training_exposure() -> None:
     assert statuses["m21.semantic_coverage"] == "missing"
 
 
-def test_m21_semantic_coverage_available_with_prefixed_metrics_only() -> None:
+def test_m21_semantic_coverage_requires_isolation_deltas_not_prefixed_metrics_only() -> None:
     tmp_path = _scratch_dir()
     suite_path = _write_json(
         tmp_path / "m21_dynamic_bridi_suite_report.json",
@@ -649,9 +649,62 @@ def test_m21_semantic_coverage_available_with_prefixed_metrics_only() -> None:
     )
 
     statuses = {row["test_id"]: row["status"] for row in manifest["contract_results"]}
+    assert statuses["m21.semantic_coverage"] == "missing"
+    assert manifest["headline_metrics"]["strict_accuracy"] == 0.82
+    assert manifest["headline_metrics"]["actual_bridge_transfer_score"] == 0.4
+    assert manifest["headline_metrics"]["semantic_coverage_strict_accuracy"] == 0.37
+    assert "semantic_coverage_lexical_shift_effect_strict_accuracy_delta" not in manifest["headline_metrics"]
+
+
+def test_m21_semantic_coverage_available_with_isolation_deltas() -> None:
+    tmp_path = _scratch_dir()
+    suite_path = _write_json(
+        tmp_path / "m21_dynamic_bridi_suite_report.json",
+        {"aggregate_metrics": {"mean_strict_accuracy": 0.82, "mean_judri_causal_delta": 0.6}},
+    )
+    actual_path = _write_json(
+        tmp_path / "m21_actual_bridge_report.json",
+        {"metrics": {"strict_accuracy": 0.82, "actual_bridge_transfer_score": 0.4, "judri_causal_delta": 0.6}},
+    )
+    adversarial_path = _write_json(
+        tmp_path / "m21_adversarial_audit_report.json",
+        {
+            "aggregate_metrics": {
+                "mean_adversarial_strict_accuracy": 0.48,
+                "mean_adversarial_judri_causal_delta": 0.42,
+                "mean_adversarial_worst_surface_accuracy": 0.33,
+                "adversarial_training_exposure_rate": 1.0,
+                "semantic_coverage_strict_accuracy": 0.37,
+                "semantic_coverage_worst_surface_accuracy": 0.29,
+                "semantic_coverage_judri_causal_delta": 0.31,
+                "semantic_coverage_training_exposure_rate": 1.0,
+                "semantic_coverage_train_fraction": 0.25,
+                "semantic_coverage_surface_count": 2.0,
+                "semantic_coverage_oov_token_rate": 0.18,
+                "semantic_isolation_cell_count": 5.0,
+                "semantic_coverage_lexical_shift_effect_strict_accuracy_delta": 0.14,
+                "semantic_coverage_role_binding_effect_strict_accuracy_delta": 0.11,
+                "semantic_coverage_combined_effect_strict_accuracy_delta": 0.20,
+                "semantic_coverage_fraction_effect_strict_accuracy_delta": 0.02,
+            }
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M21",
+        track="M21.1",
+        m21_suite_report_path=suite_path,
+        m21_actual_bridge_report_path=actual_path,
+        m21_adversarial_audit_report_path=adversarial_path,
+        history_manifest_path=None,
+    )
+
+    statuses = {row["test_id"]: row["status"] for row in manifest["contract_results"]}
     assert statuses["m21.semantic_coverage"] == "available"
     assert manifest["headline_metrics"]["strict_accuracy"] == 0.82
     assert manifest["headline_metrics"]["actual_bridge_transfer_score"] == 0.4
     assert manifest["headline_metrics"]["semantic_coverage_strict_accuracy"] == 0.37
+    assert manifest["headline_metrics"]["semantic_coverage_lexical_shift_effect_strict_accuracy_delta"] == 0.14
     semantic_row = next(row for row in manifest["contract_results"] if row["test_id"] == "m21.semantic_coverage")
     assert semantic_row["metrics"]["semantic_coverage_surface_count"] == 2.0
+    assert semantic_row["metrics"]["semantic_isolation_cell_count"] == 5.0

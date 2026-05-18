@@ -11,7 +11,7 @@ from lojban_airflow_utils import merge_conf, run_repo_script, sanitize_run_id, v
 
 DEFAULTS = {
     "seed_list": "23,29",
-    "cell_list": "A,B,C,D,E,F,G,H,I",
+    "cell_list": "A,B,C,D,E,F,G,H,I,J,K,L",
     "train_size": 6000,
     "eval_size": 1500,
     "epochs": 16,
@@ -61,7 +61,7 @@ def _run_m21_dynamic_bridi(**context: object) -> None:
         "--seed-list",
         str(cfg.get("seed_list", "23,29")),
         "--cell-list",
-        str(cfg.get("cell_list", "A,B,C,D,E,F")),
+        str(cfg.get("cell_list", "A,B,C,D,E,F,G,H,I,J,K,L")),
         "--train-size",
         str(int(cfg.get("train_size", 6000))),
         "--eval-size",
@@ -215,7 +215,7 @@ with DAG(
     tags=["lojban", "m-series", "m21", "bridi"],
     params={
         "seed_list": Param("23,29", type="string", minLength=1),
-        "cell_list": Param("A,B,C,D,E,F,G,H,I", type="string", minLength=1),
+        "cell_list": Param("A,B,C,D,E,F,G,H,I,J,K,L", type="string", minLength=1),
         "train_size": Param(6000, type="integer", minimum=1),
         "eval_size": Param(1500, type="integer", minimum=1),
         "epochs": Param(16, type="integer", minimum=1),

@@ -127,6 +127,11 @@ KEY_METRICS = [
     "semantic_coverage_judri_causal_delta",
     "semantic_coverage_training_exposure_rate",
     "semantic_coverage_surface_count",
+    "semantic_isolation_cell_count",
+    "semantic_coverage_lexical_shift_effect_strict_accuracy_delta",
+    "semantic_coverage_role_binding_effect_strict_accuracy_delta",
+    "semantic_coverage_combined_effect_strict_accuracy_delta",
+    "semantic_coverage_fraction_effect_strict_accuracy_delta",
 ]
 
 
@@ -690,6 +695,11 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                     "semantic_coverage_judri_causal_delta": "semantic_coverage_judri_causal_delta",
                     "semantic_coverage_training_exposure_rate": "semantic_coverage_training_exposure_rate",
                     "semantic_coverage_surface_count": "semantic_coverage_surface_count",
+                    "semantic_isolation_cell_count": "semantic_isolation_cell_count",
+                    "semantic_coverage_lexical_shift_effect_strict_accuracy_delta": "semantic_coverage_lexical_shift_effect_strict_accuracy_delta",
+                    "semantic_coverage_role_binding_effect_strict_accuracy_delta": "semantic_coverage_role_binding_effect_strict_accuracy_delta",
+                    "semantic_coverage_combined_effect_strict_accuracy_delta": "semantic_coverage_combined_effect_strict_accuracy_delta",
+                    "semantic_coverage_fraction_effect_strict_accuracy_delta": "semantic_coverage_fraction_effect_strict_accuracy_delta",
                 },
             )
         actual_anchor = _latest_named_manifest(DEFAULT_M21_ACTUAL_ROOT, "m21_actual_bridge_report.json")

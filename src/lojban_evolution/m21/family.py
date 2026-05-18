@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 
-M21_FAMILY_VERSION = "0.1"
+M21_FAMILY_VERSION = "0.2"
 M21_DEFAULT_MAX_FRAMES = 6
 M21_DEFAULT_MAX_CMAVO_PER_FRAME = 3
 M21_DEFAULT_MAX_PLACES = 5
@@ -118,6 +118,60 @@ M21_DYNAMIC_BRIDI_GRID: list[dict[str, Any]] = [
             "adversarial_train_surfaces": "heldout_paraphrase,clausal_permutation,lexical_shift_train,role_binding_train",
         },
     },
+    {
+        "cell_key": "J",
+        "cell_id": m21_cell_id("J"),
+        "lock": "adversarial_augmented_judri_gated_bridge",
+        "label": "Lexical-shift semantic coverage bridge",
+        "variant": {
+            "trace_weight": 1.25,
+            "answer_weight": 1.25,
+            "counterfactual_weight": 1.25,
+            "brivi_lock_weight": 1.5,
+            "frame_necessity_weight": 1.0,
+            "mdl_weight": 0.01,
+            "judri_bridge_gate": True,
+            "judri_bridge_gate_temperature": 1.0,
+            "adversarial_train_fraction": 0.25,
+            "adversarial_train_surfaces": "heldout_paraphrase,clausal_permutation,lexical_shift_train",
+        },
+    },
+    {
+        "cell_key": "K",
+        "cell_id": m21_cell_id("K"),
+        "lock": "adversarial_augmented_judri_gated_bridge",
+        "label": "Role-binding semantic coverage bridge",
+        "variant": {
+            "trace_weight": 1.25,
+            "answer_weight": 1.25,
+            "counterfactual_weight": 1.25,
+            "brivi_lock_weight": 1.5,
+            "frame_necessity_weight": 1.0,
+            "mdl_weight": 0.01,
+            "judri_bridge_gate": True,
+            "judri_bridge_gate_temperature": 1.0,
+            "adversarial_train_fraction": 0.25,
+            "adversarial_train_surfaces": "heldout_paraphrase,clausal_permutation,role_binding_train",
+        },
+    },
+    {
+        "cell_key": "L",
+        "cell_id": m21_cell_id("L"),
+        "lock": "adversarial_augmented_judri_gated_bridge",
+        "label": "High-fraction semantic coverage bridge",
+        "variant": {
+            "trace_weight": 1.25,
+            "answer_weight": 1.25,
+            "counterfactual_weight": 1.25,
+            "brivi_lock_weight": 1.5,
+            "frame_necessity_weight": 1.0,
+            "mdl_weight": 0.01,
+            "judri_bridge_gate": True,
+            "judri_bridge_gate_temperature": 1.0,
+            "adversarial_train_fraction": 0.5,
+            "adversarial_train_surfaces": "heldout_paraphrase,clausal_permutation,lexical_shift_train,role_binding_train",
+        },
+    },
 ]
 
 
@@ -198,7 +252,18 @@ M21_REGISTRY: dict[str, dict[str, Any]] = {
             "mdl_weight",
             "seed",
         ],
-        "comparison_targets": ["M20", "M19.31", "M21.1.A", "M21.1.F", "M21.1.G", "M21.1.H", "M21.1.I"],
+        "comparison_targets": [
+            "M20",
+            "M19.31",
+            "M21.1.A",
+            "M21.1.F",
+            "M21.1.G",
+            "M21.1.H",
+            "M21.1.I",
+            "M21.1.J",
+            "M21.1.K",
+            "M21.1.L",
+        ],
         "default_grid": deepcopy(M21_DYNAMIC_BRIDI_GRID),
     }
 }

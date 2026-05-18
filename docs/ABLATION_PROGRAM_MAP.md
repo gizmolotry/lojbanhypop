@@ -1,7 +1,7 @@
 # Ablation Program Map
 
-- Generated UTC: `2026-05-18T09:38:12.533740+00:00`
-- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m21_semantic_I_history_20260518/ablation_history_manifest.json`
+- Generated UTC: `2026-05-18T10:15:22.139718+00:00`
+- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m21_semantic_hijkl_history_20260518/ablation_history_manifest.json`
 - Concentrated family count: `37`
 
 ## Program Layers
@@ -518,11 +518,11 @@
 
 - Layer: `dynamic_bridi_substrate`
 - Status: `runnable`
-- Normalized IDs: `M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G, M21.1.H, M21.1.I`
-- Legacy aliases: `A, B, C, D, E, F, G, H, I`
-- Entry count: `10`
-- Runnable rows: `10`
-- Brief: Actual bridge adapter + 9 more
+- Normalized IDs: `M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G, M21.1.H, M21.1.I, M21.1.J, M21.1.K, M21.1.L`
+- Legacy aliases: `A, B, C, D, E, F, G, H, I, J, K, L`
+- Entry count: `13`
+- Runnable rows: `13`
+- Brief: Actual bridge adapter + 12 more
 - Family groups: `m_track`
 - Scripts: `scripts/m21/run_m21_actual_bridge_suite.py, scripts/m21/run_m21_adversarial_audit.py, scripts/m21/run_m21_dynamic_bridi_suite.py, scripts/m21/run_m21_lock_suite.py, scripts/m21/run_m21_synthetic_assay_suite.py`
 - DAGs: `airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py`
