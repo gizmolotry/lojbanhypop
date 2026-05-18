@@ -421,6 +421,159 @@ def _variant_specs() -> list[dict[str, Any]]:
     ]
 
 
+def _adversarial_template_bank() -> dict[str, tuple[tuple[str, str], ...]]:
+    return {
+        "size_excess": (
+            ("heldout_paraphrase", "Because {object} was oversized, {container} rejected it."),
+            ("role_distractor", "{object2} was nearby, but {object} was the one too large for {container}."),
+            ("clausal_permutation", "Too big was the {object}; fitting into {container} failed."),
+            ("oov_synonym", "The {container} could not accommodate the bulky {object}."),
+        ),
+        "size_deficit": (
+            ("heldout_paraphrase", "Because {object} was undersized, {container} had empty space."),
+            ("role_distractor", "{object2} fit normally, while {object} was too small for {container}."),
+            ("clausal_permutation", "Too small was the {object}; it rattled in {container}."),
+            ("oov_synonym", "The {object} was miniature, leaving {container} unfilled."),
+        ),
+        "weight_excess": (
+            ("heldout_paraphrase", "{person} failed the lift since {object} had excessive weight."),
+            ("role_distractor", "{object2} was light enough, but {object} was too heavy for {person}."),
+            ("clausal_permutation", "Too heavy was the {object}; {person} could not lift it."),
+            ("oov_synonym", "{person} could not budge the weighty {object}."),
+        ),
+        "weight_deficit": (
+            ("heldout_paraphrase", "{object} moved easily because its weight was low."),
+            ("role_distractor", "{object2} stayed put, but the light {object} moved."),
+            ("clausal_permutation", "Too light was the {object}; motion followed."),
+            ("oov_synonym", "The lightweight {object} shifted without resistance."),
+        ),
+        "transfer_success": (
+            ("heldout_paraphrase", "Ownership shifted when {giver} handed {object} to {receiver}."),
+            ("role_distractor", "{person} watched, but {giver} transferred {object} to {receiver}."),
+            ("clausal_permutation", "To {receiver} went {object}, from {giver}."),
+            ("oov_synonym", "{receiver} acquired {object} from {giver}."),
+        ),
+        "transfer_refused": (
+            ("heldout_paraphrase", "{receiver} rejected {object}, so the transfer from {giver} failed."),
+            ("role_distractor", "{person} accepted nothing; {receiver} refused {object} from {giver}."),
+            ("clausal_permutation", "Refused by {receiver} was {object}, despite {giver}'s offer."),
+            ("oov_synonym", "{receiver} declined the proposed handoff of {object}."),
+        ),
+        "preference_like": (
+            ("heldout_paraphrase", "{person} favored {object} and kept using it."),
+            ("role_distractor", "{person} ignored {object2} but liked {object}."),
+            ("clausal_permutation", "Liked by {person} was the {object}."),
+            ("oov_synonym", "{person} preferred the handy {object}."),
+        ),
+        "preference_dislike": (
+            ("heldout_paraphrase", "{person} disliked {object} and avoided it."),
+            ("role_distractor", "{person} liked {object2}, not {object}."),
+            ("clausal_permutation", "Disliked by {person} was the {object}."),
+            ("oov_synonym", "{person} was averse to the troublesome {object}."),
+        ),
+        "containment_success": (
+            ("heldout_paraphrase", "{container} accepted {object} and held it inside."),
+            ("role_distractor", "{object2} sat outside, but {object} stayed in {container}."),
+            ("clausal_permutation", "Inside {container} remained {object}."),
+            ("oov_synonym", "{container} enclosed {object} successfully."),
+        ),
+        "containment_blocked": (
+            ("heldout_paraphrase", "{container} refused passage because {object} was too large."),
+            ("role_distractor", "{object2} was irrelevant; {object} was blocked by {container}."),
+            ("clausal_permutation", "Blocked by {container} was {object}."),
+            ("oov_synonym", "{container}'s aperture obstructed {object}."),
+        ),
+        "visibility_clear": (
+            ("heldout_paraphrase", "{observer} had a clear view of {object}."),
+            ("role_distractor", "{observer} saw {object}, not {object2}."),
+            ("clausal_permutation", "Visible to {observer} was {object}."),
+            ("oov_synonym", "{object} was unobscured for {observer}."),
+        ),
+        "visibility_blocked": (
+            ("heldout_paraphrase", "{observer}'s view of {object} was blocked."),
+            ("role_distractor", "{observer} saw {object2}, but not {object}."),
+            ("clausal_permutation", "Hidden from {observer} was {object}."),
+            ("oov_synonym", "{object} was occluded from {observer}."),
+        ),
+        "quantity_excess": (
+            ("heldout_paraphrase", "{count} {object}s made the amount too high."),
+            ("role_distractor", "{object2}s were ignored; {count} {object}s exceeded the limit."),
+            ("clausal_permutation", "Too many were the {object}s: {count}."),
+            ("oov_synonym", "The tally of {object}s surpassed the cap."),
+        ),
+        "quantity_deficit": (
+            ("heldout_paraphrase", "{count} {object}s made the amount too low."),
+            ("role_distractor", "{object2}s were ignored; {count} {object}s fell short."),
+            ("clausal_permutation", "Too few were the {object}s: {count}."),
+            ("oov_synonym", "The tally of {object}s undershot the requirement."),
+        ),
+        "motion_allowed": (
+            ("heldout_paraphrase", "Permission let {person} move {object} into {container}."),
+            ("role_distractor", "{person} moved {object}, while {object2} stayed outside {container}."),
+            ("clausal_permutation", "Allowed by permission, {person} moved {object}."),
+            ("oov_synonym", "Authorization enabled {person}'s relocation of {object}."),
+        ),
+        "motion_blocked": (
+            ("heldout_paraphrase", "No permission meant {person} could not move {object}."),
+            ("role_distractor", "{person} moved {object2}, but was blocked from moving {object}."),
+            ("clausal_permutation", "Denied permission, {person} left {object} unmoved."),
+            ("oov_synonym", "Lack of authorization prevented {person}'s relocation of {object}."),
+        ),
+        "permission_granted": (
+            ("heldout_paraphrase", "{person} was allowed to use {object}."),
+            ("role_distractor", "{person} could use {object}, not necessarily {object2}."),
+            ("clausal_permutation", "Granted to {person} was permission for {object}."),
+            ("oov_synonym", "{person} received authorization for {object}."),
+        ),
+        "permission_denied": (
+            ("heldout_paraphrase", "{person} was not allowed to use {object}."),
+            ("role_distractor", "{person} could use {object2}, but not {object}."),
+            ("clausal_permutation", "Denied to {person} was permission for {object}."),
+            ("oov_synonym", "{person} lacked authorization for {object}."),
+        ),
+    }
+
+
+def generate_dynamic_bridi_adversarial_examples(
+    size: int,
+    *,
+    seed: int = 0,
+    surfaces: Sequence[str] = ("heldout_paraphrase", "role_distractor", "clausal_permutation", "oov_synonym"),
+) -> list[DynamicBridiExample]:
+    rng = random.Random(int(seed))
+    specs = {str(spec["name"]): spec for spec in _variant_specs()}
+    banks = _adversarial_template_bank()
+    selected_surfaces = tuple(str(surface) for surface in surfaces)
+    rows: list[DynamicBridiExample] = []
+    labels = list(ANSWER_LABELS)
+    for idx in range(int(size)):
+        answer_label = labels[idx % len(labels)] if idx < len(labels) * 2 else rng.choice(labels)
+        candidates = [item for item in banks[answer_label] if item[0] in selected_surfaces]
+        if not candidates:
+            candidates = list(banks[answer_label])
+        surface, template = rng.choice(candidates)
+        values = _values(rng, "renamed" if surface == "role_distractor" else "purged")
+        entities = _entity_tuple(values)
+        prompt = template.format(**values)
+        spec = specs[answer_label]
+        frames = tuple(spec["frames"](values))
+        rows.append(
+            DynamicBridiExample(
+                prompt=prompt,
+                frames=frames,
+                entities=entities,
+                answer_id=ANSWER_TO_ID[answer_label],
+                answer_label=answer_label,
+                surface=surface,
+                counterfactual_group=answer_label,
+                entity_signature="|".join(entities),
+                is_floating=False,
+            )
+        )
+    rng.shuffle(rows)
+    return rows
+
+
 def generate_dynamic_bridi_examples(
     size: int,
     *,

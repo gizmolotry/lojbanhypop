@@ -45,6 +45,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--m21-lock-report", type=Path, default=None)
     parser.add_argument("--m21-pointer-microgrid-report", type=Path, default=None)
     parser.add_argument("--m21-gauntlet-report", type=Path, default=None)
+    parser.add_argument("--m21-adversarial-audit-report", type=Path, default=None)
 
     parser.add_argument("--execute-m19-direct", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--base-model", type=str, default="C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct")
@@ -112,6 +113,7 @@ def main() -> None:
         m21_lock_report_path=args.m21_lock_report,
         m21_pointer_microgrid_report_path=args.m21_pointer_microgrid_report,
         m21_gauntlet_report_path=args.m21_gauntlet_report,
+        m21_adversarial_audit_report_path=args.m21_adversarial_audit_report,
         history_manifest_path=history_manifest,
     )
     manifest["run_id"] = run_id
@@ -136,6 +138,7 @@ def main() -> None:
         "m21_lock_report": _repo_string(args.m21_lock_report) if args.m21_lock_report else None,
         "m21_pointer_microgrid_report": _repo_string(args.m21_pointer_microgrid_report) if args.m21_pointer_microgrid_report else None,
         "m21_gauntlet_report": _repo_string(args.m21_gauntlet_report) if args.m21_gauntlet_report else None,
+        "m21_adversarial_audit_report": _repo_string(args.m21_adversarial_audit_report) if args.m21_adversarial_audit_report else None,
     }
 
     manifest_path = output_dir / "direct_unified_eval_manifest.json"

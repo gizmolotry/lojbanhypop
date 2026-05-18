@@ -147,6 +147,7 @@ PATH_CANONICALIZATION: dict[str, str] = {
     "scripts/run_m21_synthetic_assay_suite.py": "scripts/m21/run_m21_synthetic_assay_suite.py",
     "scripts/run_m21_actual_bridge_suite.py": "scripts/m21/run_m21_actual_bridge_suite.py",
     "scripts/run_m21_lock_suite.py": "scripts/m21/run_m21_lock_suite.py",
+    "scripts/run_m21_adversarial_audit.py": "scripts/m21/run_m21_adversarial_audit.py",
     "scripts/run_m3_plus_family.py": "scripts/m3/run_m3_plus_family.py",
     "scripts/run_m3_5_symmetry.py": "scripts/m3/run_m3_5_symmetry.py",
     "scripts/run_m3_6_symmetry_oracle.py": "scripts/m3/run_m3_6_symmetry_oracle.py",

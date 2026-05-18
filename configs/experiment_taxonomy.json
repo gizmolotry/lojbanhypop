@@ -428,7 +428,8 @@
         "judri gated bridge",
         "brivi lock",
         "frame necessity",
-        "actual bridge transfer"
+        "actual bridge transfer",
+        "held-out adversarial prompt audit"
       ],
       "forbidden_drift_axes": [
         "fixed typed-slot layout as main result",
@@ -453,6 +454,8 @@
         "judri_causal_delta",
         "judri_bridge_gate_active_mean",
         "judri_bridge_gate_silenced_predicate_energy_mean",
+        "adversarial_strict_accuracy",
+        "adversarial_worst_surface_accuracy",
         "brivi_lock_violation_rate",
         "accuracy_per_trace_token"
       ],
@@ -949,6 +952,20 @@
         "accuracy_per_trace_token"
       ],
       "surface": "m21_actual_bridge_suite"
+    },
+    "m21.adversarial_heldout": {
+      "test_id": "m21.adversarial_heldout",
+      "family": "M21",
+      "description": "Checkpoint-backed held-out prompt audit using non-training generator language, role distractors, clause permutation, and OOV synonym stressors.",
+      "metrics": [
+        "adversarial_strict_accuracy",
+        "adversarial_bridi_trace_exact_accuracy",
+        "adversarial_no_judri_accuracy",
+        "adversarial_judri_causal_delta",
+        "adversarial_worst_surface_accuracy",
+        "adversarial_oov_token_rate"
+      ],
+      "surface": "m21_adversarial_audit"
     }
   },
   "family_comparison_contracts": {
@@ -1184,7 +1201,8 @@
         "m21.pointer_necessity",
         "m21.m19_gauntlet_port",
         "m21.frame_necessity",
-        "m21.actual_bridge_transfer"
+        "m21.actual_bridge_transfer",
+        "m21.adversarial_heldout"
       ],
       "explicit_compare_entries": [
         "M19.31",

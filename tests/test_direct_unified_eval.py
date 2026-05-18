@@ -492,6 +492,19 @@ def test_build_direct_unified_eval_manifest_m21_dynamic_bridi() -> None:
             }
         },
     )
+    adversarial_path = _write_json(
+        tmp_path / "m21_adversarial_audit_report.json",
+        {
+            "aggregate_metrics": {
+                "mean_adversarial_strict_accuracy": 0.61,
+                "mean_adversarial_bridi_trace_exact_accuracy": 0.58,
+                "mean_adversarial_no_judri_accuracy": 0.06,
+                "mean_adversarial_judri_causal_delta": 0.55,
+                "mean_adversarial_worst_surface_accuracy": 0.49,
+                "mean_adversarial_oov_token_rate": 0.22,
+            }
+        },
+    )
 
     manifest = build_direct_unified_eval_manifest(
         family_key="M21",
@@ -500,6 +513,7 @@ def test_build_direct_unified_eval_manifest_m21_dynamic_bridi() -> None:
         m21_synthetic_assay_report_path=suite_path,
         m21_actual_bridge_report_path=actual_path,
         m21_lock_report_path=lock_path,
+        m21_adversarial_audit_report_path=adversarial_path,
         history_manifest_path=None,
     )
 
@@ -515,7 +529,9 @@ def test_build_direct_unified_eval_manifest_m21_dynamic_bridi() -> None:
     assert statuses["m21.judri_binding"] == "available"
     assert statuses["m21.frame_necessity"] == "available"
     assert statuses["m21.actual_bridge_transfer"] == "available"
+    assert statuses["m21.adversarial_heldout"] == "available"
 
     rendered = render_direct_unified_eval_markdown(manifest)
     assert "Direct Unified Eval: M21 (M21.1)" in rendered
     assert "m21.actual_bridge_transfer" in rendered
+    assert "m21.adversarial_heldout" in rendered

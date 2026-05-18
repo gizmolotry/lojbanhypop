@@ -142,6 +142,15 @@ KEY_METRICS = (
     "pointer_necessity_gap",
     "m19_gauntlet_worst_surface_accuracy",
     "m19_gauntlet_order_sensitivity_spread",
+    "adversarial_strict_accuracy",
+    "adversarial_bridi_trace_exact_accuracy",
+    "adversarial_gismu_accuracy",
+    "adversarial_cmavo_accuracy",
+    "adversarial_judri_binding_accuracy",
+    "adversarial_no_judri_accuracy",
+    "adversarial_judri_causal_delta",
+    "adversarial_worst_surface_accuracy",
+    "adversarial_oov_token_rate",
     "gauntlet_integrity_full_accuracy",
     "gauntlet_integrity_purged_accuracy",
     "gauntlet_integrity_masked_accuracy",
@@ -321,6 +330,7 @@ def discover_m21_surfaces(
     lock_report_path: Path | None = None,
     pointer_microgrid_report_path: Path | None = None,
     gauntlet_report_path: Path | None = None,
+    adversarial_audit_report_path: Path | None = None,
 ) -> dict[str, dict[str, Any]]:
     registry = M21_REGISTRY["M21"]
     suite_path = suite_report_path or _latest_named_manifest(
@@ -347,6 +357,10 @@ def discover_m21_surfaces(
         REPO_ROOT / registry["output_roots"]["gauntlet"],
         registry["report_names"]["gauntlet"],
     )
+    adversarial_path = adversarial_audit_report_path or _latest_named_manifest(
+        REPO_ROOT / registry["output_roots"]["adversarial_audit"],
+        registry["report_names"]["adversarial_audit"],
+    )
     return {
         "suite": _surface_record("suite", suite_path),
         "synthetic_assay": _surface_record("synthetic_assay", synthetic_path),
@@ -354,6 +368,7 @@ def discover_m21_surfaces(
         "lock_suite": _surface_record("lock_suite", lock_path),
         "pointer_microgrid": _surface_record("pointer_microgrid", pointer_path),
         "gauntlet": _surface_record("gauntlet", gauntlet_path),
+        "adversarial_audit": _surface_record("adversarial_audit", adversarial_path),
     }
 
 
@@ -377,6 +392,7 @@ def build_direct_unified_eval_manifest(
     m21_lock_report_path: Path | None = None,
     m21_pointer_microgrid_report_path: Path | None = None,
     m21_gauntlet_report_path: Path | None = None,
+    m21_adversarial_audit_report_path: Path | None = None,
     history_manifest_path: Path | None = None,
     taxonomy: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -413,6 +429,7 @@ def build_direct_unified_eval_manifest(
             lock_report_path=m21_lock_report_path,
             pointer_microgrid_report_path=m21_pointer_microgrid_report_path,
             gauntlet_report_path=m21_gauntlet_report_path,
+            adversarial_audit_report_path=m21_adversarial_audit_report_path,
         )
     else:
         raise NotImplementedError(f"Direct unified eval is currently implemented for family '{family_key}' only.")
@@ -433,6 +450,7 @@ def build_direct_unified_eval_manifest(
     m21_lock_payload = direct_surfaces.get("lock_suite", {}).get("payload") if family_key == "M21" else None
     m21_pointer_payload = direct_surfaces.get("pointer_microgrid", {}).get("payload") if family_key == "M21" else None
     m21_gauntlet_payload = direct_surfaces.get("gauntlet", {}).get("payload") if family_key == "M21" else None
+    m21_adversarial_payload = direct_surfaces.get("adversarial_audit", {}).get("payload") if family_key == "M21" else None
     historical_references = _resolve_historical_family_references(contract, history_manifest_path)
     comparison_targets = _resolve_comparison_targets(contract, history_manifest_path)
     reference_surface_index = _build_reference_surface_index(historical_references, comparison_targets)
@@ -455,6 +473,7 @@ def build_direct_unified_eval_manifest(
         m21_lock_payload=m21_lock_payload,
         m21_pointer_payload=m21_pointer_payload,
         m21_gauntlet_payload=m21_gauntlet_payload,
+        m21_adversarial_payload=m21_adversarial_payload,
         reference_surface_index=reference_surface_index,
     )
 
@@ -475,6 +494,7 @@ def build_direct_unified_eval_manifest(
         m21_lock_payload=m21_lock_payload,
         m21_pointer_payload=m21_pointer_payload,
         m21_gauntlet_payload=m21_gauntlet_payload,
+        m21_adversarial_payload=m21_adversarial_payload,
     )
     direct_report_paths = {
         name: surface["path"]
@@ -613,6 +633,7 @@ def _evaluate_contracts(
     m21_lock_payload: dict[str, Any] | None = None,
     m21_pointer_payload: dict[str, Any] | None = None,
     m21_gauntlet_payload: dict[str, Any] | None = None,
+    m21_adversarial_payload: dict[str, Any] | None = None,
     reference_surface_index: dict[str, dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     reference_surface_index = reference_surface_index or {}
@@ -647,6 +668,7 @@ def _evaluate_contracts(
                 m21_lock_payload,
                 m21_pointer_payload,
                 m21_gauntlet_payload,
+                m21_adversarial_payload,
             )
             rows.append(_attach_reference_surface(row, contract, reference_surface_index))
             continue
@@ -672,6 +694,7 @@ def _evaluate_m21_contract(
     lock_payload: dict[str, Any] | None,
     pointer_payload: dict[str, Any] | None,
     gauntlet_payload: dict[str, Any] | None,
+    adversarial_payload: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     suite_metrics = _m21_suite_metrics(suite_payload)
     synthetic_metrics = _m21_suite_metrics(synthetic_payload)
@@ -679,12 +702,15 @@ def _evaluate_m21_contract(
     actual_metrics = actual_payload.get("metrics", {}) if isinstance(actual_payload, dict) else {}
     lock_metrics = lock_payload.get("metrics", {}) if isinstance(lock_payload, dict) else {}
     gauntlet_metrics = gauntlet_payload.get("metrics", {}) if isinstance(gauntlet_payload, dict) else {}
+    adversarial_metrics = _m21_suite_metrics(adversarial_payload)
     merged = {}
     surface = str(contract.get("surface", "")).strip()
     if test_id == "m21.pointer_necessity" or surface == "m21_pointer_necessity_microgrid":
         sources = (pointer_metrics, actual_metrics)
     elif test_id == "m21.m19_gauntlet_port" or surface == "m21_gauntlet_suite":
         sources = (gauntlet_metrics,)
+    elif test_id == "m21.adversarial_heldout" or surface == "m21_adversarial_audit":
+        sources = (adversarial_metrics,)
     elif surface == "m21_dynamic_bridi_suite":
         sources = (suite_metrics,)
     elif surface == "m21_actual_bridge_suite":
@@ -694,7 +720,7 @@ def _evaluate_m21_contract(
     elif surface == "m21_lock_suite":
         sources = (suite_metrics, lock_metrics)
     else:
-        sources = (suite_metrics, synthetic_metrics, actual_metrics, lock_metrics, pointer_metrics, gauntlet_metrics)
+        sources = (suite_metrics, synthetic_metrics, actual_metrics, lock_metrics, pointer_metrics, gauntlet_metrics, adversarial_metrics)
     for source in sources:
         if isinstance(source, dict):
             merged.update(source)
@@ -710,7 +736,7 @@ def _evaluate_m21_contract(
         "status": "available",
         "provenance": "artifact",
         "metrics": metrics,
-        "notes": ["M21 contract is evaluated from dynamic bridi suite, synthetic assay, lock-suite, actual bridge, and gauntlet-adapter reports."],
+        "notes": ["M21 contract is evaluated from dynamic bridi suite, synthetic assay, lock-suite, actual bridge, adversarial audit, and gauntlet-adapter reports."],
     }
 
 
@@ -1191,6 +1217,7 @@ def _build_headline_metrics(
     m21_lock_payload: dict[str, Any] | None = None,
     m21_pointer_payload: dict[str, Any] | None = None,
     m21_gauntlet_payload: dict[str, Any] | None = None,
+    m21_adversarial_payload: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     headline: dict[str, Any] = {}
     if isinstance(benchmark_payload, dict):
@@ -1290,6 +1317,12 @@ def _build_headline_metrics(
                 headline[key] = value
             else:
                 headline.setdefault(key, value)
+    if isinstance(m21_adversarial_payload, dict):
+        for key, value in _filtered_metrics(_m21_suite_metrics(m21_adversarial_payload), KEY_METRICS).items():
+            if str(key).startswith("adversarial_"):
+                headline[key] = value
+            else:
+                headline.setdefault(key, value)
     return {k: v for k, v in headline.items() if v is not None}
 
 
@@ -1323,21 +1356,35 @@ def _m21_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("judri_bridge_gate_mean", aggregate.get("mean_judri_bridge_gate_mean"))
         metrics.setdefault("judri_bridge_gate_active_mean", aggregate.get("mean_judri_bridge_gate_active_mean"))
         metrics.setdefault("judri_bridge_gate_silenced_predicate_energy_mean", aggregate.get("mean_judri_bridge_gate_silenced_predicate_energy_mean"))
+        metrics.setdefault("adversarial_strict_accuracy", aggregate.get("mean_adversarial_strict_accuracy"))
+        metrics.setdefault("adversarial_bridi_trace_exact_accuracy", aggregate.get("mean_adversarial_bridi_trace_exact_accuracy"))
+        metrics.setdefault("adversarial_gismu_accuracy", aggregate.get("mean_adversarial_gismu_accuracy"))
+        metrics.setdefault("adversarial_cmavo_accuracy", aggregate.get("mean_adversarial_cmavo_accuracy"))
+        metrics.setdefault("adversarial_judri_binding_accuracy", aggregate.get("mean_adversarial_judri_binding_accuracy"))
+        metrics.setdefault("adversarial_no_judri_accuracy", aggregate.get("mean_adversarial_no_judri_accuracy"))
+        metrics.setdefault("adversarial_judri_causal_delta", aggregate.get("mean_adversarial_judri_causal_delta"))
+        metrics.setdefault("adversarial_worst_surface_accuracy", aggregate.get("mean_adversarial_worst_surface_accuracy"))
+        metrics.setdefault("adversarial_oov_token_rate", aggregate.get("mean_adversarial_oov_token_rate"))
         metrics.setdefault("mean_active_frames", aggregate.get("mean_active_frames"))
         metrics.setdefault("active_code_fraction_reachable", aggregate.get("mean_active_code_fraction_reachable"))
+    seed_rows: list[dict[str, Any]] = []
     cells = payload.get("cells", {})
     if isinstance(cells, dict):
-        seed_rows: list[dict[str, Any]] = []
         for cell in cells.values():
             if not isinstance(cell, dict):
                 continue
             for row in cell.get("seed_reports", []):
                 if isinstance(row, dict) and isinstance(row.get("metrics"), dict):
                     seed_rows.append(row["metrics"])
-        for key in KEY_METRICS:
-            values = [float(row[key]) for row in seed_rows if isinstance(row.get(key), (int, float))]
-            if values and key not in metrics:
-                metrics[key] = sum(values) / len(values)
+    top_level_seed_rows = payload.get("seed_reports", [])
+    if isinstance(top_level_seed_rows, list):
+        for row in top_level_seed_rows:
+            if isinstance(row, dict) and isinstance(row.get("metrics"), dict):
+                seed_rows.append(row["metrics"])
+    for key in KEY_METRICS:
+        values = [float(row[key]) for row in seed_rows if isinstance(row.get(key), (int, float))]
+        if values and key not in metrics:
+            metrics[key] = sum(values) / len(values)
     return metrics
 
 
@@ -1494,6 +1541,7 @@ def _preferred_names_for_target(target: str) -> list[str]:
             "m21_lock_suite_report.json",
             "m21_pointer_necessity_microgrid_report.json",
             "m21_gauntlet_report.json",
+            "m21_adversarial_audit_report.json",
         ]
     return []
 

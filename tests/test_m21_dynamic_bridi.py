@@ -9,6 +9,7 @@ from lojban_evolution.m21 import (
     build_vocab,
     clamp_poincare_norm,
     compute_m21_loss,
+    generate_dynamic_bridi_adversarial_examples,
     generate_dynamic_bridi_examples,
     judri_grounding_gate_from_logits,
     m21_collate,
@@ -32,6 +33,16 @@ def test_generator_emits_variable_length_counterfactual_traces() -> None:
         active = tuple((frame.gismu_id, tuple(frame.cmavo_ids)) for frame in row.frames if frame.active)
         groups.setdefault(row.counterfactual_group, set()).add(active)
     assert any(len(signatures) == 1 for signatures in groups.values())
+
+
+def test_adversarial_generator_emits_heldout_surfaces_with_valid_traces() -> None:
+    examples = generate_dynamic_bridi_adversarial_examples(144, seed=24)
+
+    surfaces = {row.surface for row in examples}
+    assert {"heldout_paraphrase", "role_distractor", "clausal_permutation", "oov_synonym"}.issubset(surfaces)
+    assert all(any(frame.active for frame in row.frames) for row in examples)
+    assert {row.answer_label for row in examples} == set(row.answer_label for row in examples)
+    assert len({row.answer_label for row in examples}) == 18
 
 
 def test_cmavo_minimal_pairs_change_semantics_without_changing_gismu() -> None:

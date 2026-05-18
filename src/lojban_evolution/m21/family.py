@@ -97,6 +97,7 @@ M21_REGISTRY: dict[str, dict[str, Any]] = {
             "suite": "scripts/m21/run_m21_dynamic_bridi_suite.py",
             "pointer_microgrid": "scripts/m21/run_m21_pointer_necessity_microgrid.py",
             "gauntlet": "scripts/m21/run_m21_gauntlet_suite.py",
+            "adversarial_audit": "scripts/m21/run_m21_adversarial_audit.py",
         },
         "dags": {
             "train": "airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py",
@@ -106,6 +107,7 @@ M21_REGISTRY: dict[str, dict[str, Any]] = {
             "suite": "airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py",
             "pointer_microgrid": "airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py",
             "gauntlet": "airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py",
+            "adversarial_audit": "airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py",
         },
         "output_roots": {
             "train": "artifacts/runs/telemetry/raw/ablation/hypercube/m21_dynamic_bridi_train",
@@ -115,6 +117,7 @@ M21_REGISTRY: dict[str, dict[str, Any]] = {
             "suite": "artifacts/runs/telemetry/raw/ablation/hypercube/m21_dynamic_bridi_suite",
             "pointer_microgrid": "artifacts/runs/telemetry/raw/ablation/hypercube/m21_pointer_necessity_microgrid",
             "gauntlet": "artifacts/runs/telemetry/raw/ablation/hypercube/m21_gauntlet_suite",
+            "adversarial_audit": "artifacts/runs/telemetry/raw/ablation/hypercube/m21_adversarial_audit",
         },
         "report_names": {
             "train": "m21_dynamic_bridi_train_report.json",
@@ -124,6 +127,7 @@ M21_REGISTRY: dict[str, dict[str, Any]] = {
             "suite": "m21_dynamic_bridi_suite_report.json",
             "pointer_microgrid": "m21_pointer_necessity_microgrid_report.json",
             "gauntlet": "m21_gauntlet_report.json",
+            "adversarial_audit": "m21_adversarial_audit_report.json",
         },
         "dataset_defaults": {
             "profile": "dynamic_bridi_synthetic_minimal_pairs_v1",

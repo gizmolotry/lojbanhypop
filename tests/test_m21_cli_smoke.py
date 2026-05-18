@@ -17,6 +17,7 @@ def test_m21_cli_help_surfaces() -> None:
         "scripts/m21/run_m21_lock_suite.py",
         "scripts/m21/run_m21_pointer_necessity_microgrid.py",
         "scripts/m21/run_m21_gauntlet_suite.py",
+        "scripts/m21/run_m21_adversarial_audit.py",
     ]
     for script in scripts:
         result = subprocess.run(

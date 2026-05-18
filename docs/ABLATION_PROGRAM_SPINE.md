@@ -1,7 +1,7 @@
 # Ablation Program Spine
 
-- Generated UTC: `2026-05-17T23:08:38.436991+00:00`
-- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m21_judri_gate_history_20260517/ablation_history_manifest.json`
+- Generated UTC: `2026-05-18T08:24:05.724302+00:00`
+- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m21_judri_gate_adversarial_history_20260518/ablation_history_manifest.json`
 - Source taxonomy config: `configs/experiment_taxonomy.json`
 - Stage count: `24`
 
@@ -505,16 +505,16 @@ This is the ordered research spine of the project: legacy letter-series families
 - Rejects: `decorative slot occupancy as semantic evidence, dictionary spread without causal utility`
 - IDs: `M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G`
 - Aliases: `A, B, C, D, E, F, G, M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G`
-- Allowed axes: `dynamic frame count, cmavo causality, judri binding causality, judri gated bridge, brivi lock, frame necessity, actual bridge transfer`
+- Allowed axes: `dynamic frame count, cmavo causality, judri binding causality, judri gated bridge, brivi lock, frame necessity, actual bridge transfer, held-out adversarial prompt audit`
 - Frozen/forbidden drift: `fixed typed-slot layout as main result, decorative frame occupancy, phrase accuracy as canonical accuracy, mass deletion of M20 control assets`
 - Promotion basis: `strict_accuracy, bridi_trace_exact_accuracy, lock_pass_rate, actual_bridge_transfer_score`
 - Primary metrics: `strict_accuracy, bridi_trace_exact_accuracy, gismu_accuracy, judri_binding_accuracy`
-- Guardrail metrics: `cmavo_causal_delta, judri_causal_delta, judri_bridge_gate_active_mean, judri_bridge_gate_silenced_predicate_energy_mean, brivi_lock_violation_rate, accuracy_per_trace_token`
+- Guardrail metrics: `cmavo_causal_delta, judri_causal_delta, judri_bridge_gate_active_mean, judri_bridge_gate_silenced_predicate_energy_mean, adversarial_strict_accuracy, adversarial_worst_surface_accuracy, brivi_lock_violation_rate, accuracy_per_trace_token`
 - Historical comparison families: `M19, M20`
-- Required test contracts: `m21.dynamic_frame_count, m21.bridi_reconstruction, m21.cmavo_causality, m21.judri_binding, m21.judri_gated_bridge, m21.pointer_necessity, m21.m19_gauntlet_port, m21.frame_necessity, m21.actual_bridge_transfer`
+- Required test contracts: `m21.dynamic_frame_count, m21.bridi_reconstruction, m21.cmavo_causality, m21.judri_binding, m21.judri_gated_bridge, m21.pointer_necessity, m21.m19_gauntlet_port, m21.frame_necessity, m21.actual_bridge_transfer, m21.adversarial_heldout`
 - Automatic comparison targets: `M21, M20, M19, M19.31, M20.1.F, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G`
 - Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
-- Scripts: `scripts/m21/run_m21_actual_bridge_suite.py, scripts/m21/run_m21_dynamic_bridi_suite.py, scripts/m21/run_m21_lock_suite.py, scripts/m21/run_m21_synthetic_assay_suite.py`
+- Scripts: `scripts/m21/run_m21_actual_bridge_suite.py, scripts/m21/run_m21_adversarial_audit.py, scripts/m21/run_m21_dynamic_bridi_suite.py, scripts/m21/run_m21_lock_suite.py, scripts/m21/run_m21_synthetic_assay_suite.py`
 - DAGs: `airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py`
 
 ## 24. Control Plane

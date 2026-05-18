@@ -26,6 +26,7 @@ PATH_CANONICALIZATION: dict[str, str] = {
     "scripts/run_m21_synthetic_assay_suite.py": "scripts/m21/run_m21_synthetic_assay_suite.py",
     "scripts/run_m21_actual_bridge_suite.py": "scripts/m21/run_m21_actual_bridge_suite.py",
     "scripts/run_m21_lock_suite.py": "scripts/m21/run_m21_lock_suite.py",
+    "scripts/run_m21_adversarial_audit.py": "scripts/m21/run_m21_adversarial_audit.py",
     "airflow/dags/lojban_ablation_history_backfill_dag.py": "airflow/dags/control_plane/lojban_ablation_history_backfill_dag.py",
     "airflow/dags/lojban_ablation_program_spine_dag.py": "airflow/dags/control_plane/lojban_ablation_program_spine_dag.py",
     "airflow/dags/lojban_m_bridge_ablation_test_suite_dag.py": "airflow/dags/m_bridge/lojban_m_bridge_ablation_test_suite_dag.py",
