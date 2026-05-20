@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 
-M21_FAMILY_VERSION = "0.2"
+M21_FAMILY_VERSION = "0.3"
 M21_DEFAULT_MAX_FRAMES = 6
 M21_DEFAULT_MAX_CMAVO_PER_FRAME = 3
 M21_DEFAULT_MAX_PLACES = 5
@@ -172,6 +172,61 @@ M21_DYNAMIC_BRIDI_GRID: list[dict[str, Any]] = [
             "adversarial_train_surfaces": "heldout_paraphrase,clausal_permutation,lexical_shift_train,role_binding_train",
         },
     },
+
+    {
+        "cell_key": "M",
+        "cell_id": m21_cell_id("M"),
+        "lock": "adversarial_augmented_judri_gated_bridge",
+        "label": "Role-binding curriculum bridge",
+        "variant": {
+            "trace_weight": 1.25,
+            "answer_weight": 1.25,
+            "counterfactual_weight": 1.25,
+            "brivi_lock_weight": 1.5,
+            "frame_necessity_weight": 1.0,
+            "mdl_weight": 0.01,
+            "judri_bridge_gate": True,
+            "judri_bridge_gate_temperature": 1.0,
+            "adversarial_train_fraction": 0.25,
+            "adversarial_train_surfaces": "heldout_paraphrase,clausal_permutation,role_binding_train,role_binding_pair_train,role_binding_swap_train,role_binding_chain_train",
+        },
+    },
+    {
+        "cell_key": "N",
+        "cell_id": m21_cell_id("N"),
+        "lock": "adversarial_augmented_judri_gated_bridge",
+        "label": "Swap-focused role-binding curriculum bridge",
+        "variant": {
+            "trace_weight": 1.25,
+            "answer_weight": 1.25,
+            "counterfactual_weight": 1.25,
+            "brivi_lock_weight": 1.5,
+            "frame_necessity_weight": 1.0,
+            "mdl_weight": 0.01,
+            "judri_bridge_gate": True,
+            "judri_bridge_gate_temperature": 1.0,
+            "adversarial_train_fraction": 0.25,
+            "adversarial_train_surfaces": "heldout_paraphrase,clausal_permutation,role_binding_swap_train",
+        },
+    },
+    {
+        "cell_key": "O",
+        "cell_id": m21_cell_id("O"),
+        "lock": "adversarial_augmented_judri_gated_bridge",
+        "label": "Higher-fraction role-binding curriculum bridge",
+        "variant": {
+            "trace_weight": 1.25,
+            "answer_weight": 1.25,
+            "counterfactual_weight": 1.25,
+            "brivi_lock_weight": 1.5,
+            "frame_necessity_weight": 1.0,
+            "mdl_weight": 0.01,
+            "judri_bridge_gate": True,
+            "judri_bridge_gate_temperature": 1.0,
+            "adversarial_train_fraction": 0.35,
+            "adversarial_train_surfaces": "heldout_paraphrase,clausal_permutation,role_binding_train,role_binding_pair_train,role_binding_swap_train,role_binding_chain_train",
+        },
+    },
 ]
 
 
@@ -263,6 +318,9 @@ M21_REGISTRY: dict[str, dict[str, Any]] = {
             "M21.1.J",
             "M21.1.K",
             "M21.1.L",
+            "M21.1.M",
+            "M21.1.N",
+            "M21.1.O",
         ],
         "default_grid": deepcopy(M21_DYNAMIC_BRIDI_GRID),
     }

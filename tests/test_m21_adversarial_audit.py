@@ -24,17 +24,23 @@ def test_m21_adversarial_audit_summarizes_semantic_isolation_deltas() -> None:
         _row("J", "heldout_paraphrase,clausal_permutation,lexical_shift_train", 0.44, 0.35, 0.38),
         _row("K", "heldout_paraphrase,clausal_permutation,role_binding_train", 0.41, 0.34, 0.36),
         _row("L", "heldout_paraphrase,clausal_permutation,lexical_shift_train,role_binding_train", 0.52, 0.42, 0.46, fraction=0.50),
+        _row("M", "heldout_paraphrase,clausal_permutation,role_binding_train,role_binding_pair_train,role_binding_swap_train,role_binding_chain_train", 0.55, 0.45, 0.50),
+        _row("N", "heldout_paraphrase,clausal_permutation,role_binding_swap_train", 0.47, 0.39, 0.41),
+        _row("O", "heldout_paraphrase,clausal_permutation,role_binding_train,role_binding_pair_train,role_binding_swap_train,role_binding_chain_train", 0.53, 0.43, 0.48, fraction=0.35),
     ]
 
     summary = audit._summarize(rows)
 
-    assert summary["semantic_isolation_cell_count"] == 5.0
+    assert summary["semantic_isolation_cell_count"] == 8.0
     assert summary["semantic_coverage_lexical_shift_effect_strict_accuracy_delta"] == pytest.approx(0.14)
     assert summary["semantic_coverage_role_binding_effect_strict_accuracy_delta"] == pytest.approx(0.11)
     assert summary["semantic_coverage_combined_effect_strict_accuracy_delta"] == pytest.approx(0.20)
     assert summary["semantic_coverage_fraction_effect_strict_accuracy_delta"] == pytest.approx(0.02)
     assert summary["semantic_coverage_lexical_shift_effect_worst_surface_accuracy_delta"] == pytest.approx(0.10)
     assert summary["semantic_coverage_role_binding_effect_judri_causal_delta_delta"] == pytest.approx(0.16)
+    assert summary["semantic_coverage_role_curriculum_effect_strict_accuracy_delta"] == pytest.approx(0.14)
+    assert summary["semantic_coverage_role_swap_effect_worst_surface_accuracy_delta"] == pytest.approx(0.14)
+    assert summary["semantic_coverage_role_curriculum_fraction_effect_judri_causal_delta_delta"] == pytest.approx(-0.02)
 
 
 def _row(

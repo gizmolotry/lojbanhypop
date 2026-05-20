@@ -24,6 +24,7 @@ from lojban_evolution.m21.bridi import (
     M21BridiDataset,
     RESERVED_ADVERSARIAL_AUDIT_SURFACES,
     SEMANTIC_COVERAGE_TRAINING_SURFACES,
+    SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES,
     adversarial_training_surface_names,
 )
 from lojban_evolution.m21.gauntlet import build_m21_gauntlet_payload, m21_to_m19_reservoir_shim
@@ -133,7 +134,7 @@ def test_tiny_training_accepts_adversarial_augmentation() -> None:
 
 def test_semantic_training_surfaces_are_explicit_and_accepted() -> None:
     training_surfaces = set(adversarial_training_surface_names())
-    semantic_surfaces = set(SEMANTIC_COVERAGE_TRAINING_SURFACES)
+    semantic_surfaces = set(SEMANTIC_COVERAGE_TRAINING_SURFACES) | set(SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES)
     reserved_surfaces = set(RESERVED_ADVERSARIAL_AUDIT_SURFACES)
 
     assert semantic_surfaces.issubset(training_surfaces)
@@ -147,7 +148,7 @@ def test_semantic_training_surfaces_are_explicit_and_accepted() -> None:
         assert {row.surface for row in examples} == {surface}
         assert len({row.answer_label for row in examples}) == 18
         assert all(any(frame.active for frame in row.frames) for row in examples)
-        if surface == "role_binding_train":
+        if surface == "role_binding_train" or surface in SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES:
             assert all(row.entities[0] != row.entities[6] for row in examples)
 
     result = train_m21_dynamic_bridi(
@@ -182,6 +183,11 @@ def test_m21_grid_contains_semantic_coverage_ablation_cells() -> None:
         "heldout_paraphrase,clausal_permutation,lexical_shift_train,role_binding_train"
     )
     assert cells["L"]["variant"]["adversarial_train_fraction"] == 0.5
+    assert cells["M"]["variant"]["adversarial_train_surfaces"] == (
+        "heldout_paraphrase,clausal_permutation,role_binding_train,role_binding_pair_train,role_binding_swap_train,role_binding_chain_train"
+    )
+    assert cells["N"]["variant"]["adversarial_train_surfaces"] == "heldout_paraphrase,clausal_permutation,role_binding_swap_train"
+    assert cells["O"]["variant"]["adversarial_train_fraction"] == 0.35
 
 
 def test_adversarial_training_rejects_reserved_audit_surfaces() -> None:

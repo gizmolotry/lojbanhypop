@@ -96,6 +96,11 @@ SEMANTIC_COVERAGE_TRAINING_SURFACES = (
     "lexical_shift_train",
     "role_binding_train",
 )
+SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES = (
+    "role_binding_pair_train",
+    "role_binding_swap_train",
+    "role_binding_chain_train",
+)
 
 
 def pointer_necessity_contrast_loss(
@@ -631,13 +636,110 @@ def _semantic_coverage_template_bank() -> dict[str, tuple[tuple[str, str], ...]]
     }
 
 
+
+def _role_binding_curriculum_template_bank() -> dict[str, tuple[tuple[str, str], ...]]:
+    return {
+        "size_excess": (
+            ("role_binding_pair_train", "Between {object} and {object2}, only {object} exceeded {container}'s opening."),
+            ("role_binding_swap_train", "{container} accepted {object2}; {object}, not {object2}, was too large for it."),
+            ("role_binding_chain_train", "After {object2} was moved aside, {object} failed because its size exceeded {container}."),
+        ),
+        "size_deficit": (
+            ("role_binding_pair_train", "Between {object} and {object2}, only {object} left unused room in {container}."),
+            ("role_binding_swap_train", "{object2} filled {container}; {object}, not {object2}, was too small."),
+            ("role_binding_chain_train", "After {object2} was checked, {object} rattled because it was undersized for {container}."),
+        ),
+        "weight_excess": (
+            ("role_binding_pair_train", "{person} could lift {object2}, but {object} was the heavy one."),
+            ("role_binding_swap_train", "Liftable was {object2}; unliftable for {person} was {object}."),
+            ("role_binding_chain_train", "{person} moved {object2} first, then failed to raise {object} because of its weight."),
+        ),
+        "weight_deficit": (
+            ("role_binding_pair_train", "{object2} stayed put, but {object} was the light item that moved."),
+            ("role_binding_swap_train", "Stationary was {object2}; the low-weight item was {object}."),
+            ("role_binding_chain_train", "After {object2} resisted motion, {object} shifted because it was light."),
+        ),
+        "transfer_success": (
+            ("role_binding_pair_train", "{person} watched while {giver} gave {object} to {receiver}."),
+            ("role_binding_swap_train", "From {giver} to {receiver}, not from {receiver} to {giver}, went {object}."),
+            ("role_binding_chain_train", "After {person} stepped away, {giver} transferred {object} and {receiver} became its holder."),
+        ),
+        "transfer_refused": (
+            ("role_binding_pair_train", "{person} watched while {receiver} refused {object} from {giver}."),
+            ("role_binding_swap_train", "Refuser was {receiver}, not {giver}; {object} stayed with the offer path blocked."),
+            ("role_binding_chain_train", "After {person} considered {object2}, {receiver} rejected {object} from {giver}."),
+        ),
+        "preference_like": (
+            ("role_binding_pair_train", "{person} ignored {object2} and favored {object}."),
+            ("role_binding_swap_train", "The liked item for {person} was {object}, not {object2}."),
+            ("role_binding_chain_train", "After comparing {object2} with {object}, {person} kept {object} because it was preferred."),
+        ),
+        "preference_dislike": (
+            ("role_binding_pair_train", "{person} accepted {object2} but avoided {object}."),
+            ("role_binding_swap_train", "The disliked item for {person} was {object}, not {object2}."),
+            ("role_binding_chain_train", "After choosing around {object2}, {person} avoided {object} because it was disliked."),
+        ),
+        "containment_success": (
+            ("role_binding_pair_train", "{object2} remained outside while {container} held {object}."),
+            ("role_binding_swap_train", "Held by {container} was {object}, not {object2}."),
+            ("role_binding_chain_train", "After {object2} was set aside, {container} accepted and held {object}."),
+        ),
+        "containment_blocked": (
+            ("role_binding_pair_train", "{object2} was irrelevant while {container} blocked {object}."),
+            ("role_binding_swap_train", "Blocked by {container} was {object}, not {object2}."),
+            ("role_binding_chain_train", "After {object2} passed nearby, {container} still blocked {object}."),
+        ),
+        "visibility_clear": (
+            ("role_binding_pair_train", "{observer} missed {object2} but clearly saw {object}."),
+            ("role_binding_swap_train", "Visible to {observer} was {object}, not {object2}."),
+            ("role_binding_chain_train", "After {object2} left the scene, {observer} had a clear view of {object}."),
+        ),
+        "visibility_blocked": (
+            ("role_binding_pair_train", "{observer} saw {object2}, but {object} remained hidden."),
+            ("role_binding_swap_train", "Hidden from {observer} was {object}, not {object2}."),
+            ("role_binding_chain_train", "After {object2} became visible, {object} was still occluded from {observer}."),
+        ),
+        "quantity_excess": (
+            ("role_binding_pair_train", "{object2}s were ignored; {count} {object}s were the excessive set."),
+            ("role_binding_swap_train", "Too many were the {object}s, not the {object2}s: {count}."),
+            ("role_binding_chain_train", "After excluding {object2}s, the counted {object}s exceeded the limit at {count}."),
+        ),
+        "quantity_deficit": (
+            ("role_binding_pair_train", "{object2}s were ignored; {count} {object}s were the deficient set."),
+            ("role_binding_swap_train", "Too few were the {object}s, not the {object2}s: {count}."),
+            ("role_binding_chain_train", "After excluding {object2}s, the counted {object}s fell short at {count}."),
+        ),
+        "motion_allowed": (
+            ("role_binding_pair_train", "{person} moved {object}, while {object2} stayed outside {container}."),
+            ("role_binding_swap_train", "Permission applied to moving {object}, not {object2}, toward {container}."),
+            ("role_binding_chain_train", "After {object2} was left behind, permission let {person} move {object} toward {container}."),
+        ),
+        "motion_blocked": (
+            ("role_binding_pair_train", "{person} moved {object2}, but {object} remained blocked."),
+            ("role_binding_swap_train", "The blocked motion concerned {object}, not {object2}, for {person}."),
+            ("role_binding_chain_train", "After {object2} moved, lack of permission kept {person} from moving {object}."),
+        ),
+        "permission_granted": (
+            ("role_binding_pair_train", "{person} had permission for {object}, not necessarily {object2}."),
+            ("role_binding_swap_train", "Allowed for {person} was {object}, not {object2}."),
+            ("role_binding_chain_train", "After {object2} was denied, the rule still allowed {person} to use {object}."),
+        ),
+        "permission_denied": (
+            ("role_binding_pair_train", "{person} could use {object2}, but permission for {object} was denied."),
+            ("role_binding_swap_train", "Denied for {person} was {object}, not {object2}."),
+            ("role_binding_chain_train", "After {object2} was allowed, the rule still forbade {person} from using {object}."),
+        ),
+    }
+
+
 def _with_semantic_coverage_surfaces(
     base: dict[str, tuple[tuple[str, str], ...]],
 ) -> dict[str, tuple[tuple[str, str], ...]]:
     semantic_bank = _semantic_coverage_template_bank()
+    role_curriculum_bank = _role_binding_curriculum_template_bank()
     expanded: dict[str, tuple[tuple[str, str], ...]] = {}
     for answer_label, templates in base.items():
-        expanded[answer_label] = templates + semantic_bank.get(answer_label, tuple())
+        expanded[answer_label] = templates + semantic_bank.get(answer_label, tuple()) + role_curriculum_bank.get(answer_label, tuple())
     return expanded
 
 
@@ -647,7 +749,7 @@ def adversarial_surface_names() -> tuple[str, ...]:
 
 
 def adversarial_training_surface_names() -> tuple[str, ...]:
-    return LEGACY_ADVERSARIAL_TRAINING_SURFACES + SEMANTIC_COVERAGE_TRAINING_SURFACES
+    return LEGACY_ADVERSARIAL_TRAINING_SURFACES + SEMANTIC_COVERAGE_TRAINING_SURFACES + SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES
 
 
 def _validated_adversarial_surfaces(
@@ -691,7 +793,8 @@ def generate_dynamic_bridi_adversarial_examples(
         if not candidates:
             raise ValueError(f"No M21 adversarial templates for answer '{answer_label}' on surfaces {selected_surfaces}.")
         surface, template = rng.choice(candidates)
-        values = _values(rng, "renamed" if surface in {"role_distractor", "role_binding_train"} else "purged")
+        role_surfaces = {"role_distractor", "role_binding_train", *SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES}
+        values = _values(rng, "renamed" if surface in role_surfaces else "purged")
         entities = _entity_tuple(values)
         prompt = template.format(**values)
         spec = specs[answer_label]

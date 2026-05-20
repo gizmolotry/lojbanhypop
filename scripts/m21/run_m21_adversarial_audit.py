@@ -24,12 +24,15 @@ from lojban_evolution.m21.bridi import (  # noqa: E402
 from lojban_evolution.m21.family import M21_FAMILY_VERSION, M21_REGISTRY  # noqa: E402
 from lojban_evolution.series_contract import assert_output_path_allowed, series_metadata, validate_series_outputs  # noqa: E402
 
-SEMANTIC_ISOLATION_CELLS = ("H", "I", "J", "K", "L")
+SEMANTIC_ISOLATION_CELLS = ("H", "I", "J", "K", "L", "M", "N", "O")
 SEMANTIC_ISOLATION_EFFECTS = {
     "lexical_shift": ("J", "H"),
     "role_binding": ("K", "H"),
     "combined": ("I", "H"),
     "fraction": ("L", "I"),
+    "role_curriculum": ("M", "K"),
+    "role_swap": ("N", "H"),
+    "role_curriculum_fraction": ("O", "M"),
 }
 SEMANTIC_ISOLATION_METRICS = {
     "strict_accuracy": "adversarial_strict_accuracy",
@@ -324,7 +327,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     registry = M21_REGISTRY["M21"]
     parser = argparse.ArgumentParser(description="Run M21 held-out adversarial prompt audit on saved dynamic bridi checkpoints.")
     parser.add_argument("--suite-report", type=Path, required=True)
-    parser.add_argument("--cell-list", type=str, default="H,I,J,K,L")
+    parser.add_argument("--cell-list", type=str, default="H,I,J,K,L,M,N,O")
     parser.add_argument("--eval-size", type=int, default=2048)
     parser.add_argument("--batch-size", type=int, default=512)
     parser.add_argument("--audit-seed", type=int, default=21017)
