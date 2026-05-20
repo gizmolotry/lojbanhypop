@@ -41,3 +41,6 @@ archive/**/.tmp_pytest/
 RESULTS_*/
 ROOT_*/
 REPORTS_RELEVANT/
+
+# Test-generated baseline hashes; tracked golden baselines remain tracked.
+docs/baselines/test_m_series_baseline_*.json
