@@ -558,11 +558,9 @@ If an experiment cannot be placed in exactly one family bucket and one ledger co
 
 
 def _write_manifest(entries: list[FileEntry], redundancy: dict[str, Any], generated_at: str) -> None:
-    status = _run_git(["status", "--short", "--branch"])
     payload = {
         "generated_at": generated_at,
         "repo_root": str(REPO_ROOT),
-        "git_status_short": status.splitlines(),
         "series_order": series_order(),
         "known_series": sorted(known_series()),
         "summary": {
