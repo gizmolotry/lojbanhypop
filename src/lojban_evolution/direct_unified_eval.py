@@ -5,6 +5,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from .control_plane.artifact_io import (
+    latest_json as _artifact_latest_json,
+    latest_named_manifest as _artifact_latest_named_manifest,
+    path_allowed_for_discovery as _artifact_path_allowed_for_discovery,
+    read_json_optional as _artifact_read_json_optional,
+    repo_string as _artifact_repo_string,
+)
 from .experiment_taxonomy import build_comparison_index, load_taxonomy_config
 from .m19.family import M19_REGISTRY
 from .m20.family import M20_REGISTRY
@@ -174,6 +181,15 @@ KEY_METRICS = (
     "semantic_coverage_fraction_effect_strict_accuracy_delta",
     "semantic_coverage_fraction_effect_worst_surface_accuracy_delta",
     "semantic_coverage_fraction_effect_judri_causal_delta_delta",
+    "semantic_coverage_role_curriculum_effect_strict_accuracy_delta",
+    "semantic_coverage_role_curriculum_effect_worst_surface_accuracy_delta",
+    "semantic_coverage_role_curriculum_effect_judri_causal_delta_delta",
+    "semantic_coverage_role_swap_effect_strict_accuracy_delta",
+    "semantic_coverage_role_swap_effect_worst_surface_accuracy_delta",
+    "semantic_coverage_role_swap_effect_judri_causal_delta_delta",
+    "semantic_coverage_role_curriculum_fraction_effect_strict_accuracy_delta",
+    "semantic_coverage_role_curriculum_fraction_effect_worst_surface_accuracy_delta",
+    "semantic_coverage_role_curriculum_fraction_effect_judri_causal_delta_delta",
     "gauntlet_integrity_full_accuracy",
     "gauntlet_integrity_purged_accuracy",
     "gauntlet_integrity_masked_accuracy",
@@ -1541,36 +1557,11 @@ def _nested_metric(source: Any, row_key: Any, metric_key: str) -> Any:
 
 
 def _latest_named_manifest(root: Path, file_name: str) -> Path | None:
-    if not root.exists():
-        return None
-    matches = [path for path in root.rglob(file_name) if _path_allowed_for_discovery(path)]
-    if not matches:
-        return None
-    matches.sort(key=lambda item: item.stat().st_mtime, reverse=True)
-    return matches[0]
+    return _artifact_latest_named_manifest(root, file_name, recursive=True, path_filter=_path_allowed_for_discovery)
 
 
 def _latest_json(root: Path, preferred_names: list[str] | None = None) -> Path | None:
-    if not root.exists():
-        return None
-    preferred_names = preferred_names or []
-    candidates = [path for path in root.rglob("*.json") if _path_allowed_for_discovery(path)]
-    if not candidates:
-        return None
-    ranked: list[tuple[int, float, Path]] = []
-    for path in candidates:
-        score = 0
-        if path.name in preferred_names:
-            score += 100
-        if "manifest" in path.name:
-            score += 20
-        if "report" in path.name:
-            score += 20
-        if "summary" in path.name:
-            score += 10
-        ranked.append((score, path.stat().st_mtime, path))
-    ranked.sort(key=lambda item: (item[0], item[1]), reverse=True)
-    return ranked[0][2]
+    return _artifact_latest_json(root, preferred_names or [], path_filter=_path_allowed_for_discovery)
 
 
 def _preferred_names_for_target(target: str) -> list[str]:
@@ -1619,20 +1610,11 @@ def _preferred_names_for_target(target: str) -> list[str]:
 
 
 def _path_allowed_for_discovery(path: Path) -> bool:
-    bad_parts = {"__pycache__"}
-    for part in path.parts:
-        lowered = part.lower()
-        if lowered in bad_parts:
-            return False
-        if lowered.startswith("test_"):
-            return False
-    return True
+    return _artifact_path_allowed_for_discovery(path)
 
 
 def _read_json_optional(path: Path | None) -> dict[str, Any] | None:
-    if path is None or not path.exists() or not path.is_file():
-        return None
-    return json.loads(path.read_text(encoding="utf-8"))
+    return _artifact_read_json_optional(path)
 
 
 def _repo_path(value: str | Path) -> Path:
@@ -1643,12 +1625,10 @@ def _repo_path(value: str | Path) -> Path:
 
 
 def _repo_string(path: Path | None) -> str | None:
-    if path is None:
-        return None
     try:
-        return repo_relative(path)
+        return repo_relative(path) if path is not None else None
     except ValueError:
-        return str(path).replace("\\", "/")
+        return _artifact_repo_string(path, REPO_ROOT)
 
 
 def _track_key(track: str) -> str:

@@ -172,3 +172,96 @@ def merge_conf(defaults: Mapping[str, object], dag_conf: Mapping[str, object] | 
         if value is not None:
             merged[key] = value
     return merged
+
+
+from dataclasses import dataclass, field
+from typing import Callable, Sequence
+
+
+@dataclass(frozen=True)
+class SeriesTaskSpec:
+    task_id: str
+    script_relpath: str
+    argv: Callable[[Mapping[str, object], str, str], list[str]]
+    output_key: str = "output_dir"
+    output_partition: str = "telemetry/raw"
+    run_id_suffix: str = ""
+    upstream_task_ids: tuple[str, ...] = field(default_factory=tuple)
+
+
+@dataclass(frozen=True)
+class SeriesDagSpec:
+    dag_id: str
+    series_key: str
+    family_key: str
+    description: str
+    tags: tuple[str, ...]
+    defaults: Mapping[str, object]
+    params: Mapping[str, object]
+    tasks: tuple[SeriesTaskSpec, ...]
+    schedule: str | None = None
+    start_year: int = 2026
+
+
+def bool_cli_flag(flag_name: str, enabled: bool) -> str:
+    normalized = flag_name if flag_name.startswith("--") else f"--{flag_name}"
+    return normalized if enabled else f"--no-{normalized[2:]}"
+
+
+def scalar_cli_args(options: Sequence[tuple[str, object]]) -> list[str]:
+    args: list[str] = []
+    for key, value in options:
+        flag = str(key) if str(key).startswith("--") else f"--{key}"
+        if isinstance(value, bool):
+            args.append(bool_cli_flag(flag, value))
+        elif value is not None:
+            args.extend([flag, str(value)])
+    return args
+
+
+def resolve_dag_conf(defaults: Mapping[str, object], context: Mapping[str, object]) -> dict[str, object]:
+    dag_run = context.get("dag_run")
+    conf = getattr(dag_run, "conf", None)
+    return merge_conf(defaults, conf)
+
+
+def build_series_python_callable(task_spec: SeriesTaskSpec, defaults: Mapping[str, object]) -> Callable[..., None]:
+    def _callable(**context: object) -> None:
+        cfg = resolve_dag_conf(defaults, context)
+        output_dir = validate_output_partition(str(cfg.get(task_spec.output_key, "")), task_spec.output_partition)
+        dag_run = context.get("dag_run")
+        fallback_run_id = getattr(dag_run, "run_id", "manual")
+        run_id = sanitize_run_id(str(cfg.get("run_id") or fallback_run_id))
+        if task_spec.run_id_suffix:
+            run_id = sanitize_run_id(f"{run_id}_{task_spec.run_id_suffix}")
+        run_repo_script(task_spec.script_relpath, task_spec.argv(cfg, output_dir, run_id))
+
+    return _callable
+
+
+def build_series_dag(spec: SeriesDagSpec):
+    from datetime import datetime
+
+    from airflow import DAG
+    from airflow.operators.python import PythonOperator
+
+    with DAG(
+        dag_id=spec.dag_id,
+        description=spec.description,
+        start_date=datetime(spec.start_year, 1, 1),
+        schedule=spec.schedule,
+        catchup=False,
+        max_active_runs=1,
+        tags=list(spec.tags),
+        params=dict(spec.params),
+    ) as dag:
+        operators: dict[str, object] = {}
+        for task in spec.tasks:
+            operators[task.task_id] = PythonOperator(
+                task_id=task.task_id,
+                python_callable=build_series_python_callable(task, spec.defaults),
+            )
+        for task in spec.tasks:
+            for upstream in task.upstream_task_ids:
+                operators[upstream] >> operators[task.task_id]
+    return dag

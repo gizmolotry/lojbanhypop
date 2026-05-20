@@ -10,6 +10,11 @@ from typing import Any
 
 sys.path.append(str(Path(__file__).resolve().parents[2] / "src"))
 
+from lojban_evolution.control_plane.artifact_io import (
+    latest_named_manifest as _artifact_latest_named_manifest,
+    read_json_optional as _artifact_read_json_optional,
+    repo_relative_or_string as _artifact_repo_relative_or_string,
+)
 from lojban_evolution.series_contract import assert_output_path_allowed, series_metadata
 
 
@@ -132,6 +137,9 @@ KEY_METRICS = [
     "semantic_coverage_role_binding_effect_strict_accuracy_delta",
     "semantic_coverage_combined_effect_strict_accuracy_delta",
     "semantic_coverage_fraction_effect_strict_accuracy_delta",
+    "semantic_coverage_role_curriculum_effect_strict_accuracy_delta",
+    "semantic_coverage_role_swap_effect_strict_accuracy_delta",
+    "semantic_coverage_role_curriculum_fraction_effect_strict_accuracy_delta",
 ]
 
 
@@ -700,6 +708,9 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                     "semantic_coverage_role_binding_effect_strict_accuracy_delta": "semantic_coverage_role_binding_effect_strict_accuracy_delta",
                     "semantic_coverage_combined_effect_strict_accuracy_delta": "semantic_coverage_combined_effect_strict_accuracy_delta",
                     "semantic_coverage_fraction_effect_strict_accuracy_delta": "semantic_coverage_fraction_effect_strict_accuracy_delta",
+                    "semantic_coverage_role_curriculum_effect_strict_accuracy_delta": "semantic_coverage_role_curriculum_effect_strict_accuracy_delta",
+                    "semantic_coverage_role_swap_effect_strict_accuracy_delta": "semantic_coverage_role_swap_effect_strict_accuracy_delta",
+                    "semantic_coverage_role_curriculum_fraction_effect_strict_accuracy_delta": "semantic_coverage_role_curriculum_fraction_effect_strict_accuracy_delta",
                 },
             )
         actual_anchor = _latest_named_manifest(DEFAULT_M21_ACTUAL_ROOT, "m21_actual_bridge_report.json")
@@ -964,20 +975,11 @@ def _read_json_required(path: Path | None) -> dict[str, Any]:
 
 
 def _read_json_optional(path: Path | None) -> dict[str, Any] | None:
-    if path is None or not path.exists():
-        return None
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except Exception:
-        return None
-    return payload if isinstance(payload, dict) else None
+    return _artifact_read_json_optional(path, swallow_errors=True)
 
 
 def _latest_named_manifest(root: Path, filename: str) -> Path | None:
-    if not root.exists():
-        return None
-    matches = sorted(root.glob(f"*/{filename}"), key=lambda path: path.stat().st_mtime)
-    return matches[-1] if matches else None
+    return _artifact_latest_named_manifest(root, filename, recursive=False, newest_first=True, path_filter=None)
 
 
 def _latest_direct_unified_eval_anchor(family_key: str) -> Path | None:
@@ -1001,12 +1003,7 @@ def _repo_path(value: str | Path) -> Path:
 
 
 def _repo_relative(path: Path | None) -> str | None:
-    if path is None:
-        return None
-    try:
-        return path.resolve().relative_to(REPO_ROOT.resolve()).as_posix()
-    except ValueError:
-        return str(path).replace("\\", "/")
+    return _artifact_repo_relative_or_string(path, REPO_ROOT)
 
 
 def _string_or_none(value: Any) -> str | None:

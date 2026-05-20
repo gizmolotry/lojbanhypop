@@ -681,11 +681,12 @@ def test_m21_semantic_coverage_available_with_isolation_deltas() -> None:
                 "semantic_coverage_train_fraction": 0.25,
                 "semantic_coverage_surface_count": 2.0,
                 "semantic_coverage_oov_token_rate": 0.18,
-                "semantic_isolation_cell_count": 5.0,
+                "semantic_isolation_cell_count": 8.0,
                 "semantic_coverage_lexical_shift_effect_strict_accuracy_delta": 0.14,
                 "semantic_coverage_role_binding_effect_strict_accuracy_delta": 0.11,
                 "semantic_coverage_combined_effect_strict_accuracy_delta": 0.20,
                 "semantic_coverage_fraction_effect_strict_accuracy_delta": 0.02,
+                "semantic_coverage_role_curriculum_effect_strict_accuracy_delta": 0.09,
             }
         },
     )
@@ -705,6 +706,7 @@ def test_m21_semantic_coverage_available_with_isolation_deltas() -> None:
     assert manifest["headline_metrics"]["actual_bridge_transfer_score"] == 0.4
     assert manifest["headline_metrics"]["semantic_coverage_strict_accuracy"] == 0.37
     assert manifest["headline_metrics"]["semantic_coverage_lexical_shift_effect_strict_accuracy_delta"] == 0.14
+    assert manifest["headline_metrics"]["semantic_coverage_role_curriculum_effect_strict_accuracy_delta"] == 0.09
     semantic_row = next(row for row in manifest["contract_results"] if row["test_id"] == "m21.semantic_coverage")
     assert semantic_row["metrics"]["semantic_coverage_surface_count"] == 2.0
-    assert semantic_row["metrics"]["semantic_isolation_cell_count"] == 5.0
+    assert semantic_row["metrics"]["semantic_isolation_cell_count"] == 8.0

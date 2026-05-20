@@ -133,11 +133,12 @@ def test_m21_special_stage_metrics_include_dynamic_bridi_and_causal_deltas() -> 
             "semantic_coverage_judri_causal_delta": 0.31,
             "semantic_coverage_training_exposure_rate": 1.0,
             "semantic_coverage_surface_count": 2.0,
-            "semantic_isolation_cell_count": 5.0,
+            "semantic_isolation_cell_count": 8.0,
             "semantic_coverage_lexical_shift_effect_strict_accuracy_delta": 0.14,
             "semantic_coverage_role_binding_effect_strict_accuracy_delta": 0.11,
             "semantic_coverage_combined_effect_strict_accuracy_delta": 0.20,
             "semantic_coverage_fraction_effect_strict_accuracy_delta": 0.02,
+            "semantic_coverage_role_curriculum_effect_strict_accuracy_delta": 0.09,
         }
     }
 
@@ -157,8 +158,9 @@ def test_m21_special_stage_metrics_include_dynamic_bridi_and_causal_deltas() -> 
     assert metrics["semantic_coverage_judri_causal_delta"] == 0.31
     assert metrics["semantic_coverage_training_exposure_rate"] == 1.0
     assert metrics["semantic_coverage_surface_count"] == 2.0
-    assert metrics["semantic_isolation_cell_count"] == 5.0
+    assert metrics["semantic_isolation_cell_count"] == 8.0
     assert metrics["semantic_coverage_lexical_shift_effect_strict_accuracy_delta"] == 0.14
     assert metrics["semantic_coverage_role_binding_effect_strict_accuracy_delta"] == 0.11
     assert metrics["semantic_coverage_combined_effect_strict_accuracy_delta"] == 0.20
     assert metrics["semantic_coverage_fraction_effect_strict_accuracy_delta"] == 0.02
+    assert metrics["semantic_coverage_role_curriculum_effect_strict_accuracy_delta"] == 0.09
