@@ -753,3 +753,41 @@ def test_build_direct_unified_eval_manifest_m22_semantic_generalization() -> Non
     rendered = render_direct_unified_eval_markdown(manifest)
     assert "Direct Unified Eval: M22 (M22)" in rendered
     assert "m22.semantic_coverage_generalization" in rendered
+
+
+def test_build_direct_unified_eval_manifest_m22_failed_promotion_is_not_available() -> None:
+    tmp_path = _scratch_dir()
+    generalization_path = _write_json(
+        tmp_path / "m22_semantic_generalization_report.json",
+        {
+            "track": "M22",
+            "metrics": {
+                "strict_accuracy": 0.85,
+                "bridi_trace_exact_accuracy": 0.999,
+                "judri_causal_delta": 0.79,
+                "semantic_coverage_strict_accuracy": 0.43,
+                "semantic_coverage_worst_surface_accuracy": 0.12,
+                "semantic_coverage_judri_causal_delta": 0.31,
+                "m22_semantic_generalization_score": 0.12,
+                "m22_semantic_strict_delta_vs_m21_control": 0.04,
+                "m22_semantic_worst_delta_vs_m21_control": -0.18,
+                "m22_clean_accuracy_drop_vs_m21_control": 0.0,
+                "m22_judri_delta_drop_vs_m21_control": 0.01,
+                "m22_promotion_gate_pass_rate": 0.8,
+                "m22_promotion_candidate": 0.0,
+            },
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M22",
+        track="M22",
+        m22_generalization_report_path=generalization_path,
+        history_manifest_path=None,
+    )
+
+    rows = {row["test_id"]: row for row in manifest["contract_results"]}
+    semantic_row = rows["m22.semantic_coverage_generalization"]
+    assert semantic_row["status"] == "missing"
+    assert "failed promotion" in " ".join(semantic_row["notes"])
+    assert semantic_row["metrics"]["m22_promotion_candidate"] == 0.0

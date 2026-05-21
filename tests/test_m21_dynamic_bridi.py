@@ -179,6 +179,30 @@ def test_semantic_training_surfaces_are_explicit_and_accepted() -> None:
     assert {row.surface for row in result["train_examples"]}.isdisjoint(reserved_surfaces)
 
 
+def test_m22_semantic_surfaces_preserve_role_and_polarity_contrasts() -> None:
+    examples = generate_dynamic_bridi_adversarial_examples(
+        216,
+        seed=130,
+        surfaces=M22_SEMANTIC_GENERALIZATION_TRAINING_SURFACES,
+    )
+
+    assert {row.surface for row in examples} == set(M22_SEMANTIC_GENERALIZATION_TRAINING_SURFACES)
+    role_chain_rows = [row for row in examples if row.surface == "role_chain_generalization_train"]
+    assert role_chain_rows
+    assert all(row.entities[0] != row.entities[6] for row in role_chain_rows)
+
+    polarity_rows = generate_dynamic_bridi_adversarial_examples(36, seed=131, surfaces=("polarity_reframe_train",))
+    excess = next(row for row in polarity_rows if row.answer_label == "size_excess")
+    deficit = next(row for row in polarity_rows if row.answer_label == "size_deficit")
+    excess_size = next(frame for frame in excess.frames if frame.active and frame.gismu_id == GISMU_TO_ID["size"])
+    deficit_size = next(frame for frame in deficit.frames if frame.active and frame.gismu_id == GISMU_TO_ID["size"])
+
+    assert excess.answer_id != deficit.answer_id
+    assert excess_size.gismu_id == deficit_size.gismu_id
+    assert CMAVO_TO_ID["excess"] in excess_size.cmavo_ids
+    assert CMAVO_TO_ID["deficit"] in deficit_size.cmavo_ids
+
+
 def test_m21_grid_contains_semantic_coverage_ablation_cells() -> None:
     grid = m21_default_grid()
     cell_ids = [row["cell_id"] for row in grid]

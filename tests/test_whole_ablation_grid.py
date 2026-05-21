@@ -164,3 +164,31 @@ def test_m21_special_stage_metrics_include_dynamic_bridi_and_causal_deltas() -> 
     assert metrics["semantic_coverage_combined_effect_strict_accuracy_delta"] == 0.20
     assert metrics["semantic_coverage_fraction_effect_strict_accuracy_delta"] == 0.02
     assert metrics["semantic_coverage_role_curriculum_effect_strict_accuracy_delta"] == 0.09
+
+
+def test_m22_is_visible_in_whole_grid_stage_order_and_metrics() -> None:
+    whole_grid = _load_whole_grid_module()
+    payload = {
+        "metrics": {
+            "strict_accuracy": 0.849,
+            "semantic_coverage_strict_accuracy": 0.653,
+            "semantic_coverage_worst_surface_accuracy": 0.181,
+            "semantic_coverage_judri_causal_delta": 0.600,
+            "m22_semantic_generalization_score": 0.181,
+            "m22_semantic_strict_delta_vs_m21_control": 0.260,
+            "m22_semantic_worst_delta_vs_m21_control": -0.116,
+            "m22_clean_accuracy_drop_vs_m21_control": 0.001,
+            "m22_judri_delta_drop_vs_m21_control": 0.001,
+            "m22_promotion_gate_pass_rate": 0.833,
+            "m22_promotion_candidate": 0.0,
+        }
+    }
+
+    metrics = whole_grid._special_stage_metrics("M22", payload)
+
+    assert "M22" in whole_grid.STAGE_ORDER
+    assert whole_grid.STAGE_ORDER.index("M21") < whole_grid.STAGE_ORDER.index("M22")
+    assert metrics["strict_accuracy"] == 0.849
+    assert metrics["semantic_coverage_strict_accuracy"] == 0.653
+    assert metrics["m22_semantic_generalization_score"] == 0.181
+    assert metrics["m22_promotion_candidate"] == 0.0

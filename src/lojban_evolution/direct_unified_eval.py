@@ -776,12 +776,16 @@ def _evaluate_m22_contract(
         metrics = _filtered_metrics(generalization_payload["metrics"], tuple(contract.get("metrics", [])))
     if not metrics:
         return _missing_contract_row(test_id, contract, f"missing M22 direct surface for {test_id}")
-    if test_id == "m22.semantic_coverage_generalization" and float(
-        generalization_payload.get("metrics", {}).get("m22_semantic_generalization_score", 0.0) or 0.0
-    ) <= 0.0:
-        row = _missing_contract_row(test_id, contract, "missing positive M22 semantic generalization score")
-        row["metrics"] = metrics
-        return row
+    if test_id == "m22.semantic_coverage_generalization":
+        report_metrics = generalization_payload.get("metrics", {})
+        if float(report_metrics.get("m22_semantic_generalization_score", 0.0) or 0.0) <= 0.0:
+            row = _missing_contract_row(test_id, contract, "missing positive M22 semantic generalization score")
+            row["metrics"] = metrics
+            return row
+        if float(report_metrics.get("m22_promotion_candidate", 0.0) or 0.0) < 1.0:
+            row = _missing_contract_row(test_id, contract, "M22 semantic generalization gate failed promotion")
+            row["metrics"] = metrics
+            return row
     return {
         "test_id": test_id,
         "surface": contract.get("surface"),

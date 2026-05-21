@@ -1054,6 +1054,8 @@
         "semantic_coverage_strict_accuracy",
         "semantic_coverage_worst_surface_accuracy",
         "semantic_coverage_judri_causal_delta",
+        "semantic_coverage_training_exposure_rate",
+        "semantic_isolation_cell_count",
         "m22_semantic_generalization_score",
         "m22_semantic_strict_delta_vs_m21_control",
         "m22_semantic_worst_delta_vs_m21_control",

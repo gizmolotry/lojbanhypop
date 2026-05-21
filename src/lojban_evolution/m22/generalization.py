@@ -32,14 +32,30 @@ def build_m22_semantic_generalization_payload(
         "cmavo_causal_delta": suite_metrics.get("cmavo_causal_delta", 0.0),
         "judri_causal_delta": suite_metrics.get("judri_causal_delta", 0.0),
         "stable_seed_rate": suite_metrics.get("stable_seed_rate", 0.0),
-        "semantic_coverage_strict_accuracy": adversarial_metrics.get("semantic_coverage_strict_accuracy")
-        or adversarial_metrics.get("adversarial_strict_accuracy", 0.0),
-        "semantic_coverage_worst_surface_accuracy": adversarial_metrics.get("semantic_coverage_worst_surface_accuracy")
-        or adversarial_metrics.get("adversarial_worst_surface_accuracy", 0.0),
-        "semantic_coverage_judri_causal_delta": adversarial_metrics.get("semantic_coverage_judri_causal_delta")
-        or adversarial_metrics.get("adversarial_judri_causal_delta", 0.0),
-        "semantic_coverage_oov_token_rate": adversarial_metrics.get("semantic_coverage_oov_token_rate")
-        or adversarial_metrics.get("adversarial_oov_token_rate", 0.0),
+        "semantic_coverage_strict_accuracy": _first_present(
+            adversarial_metrics,
+            "semantic_coverage_strict_accuracy",
+            "adversarial_strict_accuracy",
+            default=0.0,
+        ),
+        "semantic_coverage_worst_surface_accuracy": _first_present(
+            adversarial_metrics,
+            "semantic_coverage_worst_surface_accuracy",
+            "adversarial_worst_surface_accuracy",
+            default=0.0,
+        ),
+        "semantic_coverage_judri_causal_delta": _first_present(
+            adversarial_metrics,
+            "semantic_coverage_judri_causal_delta",
+            "adversarial_judri_causal_delta",
+            default=0.0,
+        ),
+        "semantic_coverage_oov_token_rate": _first_present(
+            adversarial_metrics,
+            "semantic_coverage_oov_token_rate",
+            "adversarial_oov_token_rate",
+            default=0.0,
+        ),
         "semantic_coverage_training_exposure_rate": adversarial_metrics.get("semantic_coverage_training_exposure_rate", 0.0),
         "semantic_isolation_cell_count": adversarial_metrics.get("semantic_isolation_cell_count", 0.0),
         "m21_control_strict_accuracy": control_metrics.get("strict_accuracy"),
@@ -79,6 +95,17 @@ def build_m22_semantic_generalization_payload(
         "semantic_worst_improves_control": _num(metrics.get("m22_semantic_worst_delta_vs_m21_control"))
         >= float(min_semantic_delta),
         "clean_drop_within_tolerance": _num(metrics.get("m22_clean_accuracy_drop_vs_m21_control")) <= float(max_clean_drop),
+        "semantic_training_exposed": _num(metrics.get("semantic_coverage_training_exposure_rate")) > 0.0,
+        "semantic_isolation_evidence_present": _num(metrics.get("semantic_isolation_cell_count")) > 0.0,
+        "explicit_m21_control_present": all(
+            metrics.get(key) is not None
+            for key in (
+                "m21_control_strict_accuracy",
+                "m21_control_semantic_coverage_strict_accuracy",
+                "m21_control_semantic_coverage_worst_surface_accuracy",
+                "m21_control_judri_causal_delta",
+            )
+        ),
     }
     metrics["m22_promotion_gate_pass_rate"] = sum(1.0 for value in gates.values() if value) / max(1, len(gates))
     metrics["m22_promotion_candidate"] = float(all(gates.values()))
@@ -157,6 +184,13 @@ def _num(value: Any, default: float = 0.0) -> float:
         return float(value)
     except (TypeError, ValueError):
         return float(default)
+
+
+def _first_present(metrics: dict[str, Any], *keys: str, default: Any = None) -> Any:
+    for key in keys:
+        if key in metrics and metrics[key] is not None:
+            return metrics[key]
+    return default
 
 
 def _delta(value: Any, baseline: Any) -> float:

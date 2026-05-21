@@ -1,6 +1,6 @@
 # Ablation Program Spine
 
-- Generated UTC: `2026-05-21T19:35:38.694629+00:00`
+- Generated UTC: `2026-05-21T20:02:46.848073+00:00`
 - Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_semantic_generalization_history_20260521/ablation_history_manifest.json`
 - Source taxonomy config: `configs/experiment_taxonomy.json`
 - Stage count: `25`

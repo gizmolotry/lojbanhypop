@@ -11,7 +11,7 @@ from lojban_airflow_utils import merge_conf, run_repo_script, sanitize_run_id, v
 
 DEFAULTS = {
     "suite_report": "artifacts/runs/telemetry/raw/ablation/hypercube/m21_dynamic_bridi_suite/m21_role_curriculum_mno_48e_20260518/m21_dynamic_bridi_suite_report.json",
-    "adversarial_audit_report": "",
+    "adversarial_audit_report": "artifacts/runs/telemetry/raw/ablation/hypercube/m21_adversarial_audit/m21_role_curriculum_mno_reserved_48e_20260518/m21_adversarial_audit_report.json",
     "m21_control_direct_manifest": "artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m21_semantic_hijkl_isolation_direct_fixed_20260518/direct_unified_eval_manifest.json",
     "output_dir": "artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization",
     "run_id": "",
@@ -58,7 +58,7 @@ with DAG(
     tags=["lojban", "m-series", "m22", "semantic-generalization"],
     params={
         "suite_report": Param(DEFAULTS["suite_report"], type="string", minLength=1),
-        "adversarial_audit_report": Param("", type="string"),
+        "adversarial_audit_report": Param(DEFAULTS["adversarial_audit_report"], type="string"),
         "m21_control_direct_manifest": Param(DEFAULTS["m21_control_direct_manifest"], type="string"),
         "output_dir": Param(DEFAULTS["output_dir"], type="string", minLength=1),
         "run_id": Param("", type="string"),
