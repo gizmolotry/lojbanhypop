@@ -174,7 +174,7 @@ def test_m22_is_visible_in_whole_grid_stage_order_and_metrics() -> None:
             "semantic_coverage_strict_accuracy": 0.653,
             "semantic_coverage_worst_surface_accuracy": 0.181,
             "semantic_coverage_judri_causal_delta": 0.600,
-            "m22_candidate_cell_count": 3.0,
+            "m22_candidate_cell_count": 4.0,
             "m22_candidate_cells_present": 1.0,
             "m22_semantic_generalization_score": 0.181,
             "m22_semantic_strict_delta_vs_m21_control": 0.260,
@@ -192,7 +192,7 @@ def test_m22_is_visible_in_whole_grid_stage_order_and_metrics() -> None:
     assert whole_grid.STAGE_ORDER.index("M21") < whole_grid.STAGE_ORDER.index("M22")
     assert list(metrics)[:2] == ["m22_promotion_candidate", "m22_promotion_gate_pass_rate"]
     assert metrics["strict_accuracy"] == 0.849
-    assert metrics["m22_candidate_cell_count"] == 3.0
+    assert metrics["m22_candidate_cell_count"] == 4.0
     assert metrics["semantic_coverage_strict_accuracy"] == 0.653
     assert metrics["m22_semantic_generalization_score"] == 0.181
     assert metrics["m22_promotion_candidate"] == 0.0

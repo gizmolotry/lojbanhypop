@@ -1,7 +1,7 @@
 # Ablation Program Map
 
-- Generated UTC: `2026-05-21T20:35:54.601045+00:00`
-- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_contract_tightening_history_20260521/ablation_history_manifest.json`
+- Generated UTC: `2026-05-21T21:11:23.449244+00:00`
+- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_explicit_pqr_history_20260521/ablation_history_manifest.json`
 - Concentrated family count: `38`
 
 ## Program Layers
@@ -518,11 +518,11 @@
 
 - Layer: `dynamic_bridi_substrate`
 - Status: `runnable`
-- Normalized IDs: `M21.1, M21.1.M, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G, M21.1.H, M21.1.I, M21.1.J, M21.1.K, M21.1.L, M21.1.N, M21.1.O`
-- Legacy aliases: `A, B, C, D, E, F, G, H, I, J, K, L, M, N, O`
-- Entry count: `16`
-- Runnable rows: `16`
-- Brief: Actual bridge adapter + 15 more
+- Normalized IDs: `M21.1, M21.1.M, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G, M21.1.H, M21.1.I, M21.1.J, M21.1.K, M21.1.L, M21.1.N, M21.1.O, M21.1.P, M21.1.Q, M21.1.R`
+- Legacy aliases: `A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R`
+- Entry count: `19`
+- Runnable rows: `19`
+- Brief: Actual bridge adapter + 18 more
 - Family groups: `m_track`
 - Scripts: `scripts/m21/run_m21_actual_bridge_suite.py, scripts/m21/run_m21_adversarial_audit.py, scripts/m21/run_m21_dynamic_bridi_suite.py, scripts/m21/run_m21_lock_suite.py, scripts/m21/run_m21_synthetic_assay_suite.py`
 - DAGs: `airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py`
@@ -539,7 +539,7 @@
 - Family groups: `m_track`
 - Scripts: `scripts/m22/run_m22_semantic_generalization.py`
 - DAGs: `airflow/dags/m22/lojban_m22_semantic_generalization_dag.py`
-- Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_mno_generalization_gate_20260521, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_mno_generalization_gate_20260521/m22_semantic_generalization_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_semantic_surfaces_gated_48e_gate_20260521, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_semantic_surfaces_gated_48e_gate_20260521/m22_semantic_generalization_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization_test/fixture, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization_test/fixture/m22_semantic_generalization_report.json`
+- Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_explicit_pqr_48e_gate_20260521, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_explicit_pqr_48e_gate_20260521/m22_semantic_generalization_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_explicit_pqr_smoke_gate_20260521, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_explicit_pqr_smoke_gate_20260521/m22_semantic_generalization_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_mno_generalization_gate_20260521, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_mno_generalization_gate_20260521/m22_semantic_generalization_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_semantic_surfaces_gated_48e_gate_20260521, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_semantic_surfaces_gated_48e_gate_20260521/m22_semantic_generalization_report.json`
 
 ### History
 

@@ -60,6 +60,7 @@ M22_REGISTRY: dict[str, dict[str, Any]] = {
             "M21.1.P",
             "M21.1.Q",
             "M21.1.R",
+            "M21.1.S",
         ],
     }
 }

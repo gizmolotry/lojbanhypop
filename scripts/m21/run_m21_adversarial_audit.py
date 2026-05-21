@@ -25,7 +25,7 @@ from lojban_evolution.m21.family import M21_FAMILY_VERSION, M21_REGISTRY  # noqa
 from lojban_evolution.series_contract import assert_output_path_allowed, series_metadata, validate_series_outputs  # noqa: E402
 
 SEMANTIC_ISOLATION_CELLS = ("H", "I", "J", "K", "L", "M", "N", "O")
-M22_SEMANTIC_ISOLATION_CELLS = ("P", "Q", "R")
+M22_SEMANTIC_ISOLATION_CELLS = ("P", "Q", "R", "S")
 SEMANTIC_ISOLATION_EFFECTS = {
     "lexical_shift": ("J", "H"),
     "role_binding": ("K", "H"),

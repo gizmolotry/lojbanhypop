@@ -183,7 +183,7 @@ def _control_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
 
 
 def _m22_candidate_cells(*payloads: dict[str, Any] | None) -> list[str]:
-    allowed = {"P", "Q", "R"}
+    allowed = {"P", "Q", "R", "S"}
     cells: set[str] = set()
     for payload in payloads:
         if not isinstance(payload, dict):

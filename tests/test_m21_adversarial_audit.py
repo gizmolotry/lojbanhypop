@@ -68,13 +68,21 @@ def test_m22_semantic_cells_count_as_isolation_evidence_without_breaking_h_o_eff
         _row("P", "heldout_paraphrase,clausal_permutation,relational_synonym_train", 0.60, 0.30, 0.50),
         _row("Q", "heldout_paraphrase,clausal_permutation,role_chain_generalization_train", 0.62, 0.28, 0.52),
         _row("R", "heldout_paraphrase,clausal_permutation,polarity_reframe_train", 0.58, 0.27, 0.49),
+        _row(
+            "S",
+            "heldout_paraphrase,clausal_permutation,role_binding_train,role_binding_pair_train,role_binding_swap_train,role_binding_chain_train,relational_synonym_train,role_chain_generalization_train,polarity_reframe_train",
+            0.70,
+            0.33,
+            0.60,
+        ),
     ]
 
     summary = audit._summarize(rows)
 
-    assert summary["semantic_isolation_cell_count"] == 3.0
+    assert summary["semantic_isolation_cell_count"] == 4.0
     assert summary["semantic_isolation_p_strict_accuracy"] == 0.60
     assert summary["semantic_isolation_q_worst_surface_accuracy"] == 0.28
+    assert summary["semantic_isolation_s_judri_causal_delta"] == 0.60
     assert "semantic_coverage_lexical_shift_effect_strict_accuracy_delta" not in summary
 
 

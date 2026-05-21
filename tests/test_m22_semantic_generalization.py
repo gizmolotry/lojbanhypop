@@ -21,7 +21,7 @@ def _load_m22_runner():
 def test_m22_registry_tracks_explicit_pqr_candidate_cells() -> None:
     targets = set(m22_track_spec()["comparison_targets"])
 
-    assert {"M21.1.P", "M21.1.Q", "M21.1.R"}.issubset(targets)
+    assert {"M21.1.P", "M21.1.Q", "M21.1.R", "M21.1.S"}.issubset(targets)
 
 
 def test_m22_generalization_gate_requires_semantic_lift_without_judri_regression() -> None:
@@ -36,7 +36,7 @@ def test_m22_generalization_gate_requires_semantic_lift_without_judri_regression
             "mean_judri_causal_delta": 0.79,
             "stable_seed_rate": 1.0,
         },
-        "cells": {"P": {}, "Q": {}, "R": {}},
+        "cells": {"P": {}, "Q": {}, "R": {}, "S": {}},
     }
     adversarial_payload = {
         "aggregate_metrics": {
@@ -47,7 +47,7 @@ def test_m22_generalization_gate_requires_semantic_lift_without_judri_regression
             "semantic_coverage_training_exposure_rate": 1.0,
             "semantic_isolation_cell_count": 8.0,
         },
-        "seed_reports": [{"cell_key": "P"}, {"cell_key": "Q"}, {"cell_key": "R"}],
+        "seed_reports": [{"cell_key": "P"}, {"cell_key": "Q"}, {"cell_key": "R"}, {"cell_key": "S"}],
     }
     control_manifest = {
         "headline_metrics": {
@@ -68,9 +68,9 @@ def test_m22_generalization_gate_requires_semantic_lift_without_judri_regression
     assert metrics["m22_semantic_strict_delta_vs_m21_control"] == 0.03999999999999998
     assert metrics["m22_semantic_worst_delta_vs_m21_control"] == 0.04999999999999999
     assert metrics["m22_clean_accuracy_drop_vs_m21_control"] == 0.0
-    assert metrics["m22_candidate_cell_count"] == 3.0
+    assert metrics["m22_candidate_cell_count"] == 4.0
     assert metrics["m22_promotion_candidate"] == 1.0
-    assert payload["candidate_cells"] == ["P", "Q", "R"]
+    assert payload["candidate_cells"] == ["P", "Q", "R", "S"]
     assert payload["comparison_policy"]["delta_baseline"] == "explicit_m21_control_direct_manifest"
 
 

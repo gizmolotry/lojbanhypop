@@ -281,6 +281,24 @@ M21_DYNAMIC_BRIDI_GRID: list[dict[str, Any]] = [
             "adversarial_train_surfaces": "heldout_paraphrase,clausal_permutation,polarity_reframe_train",
         },
     },
+    {
+        "cell_key": "S",
+        "cell_id": m21_cell_id("S"),
+        "lock": "adversarial_augmented_judri_gated_bridge",
+        "label": "M22 blended semantic-role curriculum bridge",
+        "variant": {
+            "trace_weight": 1.25,
+            "answer_weight": 1.25,
+            "counterfactual_weight": 1.25,
+            "brivi_lock_weight": 1.5,
+            "frame_necessity_weight": 1.0,
+            "mdl_weight": 0.01,
+            "judri_bridge_gate": True,
+            "judri_bridge_gate_temperature": 1.0,
+            "adversarial_train_fraction": 0.35,
+            "adversarial_train_surfaces": "heldout_paraphrase,clausal_permutation,role_binding_train,role_binding_pair_train,role_binding_swap_train,role_binding_chain_train,relational_synonym_train,role_chain_generalization_train,polarity_reframe_train",
+        },
+    },
 ]
 
 
@@ -378,6 +396,7 @@ M21_REGISTRY: dict[str, dict[str, Any]] = {
             "M21.1.P",
             "M21.1.Q",
             "M21.1.R",
+            "M21.1.S",
         ],
         "default_grid": deepcopy(M21_DYNAMIC_BRIDI_GRID),
     }
