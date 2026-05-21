@@ -68,6 +68,7 @@ FAMILY_DAG_MAP: dict[str, list[str]] = {
     ],
     "M20": ["airflow/dags/m20/lojban_m20_dictionary_first_dag.py"],
     "M21": ["airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py"],
+    "M22": ["airflow/dags/m22/lojban_m22_semantic_generalization_dag.py"],
     "History": [
         "airflow/dags/control_plane/lojban_ablation_history_backfill_dag.py",
         "airflow/dags/m_bridge/lojban_m_bridge_ablation_test_suite_dag.py",
@@ -116,6 +117,7 @@ M_FAMILY_ORDER = [
     "M19",
     "M20",
     "M21",
+    "M22",
 ]
 
 
@@ -263,6 +265,8 @@ def _family_key(entry: dict[str, Any]) -> str | None:
         return "M20"
     if normalized.startswith("M21"):
         return "M21"
+    if normalized.startswith("M22"):
+        return "M22"
     return None
 
 
@@ -275,6 +279,8 @@ def _program_layer(family_key: str) -> str:
         return "dictionary_first_substrate"
     if family_key == "M21":
         return "dynamic_bridi_substrate"
+    if family_key == "M22":
+        return "semantic_generalization_substrate"
     return "manifold_and_return_path"
 
 

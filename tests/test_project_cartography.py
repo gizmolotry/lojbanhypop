@@ -33,19 +33,22 @@ def test_series_registry_classifies_branch_series_surfaces() -> None:
         "scripts/m21/run_m21_dynamic_bridi_suite.py": "M21",
         "airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py": "M21",
         "src/lojban_evolution/m21/bridi.py": "M21",
+        "scripts/m22/run_m22_semantic_generalization.py": "M22",
+        "airflow/dags/m22/lojban_m22_semantic_generalization_dag.py": "M22",
+        "src/lojban_evolution/m22/generalization.py": "M22",
     }
 
     for path, expected_series in cases.items():
         assert classify_surface_path(path).series == expected_series
 
 
-def test_series_registry_preserves_a_to_m21_ordering() -> None:
+def test_series_registry_preserves_a_to_m22_ordering() -> None:
     order = series_order()
 
     assert order[:5] == ["A-G", "H", "H5", "J", "L"]
-    assert "M21" in order
-    assert order.index("M3") < order.index("M21")
-    assert {"A-G", "H", "H5", "J", "L", "M19", "M20", "M21"}.issubset(known_series())
+    assert "M22" in order
+    assert order.index("M21") < order.index("M22")
+    assert {"A-G", "H", "H5", "J", "L", "M19", "M20", "M21", "M22"}.issubset(known_series())
 
 
 def test_cartography_has_no_unclassified_runnable_surfaces() -> None:

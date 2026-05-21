@@ -1,9 +1,9 @@
 # Ablation Program Spine
 
-- Generated UTC: `2026-05-18T10:15:22.270061+00:00`
-- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m21_semantic_hijkl_history_20260518/ablation_history_manifest.json`
+- Generated UTC: `2026-05-21T19:35:38.694629+00:00`
+- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_semantic_generalization_history_20260521/ablation_history_manifest.json`
 - Source taxonomy config: `configs/experiment_taxonomy.json`
-- Stage count: `24`
+- Stage count: `25`
 
 This is the ordered research spine of the project: legacy letter-series families, normalized M-major families, and the control plane that keeps the program auditable.
 
@@ -495,16 +495,16 @@ This is the ordered research spine of the project: legacy letter-series families
 - Kind: `major_series`
 - Layer: `dynamic_bridi_substrate`
 - Objective: replace fixed typed slots with variable-length bridi traces so the model learns how many gismu predicates, cmavo modifiers, and judri bindings are needed, then proves those frames are causally useful.
-- Entry count: `13`
-- Runnable rows: `13`
+- Entry count: `16`
+- Runnable rows: `16`
 - Question boundary: dynamic Lojbanic bridi Q-former
 - Thesis: replace fixed typed slots with variable-length bridi traces so the model learns how many gismu predicates, cmavo modifiers, and judri bindings are needed, then proves those frames are causally useful.
 - Selected upstream: `M20.1.F`
 - Inherits: `dictionary-first causal predicate discipline, counterfactual quotient invariance, brivi lock skepticism`
 - Reopens: `fixed typed slot count, fixed predicate target set, static dictionary trace shape`
 - Rejects: `decorative slot occupancy as semantic evidence, dictionary spread without causal utility`
-- IDs: `M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G, M21.1.H, M21.1.I, M21.1.J, M21.1.K, M21.1.L`
-- Aliases: `A, B, C, D, E, F, G, H, I, J, K, L, M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G, M21.1.H, M21.1.I, M21.1.J, M21.1.K, M21.1.L`
+- IDs: `M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G, M21.1.H, M21.1.I, M21.1.J, M21.1.K, M21.1.L, M21.1.M, M21.1.N, M21.1.O`
+- Aliases: `A, B, C, D, E, F, G, H, I, J, K, L, M, M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G, M21.1.H, M21.1.I, M21.1.J, M21.1.K, M21.1.L, M21.1.M, M21.1.N, M21.1.O, N, O`
 - Allowed axes: `dynamic frame count, cmavo causality, judri binding causality, judri gated bridge, brivi lock, frame necessity, actual bridge transfer, held-out adversarial prompt audit, adversarial training augmentation, semantic coverage augmentation`
 - Frozen/forbidden drift: `fixed typed-slot layout as main result, decorative frame occupancy, phrase accuracy as canonical accuracy, mass deletion of M20 control assets`
 - Promotion basis: `strict_accuracy, bridi_trace_exact_accuracy, lock_pass_rate, actual_bridge_transfer_score`
@@ -517,7 +517,34 @@ This is the ordered research spine of the project: legacy letter-series families
 - Scripts: `scripts/m21/run_m21_actual_bridge_suite.py, scripts/m21/run_m21_adversarial_audit.py, scripts/m21/run_m21_dynamic_bridi_suite.py, scripts/m21/run_m21_lock_suite.py, scripts/m21/run_m21_synthetic_assay_suite.py`
 - DAGs: `airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py`
 
-## 24. Control Plane
+## 24. M22
+
+- Kind: `major_series`
+- Layer: `semantic_generalization_substrate`
+- Objective: keep the M21 dynamic bridi Q-former fixed and test whether expanded semantic surfaces generalize beyond memorized synthetic templates without damaging clean accuracy or judri causality.
+- Entry count: `1`
+- Runnable rows: `1`
+- Question boundary: semantic coverage generalization over the M21 dynamic bridi substrate
+- Thesis: keep the M21 dynamic bridi Q-former fixed and test whether expanded semantic surfaces generalize beyond memorized synthetic templates without damaging clean accuracy or judri causality.
+- Selected upstream: `M21.1.O`
+- Inherits: `dynamic bridi Q-former, judri-gated bridge, pointer necessity evidence, semantic coverage audit harness`
+- Reopens: `semantic surface diversity, role-chain generalization, reserved adversarial audit coverage`
+- Rejects: `new architecture family before semantic generalization is exhausted, hyperbolic geometry as primary fix`
+- IDs: `M22`
+- Aliases: `M22`
+- Allowed axes: `semantic training surface family, role-chain generalization, polarity reframe templates, reserved adversarial audit surfaces, promotion tolerance against M21 control`
+- Frozen/forbidden drift: `new geometry as the main intervention, new bridge architecture family, promoting smoke-only adversarial audits, sacrificing judri causal delta for surface accuracy`
+- Promotion basis: `semantic_coverage_strict_accuracy, semantic_coverage_worst_surface_accuracy, m22_semantic_generalization_score, m22_semantic_strict_delta_vs_m21_control`
+- Primary metrics: `semantic_coverage_strict_accuracy, semantic_coverage_worst_surface_accuracy, m22_semantic_generalization_score`
+- Guardrail metrics: `strict_accuracy, bridi_trace_exact_accuracy, judri_causal_delta, m22_clean_accuracy_drop_vs_m21_control, m22_judri_delta_drop_vs_m21_control`
+- Historical comparison families: `M21`
+- Required test contracts: `m22.semantic_coverage_generalization`
+- Automatic comparison targets: `M22, M21, M20, M21.1.H, M21.1.I, M21.1.J, M21.1.K, M21.1.L, M21.1.M, M21.1.N, M21.1.O`
+- Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
+- Scripts: `scripts/m22/run_m22_semantic_generalization.py`
+- DAGs: `airflow/dags/m22/lojban_m22_semantic_generalization_dag.py`
+
+## 25. Control Plane
 
 - Kind: `control_plane`
 - Layer: `control_plane`

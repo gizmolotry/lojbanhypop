@@ -16,9 +16,9 @@ if str(REPO_ROOT / "src") not in sys.path:
 
 from lojban_evolution.m21.bridi import (  # noqa: E402
     M21DynamicBridiQFormer,
-    SEMANTIC_COVERAGE_TRAINING_SURFACES,
     evaluate_model,
     generate_dynamic_bridi_adversarial_examples,
+    semantic_training_surface_names,
     tokenize,
 )
 from lojban_evolution.m21.family import M21_FAMILY_VERSION, M21_REGISTRY  # noqa: E402
@@ -242,7 +242,7 @@ def _semantic_coverage_surface_count(config: dict[str, Any]) -> int:
         selected = {str(item).strip() for item in surfaces if str(item).strip()}
     else:
         selected = set()
-    return len(selected.intersection(set(SEMANTIC_COVERAGE_TRAINING_SURFACES)))
+    return len(selected.intersection(set(semantic_training_surface_names())))
 
 
 def run_audit(args: argparse.Namespace) -> dict[str, Any]:

@@ -43,6 +43,25 @@ def test_m21_adversarial_audit_summarizes_semantic_isolation_deltas() -> None:
     assert summary["semantic_coverage_role_curriculum_fraction_effect_judri_causal_delta_delta"] == pytest.approx(-0.02)
 
 
+def test_semantic_coverage_surface_count_includes_m22_generalization_surfaces() -> None:
+    audit = _load_audit_module()
+
+    count = audit._semantic_coverage_surface_count(
+        {
+            "adversarial_train_surfaces": (
+                "heldout_paraphrase,"
+                "role_binding_train,"
+                "role_binding_swap_train,"
+                "relational_synonym_train,"
+                "role_chain_generalization_train,"
+                "polarity_reframe_train"
+            )
+        }
+    )
+
+    assert count == 5
+
+
 def _row(
     cell: str,
     surfaces: str,

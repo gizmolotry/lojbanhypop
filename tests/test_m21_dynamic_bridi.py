@@ -6,6 +6,7 @@ from lojban_evolution.m21 import (
     CMAVO,
     GISMU,
     M21DynamicBridiQFormer,
+    M22_SEMANTIC_GENERALIZATION_TRAINING_SURFACES,
     build_vocab,
     clamp_poincare_norm,
     compute_m21_loss,
@@ -26,6 +27,7 @@ from lojban_evolution.m21.bridi import (
     SEMANTIC_COVERAGE_TRAINING_SURFACES,
     SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES,
     adversarial_training_surface_names,
+    semantic_training_surface_names,
 )
 from lojban_evolution.m21.gauntlet import build_m21_gauntlet_payload, m21_to_m19_reservoir_shim
 
@@ -134,7 +136,7 @@ def test_tiny_training_accepts_adversarial_augmentation() -> None:
 
 def test_semantic_training_surfaces_are_explicit_and_accepted() -> None:
     training_surfaces = set(adversarial_training_surface_names())
-    semantic_surfaces = set(SEMANTIC_COVERAGE_TRAINING_SURFACES) | set(SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES)
+    semantic_surfaces = set(semantic_training_surface_names())
     reserved_surfaces = set(RESERVED_ADVERSARIAL_AUDIT_SURFACES)
 
     assert semantic_surfaces.issubset(training_surfaces)
@@ -149,6 +151,16 @@ def test_semantic_training_surfaces_are_explicit_and_accepted() -> None:
         assert len({row.answer_label for row in examples}) == 18
         assert all(any(frame.active for frame in row.frames) for row in examples)
         if surface == "role_binding_train" or surface in SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES:
+            assert all(row.entities[0] != row.entities[6] for row in examples)
+
+    for surface in M22_SEMANTIC_GENERALIZATION_TRAINING_SURFACES:
+        examples = generate_dynamic_bridi_adversarial_examples(18, seed=30, surfaces=(surface,))
+
+        assert len(examples) == 18
+        assert {row.surface for row in examples} == {surface}
+        assert len({row.answer_label for row in examples}) == 18
+        assert all(any(frame.active for frame in row.frames) for row in examples)
+        if surface == "role_chain_generalization_train":
             assert all(row.entities[0] != row.entities[6] for row in examples)
 
     result = train_m21_dynamic_bridi(

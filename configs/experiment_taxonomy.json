@@ -464,6 +464,42 @@
         "accuracy_per_trace_token"
       ],
       "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
+    },
+    "M22": {
+      "question_boundary": "semantic coverage generalization over the M21 dynamic bridi substrate",
+      "architectural_thesis": "keep the M21 dynamic bridi Q-former fixed and test whether expanded semantic surfaces generalize beyond memorized synthetic templates without damaging clean accuracy or judri causality.",
+      "allowed_ablation_axes": [
+        "semantic training surface family",
+        "role-chain generalization",
+        "polarity reframe templates",
+        "reserved adversarial audit surfaces",
+        "promotion tolerance against M21 control"
+      ],
+      "forbidden_drift_axes": [
+        "new geometry as the main intervention",
+        "new bridge architecture family",
+        "promoting smoke-only adversarial audits",
+        "sacrificing judri causal delta for surface accuracy"
+      ],
+      "promotion_basis": [
+        "semantic_coverage_strict_accuracy",
+        "semantic_coverage_worst_surface_accuracy",
+        "m22_semantic_generalization_score",
+        "m22_semantic_strict_delta_vs_m21_control"
+      ],
+      "metrics_primary": [
+        "semantic_coverage_strict_accuracy",
+        "semantic_coverage_worst_surface_accuracy",
+        "m22_semantic_generalization_score"
+      ],
+      "metrics_guardrail": [
+        "strict_accuracy",
+        "bridi_trace_exact_accuracy",
+        "judri_causal_delta",
+        "m22_clean_accuracy_drop_vs_m21_control",
+        "m22_judri_delta_drop_vs_m21_control"
+      ],
+      "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
     }
   },
   "comparison_defaults": {
@@ -1006,6 +1042,27 @@
         "semantic_coverage_fraction_effect_strict_accuracy_delta"
       ],
       "surface": "m21_adversarial_audit"
+    },
+    "m22.semantic_coverage_generalization": {
+      "test_id": "m22.semantic_coverage_generalization",
+      "family": "M22",
+      "description": "M22 must improve semantic coverage over the M21 dynamic bridi control without clean-accuracy or judri-causality regression.",
+      "metrics": [
+        "strict_accuracy",
+        "bridi_trace_exact_accuracy",
+        "judri_causal_delta",
+        "semantic_coverage_strict_accuracy",
+        "semantic_coverage_worst_surface_accuracy",
+        "semantic_coverage_judri_causal_delta",
+        "m22_semantic_generalization_score",
+        "m22_semantic_strict_delta_vs_m21_control",
+        "m22_semantic_worst_delta_vs_m21_control",
+        "m22_clean_accuracy_drop_vs_m21_control",
+        "m22_judri_delta_drop_vs_m21_control",
+        "m22_promotion_gate_pass_rate",
+        "m22_promotion_candidate"
+      ],
+      "surface": "m22_semantic_generalization"
     }
   },
   "family_comparison_contracts": {
@@ -1262,6 +1319,26 @@
         "M21.1.J",
         "M21.1.K",
         "M21.1.L"
+      ],
+      "inherit_required_test_contracts": false
+    },
+    "M22": {
+      "historical_comparison_families": [
+        "M21"
+      ],
+      "required_test_contracts": [
+        "m22.semantic_coverage_generalization"
+      ],
+      "explicit_compare_entries": [
+        "M21",
+        "M21.1.H",
+        "M21.1.I",
+        "M21.1.J",
+        "M21.1.K",
+        "M21.1.L",
+        "M21.1.M",
+        "M21.1.N",
+        "M21.1.O"
       ],
       "inherit_required_test_contracts": false
     }
@@ -1777,6 +1854,33 @@
         "strict_accuracy",
         "bridi_trace_exact_accuracy",
         "actual_bridge_transfer_score"
+      ]
+    },
+    {
+      "transition_id": "M21_to_M22",
+      "status": "active_branch",
+      "from_major": "M21",
+      "to_major": "M22",
+      "selected_upstream": "M21.1.O",
+      "inherits_components": [
+        "dynamic bridi Q-former",
+        "judri-gated bridge",
+        "pointer necessity evidence",
+        "semantic coverage audit harness"
+      ],
+      "reopened_components": [
+        "semantic surface diversity",
+        "role-chain generalization",
+        "reserved adversarial audit coverage"
+      ],
+      "rejected_components": [
+        "new architecture family before semantic generalization is exhausted",
+        "hyperbolic geometry as primary fix"
+      ],
+      "promotion_basis": [
+        "semantic_coverage_strict_accuracy",
+        "semantic_coverage_worst_surface_accuracy",
+        "m22_semantic_generalization_score"
       ]
     }
   ]

@@ -1,6 +1,6 @@
-﻿{
+{
   "version": "2026-05-20",
-  "purpose": "Series-aware registry for runnable scripts, DAGs, and scaffolding surfaces. This divides the codebase by research branch terminology from A-G through M21.",
+  "purpose": "Series-aware registry for runnable scripts, DAGs, and scaffolding surfaces. This divides the codebase by research branch terminology from A-G through M22.",
   "series_order": [
     "A-G",
     "H",
@@ -26,6 +26,7 @@
     "M19",
     "M20",
     "M21",
+    "M22",
     "control_plane",
     "data",
     "training",
@@ -69,7 +70,8 @@
     "M18": {"era": "active-history", "question": "Two-pass salience controller steering."},
     "M19": {"era": "active-mainline", "question": "Bounded continuous scratchpad runway."},
     "M20": {"era": "active-branch", "question": "Dictionary-first predicate substrate."},
-    "M21": {"era": "active-branch", "question": "Dynamic bridi Q-former substrate."}
+    "M21": {"era": "active-branch", "question": "Dynamic bridi Q-former substrate."},
+    "M22": {"era": "active-branch", "question": "Semantic coverage generalization over M21 dynamic bridi controls."}
   },
   "path_rules": [
     {"globs": ["scripts/control_plane/*.py"], "series": "control_plane", "status": "active-control-plane", "kind": "script", "bucket": "scripts/control_plane", "owner": "control-plane", "replacement": ""},
@@ -93,12 +95,14 @@
     {"globs": ["scripts/m19/*.py", "airflow/dags/m19/*.py"], "series": "M19", "status": "active-family-runner", "kind": "script", "bucket": "m19", "owner": "M19"},
     {"globs": ["scripts/m20/*.py", "airflow/dags/m20/*.py"], "series": "M20", "status": "active-family-runner", "kind": "script", "bucket": "m20", "owner": "M20"},
     {"globs": ["scripts/m21/*.py", "airflow/dags/m21/*.py"], "series": "M21", "status": "active-family-runner", "kind": "script", "bucket": "m21", "owner": "M21"},
+    {"globs": ["scripts/m22/*.py", "airflow/dags/m22/*.py"], "series": "M22", "status": "active-family-runner", "kind": "script", "bucket": "m22", "owner": "M22"},
 
     {"globs": ["src/lojban_evolution/m3*.py"], "series": "M3", "status": "active-library", "kind": "library", "bucket": "src/lojban_evolution", "owner": "M3"},
     {"globs": ["src/lojban_evolution/m18*.py", "src/lojban_evolution/m18/**"], "series": "M18", "status": "active-library", "kind": "library", "bucket": "src/lojban_evolution/m18", "owner": "M18"},
     {"globs": ["src/lojban_evolution/m19/**"], "series": "M19", "status": "active-library", "kind": "library", "bucket": "src/lojban_evolution/m19", "owner": "M19"},
     {"globs": ["src/lojban_evolution/m20/**"], "series": "M20", "status": "active-library", "kind": "library", "bucket": "src/lojban_evolution/m20", "owner": "M20"},
     {"globs": ["src/lojban_evolution/m21/**"], "series": "M21", "status": "active-library", "kind": "library", "bucket": "src/lojban_evolution/m21", "owner": "M21"},
+    {"globs": ["src/lojban_evolution/m22/**"], "series": "M22", "status": "active-library", "kind": "library", "bucket": "src/lojban_evolution/m22", "owner": "M22"},
     {"globs": ["src/lojban_evolution/control_plane/**"], "series": "control_plane", "status": "active-library", "kind": "library", "bucket": "src/lojban_evolution/control_plane", "owner": "control-plane"},
 
     {"globs": ["scripts/legacy/eval_j_*.py", "airflow/dags/legacy/lojban_j_series_dag.py"], "series": "J", "status": "legacy-runnable", "kind": "script", "bucket": "scripts/legacy", "owner": "J", "replacement": "M1 normalized contract in docs/SERIES_FIELD_GUIDE.md"},

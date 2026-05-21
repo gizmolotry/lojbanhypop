@@ -101,6 +101,11 @@ SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES = (
     "role_binding_swap_train",
     "role_binding_chain_train",
 )
+M22_SEMANTIC_GENERALIZATION_TRAINING_SURFACES = (
+    "relational_synonym_train",
+    "role_chain_generalization_train",
+    "polarity_reframe_train",
+)
 
 
 def pointer_necessity_contrast_loss(
@@ -732,14 +737,115 @@ def _role_binding_curriculum_template_bank() -> dict[str, tuple[tuple[str, str],
     }
 
 
+
+def _m22_semantic_generalization_template_bank() -> dict[str, tuple[tuple[str, str], ...]]:
+    return {
+        "size_excess": (
+            ("relational_synonym_train", "{object} exceeded the spatial allowance of {container}."),
+            ("role_chain_generalization_train", "After {object2} was accepted, {object} still exceeded {container}'s available space."),
+            ("polarity_reframe_train", "The failure was from surplus size in {object}, not lack of size."),
+        ),
+        "size_deficit": (
+            ("relational_synonym_train", "{object} undershot the spatial allowance of {container}."),
+            ("role_chain_generalization_train", "After {object2} filled the gap, {object} still left excess room in {container}."),
+            ("polarity_reframe_train", "The mismatch was insufficient size in {object}, not oversize."),
+        ),
+        "weight_excess": (
+            ("relational_synonym_train", "{object} exceeded {person}'s lifting capacity."),
+            ("role_chain_generalization_train", "After {person} moved {object2}, {object} remained beyond lifting capacity."),
+            ("polarity_reframe_train", "The issue was surplus weight in {object}, not lightness."),
+        ),
+        "weight_deficit": (
+            ("relational_synonym_train", "{object} had too little mass to resist motion."),
+            ("role_chain_generalization_train", "After {object2} stayed put, {object} moved because its mass was low."),
+            ("polarity_reframe_train", "The motion came from deficient weight in {object}, not heaviness."),
+        ),
+        "transfer_success": (
+            ("relational_synonym_train", "Custody of {object} moved from {giver} to {receiver}."),
+            ("role_chain_generalization_train", "After {person} observed the exchange, {receiver} held {object} from {giver}."),
+            ("polarity_reframe_train", "The transfer completed rather than being refused."),
+        ),
+        "transfer_refused": (
+            ("relational_synonym_train", "{receiver} declined custody of {object} from {giver}."),
+            ("role_chain_generalization_train", "After {person} considered {object2}, {receiver} still rejected {object} from {giver}."),
+            ("polarity_reframe_train", "The transfer was blocked rather than completed."),
+        ),
+        "preference_like": (
+            ("relational_synonym_train", "{person} favored {object} over the alternative."),
+            ("role_chain_generalization_train", "After comparing {object2}, {person} selected {object} as preferred."),
+            ("polarity_reframe_train", "The attitude toward {object} was favorable, not avoidance."),
+        ),
+        "preference_dislike": (
+            ("relational_synonym_train", "{person} rejected {object} as undesirable."),
+            ("role_chain_generalization_train", "After accepting {object2}, {person} avoided {object} as disliked."),
+            ("polarity_reframe_train", "The attitude toward {object} was aversion, not preference."),
+        ),
+        "containment_success": (
+            ("relational_synonym_train", "{container} successfully enclosed {object}."),
+            ("role_chain_generalization_train", "After {object2} was removed, {container} contained {object}."),
+            ("polarity_reframe_train", "Containment succeeded rather than being blocked."),
+        ),
+        "containment_blocked": (
+            ("relational_synonym_train", "{container} prevented {object} from entering."),
+            ("role_chain_generalization_train", "After {object2} passed nearby, {container} still barred {object}."),
+            ("polarity_reframe_train", "Containment was blocked rather than successful."),
+        ),
+        "visibility_clear": (
+            ("relational_synonym_train", "{observer} had an unobstructed view of {object}."),
+            ("role_chain_generalization_train", "After {object2} moved away, {observer} could see {object}."),
+            ("polarity_reframe_train", "Visibility was clear rather than occluded."),
+        ),
+        "visibility_blocked": (
+            ("relational_synonym_train", "{object} was occluded from {observer}."),
+            ("role_chain_generalization_train", "After {object2} became visible, {object} remained hidden from {observer}."),
+            ("polarity_reframe_train", "Visibility was obstructed rather than clear."),
+        ),
+        "quantity_excess": (
+            ("relational_synonym_train", "The count of {object}s exceeded the permitted quantity."),
+            ("role_chain_generalization_train", "After excluding {object2}s, the {count} {object}s were still too many."),
+            ("polarity_reframe_train", "The quantity problem was surplus, not shortage."),
+        ),
+        "quantity_deficit": (
+            ("relational_synonym_train", "The count of {object}s fell below the required quantity."),
+            ("role_chain_generalization_train", "After excluding {object2}s, the {count} {object}s were still too few."),
+            ("polarity_reframe_train", "The quantity problem was shortage, not surplus."),
+        ),
+        "motion_allowed": (
+            ("relational_synonym_train", "Authorization permitted {person} to move {object}."),
+            ("role_chain_generalization_train", "After {object2} was left behind, permission applied to moving {object}."),
+            ("polarity_reframe_train", "Motion was allowed rather than forbidden."),
+        ),
+        "motion_blocked": (
+            ("relational_synonym_train", "Authorization prevented {person} from moving {object}."),
+            ("role_chain_generalization_train", "After {object2} moved, {person} still lacked permission for {object}."),
+            ("polarity_reframe_train", "Motion was forbidden rather than allowed."),
+        ),
+        "permission_granted": (
+            ("relational_synonym_train", "{person} received authorization for {object}."),
+            ("role_chain_generalization_train", "After {object2} was denied, {person} was still allowed to use {object}."),
+            ("polarity_reframe_train", "Permission was granted rather than denied."),
+        ),
+        "permission_denied": (
+            ("relational_synonym_train", "{person} lacked authorization for {object}."),
+            ("role_chain_generalization_train", "After {object2} was allowed, {person} remained denied for {object}."),
+            ("polarity_reframe_train", "Permission was denied rather than granted."),
+        ),
+    }
+
 def _with_semantic_coverage_surfaces(
     base: dict[str, tuple[tuple[str, str], ...]],
 ) -> dict[str, tuple[tuple[str, str], ...]]:
     semantic_bank = _semantic_coverage_template_bank()
     role_curriculum_bank = _role_binding_curriculum_template_bank()
+    m22_bank = _m22_semantic_generalization_template_bank()
     expanded: dict[str, tuple[tuple[str, str], ...]] = {}
     for answer_label, templates in base.items():
-        expanded[answer_label] = templates + semantic_bank.get(answer_label, tuple()) + role_curriculum_bank.get(answer_label, tuple())
+        expanded[answer_label] = (
+            templates
+            + semantic_bank.get(answer_label, tuple())
+            + role_curriculum_bank.get(answer_label, tuple())
+            + m22_bank.get(answer_label, tuple())
+        )
     return expanded
 
 
@@ -748,8 +854,12 @@ def adversarial_surface_names() -> tuple[str, ...]:
     return tuple(names)
 
 
+def semantic_training_surface_names() -> tuple[str, ...]:
+    return SEMANTIC_COVERAGE_TRAINING_SURFACES + SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES + M22_SEMANTIC_GENERALIZATION_TRAINING_SURFACES
+
+
 def adversarial_training_surface_names() -> tuple[str, ...]:
-    return LEGACY_ADVERSARIAL_TRAINING_SURFACES + SEMANTIC_COVERAGE_TRAINING_SURFACES + SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES
+    return LEGACY_ADVERSARIAL_TRAINING_SURFACES + semantic_training_surface_names()
 
 
 def _validated_adversarial_surfaces(
@@ -793,7 +903,7 @@ def generate_dynamic_bridi_adversarial_examples(
         if not candidates:
             raise ValueError(f"No M21 adversarial templates for answer '{answer_label}' on surfaces {selected_surfaces}.")
         surface, template = rng.choice(candidates)
-        role_surfaces = {"role_distractor", "role_binding_train", *SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES}
+        role_surfaces = {"role_distractor", "role_binding_train", "role_chain_generalization_train", *SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES}
         values = _values(rng, "renamed" if surface in role_surfaces else "purged")
         entities = _entity_tuple(values)
         prompt = template.format(**values)

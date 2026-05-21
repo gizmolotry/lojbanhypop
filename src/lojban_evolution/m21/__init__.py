@@ -5,6 +5,7 @@ from .bridi import (
     CMAVO,
     GISMU,
     M21_LOCKS,
+    M22_SEMANTIC_GENERALIZATION_TRAINING_SURFACES,
     RESERVED_ADVERSARIAL_AUDIT_SURFACES,
     SEMANTIC_COVERAGE_TRAINING_SURFACES,
     SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES,
@@ -23,6 +24,7 @@ from .bridi import (
     m21_collate,
     poincare_tangent_handoff,
     pointer_necessity_contrast_loss,
+    semantic_training_surface_names,
     train_m21_dynamic_bridi,
 )
 from .family import M21_DYNAMIC_BRIDI_GRID, M21_FAMILY_VERSION, M21_REGISTRY, m21_default_grid
@@ -33,6 +35,7 @@ __all__ = [
     "CMAVO",
     "GISMU",
     "M21_LOCKS",
+    "M22_SEMANTIC_GENERALIZATION_TRAINING_SURFACES",
     "RESERVED_ADVERSARIAL_AUDIT_SURFACES",
     "SEMANTIC_COVERAGE_TRAINING_SURFACES",
     "SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES",
@@ -51,6 +54,7 @@ __all__ = [
     "m21_collate",
     "poincare_tangent_handoff",
     "pointer_necessity_contrast_loss",
+    "semantic_training_surface_names",
     "train_m21_dynamic_bridi",
     "build_m21_gauntlet_payload",
     "m21_to_m19_reservoir_shim",

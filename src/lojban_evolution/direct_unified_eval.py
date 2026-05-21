@@ -16,6 +16,7 @@ from .experiment_taxonomy import build_comparison_index, load_taxonomy_config
 from .m19.family import M19_REGISTRY
 from .m20.family import M20_REGISTRY
 from .m21.family import M21_REGISTRY
+from .m22.family import M22_REGISTRY
 from .repo_paths import REPO_ROOT, repo_relative
 from .series_contract import series_metadata
 
@@ -195,6 +196,13 @@ KEY_METRICS = (
     "gauntlet_integrity_masked_accuracy",
     "gauntlet_kill_worst_surface_accuracy",
     "gauntlet_order_accuracy_spread",
+    "m22_semantic_generalization_score",
+    "m22_semantic_strict_delta_vs_m21_control",
+    "m22_semantic_worst_delta_vs_m21_control",
+    "m22_clean_accuracy_drop_vs_m21_control",
+    "m22_judri_delta_drop_vs_m21_control",
+    "m22_promotion_gate_pass_rate",
+    "m22_promotion_candidate",
 )
 
 _REFERENCE_ROOTS: dict[str, list[Path]] = {
@@ -233,6 +241,10 @@ _REFERENCE_ROOTS: dict[str, list[Path]] = {
         REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m21_lock_suite",
         REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m21_pointer_necessity_microgrid",
         REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m21_gauntlet_suite",
+    ],
+    "M22": [
+        REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m22_semantic_generalization",
+        REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "direct_unified_eval",
     ],
     "M10": [
         REPO_ROOT / "archive" / "results" / "m10" / "active",
@@ -411,6 +423,20 @@ def discover_m21_surfaces(
     }
 
 
+def discover_m22_surfaces(
+    *,
+    generalization_report_path: Path | None = None,
+) -> dict[str, dict[str, Any]]:
+    registry = M22_REGISTRY["M22"]
+    generalization_path = generalization_report_path or _latest_named_manifest(
+        REPO_ROOT / registry["output_roots"]["generalization"],
+        registry["report_names"]["generalization"],
+    )
+    return {
+        "generalization": _surface_record("generalization", generalization_path),
+    }
+
+
 def build_direct_unified_eval_manifest(
     *,
     family_key: str,
@@ -432,6 +458,7 @@ def build_direct_unified_eval_manifest(
     m21_pointer_microgrid_report_path: Path | None = None,
     m21_gauntlet_report_path: Path | None = None,
     m21_adversarial_audit_report_path: Path | None = None,
+    m22_generalization_report_path: Path | None = None,
     history_manifest_path: Path | None = None,
     taxonomy: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -470,6 +497,11 @@ def build_direct_unified_eval_manifest(
             gauntlet_report_path=m21_gauntlet_report_path,
             adversarial_audit_report_path=m21_adversarial_audit_report_path,
         )
+    elif family_key == "M22":
+        resolved_track = str(track or "M22")
+        direct_surfaces = discover_m22_surfaces(
+            generalization_report_path=m22_generalization_report_path,
+        )
     else:
         raise NotImplementedError(f"Direct unified eval is currently implemented for family '{family_key}' only.")
 
@@ -490,6 +522,7 @@ def build_direct_unified_eval_manifest(
     m21_pointer_payload = direct_surfaces.get("pointer_microgrid", {}).get("payload") if family_key == "M21" else None
     m21_gauntlet_payload = direct_surfaces.get("gauntlet", {}).get("payload") if family_key == "M21" else None
     m21_adversarial_payload = direct_surfaces.get("adversarial_audit", {}).get("payload") if family_key == "M21" else None
+    m22_generalization_payload = direct_surfaces.get("generalization", {}).get("payload") if family_key == "M22" else None
     historical_references = _resolve_historical_family_references(contract, history_manifest_path)
     comparison_targets = _resolve_comparison_targets(contract, history_manifest_path)
     reference_surface_index = _build_reference_surface_index(historical_references, comparison_targets)
@@ -513,6 +546,7 @@ def build_direct_unified_eval_manifest(
         m21_pointer_payload=m21_pointer_payload,
         m21_gauntlet_payload=m21_gauntlet_payload,
         m21_adversarial_payload=m21_adversarial_payload,
+        m22_generalization_payload=m22_generalization_payload,
         reference_surface_index=reference_surface_index,
     )
 
@@ -534,6 +568,7 @@ def build_direct_unified_eval_manifest(
         m21_pointer_payload=m21_pointer_payload,
         m21_gauntlet_payload=m21_gauntlet_payload,
         m21_adversarial_payload=m21_adversarial_payload,
+        m22_generalization_payload=m22_generalization_payload,
     )
     direct_report_paths = {
         name: surface["path"]
@@ -562,6 +597,8 @@ def build_direct_unified_eval_manifest(
         notes.append("M20 direct surfaces are dictionary-first substrate reports, not downstream English bridge evaluations.")
     if family_key == "M21":
         notes.append("M21 direct surfaces combine dynamic bridi synthetic assay, lock-suite, minimal actual bridge, and M19-style gauntlet adapter reports.")
+    if family_key == "M22":
+        notes.append("M22 direct surfaces evaluate semantic coverage generalization over fixed M21 dynamic bridi controls.")
 
     manifest = {
         "schema_version": DIRECT_UNIFIED_EVAL_VERSION,
@@ -673,6 +710,7 @@ def _evaluate_contracts(
     m21_pointer_payload: dict[str, Any] | None = None,
     m21_gauntlet_payload: dict[str, Any] | None = None,
     m21_adversarial_payload: dict[str, Any] | None = None,
+    m22_generalization_payload: dict[str, Any] | None = None,
     reference_surface_index: dict[str, dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     reference_surface_index = reference_surface_index or {}
@@ -711,6 +749,10 @@ def _evaluate_contracts(
             )
             rows.append(_attach_reference_surface(row, contract, reference_surface_index))
             continue
+        if family_key == "M22":
+            row = _evaluate_m22_contract(test_id, contract, m22_generalization_payload)
+            rows.append(_attach_reference_surface(row, contract, reference_surface_index))
+            continue
         rows.append(
             {
                 "test_id": test_id,
@@ -722,6 +764,32 @@ def _evaluate_contracts(
             }
         )
     return rows
+
+
+def _evaluate_m22_contract(
+    test_id: str,
+    contract: dict[str, Any],
+    generalization_payload: dict[str, Any] | None,
+) -> dict[str, Any]:
+    metrics = {}
+    if isinstance(generalization_payload, dict) and isinstance(generalization_payload.get("metrics"), dict):
+        metrics = _filtered_metrics(generalization_payload["metrics"], tuple(contract.get("metrics", [])))
+    if not metrics:
+        return _missing_contract_row(test_id, contract, f"missing M22 direct surface for {test_id}")
+    if test_id == "m22.semantic_coverage_generalization" and float(
+        generalization_payload.get("metrics", {}).get("m22_semantic_generalization_score", 0.0) or 0.0
+    ) <= 0.0:
+        row = _missing_contract_row(test_id, contract, "missing positive M22 semantic generalization score")
+        row["metrics"] = metrics
+        return row
+    return {
+        "test_id": test_id,
+        "surface": contract.get("surface"),
+        "status": "available",
+        "provenance": "artifact",
+        "metrics": metrics,
+        "notes": ["M22 contract is evaluated from the semantic generalization report over fixed M21 controls."],
+    }
 
 
 def _evaluate_m21_contract(
@@ -1287,6 +1355,7 @@ def _build_headline_metrics(
     m21_pointer_payload: dict[str, Any] | None = None,
     m21_gauntlet_payload: dict[str, Any] | None = None,
     m21_adversarial_payload: dict[str, Any] | None = None,
+    m22_generalization_payload: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     headline: dict[str, Any] = {}
     if isinstance(benchmark_payload, dict):
@@ -1396,6 +1465,9 @@ def _build_headline_metrics(
                 headline[key] = value
             else:
                 headline.setdefault(key, value)
+    if isinstance(m22_generalization_payload, dict) and isinstance(m22_generalization_payload.get("metrics"), dict):
+        for key, value in _filtered_metrics(m22_generalization_payload["metrics"], KEY_METRICS).items():
+            headline[key] = value
     return {k: v for k, v in headline.items() if v is not None}
 
 
@@ -1606,6 +1678,8 @@ def _preferred_names_for_target(target: str) -> list[str]:
             "m21_gauntlet_report.json",
             "m21_adversarial_audit_report.json",
         ]
+    if upper.startswith("M22"):
+        return ["m22_semantic_generalization_report.json", "direct_unified_eval_manifest.json"]
     return []
 
 

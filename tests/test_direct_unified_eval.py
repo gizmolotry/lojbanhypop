@@ -710,3 +710,46 @@ def test_m21_semantic_coverage_available_with_isolation_deltas() -> None:
     semantic_row = next(row for row in manifest["contract_results"] if row["test_id"] == "m21.semantic_coverage")
     assert semantic_row["metrics"]["semantic_coverage_surface_count"] == 2.0
     assert semantic_row["metrics"]["semantic_isolation_cell_count"] == 8.0
+
+
+def test_build_direct_unified_eval_manifest_m22_semantic_generalization() -> None:
+    tmp_path = _scratch_dir()
+    generalization_path = _write_json(
+        tmp_path / "m22_semantic_generalization_report.json",
+        {
+            "track": "M22",
+            "metrics": {
+                "strict_accuracy": 0.85,
+                "bridi_trace_exact_accuracy": 0.999,
+                "judri_causal_delta": 0.79,
+                "semantic_coverage_strict_accuracy": 0.43,
+                "semantic_coverage_worst_surface_accuracy": 0.35,
+                "semantic_coverage_judri_causal_delta": 0.31,
+                "m22_semantic_generalization_score": 0.31,
+                "m22_semantic_strict_delta_vs_m21_control": 0.04,
+                "m22_semantic_worst_delta_vs_m21_control": 0.03,
+                "m22_clean_accuracy_drop_vs_m21_control": 0.0,
+                "m22_judri_delta_drop_vs_m21_control": 0.01,
+                "m22_promotion_gate_pass_rate": 1.0,
+                "m22_promotion_candidate": 1.0,
+            },
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M22",
+        track="M22",
+        m22_generalization_report_path=generalization_path,
+        history_manifest_path=None,
+    )
+
+    assert manifest["family_key"] == "M22"
+    assert manifest["track"] == "M22"
+    assert manifest["headline_metrics"]["m22_semantic_generalization_score"] == 0.31
+    statuses = {row["test_id"]: row["status"] for row in manifest["contract_results"]}
+    assert statuses["m22.semantic_coverage_generalization"] == "available"
+    assert any(row["target"] == "M21.1.O" for row in manifest["comparison_targets_resolved"])
+
+    rendered = render_direct_unified_eval_markdown(manifest)
+    assert "Direct Unified Eval: M22 (M22)" in rendered
+    assert "m22.semantic_coverage_generalization" in rendered

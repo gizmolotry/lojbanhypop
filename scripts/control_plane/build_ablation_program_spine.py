@@ -21,11 +21,12 @@ DEFAULT_OUTPUT_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "
 DEFAULT_DOC_OUTPUT = REPO_ROOT / "docs" / "ABLATION_PROGRAM_SPINE.md"
 
 LETTER_STAGE_ORDER = ["A-G", "H", "H5", "J", "L", "J/L Hypercube", "Phase Eval"]
-M_STAGE_ORDER = ["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "M10", "M11", "M14", "M18", "M19", "M20", "M21"]
+M_STAGE_ORDER = ["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "M10", "M11", "M14", "M18", "M19", "M20", "M21", "M22"]
 EXTRA_STAGE_DAGS = {
     "M19": ["airflow/dags/m19/lojban_m19_family_dag.py"],
     "M20": ["airflow/dags/m20/lojban_m20_dictionary_first_dag.py"],
     "M21": ["airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py"],
+    "M22": ["airflow/dags/m22/lojban_m22_semantic_generalization_dag.py"],
 }
 
 
@@ -243,6 +244,8 @@ def _major_program_layer(major_num: int) -> str:
         return "dictionary_first_substrate"
     if major_num == 21:
         return "dynamic_bridi_substrate"
+    if major_num == 22:
+        return "semantic_generalization_substrate"
     return "manifold_and_return_path"
 
 

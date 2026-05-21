@@ -1,8 +1,8 @@
 # Ablation Program Map
 
-- Generated UTC: `2026-05-18T10:15:22.139718+00:00`
-- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m21_semantic_hijkl_history_20260518/ablation_history_manifest.json`
-- Concentrated family count: `37`
+- Generated UTC: `2026-05-21T19:35:38.691783+00:00`
+- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_semantic_generalization_history_20260521/ablation_history_manifest.json`
+- Concentrated family count: `38`
 
 ## Program Layers
 
@@ -129,7 +129,7 @@
 - Brief: M3.9 telemetry report
 - Family groups: `m_track`
 - Scripts: `scripts/m3/run_m3_9_primitive_probe.py`
-- DAGs: `airflow/dags/lojban_m3_9_primitive_probe_dag.py`
+- DAGs: `airflow/dags/m3/lojban_m3_9_primitive_probe_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m3_9_primitive_probe/m3_9_20260306, artifacts/runs/telemetry/raw/ablation/hypercube/m3_9_primitive_probe/m3_9_20260306/m3_9_primitive_probe_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m3_9_primitive_probe/m3_9_20260306_r2, artifacts/runs/telemetry/raw/ablation/hypercube/m3_9_primitive_probe/m3_9_20260306_r2/m3_9_primitive_probe_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m3_9_primitive_probe/refactor_clean/m3_9_20260310_refactor, artifacts/runs/telemetry/raw/ablation/hypercube/m3_9_primitive_probe/refactor_clean/m3_9_20260310_refactor/m3_9_primitive_probe_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m3_9_primitive_probe/refactor_clean_v2/m3_9_20260310_refactor_v2, artifacts/runs/telemetry/raw/ablation/hypercube/m3_9_primitive_probe/refactor_clean_v2/m3_9_20260310_refactor_v2/m3_9_primitive_probe_report.json`
 
 ### M3.10
@@ -142,7 +142,7 @@
 - Brief: M3.10 telemetry report
 - Family groups: `m_track`
 - Scripts: `scripts/m3/run_m3_10_ood_accuracy_probe.py`
-- DAGs: `airflow/dags/lojban_m3_10_ood_accuracy_probe_dag.py`
+- DAGs: `airflow/dags/m3/lojban_m3_10_ood_accuracy_probe_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m3_10_ood_accuracy/m3_10_20260307_r2, artifacts/runs/telemetry/raw/ablation/hypercube/m3_10_ood_accuracy/m3_10_20260307_r2/m3_10_ood_accuracy_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m3_10_ood_accuracy/refactor_clean_small/m3_10_20260310_refactor_small, artifacts/runs/telemetry/raw/ablation/hypercube/m3_10_ood_accuracy/refactor_clean_small/m3_10_20260310_refactor_small/m3_10_ood_accuracy_report.json`
 
 ### M3.11
@@ -155,7 +155,7 @@
 - Brief: M3.11 telemetry report
 - Family groups: `m_track`
 - Scripts: `scripts/m3/run_m3_11_winograd_failure_anatomy.py`
-- DAGs: `airflow/dags/lojban_m3_11_winograd_failure_anatomy_dag.py`
+- DAGs: `airflow/dags/m3/lojban_m3_11_winograd_failure_anatomy_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m3_11_winograd_failure_anatomy/m3_11_20260307, artifacts/runs/telemetry/raw/ablation/hypercube/m3_11_winograd_failure_anatomy/m3_11_20260307/m3_11_winograd_failure_anatomy_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m3_11_winograd_failure_anatomy/refactor_clean_small/m3_11_20260310_refactor_small, artifacts/runs/telemetry/raw/ablation/hypercube/m3_11_winograd_failure_anatomy/refactor_clean_small/m3_11_20260310_refactor_small/m3_11_winograd_failure_anatomy_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m3_11_winograd_failure_anatomy/refactor_clean_v2/m3_11_20260310_refactor_v2, artifacts/runs/telemetry/raw/ablation/hypercube/m3_11_winograd_failure_anatomy/refactor_clean_v2/m3_11_20260310_refactor_v2/m3_11_winograd_failure_anatomy_report.json`
 
 ### M3.12
@@ -170,7 +170,7 @@
 - Brief: M3.12 A + 2 more
 - Family groups: `m_track`
 - Scripts: `scripts/m3/run_m3_12_geometric_return_stream.py`
-- DAGs: `airflow/dags/lojban_m3_12_geometric_return_stream_dag.py`
+- DAGs: `airflow/dags/m3/lojban_m3_12_geometric_return_stream_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m3_12_geometric_return_stream/refactor_clean_small/m3_12_20260310_refactor_small, artifacts/runs/telemetry/raw/ablation/hypercube/m3_12_geometric_return_stream/refactor_clean_small/m3_12_20260310_refactor_small/m3_12_return_stream_report.json`
 
 ### M3.13
@@ -199,7 +199,7 @@
 - Brief: M3.14 A + 2 more
 - Family groups: `m_track`
 - Scripts: `scripts/m3/run_m3_14_structural_alignment_bridge.py`
-- DAGs: `airflow/dags/lojban_m3_14_structural_alignment_bridge_dag.py`
+- DAGs: `airflow/dags/m3/lojban_m3_14_structural_alignment_bridge_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m3_14_structural_alignment_bridge/m3_14_prelim_20260309, artifacts/runs/telemetry/raw/ablation/hypercube/m3_14_structural_alignment_bridge/m3_14_prelim_20260309/m3_14_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m3_14_structural_alignment_bridge/m3_14_prelim_guarded_20260309, artifacts/runs/telemetry/raw/ablation/hypercube/m3_14_structural_alignment_bridge/m3_14_prelim_guarded_20260309/m3_14_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m3_14_structural_alignment_bridge/refactor_clean_small/m3_14_20260310_refactor_small, artifacts/runs/telemetry/raw/ablation/hypercube/m3_14_structural_alignment_bridge/refactor_clean_small/m3_14_20260310_refactor_small/m3_14_report.json`
 
 ### M3.15
@@ -214,7 +214,7 @@
 - Brief: M3.15 A + 2 more
 - Family groups: `m_track`
 - Scripts: `scripts/m3/run_m3_15_rotary_coconut.py`
-- DAGs: `airflow/dags/lojban_m3_15_rotary_coconut_dag.py, airflow/dags/lojban_m3_15_rotary_coconut_seven_dag.py`
+- DAGs: `airflow/dags/m3/lojban_m3_15_rotary_coconut_dag.py, airflow/dags/m3/lojban_m3_15_rotary_coconut_seven_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m3_15_rotary_coconut/refactor_clean_small/m3_15_20260310_refactor_small, artifacts/runs/telemetry/raw/ablation/hypercube/m3_15_rotary_coconut/refactor_clean_small/m3_15_20260310_refactor_small/m3_15_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m3_15_rotary_coconut_seven/m3_15_seven_20260309/R1, artifacts/runs/telemetry/raw/ablation/hypercube/m3_15_rotary_coconut_seven/m3_15_seven_20260309/R1/m3_15_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m3_15_rotary_coconut_seven/m3_15_seven_20260309/R2, artifacts/runs/telemetry/raw/ablation/hypercube/m3_15_rotary_coconut_seven/m3_15_seven_20260309/R2/m3_15_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m3_15_rotary_coconut_seven/m3_15_seven_20260309/R3, artifacts/runs/telemetry/raw/ablation/hypercube/m3_15_rotary_coconut_seven/m3_15_seven_20260309/R3/m3_15_report.json`
 
 ### M3.15b
@@ -229,7 +229,7 @@
 - Brief: M3.15b A + 2 more
 - Family groups: `m_track`
 - Scripts: `scripts/m3/run_m3_15b_relation_local_rotary.py`
-- DAGs: `airflow/dags/lojban_m3_15b_relation_local_rotary_dag.py`
+- DAGs: `airflow/dags/m3/lojban_m3_15b_relation_local_rotary_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m3_15b_relation_local_rotary/bridge_base_v2/m3_15b_20260311_bridge_base_v2, artifacts/runs/telemetry/raw/ablation/hypercube/m3_15b_relation_local_rotary/bridge_base_v2/m3_15b_20260311_bridge_base_v2/m3_15b_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m3_15b_relation_local_rotary/decollapse_followup/m3_15b_20260311_after_decollapse, artifacts/runs/telemetry/raw/ablation/hypercube/m3_15b_relation_local_rotary/decollapse_followup/m3_15b_20260311_after_decollapse/m3_15b_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m3_15b_relation_local_rotary/refactor_clean_small/m3_15b_20260310_refactor_small, artifacts/runs/telemetry/raw/ablation/hypercube/m3_15b_relation_local_rotary/refactor_clean_small/m3_15b_20260310_refactor_small/m3_15b_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m3_15b_relation_local_rotary/refactor_clean_small/m3_15b_20260311_probe_v2, artifacts/runs/telemetry/raw/ablation/hypercube/m3_15b_relation_local_rotary/refactor_clean_small/m3_15b_20260311_probe_v2/m3_15b_report.json`
 
 ### M3.15c
@@ -244,7 +244,7 @@
 - Brief: M3.15c A + 2 more
 - Family groups: `m_track`
 - Scripts: `scripts/m3/run_m3_15c_family_conditioned_bridge.py`
-- DAGs: `airflow/dags/lojban_m3_15c_family_conditioned_bridge_dag.py`
+- DAGs: `airflow/dags/m3/lojban_m3_15c_family_conditioned_bridge_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m3_15c_family_conditioned_bridge/bridge_base_v1/m3_15c_20260311_bridge_base_v1, artifacts/runs/telemetry/raw/ablation/hypercube/m3_15c_family_conditioned_bridge/bridge_base_v1/m3_15c_20260311_bridge_base_v1/m3_15c_report.json`
 
 ### M3.15d
@@ -259,7 +259,7 @@
 - Brief: M3.15d A + 3 more
 - Family groups: `m_track`
 - Scripts: `scripts/m3/run_m3_15d_answer_path_forcing.py`
-- DAGs: `airflow/dags/lojban_m3_15d_answer_path_forcing_dag.py`
+- DAGs: `airflow/dags/m3/lojban_m3_15d_answer_path_forcing_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m3_15d_answer_path_forcing/bridge_base_v1/m3_15d_20260311_bridge_base_v1, artifacts/runs/telemetry/raw/ablation/hypercube/m3_15d_answer_path_forcing/bridge_base_v1/m3_15d_20260311_bridge_base_v1/m3_15d_report.json`
 
 ### M3.16
@@ -274,7 +274,7 @@
 - Brief: M3.16 A + 3 more
 - Family groups: `m_track`
 - Scripts: `scripts/m3/run_m3_16_continuous_graph_bias.py`
-- DAGs: `airflow/dags/lojban_m3_16_continuous_graph_bias_dag.py`
+- DAGs: `airflow/dags/m3/lojban_m3_16_continuous_graph_bias_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m3_16_continuous_graph_bias/bridge_base_v1_small/m3_16_20260311_bridge_base_v1_small, artifacts/runs/telemetry/raw/ablation/hypercube/m3_16_continuous_graph_bias/bridge_base_v1_small/m3_16_20260311_bridge_base_v1_small/m3_16_report.json`
 
 ### M3.17
@@ -289,7 +289,7 @@
 - Brief: control no re-entry + 3 more
 - Family groups: `m_track`
 - Scripts: `scripts/m3/run_m3_17_advisor_reentry_bridge.py`
-- DAGs: `airflow/dags/lojban_m3_17_advisor_reentry_bridge_dag.py`
+- DAGs: `airflow/dags/m3/lojban_m3_17_advisor_reentry_bridge_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m3_17_advisor_reentry_bridge/bridge_base_v1_small/m3_17_20260328_bridge_base_v1_small, artifacts/runs/telemetry/raw/ablation/hypercube/m3_17_advisor_reentry_bridge/bridge_base_v1_small/m3_17_20260328_bridge_base_v1_small/m3_17_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m3_17_advisor_reentry_bridge/m3_17_contract_smoke_20260328, artifacts/runs/telemetry/raw/ablation/hypercube/m3_17_advisor_reentry_bridge/m3_17_contract_smoke_20260328/m3_17_report.json`
 
 ### M3.18
@@ -316,7 +316,7 @@
 - Runnable rows: `4`
 - Brief: M3.19 D0 + 3 more
 - Family groups: `m_track`
-- DAGs: `airflow/dags/lojban_m3_19_d_mainline_grid_dag.py`
+- DAGs: `airflow/dags/m3/lojban_m3_19_d_mainline_grid_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329, artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/m3_19_grid_report.json`
 
 ### M4.0
@@ -329,7 +329,7 @@
 - Brief: M4.0 telemetry report
 - Family groups: `m_track`
 - Scripts: `scripts/m4/run_m4_0_semantic_probe.py`
-- DAGs: `airflow/dags/lojban_m4_0_semantic_probe_dag.py`
+- DAGs: `airflow/dags/m4/lojban_m4_0_semantic_probe_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m4_0_semantic_probe/bridge_base_v1/m4_0_20260312_bridge_base_v1, artifacts/runs/telemetry/raw/ablation/hypercube/m4_0_semantic_probe/bridge_base_v1/m4_0_20260312_bridge_base_v1/m4_0_semantic_probe_report.json`
 
 ### M4.2
@@ -342,7 +342,7 @@
 - Brief: M4.2 telemetry report
 - Family groups: `m_track`
 - Scripts: `scripts/m4/run_m4_2_predicate_grounding.py`
-- DAGs: `airflow/dags/lojban_m4_2_predicate_grounding_dag.py`
+- DAGs: `airflow/dags/m4/lojban_m4_2_predicate_grounding_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m4_2_predicate_grounding/bridge_base_v1/m4_2_20260312_bridge_base_v1, artifacts/runs/telemetry/raw/ablation/hypercube/m4_2_predicate_grounding/bridge_base_v1/m4_2_20260312_bridge_base_v1/m4_2_predicate_grounding_report.json`
 
 ### M5
@@ -357,7 +357,7 @@
 - Brief: Reuse-oriented control + 2 more
 - Family groups: `m_track`
 - Scripts: `scripts/m5/run_m5_autoformalization.py`
-- DAGs: `airflow/dags/lojban_m5_autoformalization_dag.py`
+- DAGs: `airflow/dags/m5/lojban_m5_autoformalization_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260313_000102, artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260313_000102/m5_autoformalization_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260330_034252, artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260330_034252/m5_autoformalization_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260330_040549, artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260330_040549/m5_autoformalization_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260330_052704, artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260330_052704/m5_autoformalization_report.json`
 
 ### M5.1
@@ -371,7 +371,7 @@
 - Artifact-only rows: `4`
 - Brief: Add counterfactual invariance + 3 more
 - Family groups: `m_track`
-- DAGs: `airflow/dags/lojban_m5_padded_nary_dag.py`
+- DAGs: `airflow/dags/m5/lojban_m5_padded_nary_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m5_padded_nary/m5_padded_nary_20260313_013336, artifacts/runs/telemetry/raw/ablation/hypercube/m5_padded_nary/m5_padded_nary_20260313_013336/m5_padded_nary_family_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m5_padded_nary/m5_padded_nary_20260313_013447, artifacts/runs/telemetry/raw/ablation/hypercube/m5_padded_nary/m5_padded_nary_20260313_013447/m5_padded_nary_family_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m5_padded_nary/m5_padded_nary_20260313_013929, artifacts/runs/telemetry/raw/ablation/hypercube/m5_padded_nary/m5_padded_nary_20260313_013929/m5_padded_nary_family_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m5_padded_nary/m5_padded_nary_20260313_014528, artifacts/runs/telemetry/raw/ablation/hypercube/m5_padded_nary/m5_padded_nary_20260313_014528/m5_padded_nary_family_report.json`
 
 ### M5.2
@@ -385,7 +385,7 @@
 - Brief: M5.2.autoregressive_chain.run telemetry report
 - Family groups: `m_track`
 - Scripts: `scripts/m5/run_m5_2_autoregressive_chain.py`
-- DAGs: `airflow/dags/lojban_m5_2_autoregressive_chain_dag.py`
+- DAGs: `airflow/dags/m5/lojban_m5_2_autoregressive_chain_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m5_2_autoregressive_chain/m5_2_20260313_133612, artifacts/runs/telemetry/raw/ablation/hypercube/m5_2_autoregressive_chain/m5_2_20260313_133612/m5_2_autoregressive_chain_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m5_2_autoregressive_chain/m5_2_20260330_034252, artifacts/runs/telemetry/raw/ablation/hypercube/m5_2_autoregressive_chain/m5_2_20260330_034252/m5_2_autoregressive_chain_report.json`
 
 ### M5.3
@@ -399,7 +399,7 @@
 - Brief: M5.3.masked_pair_chain.run telemetry report
 - Family groups: `m_track`
 - Scripts: `scripts/m5/run_m5_3_masked_pair_chain.py`
-- DAGs: `airflow/dags/lojban_m5_3_masked_pair_chain_dag.py`
+- DAGs: `airflow/dags/m5/lojban_m5_3_masked_pair_chain_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m5_3_masked_pair_chain/m5_3_20260313_151121, artifacts/runs/telemetry/raw/ablation/hypercube/m5_3_masked_pair_chain/m5_3_20260313_151121/m5_3_masked_pair_chain_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m5_3_masked_pair_chain/m5_3_20260313_155758, artifacts/runs/telemetry/raw/ablation/hypercube/m5_3_masked_pair_chain/m5_3_20260313_155758/m5_3_masked_pair_chain_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m5_3_masked_pair_chain/m5_3_20260313_155835, artifacts/runs/telemetry/raw/ablation/hypercube/m5_3_masked_pair_chain/m5_3_20260313_155835/m5_3_masked_pair_chain_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m5_3_masked_pair_chain/m5_3_20260330_034252, artifacts/runs/telemetry/raw/ablation/hypercube/m5_3_masked_pair_chain/m5_3_20260330_034252/m5_3_masked_pair_chain_report.json`
 
 ### M6
@@ -483,7 +483,7 @@
 - Brief: M18 EN-CONCISE + 10 more
 - Family groups: `m_track`
 - Scripts: `scripts/m18/run_harmonized_audit.py, scripts/m18/run_hybrid_cot_audit.py, scripts/m18/run_m18_controller_family.py, scripts/m18/run_sapir_whorf_audit.py`
-- DAGs: `airflow/dags/lojban_m18_controller_family_dag.py, airflow/dags/m18/lojban_m18_controller_family_dag.py`
+- DAGs: `airflow/dags/m18/lojban_m18_controller_family_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m18_controller_family/m18_frontier_audits_20260409, artifacts/runs/telemetry/raw/ablation/hypercube/m18_controller_family/m18_frontier_audits_20260409/harmonized_audit_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m18_controller_family/m18_frontier_audits_20260409/hybrid_cot_audit_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m18_controller_family/m18_frontier_audits_20260409/m18_family_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m18_controller_family/m18_frontier_audits_20260409/sapir_whorf_audit_report.json`
 
 ### M19
@@ -518,15 +518,28 @@
 
 - Layer: `dynamic_bridi_substrate`
 - Status: `runnable`
-- Normalized IDs: `M21.1, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G, M21.1.H, M21.1.I, M21.1.J, M21.1.K, M21.1.L`
-- Legacy aliases: `A, B, C, D, E, F, G, H, I, J, K, L`
-- Entry count: `13`
-- Runnable rows: `13`
-- Brief: Actual bridge adapter + 12 more
+- Normalized IDs: `M21.1, M21.1.M, M21.1.A, M21.1.B, M21.1.C, M21.1.D, M21.1.E, M21.1.F, M21.1.G, M21.1.H, M21.1.I, M21.1.J, M21.1.K, M21.1.L, M21.1.N, M21.1.O`
+- Legacy aliases: `A, B, C, D, E, F, G, H, I, J, K, L, M, N, O`
+- Entry count: `16`
+- Runnable rows: `16`
+- Brief: Actual bridge adapter + 15 more
 - Family groups: `m_track`
 - Scripts: `scripts/m21/run_m21_actual_bridge_suite.py, scripts/m21/run_m21_adversarial_audit.py, scripts/m21/run_m21_dynamic_bridi_suite.py, scripts/m21/run_m21_lock_suite.py, scripts/m21/run_m21_synthetic_assay_suite.py`
 - DAGs: `airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_actual_bridge_full_20260515, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_actual_bridge_full_20260515/m21_actual_bridge_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_actual_bridge_vram_48e_20260515, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_actual_bridge_vram_48e_20260515/m21_actual_bridge_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_advtrain_H_actual_48e_20260518, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_advtrain_H_actual_48e_20260518/m21_actual_bridge_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_hyperbolic_tangent_actual_48e_20260517, artifacts/runs/telemetry/raw/ablation/hypercube/m21_actual_bridge_suite/m21_hyperbolic_tangent_actual_48e_20260517/m21_actual_bridge_report.json`
+
+### M22
+
+- Layer: `semantic_generalization_substrate`
+- Status: `runnable`
+- Normalized IDs: `M22`
+- Entry count: `1`
+- Runnable rows: `1`
+- Brief: M22 telemetry report
+- Family groups: `m_track`
+- Scripts: `scripts/m22/run_m22_semantic_generalization.py`
+- DAGs: `airflow/dags/m22/lojban_m22_semantic_generalization_dag.py`
+- Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_mno_generalization_gate_20260521, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_mno_generalization_gate_20260521/m22_semantic_generalization_report.json`
 
 ### History
 
@@ -556,3 +569,4 @@
 - `M14_to_M18`: `M14 -> M18` via `M14.D`
 - `M18_to_M19`: `M18 -> M19` via `M18`
 - `M20_to_M21`: `M20 -> M21` via `M20.1.F`
+- `M21_to_M22`: `M21 -> M22` via `M21.1.O`
