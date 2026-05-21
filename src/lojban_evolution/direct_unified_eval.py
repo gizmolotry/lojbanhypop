@@ -196,6 +196,8 @@ KEY_METRICS = (
     "gauntlet_integrity_masked_accuracy",
     "gauntlet_kill_worst_surface_accuracy",
     "gauntlet_order_accuracy_spread",
+    "m22_candidate_cell_count",
+    "m22_candidate_cells_present",
     "m22_semantic_generalization_score",
     "m22_semantic_strict_delta_vs_m21_control",
     "m22_semantic_worst_delta_vs_m21_control",

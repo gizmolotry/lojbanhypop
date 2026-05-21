@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 from lojban_evolution.m22.generalization import build_m22_semantic_generalization_payload
+from lojban_evolution.m22.family import m22_track_spec
 
 
 def _load_m22_runner():
@@ -15,6 +16,12 @@ def _load_m22_runner():
     assert spec.loader is not None
     spec.loader.exec_module(module)
     return module
+
+
+def test_m22_registry_tracks_explicit_pqr_candidate_cells() -> None:
+    targets = set(m22_track_spec()["comparison_targets"])
+
+    assert {"M21.1.P", "M21.1.Q", "M21.1.R"}.issubset(targets)
 
 
 def test_m22_generalization_gate_requires_semantic_lift_without_judri_regression() -> None:
@@ -28,7 +35,8 @@ def test_m22_generalization_gate_requires_semantic_lift_without_judri_regression
             "mean_cmavo_causal_delta": 0.47,
             "mean_judri_causal_delta": 0.79,
             "stable_seed_rate": 1.0,
-        }
+        },
+        "cells": {"P": {}, "Q": {}, "R": {}},
     }
     adversarial_payload = {
         "aggregate_metrics": {
@@ -38,7 +46,8 @@ def test_m22_generalization_gate_requires_semantic_lift_without_judri_regression
             "semantic_coverage_oov_token_rate": 0.12,
             "semantic_coverage_training_exposure_rate": 1.0,
             "semantic_isolation_cell_count": 8.0,
-        }
+        },
+        "seed_reports": [{"cell_key": "P"}, {"cell_key": "Q"}, {"cell_key": "R"}],
     }
     control_manifest = {
         "headline_metrics": {
@@ -59,7 +68,9 @@ def test_m22_generalization_gate_requires_semantic_lift_without_judri_regression
     assert metrics["m22_semantic_strict_delta_vs_m21_control"] == 0.03999999999999998
     assert metrics["m22_semantic_worst_delta_vs_m21_control"] == 0.04999999999999999
     assert metrics["m22_clean_accuracy_drop_vs_m21_control"] == 0.0
+    assert metrics["m22_candidate_cell_count"] == 3.0
     assert metrics["m22_promotion_candidate"] == 1.0
+    assert payload["candidate_cells"] == ["P", "Q", "R"]
     assert payload["comparison_policy"]["delta_baseline"] == "explicit_m21_control_direct_manifest"
 
 
@@ -70,14 +81,16 @@ def test_m22_generalization_gate_blocks_clean_or_semantic_regression() -> None:
                 "mean_strict_accuracy": 0.79,
                 "mean_bridi_trace_exact_accuracy": 0.999,
                 "mean_judri_causal_delta": 0.69,
-            }
+            },
+            "cells": {"P": {}},
         },
         adversarial_payload={
             "aggregate_metrics": {
                 "semantic_coverage_strict_accuracy": 0.38,
                 "semantic_coverage_worst_surface_accuracy": 0.28,
                 "semantic_coverage_judri_causal_delta": 0.20,
-            }
+            },
+            "seed_reports": [{"cell_key": "P"}],
         },
         control_manifest_payload={
             "headline_metrics": {
@@ -101,7 +114,8 @@ def test_m22_generalization_gate_requires_exposure_isolation_and_control() -> No
                 "mean_strict_accuracy": 0.85,
                 "mean_bridi_trace_exact_accuracy": 0.999,
                 "mean_judri_causal_delta": 0.79,
-            }
+            },
+            "cells": {"P": {}},
         },
         adversarial_payload={
             "aggregate_metrics": {
@@ -118,7 +132,44 @@ def test_m22_generalization_gate_requires_exposure_isolation_and_control() -> No
     assert payload["metrics"]["m22_promotion_candidate"] == 0.0
     assert payload["promotion_gates"]["semantic_training_exposed"] is False
     assert payload["promotion_gates"]["semantic_isolation_evidence_present"] is False
+    assert payload["promotion_gates"]["m22_candidate_cell_evidence_present"] is True
     assert payload["promotion_gates"]["explicit_m21_control_present"] is False
+
+
+def test_m22_generalization_gate_requires_explicit_pqr_candidate_cells() -> None:
+    payload = build_m22_semantic_generalization_payload(
+        suite_payload={
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.85,
+                "mean_bridi_trace_exact_accuracy": 0.999,
+                "mean_judri_causal_delta": 0.79,
+            },
+            "cells": {"H": {}, "I": {}, "O": {}},
+        },
+        adversarial_payload={
+            "aggregate_metrics": {
+                "semantic_coverage_strict_accuracy": 0.95,
+                "semantic_coverage_worst_surface_accuracy": 0.95,
+                "semantic_coverage_judri_causal_delta": 0.95,
+                "semantic_coverage_training_exposure_rate": 1.0,
+                "semantic_isolation_cell_count": 8.0,
+            },
+            "seed_reports": [{"cell_key": "H"}, {"cell_key": "I"}, {"cell_key": "O"}],
+        },
+        control_manifest_payload={
+            "headline_metrics": {
+                "strict_accuracy": 0.85,
+                "semantic_coverage_strict_accuracy": 0.39,
+                "semantic_coverage_worst_surface_accuracy": 0.30,
+                "judri_causal_delta": 0.80,
+            }
+        },
+    )
+
+    assert payload["candidate_cells"] == []
+    assert payload["metrics"]["m22_candidate_cell_count"] == 0.0
+    assert payload["promotion_gates"]["m22_candidate_cell_evidence_present"] is False
+    assert payload["metrics"]["m22_promotion_candidate"] == 0.0
 
 
 def test_m22_generalization_preserves_explicit_zero_semantic_metrics() -> None:
@@ -128,7 +179,8 @@ def test_m22_generalization_preserves_explicit_zero_semantic_metrics() -> None:
                 "mean_strict_accuracy": 0.85,
                 "mean_bridi_trace_exact_accuracy": 0.999,
                 "mean_judri_causal_delta": 0.79,
-            }
+            },
+            "cells": {"P": {}},
         },
         adversarial_payload={
             "aggregate_metrics": {
@@ -140,7 +192,8 @@ def test_m22_generalization_preserves_explicit_zero_semantic_metrics() -> None:
                 "mean_adversarial_judri_causal_delta": 0.9,
                 "semantic_coverage_training_exposure_rate": 1.0,
                 "semantic_isolation_cell_count": 8.0,
-            }
+            },
+            "seed_reports": [{"cell_key": "P"}],
         },
         control_manifest_payload={
             "headline_metrics": {
@@ -170,7 +223,8 @@ def test_m22_runner_writes_report_from_fixture_paths(tmp_path: Path) -> None:
                     "mean_strict_accuracy": 0.85,
                     "mean_bridi_trace_exact_accuracy": 0.999,
                     "mean_judri_causal_delta": 0.79,
-                }
+                },
+                "cells": {"P": {}},
             }
         ),
         encoding="utf-8",
@@ -184,7 +238,8 @@ def test_m22_runner_writes_report_from_fixture_paths(tmp_path: Path) -> None:
                     "semantic_coverage_judri_causal_delta": 0.31,
                     "semantic_coverage_training_exposure_rate": 1.0,
                     "semantic_isolation_cell_count": 8.0,
-                }
+                },
+                "seed_reports": [{"cell_key": "P"}],
             }
         ),
         encoding="utf-8",
@@ -223,6 +278,7 @@ def test_m22_runner_writes_report_from_fixture_paths(tmp_path: Path) -> None:
 
     assert report_path.exists()
     assert payload["track"] == "M22"
+    assert payload["candidate_cells"] == ["P"]
     assert payload["source_reports"]["m21_suite_report"] == str(suite_path)
     assert "metrics" in payload
     assert "promotion_gates" in payload

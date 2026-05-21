@@ -1,7 +1,7 @@
 # Ablation Program Spine
 
-- Generated UTC: `2026-05-21T20:02:46.848073+00:00`
-- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_semantic_generalization_history_20260521/ablation_history_manifest.json`
+- Generated UTC: `2026-05-21T20:35:54.602633+00:00`
+- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_contract_tightening_history_20260521/ablation_history_manifest.json`
 - Source taxonomy config: `configs/experiment_taxonomy.json`
 - Stage count: `25`
 
@@ -536,7 +536,7 @@ This is the ordered research spine of the project: legacy letter-series families
 - Frozen/forbidden drift: `new geometry as the main intervention, new bridge architecture family, promoting smoke-only adversarial audits, sacrificing judri causal delta for surface accuracy`
 - Promotion basis: `semantic_coverage_strict_accuracy, semantic_coverage_worst_surface_accuracy, m22_semantic_generalization_score, m22_semantic_strict_delta_vs_m21_control`
 - Primary metrics: `semantic_coverage_strict_accuracy, semantic_coverage_worst_surface_accuracy, m22_semantic_generalization_score`
-- Guardrail metrics: `strict_accuracy, bridi_trace_exact_accuracy, judri_causal_delta, m22_clean_accuracy_drop_vs_m21_control, m22_judri_delta_drop_vs_m21_control`
+- Guardrail metrics: `strict_accuracy, bridi_trace_exact_accuracy, judri_causal_delta, m22_clean_accuracy_drop_vs_m21_control, m22_judri_delta_drop_vs_m21_control, m22_candidate_cell_count, m22_candidate_cells_present`
 - Historical comparison families: `M21`
 - Required test contracts: `m22.semantic_coverage_generalization`
 - Automatic comparison targets: `M22, M21, M20, M21.1.H, M21.1.I, M21.1.J, M21.1.K, M21.1.L, M21.1.M, M21.1.N, M21.1.O`

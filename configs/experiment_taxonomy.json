@@ -497,7 +497,9 @@
         "bridi_trace_exact_accuracy",
         "judri_causal_delta",
         "m22_clean_accuracy_drop_vs_m21_control",
-        "m22_judri_delta_drop_vs_m21_control"
+        "m22_judri_delta_drop_vs_m21_control",
+        "m22_candidate_cell_count",
+        "m22_candidate_cells_present"
       ],
       "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
     }
@@ -1056,6 +1058,8 @@
         "semantic_coverage_judri_causal_delta",
         "semantic_coverage_training_exposure_rate",
         "semantic_isolation_cell_count",
+        "m22_candidate_cell_count",
+        "m22_candidate_cells_present",
         "m22_semantic_generalization_score",
         "m22_semantic_strict_delta_vs_m21_control",
         "m22_semantic_worst_delta_vs_m21_control",
@@ -1320,7 +1324,10 @@
         "M21.1.I",
         "M21.1.J",
         "M21.1.K",
-        "M21.1.L"
+        "M21.1.L",
+        "M21.1.P",
+        "M21.1.Q",
+        "M21.1.R"
       ],
       "inherit_required_test_contracts": false
     },
@@ -1340,7 +1347,10 @@
         "M21.1.L",
         "M21.1.M",
         "M21.1.N",
-        "M21.1.O"
+        "M21.1.O",
+        "M21.1.P",
+        "M21.1.Q",
+        "M21.1.R"
       ],
       "inherit_required_test_contracts": false
     }

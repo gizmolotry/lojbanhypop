@@ -1,7 +1,7 @@
 # Ablation Program Map
 
-- Generated UTC: `2026-05-21T20:02:46.886468+00:00`
-- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_semantic_generalization_history_20260521/ablation_history_manifest.json`
+- Generated UTC: `2026-05-21T20:35:54.601045+00:00`
+- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_contract_tightening_history_20260521/ablation_history_manifest.json`
 - Concentrated family count: `38`
 
 ## Program Layers
@@ -539,7 +539,7 @@
 - Family groups: `m_track`
 - Scripts: `scripts/m22/run_m22_semantic_generalization.py`
 - DAGs: `airflow/dags/m22/lojban_m22_semantic_generalization_dag.py`
-- Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_mno_generalization_gate_20260521, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_mno_generalization_gate_20260521/m22_semantic_generalization_report.json`
+- Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_mno_generalization_gate_20260521, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_mno_generalization_gate_20260521/m22_semantic_generalization_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_semantic_surfaces_gated_48e_gate_20260521, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_semantic_surfaces_gated_48e_gate_20260521/m22_semantic_generalization_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization_test/fixture, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization_test/fixture/m22_semantic_generalization_report.json`
 
 ### History
 

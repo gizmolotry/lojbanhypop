@@ -397,7 +397,7 @@ def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
         "artifact_anchor" if anchor else "runnable_no_anchor",
         _repo_relative(anchor) if anchor else None,
         [path for path in supplemental if path],
-        _limit_metrics(metrics, limit=18 if stage_key == "M21" else 8),
+        _limit_metrics(metrics, limit=18 if stage_key in {"M21", "M22"} else 8),
         notes,
     )
 
@@ -759,17 +759,19 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                 metrics,
                 source,
                 {
+                    "m22_promotion_candidate": "m22_promotion_candidate",
+                    "m22_promotion_gate_pass_rate": "m22_promotion_gate_pass_rate",
                     "strict_accuracy": "strict_accuracy",
+                    "m22_candidate_cell_count": "m22_candidate_cell_count",
+                    "m22_candidate_cells_present": "m22_candidate_cells_present",
+                    "m22_semantic_generalization_score": "m22_semantic_generalization_score",
                     "semantic_coverage_strict_accuracy": "semantic_coverage_strict_accuracy",
                     "semantic_coverage_worst_surface_accuracy": "semantic_coverage_worst_surface_accuracy",
                     "semantic_coverage_judri_causal_delta": "semantic_coverage_judri_causal_delta",
-                    "m22_semantic_generalization_score": "m22_semantic_generalization_score",
                     "m22_semantic_strict_delta_vs_m21_control": "m22_semantic_strict_delta_vs_m21_control",
                     "m22_semantic_worst_delta_vs_m21_control": "m22_semantic_worst_delta_vs_m21_control",
                     "m22_clean_accuracy_drop_vs_m21_control": "m22_clean_accuracy_drop_vs_m21_control",
                     "m22_judri_delta_drop_vs_m21_control": "m22_judri_delta_drop_vs_m21_control",
-                    "m22_promotion_gate_pass_rate": "m22_promotion_gate_pass_rate",
-                    "m22_promotion_candidate": "m22_promotion_candidate",
                 },
             )
         return metrics

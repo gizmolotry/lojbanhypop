@@ -224,6 +224,16 @@ def test_m21_grid_contains_semantic_coverage_ablation_cells() -> None:
     )
     assert cells["N"]["variant"]["adversarial_train_surfaces"] == "heldout_paraphrase,clausal_permutation,role_binding_swap_train"
     assert cells["O"]["variant"]["adversarial_train_fraction"] == 0.35
+    assert cells["P"]["cell_id"] == "M21.1.P"
+    assert cells["P"]["variant"]["judri_bridge_gate"] is True
+    assert cells["P"]["variant"]["adversarial_train_fraction"] == 0.25
+    assert cells["P"]["variant"]["adversarial_train_surfaces"] == "heldout_paraphrase,clausal_permutation,relational_synonym_train"
+    assert cells["Q"]["variant"]["judri_bridge_gate"] is True
+    assert cells["Q"]["variant"]["adversarial_train_fraction"] == 0.25
+    assert cells["Q"]["variant"]["adversarial_train_surfaces"] == "heldout_paraphrase,clausal_permutation,role_chain_generalization_train"
+    assert cells["R"]["variant"]["judri_bridge_gate"] is True
+    assert cells["R"]["variant"]["adversarial_train_fraction"] == 0.25
+    assert cells["R"]["variant"]["adversarial_train_surfaces"] == "heldout_paraphrase,clausal_permutation,polarity_reframe_train"
 
 
 def test_adversarial_training_rejects_reserved_audit_surfaces() -> None:

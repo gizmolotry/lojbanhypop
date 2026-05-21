@@ -25,6 +25,7 @@ from lojban_evolution.m21.family import M21_FAMILY_VERSION, M21_REGISTRY  # noqa
 from lojban_evolution.series_contract import assert_output_path_allowed, series_metadata, validate_series_outputs  # noqa: E402
 
 SEMANTIC_ISOLATION_CELLS = ("H", "I", "J", "K", "L", "M", "N", "O")
+M22_SEMANTIC_ISOLATION_CELLS = ("P", "Q", "R")
 SEMANTIC_ISOLATION_EFFECTS = {
     "lexical_shift": ("J", "H"),
     "role_binding": ("K", "H"),
@@ -214,7 +215,8 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
 def _semantic_isolation_metrics(rows: list[dict[str, Any]]) -> dict[str, float]:
     cell_metrics: dict[str, dict[str, float]] = {}
     out: dict[str, float] = {}
-    for cell in SEMANTIC_ISOLATION_CELLS:
+    all_isolation_cells = SEMANTIC_ISOLATION_CELLS + M22_SEMANTIC_ISOLATION_CELLS
+    for cell in all_isolation_cells:
         cell_rows = [row for row in rows if str(row.get("cell_key", "")).upper() == cell]
         if not cell_rows:
             continue

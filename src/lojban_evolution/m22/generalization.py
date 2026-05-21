@@ -23,7 +23,10 @@ def build_m22_semantic_generalization_payload(
     suite_metrics = _suite_metrics(suite_payload)
     adversarial_metrics = _suite_metrics(adversarial_payload)
     control_metrics = _control_metrics(control_manifest_payload)
+    candidate_cells = _m22_candidate_cells(suite_payload, adversarial_payload)
     metrics: dict[str, Any] = {
+        "m22_candidate_cell_count": float(len(candidate_cells)),
+        "m22_candidate_cells_present": float(len(candidate_cells) > 0),
         "strict_accuracy": suite_metrics.get("strict_accuracy", 0.0),
         "bridi_trace_exact_accuracy": suite_metrics.get("bridi_trace_exact_accuracy", 0.0),
         "gismu_accuracy": suite_metrics.get("gismu_accuracy", 0.0),
@@ -97,6 +100,7 @@ def build_m22_semantic_generalization_payload(
         "clean_drop_within_tolerance": _num(metrics.get("m22_clean_accuracy_drop_vs_m21_control")) <= float(max_clean_drop),
         "semantic_training_exposed": _num(metrics.get("semantic_coverage_training_exposure_rate")) > 0.0,
         "semantic_isolation_evidence_present": _num(metrics.get("semantic_isolation_cell_count")) > 0.0,
+        "m22_candidate_cell_evidence_present": _num(metrics.get("m22_candidate_cells_present")) > 0.0,
         "explicit_m21_control_present": all(
             metrics.get(key) is not None
             for key in (
@@ -120,6 +124,7 @@ def build_m22_semantic_generalization_payload(
             "m21_adversarial_audit_report": str(adversarial_audit_report_path or ""),
             "m21_control_direct_manifest": str(control_manifest_path or ""),
         },
+        "candidate_cells": candidate_cells,
         "comparison_policy": {
             "delta_baseline": "explicit_m21_control_direct_manifest",
             "candidate_suite": "m21_suite_report",
@@ -175,6 +180,23 @@ def _control_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         return {}
     headline = payload.get("headline_metrics", {})
     return dict(headline) if isinstance(headline, dict) else {}
+
+
+def _m22_candidate_cells(*payloads: dict[str, Any] | None) -> list[str]:
+    allowed = {"P", "Q", "R"}
+    cells: set[str] = set()
+    for payload in payloads:
+        if not isinstance(payload, dict):
+            continue
+        raw_cells = payload.get("cells")
+        if isinstance(raw_cells, dict):
+            cells.update(str(key).strip().upper() for key in raw_cells if str(key).strip().upper() in allowed)
+        for row in payload.get("seed_reports", []) if isinstance(payload.get("seed_reports"), list) else []:
+            if isinstance(row, dict):
+                cell = str(row.get("cell_key", "")).strip().upper()
+                if cell in allowed:
+                    cells.add(cell)
+    return sorted(cells)
 
 
 def _num(value: Any, default: float = 0.0) -> float:

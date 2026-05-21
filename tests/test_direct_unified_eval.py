@@ -725,6 +725,8 @@ def test_build_direct_unified_eval_manifest_m22_semantic_generalization() -> Non
                 "semantic_coverage_strict_accuracy": 0.43,
                 "semantic_coverage_worst_surface_accuracy": 0.35,
                 "semantic_coverage_judri_causal_delta": 0.31,
+                "m22_candidate_cell_count": 3.0,
+                "m22_candidate_cells_present": 1.0,
                 "m22_semantic_generalization_score": 0.31,
                 "m22_semantic_strict_delta_vs_m21_control": 0.04,
                 "m22_semantic_worst_delta_vs_m21_control": 0.03,
@@ -745,6 +747,7 @@ def test_build_direct_unified_eval_manifest_m22_semantic_generalization() -> Non
 
     assert manifest["family_key"] == "M22"
     assert manifest["track"] == "M22"
+    assert manifest["headline_metrics"]["m22_candidate_cell_count"] == 3.0
     assert manifest["headline_metrics"]["m22_semantic_generalization_score"] == 0.31
     statuses = {row["test_id"]: row["status"] for row in manifest["contract_results"]}
     assert statuses["m22.semantic_coverage_generalization"] == "available"
@@ -768,6 +771,8 @@ def test_build_direct_unified_eval_manifest_m22_failed_promotion_is_not_availabl
                 "semantic_coverage_strict_accuracy": 0.43,
                 "semantic_coverage_worst_surface_accuracy": 0.12,
                 "semantic_coverage_judri_causal_delta": 0.31,
+                "m22_candidate_cell_count": 3.0,
+                "m22_candidate_cells_present": 1.0,
                 "m22_semantic_generalization_score": 0.12,
                 "m22_semantic_strict_delta_vs_m21_control": 0.04,
                 "m22_semantic_worst_delta_vs_m21_control": -0.18,
