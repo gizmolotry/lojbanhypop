@@ -300,6 +300,7 @@ That document points to:
 - [docs/SCRIPT_INVENTORY.md](docs/SCRIPT_INVENTORY.md) for every tracked runnable script/DAG surface.
 - [docs/REDUNDANCY_AUDIT.md](docs/REDUNDANCY_AUDIT.md) for likely duplicate or stale code zones.
 - [docs/DEPRECATION_LEDGER.md](docs/DEPRECATION_LEDGER.md) for safe-delete/replacement status.
+- [docs/BRANCH_STRATEGY.md](docs/BRANCH_STRATEGY.md) and [docs/ACTIVE_BRANCH_LEDGER.md](docs/ACTIVE_BRANCH_LEDGER.md) for branch/tag governance.
 - [docs/SCAFFOLDING_PLAYBOOK.md](docs/SCAFFOLDING_PLAYBOOK.md) for rules on adding new ablation families and scripts.
 - [docs/project_cartography_manifest.json](docs/project_cartography_manifest.json) for the machine-readable inventory.
 
@@ -338,6 +339,8 @@ This is the front-door map for `D:/lojbanhypop`. It complements the lineage ledg
 - Script inventory: [docs/SCRIPT_INVENTORY.md](SCRIPT_INVENTORY.md)
 - Redundancy audit: [docs/REDUNDANCY_AUDIT.md](REDUNDANCY_AUDIT.md)
 - Deprecation ledger: [docs/DEPRECATION_LEDGER.md](DEPRECATION_LEDGER.md)
+- Branch strategy: [docs/BRANCH_STRATEGY.md](BRANCH_STRATEGY.md)
+- Active branch ledger: [docs/ACTIVE_BRANCH_LEDGER.md](ACTIVE_BRANCH_LEDGER.md)
 - Future scaffolding playbook: [docs/SCAFFOLDING_PLAYBOOK.md](SCAFFOLDING_PLAYBOOK.md)
 - Machine manifest: [docs/project_cartography_manifest.json](project_cartography_manifest.json)
 

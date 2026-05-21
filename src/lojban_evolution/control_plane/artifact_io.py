@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Mapping
 
 
 def path_allowed_for_discovery(path: Path) -> bool:
@@ -26,6 +26,43 @@ def read_json_optional(path: Path | None, *, swallow_errors: bool = False) -> di
             return None
         raise
     return payload if isinstance(payload, dict) else None
+
+
+def read_json_required(path: Path, *, expected_type: type = dict) -> Any:
+    if not path.exists() or not path.is_file():
+        raise FileNotFoundError(f"JSON file does not exist: {path}")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, expected_type):
+        raise TypeError(f"Expected {expected_type.__name__} in {path}, got {type(payload).__name__}")
+    return payload
+
+
+def write_json(path: Path, payload: Mapping[str, Any], *, indent: int = 2) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=indent), encoding="utf-8")
+    return path
+
+
+def write_text(path: Path, text: str) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+    return path
+
+
+def load_manifest_with_schema(
+    path: Path,
+    *,
+    schema_version_key: str = "schema_version",
+    expected_schema_version: str | None = None,
+) -> dict[str, Any]:
+    payload = read_json_required(path, expected_type=dict)
+    if schema_version_key not in payload:
+        raise KeyError(f"Manifest {path} is missing schema key '{schema_version_key}'")
+    if expected_schema_version is not None and str(payload[schema_version_key]) != str(expected_schema_version):
+        raise ValueError(
+            f"Manifest {path} schema mismatch: expected {expected_schema_version}, got {payload[schema_version_key]}"
+        )
+    return payload
 
 
 def latest_named_manifest(

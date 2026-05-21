@@ -9,9 +9,13 @@ from types import SimpleNamespace
 from lojban_evolution.control_plane.artifact_io import (
     latest_json,
     latest_named_manifest,
+    load_manifest_with_schema,
     path_allowed_for_discovery,
     read_json_optional,
+    read_json_required,
     repo_relative_or_string,
+    write_json,
+    write_text,
 )
 
 
@@ -60,6 +64,48 @@ def test_artifact_io_json_and_path_helpers_are_tolerant(tmp_path: Path) -> None:
     assert repo_relative_or_string(REPO_ROOT / "docs" / "PROJECT_INDEX.md", REPO_ROOT) == "docs/PROJECT_INDEX.md"
 
 
+def test_artifact_io_required_json_schema_and_writers(tmp_path: Path) -> None:
+    manifest = write_json(tmp_path / "nested" / "manifest.json", {"schema_version": "1.0", "ok": True})
+    text = write_text(tmp_path / "nested" / "note.txt", "kept")
+    list_payload = tmp_path / "list.json"
+    missing_schema = tmp_path / "missing_schema.json"
+    list_payload.write_text(json.dumps([1, 2, 3]), encoding="utf-8")
+    missing_schema.write_text(json.dumps({"ok": True}), encoding="utf-8")
+
+    assert manifest.exists()
+    assert text.read_text(encoding="utf-8") == "kept"
+    assert read_json_required(manifest) == {"schema_version": "1.0", "ok": True}
+    assert load_manifest_with_schema(manifest, expected_schema_version="1.0")["ok"] is True
+
+    try:
+        read_json_required(tmp_path / "missing.json")
+    except FileNotFoundError:
+        pass
+    else:
+        raise AssertionError("missing required JSON should raise FileNotFoundError")
+
+    try:
+        read_json_required(list_payload)
+    except TypeError:
+        pass
+    else:
+        raise AssertionError("non-dict JSON should raise TypeError by default")
+
+    try:
+        load_manifest_with_schema(missing_schema)
+    except KeyError:
+        pass
+    else:
+        raise AssertionError("manifest without schema_version should raise KeyError")
+
+    try:
+        load_manifest_with_schema(manifest, expected_schema_version="2.0")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("wrong schema_version should raise ValueError")
+
+
 def test_airflow_series_factory_cli_helpers_and_conf_resolution() -> None:
     airflow_utils = _load_airflow_utils_module()
     dag_run = SimpleNamespace(conf={"epochs": 4, "enabled": False, "label": "smoke"})
@@ -80,6 +126,19 @@ def test_airflow_series_factory_cli_helpers_and_conf_resolution() -> None:
             ("label", "smoke"),
         ]
     ) == ["--epochs", "4", "--no-enabled", "--label", "smoke"]
+    assert airflow_utils.optional_cli_args(
+        {"epochs": 4, "enabled": False},
+        [
+            airflow_utils.CliArgSpec("epochs", "epochs", int),
+            airflow_utils.CliArgSpec("enabled", "enabled", bool),
+            airflow_utils.CliArgSpec("label", "label", optional=True),
+        ],
+    ) == ["--epochs", "4", "--no-enabled"]
+    assert airflow_utils.params_from_defaults({"epochs": 4, "enabled": True, "label": "smoke"}) == {
+        "epochs": 4,
+        "enabled": True,
+        "label": "smoke",
+    }
 
 
 def test_airflow_series_callable_builds_validated_script_invocation(monkeypatch) -> None:
@@ -123,3 +182,20 @@ def test_airflow_series_callable_builds_validated_script_invocation(monkeypatch)
             ],
         )
     ]
+
+
+def test_airflow_run_repo_script_canonicalizes_legacy_paths(monkeypatch) -> None:
+    airflow_utils = _load_airflow_utils_module()
+    calls = []
+
+    monkeypatch.setattr(
+        airflow_utils.subprocess,
+        "run",
+        lambda cmd, cwd, env, check: calls.append((cmd, cwd, check)),
+    )
+
+    airflow_utils.run_repo_script("scripts/run_m18_controller_family.py", ["--help"])
+
+    assert calls
+    assert calls[0][0][1] == "scripts/m18/run_m18_controller_family.py"
+    assert calls[0][2] is True

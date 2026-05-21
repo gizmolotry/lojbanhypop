@@ -13,6 +13,7 @@ config/
 archive/lineage/local_cache/
 archive/lineage/**/__pycache__/
 archive/lineage/**/.pytest_cache/
+archive/cleanup_snapshots/
 
 # Experiment and model artifacts
 artifacts/

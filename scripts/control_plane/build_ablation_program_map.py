@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -9,46 +10,16 @@ from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.append(str(REPO_ROOT / "src"))
+
+from lojban_evolution.control_plane.path_registry import (  # noqa: E402
+    canonical_repo_path,
+    latest_history_manifest,
+    repo_relative,
+)
+
 DEFAULT_OUTPUT_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "ablation_program_map"
 DEFAULT_DOC_OUTPUT = REPO_ROOT / "docs" / "ABLATION_PROGRAM_MAP.md"
-
-PATH_CANONICALIZATION: dict[str, str] = {
-    "scripts/run_ablation_history_backfill.py": "scripts/control_plane/run_ablation_history_backfill.py",
-    "scripts/build_ablation_program_map.py": "scripts/control_plane/build_ablation_program_map.py",
-    "scripts/build_ablation_program_spine.py": "scripts/control_plane/build_ablation_program_spine.py",
-    "scripts/render_ablation_history_catalog.py": "scripts/control_plane/render_ablation_history_catalog.py",
-    "scripts/build_airflow_ablation_hypercube_report.py": "scripts/control_plane/build_airflow_ablation_hypercube_report.py",
-    "scripts/run_coconut_ablation_matrix.py": "scripts/legacy/run_coconut_ablation_matrix.py",
-    "scripts/run_m_bridge_ablation_test_suite.py": "scripts/m_bridge/run_m_bridge_ablation_test_suite.py",
-    "scripts/run_m3_18_decoder_reentry_resume.py": "scripts/m3/run_m3_18_decoder_reentry_resume.py",
-    "scripts/run_m19_mainline_suite.py": "scripts/m19/run_m19_mainline_suite.py",
-    "scripts/run_m19_isolation_grid.py": "scripts/m19/run_isolation_grid.py",
-    "scripts/run_m19_replication_suite.py": "scripts/m19/run_m19_replication_suite.py",
-    "scripts/run_m19_kill_test_suite.py": "scripts/m19/run_m19_kill_test_suite.py",
-    "scripts/render_m19_paper_package.py": "scripts/control_plane/render_m19_paper_package.py",
-    "scripts/run_m20_dictionary_first_suite.py": "scripts/m20/run_m20_dictionary_first_suite.py",
-    "scripts/train_m21_dynamic_bridi.py": "scripts/m21/train_m21_dynamic_bridi.py",
-    "scripts/run_m21_dynamic_bridi_suite.py": "scripts/m21/run_m21_dynamic_bridi_suite.py",
-    "scripts/run_m21_synthetic_assay_suite.py": "scripts/m21/run_m21_synthetic_assay_suite.py",
-    "scripts/run_m21_actual_bridge_suite.py": "scripts/m21/run_m21_actual_bridge_suite.py",
-    "scripts/run_m21_lock_suite.py": "scripts/m21/run_m21_lock_suite.py",
-    "scripts/run_m21_adversarial_audit.py": "scripts/m21/run_m21_adversarial_audit.py",
-    "airflow/dags/lojban_ablation_history_backfill_dag.py": "airflow/dags/control_plane/lojban_ablation_history_backfill_dag.py",
-    "airflow/dags/lojban_ablation_hypercube_report_dag.py": "airflow/dags/control_plane/lojban_ablation_hypercube_report_dag.py",
-    "airflow/dags/lojban_ablation_master_spine_dag.py": "airflow/dags/control_plane/lojban_ablation_master_spine_dag.py",
-    "airflow/dags/lojban_ablation_matrix_dag.py": "airflow/dags/control_plane/lojban_ablation_matrix_dag.py",
-    "airflow/dags/lojban_ablation_program_spine_dag.py": "airflow/dags/control_plane/lojban_ablation_program_spine_dag.py",
-    "airflow/dags/lojban_m_bridge_ablation_test_suite_dag.py": "airflow/dags/m_bridge/lojban_m_bridge_ablation_test_suite_dag.py",
-    "airflow/dags/lojban_m3_18_decoder_reentry_resume_dag.py": "airflow/dags/m3/lojban_m3_18_decoder_reentry_resume_dag.py",
-    "airflow/dags/lojban_m19_mainline_suite_dag.py": "airflow/dags/m19/lojban_m19_mainline_suite_dag.py",
-    "airflow/dags/lojban_m19_isolation_grid_dag.py": "airflow/dags/m19/lojban_m19_isolation_grid_dag.py",
-    "airflow/dags/lojban_m19_replication_suite_dag.py": "airflow/dags/m19/lojban_m19_replication_suite_dag.py",
-    "airflow/dags/lojban_m19_kill_test_suite_dag.py": "airflow/dags/m19/lojban_m19_kill_test_suite_dag.py",
-    "airflow/dags/lojban_m19_paper_package_dag.py": "airflow/dags/m19/lojban_m19_paper_package_dag.py",
-    "airflow/dags/lojban_m20_dictionary_first_dag.py": "airflow/dags/m20/lojban_m20_dictionary_first_dag.py",
-    "airflow/dags/lojban_m21_dynamic_bridi_dag.py": "airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py",
-}
-
 
 FAMILY_DAG_MAP: dict[str, list[str]] = {
     "A-G": ["airflow/dags/control_plane/lojban_ablation_matrix_dag.py"],
@@ -189,18 +160,11 @@ def main() -> None:
 
 
 def _latest_history_manifest() -> Path:
-    root = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "ablation_history_backfill"
-    candidates = sorted(root.glob("*/ablation_history_manifest.json"), key=lambda path: path.stat().st_mtime)
-    if not candidates:
-        raise FileNotFoundError("No ablation_history_manifest.json found under artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill")
-    return candidates[-1]
+    return latest_history_manifest()
 
 
 def _repo_relative(path: Path) -> str:
-    try:
-        return path.resolve().relative_to(REPO_ROOT.resolve()).as_posix()
-    except ValueError:
-        return str(path).replace("\\", "/")
+    return repo_relative(path, REPO_ROOT) or ""
 
 
 def _family_key(entry: dict[str, Any]) -> str | None:
@@ -522,8 +486,7 @@ def _ordered_family_rows(families: dict[str, dict[str, Any]]) -> list[dict[str, 
 
 
 def _canonical_path(value: str) -> str:
-    text = str(value).replace("\\", "/")
-    return PATH_CANONICALIZATION.get(text, text)
+    return canonical_repo_path(value, REPO_ROOT)
 
 
 def _canonicalize_manifest_paths(manifest: dict[str, Any]) -> None:

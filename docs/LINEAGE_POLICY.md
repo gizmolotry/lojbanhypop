@@ -81,3 +81,24 @@ The human-readable companions are:
 
 - `docs/EXPERIMENT_TAXONOMY.md`
 - `docs/ABLATION_HISTORY_FULL.md`
+
+## Branch Archive Policy
+
+Branches are active work pointers, not historical notebooks.
+
+Historical branch tips should be preserved as annotated tags under:
+
+```text
+archive/*
+```
+
+Before deleting a local branch label:
+
+1. Confirm the branch is an ancestor of the active research branch.
+2. Create an annotated archive tag at the branch tip.
+3. Record the mapping in `docs/ACTIVE_BRANCH_LEDGER.md`.
+4. Delete the local branch with `git branch -d`.
+
+Remote branch deletion is a separate operation and should only happen after archive tags are pushed and default-branch or PR expectations are checked.
+
+The active branch policy is documented in `docs/BRANCH_STRATEGY.md`.

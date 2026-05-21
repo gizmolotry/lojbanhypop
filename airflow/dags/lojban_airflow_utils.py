@@ -4,8 +4,9 @@ import os
 import re
 import subprocess
 import sys
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Mapping
+from typing import Callable, Mapping, Sequence
 from urllib.parse import urlparse
 
 
@@ -19,6 +20,7 @@ def _repo_root() -> Path:
 
 def run_repo_script(script_relpath: str, cli_args: list[str]) -> None:
     repo_root = _repo_root()
+    script_relpath = canonical_script_path(script_relpath)
     script_path = repo_root / script_relpath
     if not script_path.exists():
         raise FileNotFoundError(f"Script not found: {script_path}")
@@ -35,6 +37,16 @@ def run_repo_script(script_relpath: str, cli_args: list[str]) -> None:
 
     cmd = [python_bin, script_relpath, *cli_args]
     subprocess.run(cmd, cwd=str(repo_root), env=env, check=True)
+
+
+def canonical_script_path(script_relpath: str) -> str:
+    repo_root = _repo_root()
+    src_dir = str(repo_root / "src")
+    if src_dir not in sys.path:
+        sys.path.insert(0, src_dir)
+    from lojban_evolution.control_plane.path_registry import canonical_repo_path
+
+    return canonical_repo_path(script_relpath, repo_root)
 
 
 def validate_output_dir(output_dir: str) -> str:
@@ -174,8 +186,12 @@ def merge_conf(defaults: Mapping[str, object], dag_conf: Mapping[str, object] | 
     return merged
 
 
-from dataclasses import dataclass, field
-from typing import Callable, Sequence
+@dataclass(frozen=True)
+class CliArgSpec:
+    flag: str
+    key: str
+    cast: Callable[[object], object] = str
+    optional: bool = False
 
 
 @dataclass(frozen=True)
@@ -219,6 +235,61 @@ def scalar_cli_args(options: Sequence[tuple[str, object]]) -> list[str]:
     return args
 
 
+def optional_cli_args(cfg: Mapping[str, object], specs: Sequence[CliArgSpec]) -> list[str]:
+    options: list[tuple[str, object]] = []
+    for spec in specs:
+        if spec.key not in cfg:
+            if spec.optional:
+                continue
+            raise KeyError(f"Missing required CLI config key: {spec.key}")
+        value = cfg.get(spec.key)
+        if value is None and spec.optional:
+            continue
+        options.append((spec.flag, spec.cast(value) if value is not None else None))
+    return scalar_cli_args(options)
+
+
+def param_from_default(
+    value: object,
+    *,
+    minimum: int | float | None = None,
+    min_length: int | None = None,
+    enum: Sequence[object] | None = None,
+) -> object:
+    try:
+        from airflow.models.param import Param
+    except Exception:
+        return value
+
+    kwargs: dict[str, object] = {}
+    if isinstance(value, bool):
+        kwargs["type"] = "boolean"
+    elif isinstance(value, int):
+        kwargs["type"] = "integer"
+    elif isinstance(value, float):
+        kwargs["type"] = "number"
+    else:
+        kwargs["type"] = "string"
+    if minimum is not None:
+        kwargs["minimum"] = minimum
+    if min_length is not None:
+        kwargs["minLength"] = min_length
+    if enum is not None:
+        kwargs["enum"] = list(enum)
+    return Param(value, **kwargs)
+
+
+def params_from_defaults(
+    defaults: Mapping[str, object],
+    overrides: Mapping[str, Mapping[str, object]] | None = None,
+) -> dict[str, object]:
+    overrides = overrides or {}
+    return {
+        key: param_from_default(value, **dict(overrides.get(key, {})))
+        for key, value in defaults.items()
+    }
+
+
 def resolve_dag_conf(defaults: Mapping[str, object], context: Mapping[str, object]) -> dict[str, object]:
     dag_run = context.get("dag_run")
     conf = getattr(dag_run, "conf", None)
@@ -237,6 +308,26 @@ def build_series_python_callable(task_spec: SeriesTaskSpec, defaults: Mapping[st
         run_repo_script(task_spec.script_relpath, task_spec.argv(cfg, output_dir, run_id))
 
     return _callable
+
+
+def control_plane_task_callable(
+    script_relpath: str,
+    argv_builder: Callable[[Mapping[str, object], str, str], list[str]],
+    defaults: Mapping[str, object],
+    *,
+    output_key: str = "output_dir",
+    partition: str = "telemetry/raw",
+) -> Callable[..., None]:
+    return build_series_python_callable(
+        SeriesTaskSpec(
+            task_id="control_plane_task",
+            script_relpath=script_relpath,
+            argv=argv_builder,
+            output_key=output_key,
+            output_partition=partition,
+        ),
+        defaults,
+    )
 
 
 def build_series_dag(spec: SeriesDagSpec):
