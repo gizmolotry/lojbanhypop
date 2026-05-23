@@ -299,6 +299,24 @@ M21_DYNAMIC_BRIDI_GRID: list[dict[str, Any]] = [
             "adversarial_train_surfaces": "heldout_paraphrase,clausal_permutation,role_binding_train,role_binding_pair_train,role_binding_swap_train,role_binding_chain_train,relational_synonym_train,role_chain_generalization_train,polarity_reframe_train",
         },
     },
+    {
+        "cell_key": "T",
+        "cell_id": m21_cell_id("T"),
+        "lock": "adversarial_augmented_judri_gated_bridge",
+        "label": "M22 lower-fraction blended semantic-role curriculum bridge",
+        "variant": {
+            "trace_weight": 1.25,
+            "answer_weight": 1.25,
+            "counterfactual_weight": 1.25,
+            "brivi_lock_weight": 1.5,
+            "frame_necessity_weight": 1.0,
+            "mdl_weight": 0.01,
+            "judri_bridge_gate": True,
+            "judri_bridge_gate_temperature": 1.0,
+            "adversarial_train_fraction": 0.25,
+            "adversarial_train_surfaces": "heldout_paraphrase,clausal_permutation,role_binding_train,role_binding_pair_train,role_binding_swap_train,role_binding_chain_train,relational_synonym_train,role_chain_generalization_train,polarity_reframe_train",
+        },
+    },
 ]
 
 

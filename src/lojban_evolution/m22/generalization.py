@@ -59,6 +59,24 @@ def build_m22_semantic_generalization_payload(
             "adversarial_oov_token_rate",
             default=0.0,
         ),
+        "semantic_coverage_oov_synonym_accuracy": _first_present(
+            adversarial_metrics,
+            "semantic_coverage_oov_synonym_accuracy",
+            "adversarial_oov_synonym_accuracy",
+            default=0.0,
+        ),
+        "semantic_coverage_oov_synonym_trace_exact_accuracy": _first_present(
+            adversarial_metrics,
+            "semantic_coverage_oov_synonym_trace_exact_accuracy",
+            "adversarial_oov_synonym_trace_exact_accuracy",
+            default=0.0,
+        ),
+        "semantic_coverage_surface_seed_std_max": adversarial_metrics.get(
+            "semantic_coverage_surface_seed_std_max", 0.0
+        ),
+        "semantic_coverage_surface_seed_min_accuracy": adversarial_metrics.get(
+            "semantic_coverage_surface_seed_min_accuracy", 0.0
+        ),
         "semantic_coverage_training_exposure_rate": adversarial_metrics.get("semantic_coverage_training_exposure_rate", 0.0),
         "semantic_isolation_cell_count": adversarial_metrics.get("semantic_isolation_cell_count", 0.0),
         "m21_control_strict_accuracy": control_metrics.get("strict_accuracy"),
@@ -162,6 +180,8 @@ def _suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
             "adversarial_worst_surface_accuracy": "mean_adversarial_worst_surface_accuracy",
             "adversarial_judri_causal_delta": "mean_adversarial_judri_causal_delta",
             "adversarial_oov_token_rate": "mean_adversarial_oov_token_rate",
+            "adversarial_oov_synonym_accuracy": "mean_adversarial_oov_synonym_accuracy",
+            "adversarial_oov_synonym_trace_exact_accuracy": "mean_adversarial_oov_synonym_trace_exact_accuracy",
         }
         for canonical, source in aliases.items():
             if source in aggregate:
@@ -183,7 +203,7 @@ def _control_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
 
 
 def _m22_candidate_cells(*payloads: dict[str, Any] | None) -> list[str]:
-    allowed = {"P", "Q", "R", "S"}
+    allowed = {"P", "Q", "R", "S", "T"}
     cells: set[str] = set()
     for payload in payloads:
         if not isinstance(payload, dict):

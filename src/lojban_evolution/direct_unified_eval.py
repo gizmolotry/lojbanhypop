@@ -159,6 +159,8 @@ KEY_METRICS = (
     "adversarial_judri_causal_delta",
     "adversarial_worst_surface_accuracy",
     "adversarial_oov_token_rate",
+    "adversarial_oov_synonym_accuracy",
+    "adversarial_oov_synonym_trace_exact_accuracy",
     "adversarial_train_fraction",
     "mean_adversarial_train_fraction",
     "adversarial_training_exposure_rate",
@@ -166,6 +168,10 @@ KEY_METRICS = (
     "semantic_coverage_worst_surface_accuracy",
     "semantic_coverage_judri_causal_delta",
     "semantic_coverage_oov_token_rate",
+    "semantic_coverage_oov_synonym_accuracy",
+    "semantic_coverage_oov_synonym_trace_exact_accuracy",
+    "semantic_coverage_surface_seed_std_max",
+    "semantic_coverage_surface_seed_min_accuracy",
     "semantic_coverage_training_exposure_rate",
     "semantic_coverage_train_fraction",
     "semantic_coverage_surface_count",
@@ -1516,12 +1522,27 @@ def _m21_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("adversarial_judri_causal_delta", aggregate.get("mean_adversarial_judri_causal_delta"))
         metrics.setdefault("adversarial_worst_surface_accuracy", aggregate.get("mean_adversarial_worst_surface_accuracy"))
         metrics.setdefault("adversarial_oov_token_rate", aggregate.get("mean_adversarial_oov_token_rate"))
+        metrics.setdefault("adversarial_oov_synonym_accuracy", aggregate.get("mean_adversarial_oov_synonym_accuracy"))
+        metrics.setdefault(
+            "adversarial_oov_synonym_trace_exact_accuracy",
+            aggregate.get("mean_adversarial_oov_synonym_trace_exact_accuracy"),
+        )
         metrics.setdefault("mean_adversarial_train_fraction", aggregate.get("mean_adversarial_train_fraction"))
         metrics.setdefault("adversarial_training_exposure_rate", aggregate.get("adversarial_training_exposure_rate"))
         metrics.setdefault("semantic_coverage_strict_accuracy", aggregate.get("semantic_coverage_strict_accuracy"))
         metrics.setdefault("semantic_coverage_worst_surface_accuracy", aggregate.get("semantic_coverage_worst_surface_accuracy"))
         metrics.setdefault("semantic_coverage_judri_causal_delta", aggregate.get("semantic_coverage_judri_causal_delta"))
         metrics.setdefault("semantic_coverage_oov_token_rate", aggregate.get("semantic_coverage_oov_token_rate"))
+        metrics.setdefault("semantic_coverage_oov_synonym_accuracy", aggregate.get("semantic_coverage_oov_synonym_accuracy"))
+        metrics.setdefault(
+            "semantic_coverage_oov_synonym_trace_exact_accuracy",
+            aggregate.get("semantic_coverage_oov_synonym_trace_exact_accuracy"),
+        )
+        metrics.setdefault("semantic_coverage_surface_seed_std_max", aggregate.get("semantic_coverage_surface_seed_std_max"))
+        metrics.setdefault(
+            "semantic_coverage_surface_seed_min_accuracy",
+            aggregate.get("semantic_coverage_surface_seed_min_accuracy"),
+        )
         metrics.setdefault("semantic_coverage_training_exposure_rate", aggregate.get("semantic_coverage_training_exposure_rate"))
         metrics.setdefault("semantic_coverage_train_fraction", aggregate.get("semantic_coverage_train_fraction"))
         metrics.setdefault("semantic_coverage_surface_count", aggregate.get("semantic_coverage_surface_count"))

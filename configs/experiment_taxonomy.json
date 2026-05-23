@@ -1325,10 +1325,14 @@
         "M21.1.J",
         "M21.1.K",
         "M21.1.L",
+        "M21.1.M",
+        "M21.1.N",
+        "M21.1.O",
         "M21.1.P",
         "M21.1.Q",
         "M21.1.R",
-        "M21.1.S"
+        "M21.1.S",
+        "M21.1.T"
       ],
       "inherit_required_test_contracts": false
     },
@@ -1352,7 +1356,8 @@
         "M21.1.P",
         "M21.1.Q",
         "M21.1.R",
-        "M21.1.S"
+        "M21.1.S",
+        "M21.1.T"
       ],
       "inherit_required_test_contracts": false
     }

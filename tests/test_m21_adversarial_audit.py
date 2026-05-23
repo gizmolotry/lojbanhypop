@@ -32,6 +32,10 @@ def test_m21_adversarial_audit_summarizes_semantic_isolation_deltas() -> None:
     summary = audit._summarize(rows)
 
     assert summary["semantic_isolation_cell_count"] == 8.0
+    assert summary["mean_adversarial_oov_synonym_accuracy"] == pytest.approx(0.30)
+    assert summary["semantic_coverage_oov_synonym_accuracy"] == pytest.approx(0.30)
+    assert summary["semantic_coverage_surface_seed_std_max"] > 0.0
+    assert summary["semantic_coverage_surface_accuracy"]["oov_synonym"]["seed_count"] == 7.0
     assert summary["semantic_coverage_lexical_shift_effect_strict_accuracy_delta"] == pytest.approx(0.14)
     assert summary["semantic_coverage_role_binding_effect_strict_accuracy_delta"] == pytest.approx(0.11)
     assert summary["semantic_coverage_combined_effect_strict_accuracy_delta"] == pytest.approx(0.20)
@@ -83,6 +87,7 @@ def test_m22_semantic_cells_count_as_isolation_evidence_without_breaking_h_o_eff
     assert summary["semantic_isolation_p_strict_accuracy"] == 0.60
     assert summary["semantic_isolation_q_worst_surface_accuracy"] == 0.28
     assert summary["semantic_isolation_s_judri_causal_delta"] == 0.60
+    assert summary["semantic_coverage_oov_synonym_accuracy"] == pytest.approx(0.30)
     assert "semantic_coverage_lexical_shift_effect_strict_accuracy_delta" not in summary
 
 
@@ -105,6 +110,12 @@ def _row(
             "adversarial_strict_accuracy": strict,
             "adversarial_worst_surface_accuracy": worst,
             "adversarial_judri_causal_delta": judri_delta,
+            "adversarial_oov_synonym_accuracy": 0.30,
             "adversarial_oov_token_rate": 0.1,
+            "surface_metrics": {
+                "heldout_paraphrase": {"strict_accuracy": strict},
+                "oov_synonym": {"strict_accuracy": 0.30},
+                "role_distractor": {"strict_accuracy": worst},
+            },
         },
     }

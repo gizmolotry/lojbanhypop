@@ -25,7 +25,7 @@ from lojban_evolution.m21.family import M21_FAMILY_VERSION, M21_REGISTRY  # noqa
 from lojban_evolution.series_contract import assert_output_path_allowed, series_metadata, validate_series_outputs  # noqa: E402
 
 SEMANTIC_ISOLATION_CELLS = ("H", "I", "J", "K", "L", "M", "N", "O")
-M22_SEMANTIC_ISOLATION_CELLS = ("P", "Q", "R", "S")
+M22_SEMANTIC_ISOLATION_CELLS = ("P", "Q", "R", "S", "T")
 SEMANTIC_ISOLATION_EFFECTS = {
     "lexical_shift": ("J", "H"),
     "role_binding": ("K", "H"),
@@ -140,8 +140,20 @@ def _surface_accuracy(metrics: dict[str, Any]) -> dict[str, float]:
     return {str(key): float(value.get("strict_accuracy", 0.0)) for key, value in surfaces.items() if isinstance(value, dict)}
 
 
+def _surface_metric(metrics: dict[str, Any], metric_name: str) -> dict[str, float]:
+    surfaces = metrics.get("surface_metrics", {})
+    if not isinstance(surfaces, dict):
+        return {}
+    return {
+        str(key): float(value.get(metric_name, 0.0))
+        for key, value in surfaces.items()
+        if isinstance(value, dict)
+    }
+
+
 def _with_adversarial_prefix(metrics: dict[str, Any], oov: dict[str, Any]) -> dict[str, Any]:
     surface_acc = _surface_accuracy(metrics)
+    surface_trace = _surface_metric(metrics, "bridi_trace_exact_accuracy")
     out = {
         "strict_accuracy": float(metrics.get("strict_accuracy", 0.0)),
         "adversarial_strict_accuracy": float(metrics.get("strict_accuracy", 0.0)),
@@ -154,6 +166,8 @@ def _with_adversarial_prefix(metrics: dict[str, Any], oov: dict[str, Any]) -> di
         "adversarial_judri_causal_delta": float(metrics.get("judri_causal_delta", 0.0)),
         "adversarial_cmavo_causal_delta": float(metrics.get("cmavo_causal_delta", 0.0)),
         "adversarial_worst_surface_accuracy": min(surface_acc.values()) if surface_acc else float(metrics.get("strict_accuracy", 0.0)),
+        "adversarial_oov_synonym_accuracy": float(surface_acc.get("oov_synonym", 0.0)),
+        "adversarial_oov_synonym_trace_exact_accuracy": float(surface_trace.get("oov_synonym", 0.0)),
         "adversarial_oov_token_rate": float(oov.get("adversarial_oov_token_rate", 0.0)),
         "judri_bridge_gate_enabled": float(metrics.get("judri_bridge_gate_enabled", 0.0)),
         "judri_bridge_gate_active_mean": float(metrics.get("judri_bridge_gate_active_mean", 0.0)),
@@ -164,12 +178,47 @@ def _with_adversarial_prefix(metrics: dict[str, Any], oov: dict[str, Any]) -> di
     return out
 
 
-def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
+def _surface_summary(rows: list[dict[str, Any]]) -> dict[str, dict[str, float]]:
+    by_surface: dict[str, list[float]] = {}
+    for row in rows:
+        surfaces = row.get("metrics", {}).get("surface_metrics", {})
+        if not isinstance(surfaces, dict):
+            continue
+        for surface, metrics in surfaces.items():
+            if not isinstance(metrics, dict):
+                continue
+            by_surface.setdefault(str(surface), []).append(float(metrics.get("strict_accuracy", 0.0) or 0.0))
+    return {
+        surface: {
+            "mean": mean(values),
+            "std": pstdev(values) if len(values) > 1 else 0.0,
+            "min": min(values),
+            "max": max(values),
+            "seed_count": float(len(values)),
+        }
+        for surface, values in sorted(by_surface.items())
+        if values
+    }
+
+
+def _surface_summary_metric(surface_summary: dict[str, dict[str, float]], key: str, reducer: str) -> float:
+    values = [float(item.get(key, 0.0) or 0.0) for item in surface_summary.values()]
+    if not values:
+        return 0.0
+    if reducer == "max":
+        return max(values)
+    if reducer == "min":
+        return min(values)
+    return mean(values)
+
+
+def _summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
     def collect(key: str) -> list[float]:
         return [float(row["metrics"].get(key, 0.0) or 0.0) for row in rows]
 
     strict = collect("adversarial_strict_accuracy")
     train_fractions = [float(row.get("config", {}).get("adversarial_train_fraction", 0.0) or 0.0) for row in rows]
+    surface_summary = _surface_summary(rows)
     aggregate = {
         "mean_adversarial_strict_accuracy": mean(strict) if strict else 0.0,
         "std_adversarial_strict_accuracy": pstdev(strict) if len(strict) > 1 else 0.0,
@@ -181,15 +230,21 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
         "mean_adversarial_judri_causal_delta": mean(collect("adversarial_judri_causal_delta")) if rows else 0.0,
         "mean_adversarial_cmavo_causal_delta": mean(collect("adversarial_cmavo_causal_delta")) if rows else 0.0,
         "mean_adversarial_worst_surface_accuracy": mean(collect("adversarial_worst_surface_accuracy")) if rows else 0.0,
+        "mean_adversarial_oov_synonym_accuracy": mean(collect("adversarial_oov_synonym_accuracy")) if rows else 0.0,
+        "mean_adversarial_oov_synonym_trace_exact_accuracy": mean(collect("adversarial_oov_synonym_trace_exact_accuracy")) if rows else 0.0,
         "mean_adversarial_oov_token_rate": mean(collect("adversarial_oov_token_rate")) if rows else 0.0,
         "mean_adversarial_train_fraction": mean(train_fractions) if train_fractions else 0.0,
         "adversarial_training_exposure_rate": sum(1.0 for value in train_fractions if value > 0.0) / max(1, len(train_fractions)),
+        "adversarial_surface_accuracy": surface_summary,
+        "adversarial_surface_seed_std_max": _surface_summary_metric(surface_summary, "std", "max"),
+        "adversarial_surface_seed_min_accuracy": _surface_summary_metric(surface_summary, "min", "min"),
     }
     semantic_rows = [row for row in rows if _semantic_coverage_surface_count(row.get("config", {})) > 0]
     if semantic_rows:
         semantic_train_fractions = [
             float(row.get("config", {}).get("adversarial_train_fraction", 0.0) or 0.0) for row in semantic_rows
         ]
+        semantic_surface_summary = _surface_summary(semantic_rows)
 
         def semantic_collect(key: str) -> list[float]:
             return [float(row["metrics"].get(key, 0.0) or 0.0) for row in semantic_rows]
@@ -199,12 +254,21 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
                 "semantic_coverage_strict_accuracy": mean(semantic_collect("adversarial_strict_accuracy")),
                 "semantic_coverage_worst_surface_accuracy": mean(semantic_collect("adversarial_worst_surface_accuracy")),
                 "semantic_coverage_judri_causal_delta": mean(semantic_collect("adversarial_judri_causal_delta")),
+                "semantic_coverage_oov_synonym_accuracy": mean(semantic_collect("adversarial_oov_synonym_accuracy")),
+                "semantic_coverage_oov_synonym_trace_exact_accuracy": mean(
+                    semantic_collect("adversarial_oov_synonym_trace_exact_accuracy")
+                ),
                 "semantic_coverage_oov_token_rate": mean(semantic_collect("adversarial_oov_token_rate")),
                 "semantic_coverage_training_exposure_rate": sum(1.0 for value in semantic_train_fractions if value > 0.0)
                 / max(1, len(semantic_train_fractions)),
                 "semantic_coverage_train_fraction": mean(semantic_train_fractions),
                 "semantic_coverage_surface_count": float(
                     mean([_semantic_coverage_surface_count(row.get("config", {})) for row in semantic_rows])
+                ),
+                "semantic_coverage_surface_accuracy": semantic_surface_summary,
+                "semantic_coverage_surface_seed_std_max": _surface_summary_metric(semantic_surface_summary, "std", "max"),
+                "semantic_coverage_surface_seed_min_accuracy": _surface_summary_metric(
+                    semantic_surface_summary, "min", "min"
                 ),
             }
         )
@@ -320,7 +384,8 @@ def run_audit(args: argparse.Namespace) -> dict[str, Any]:
         f"strict={aggregate['mean_adversarial_strict_accuracy']:.4f} "
         f"trace={aggregate['mean_adversarial_bridi_trace_exact_accuracy']:.4f} "
         f"judri_delta={aggregate['mean_adversarial_judri_causal_delta']:.4f} "
-        f"oov={aggregate['mean_adversarial_oov_token_rate']:.4f}"
+        f"oov_acc={aggregate['mean_adversarial_oov_synonym_accuracy']:.4f} "
+        f"oov_token_rate={aggregate['mean_adversarial_oov_token_rate']:.4f}"
     )
     return payload
 

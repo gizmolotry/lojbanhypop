@@ -4,6 +4,8 @@ import importlib.util
 import json
 from pathlib import Path
 
+import pytest
+
 from lojban_evolution.m22.generalization import build_m22_semantic_generalization_payload
 from lojban_evolution.m22.family import m22_track_spec
 
@@ -18,10 +20,20 @@ def _load_m22_runner():
     return module
 
 
+def _load_m22_seed_stability_runner():
+    module_path = Path(__file__).resolve().parents[1] / "scripts" / "m22" / "run_m22_seed_stability_aggregate.py"
+    spec = importlib.util.spec_from_file_location("run_m22_seed_stability_aggregate", module_path)
+    assert spec is not None
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    return module
+
+
 def test_m22_registry_tracks_explicit_pqr_candidate_cells() -> None:
     targets = set(m22_track_spec()["comparison_targets"])
 
-    assert {"M21.1.P", "M21.1.Q", "M21.1.R", "M21.1.S"}.issubset(targets)
+    assert {"M21.1.P", "M21.1.Q", "M21.1.R", "M21.1.S", "M21.1.T"}.issubset(targets)
 
 
 def test_m22_generalization_gate_requires_semantic_lift_without_judri_regression() -> None:
@@ -44,6 +56,9 @@ def test_m22_generalization_gate_requires_semantic_lift_without_judri_regression
             "semantic_coverage_worst_surface_accuracy": 0.35,
             "semantic_coverage_judri_causal_delta": 0.31,
             "semantic_coverage_oov_token_rate": 0.12,
+            "semantic_coverage_oov_synonym_accuracy": 0.34,
+            "semantic_coverage_surface_seed_std_max": 0.04,
+            "semantic_coverage_surface_seed_min_accuracy": 0.29,
             "semantic_coverage_training_exposure_rate": 1.0,
             "semantic_isolation_cell_count": 8.0,
         },
@@ -69,6 +84,8 @@ def test_m22_generalization_gate_requires_semantic_lift_without_judri_regression
     assert metrics["m22_semantic_worst_delta_vs_m21_control"] == 0.04999999999999999
     assert metrics["m22_clean_accuracy_drop_vs_m21_control"] == 0.0
     assert metrics["m22_candidate_cell_count"] == 4.0
+    assert metrics["semantic_coverage_oov_synonym_accuracy"] == 0.34
+    assert metrics["semantic_coverage_surface_seed_std_max"] == 0.04
     assert metrics["m22_promotion_candidate"] == 1.0
     assert payload["candidate_cells"] == ["P", "Q", "R", "S"]
     assert payload["comparison_policy"]["delta_baseline"] == "explicit_m21_control_direct_manifest"
@@ -282,3 +299,106 @@ def test_m22_runner_writes_report_from_fixture_paths(tmp_path: Path) -> None:
     assert payload["source_reports"]["m21_suite_report"] == str(suite_path)
     assert "metrics" in payload
     assert "promotion_gates" in payload
+
+
+def test_m22_seed_stability_aggregate_reports_ood_accuracy_and_surface_variance(tmp_path: Path) -> None:
+    runner = _load_m22_seed_stability_runner()
+    suite_path = tmp_path / "suite.json"
+    audit_path = tmp_path / "audit.json"
+    gate_path = tmp_path / "gate.json"
+    suite_path.write_text(
+        json.dumps(
+            {
+                "run_id": "suite_a",
+                "cells": {
+                    "S": {
+                        "seed_reports": [
+                            {"seed": 23, "metrics": {"strict_accuracy": 0.85, "bridi_trace_exact_accuracy": 0.999, "judri_causal_delta": 0.79}},
+                            {"seed": 29, "metrics": {"strict_accuracy": 0.83, "bridi_trace_exact_accuracy": 0.998, "judri_causal_delta": 0.78}},
+                        ]
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    audit_path.write_text(
+        json.dumps(
+            {
+                "run_id": "audit_a",
+                "seed_reports": [
+                    {
+                        "cell_key": "S",
+                        "seed": 23,
+                        "metrics": {
+                            "adversarial_strict_accuracy": 0.84,
+                            "adversarial_worst_surface_accuracy": 0.31,
+                            "adversarial_judri_causal_delta": 0.80,
+                            "adversarial_oov_synonym_accuracy": 0.31,
+                            "adversarial_oov_token_rate": 0.04,
+                            "surface_metrics": {
+                                "oov_synonym": {"strict_accuracy": 0.31},
+                                "role_distractor": {"strict_accuracy": 0.70},
+                            },
+                        },
+                    },
+                    {
+                        "cell_key": "S",
+                        "seed": 29,
+                        "metrics": {
+                            "adversarial_strict_accuracy": 0.82,
+                            "adversarial_worst_surface_accuracy": 0.27,
+                            "adversarial_judri_causal_delta": 0.77,
+                            "adversarial_oov_synonym_accuracy": 0.27,
+                            "adversarial_oov_token_rate": 0.05,
+                            "surface_metrics": {
+                                "oov_synonym": {"strict_accuracy": 0.27},
+                                "role_distractor": {"strict_accuracy": 0.72},
+                            },
+                        },
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    gate_path.write_text(
+        json.dumps(
+            {
+                "run_id": "gate_a",
+                "metrics": {
+                    "strict_accuracy": 0.84,
+                    "semantic_coverage_strict_accuracy": 0.83,
+                    "semantic_coverage_worst_surface_accuracy": 0.29,
+                    "semantic_coverage_oov_synonym_accuracy": 0.29,
+                    "m22_promotion_candidate": 1.0,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    output_root = Path("artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability_test")
+    args = runner.parse_args(
+        [
+            "--suite-reports",
+            str(suite_path),
+            "--adversarial-audit-reports",
+            str(audit_path),
+            "--gate-reports",
+            str(gate_path),
+            "--output-root",
+            str(output_root),
+            "--run-id",
+            "fixture",
+        ]
+    )
+    payload = runner.run_seed_stability(args)
+    metrics = payload["metrics"]
+
+    assert metrics["m22_seed_stability_suite_seed_count"] == 2.0
+    assert metrics["suite_seed_strict_accuracy_mean"] == 0.84
+    assert metrics["audit_seed_adversarial_oov_synonym_accuracy_mean"] == 0.29000000000000004
+    assert metrics["m22_seed_stability_surface_accuracy"]["oov_synonym"]["std"] == pytest.approx(0.02)
+    assert metrics["m22_seed_stability_promotion_rate"] == 1.0
+    assert (output_root / "fixture" / "m22_seed_stability_report.json").exists()

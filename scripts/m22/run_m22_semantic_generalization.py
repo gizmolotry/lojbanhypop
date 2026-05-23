@@ -73,6 +73,7 @@ def run_generalization(args: argparse.Namespace) -> dict[str, Any]:
         "M22 metrics: "
         f"strict={float(metrics.get('strict_accuracy', 0.0)):.4f} "
         f"semantic={float(metrics.get('semantic_coverage_strict_accuracy', 0.0)):.4f} "
+        f"oov_acc={float(metrics.get('semantic_coverage_oov_synonym_accuracy', 0.0)):.4f} "
         f"semantic_delta={float(metrics.get('m22_semantic_strict_delta_vs_m21_control', 0.0)):.4f} "
         f"promotion={float(metrics.get('m22_promotion_candidate', 0.0)):.0f}"
     )

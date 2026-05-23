@@ -725,6 +725,7 @@ def test_build_direct_unified_eval_manifest_m22_semantic_generalization() -> Non
                 "semantic_coverage_strict_accuracy": 0.43,
                 "semantic_coverage_worst_surface_accuracy": 0.35,
                 "semantic_coverage_judri_causal_delta": 0.31,
+                "semantic_coverage_oov_synonym_accuracy": 0.34,
                 "m22_candidate_cell_count": 4.0,
                 "m22_candidate_cells_present": 1.0,
                 "m22_semantic_generalization_score": 0.31,
@@ -748,6 +749,7 @@ def test_build_direct_unified_eval_manifest_m22_semantic_generalization() -> Non
     assert manifest["family_key"] == "M22"
     assert manifest["track"] == "M22"
     assert manifest["headline_metrics"]["m22_candidate_cell_count"] == 4.0
+    assert manifest["headline_metrics"]["semantic_coverage_oov_synonym_accuracy"] == 0.34
     assert manifest["headline_metrics"]["m22_semantic_generalization_score"] == 0.31
     statuses = {row["test_id"]: row["status"] for row in manifest["contract_results"]}
     assert statuses["m22.semantic_coverage_generalization"] == "available"

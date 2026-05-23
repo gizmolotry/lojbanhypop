@@ -14,15 +14,18 @@ M22_REGISTRY: dict[str, dict[str, Any]] = {
         "implementation_label": "m21_dynamic_bridi_semantic_generalization_gate",
         "runner_scripts": {
             "generalization": "scripts/m22/run_m22_semantic_generalization.py",
+            "seed_stability": "scripts/m22/run_m22_seed_stability_aggregate.py",
         },
         "dags": {
             "generalization": "airflow/dags/m22/lojban_m22_semantic_generalization_dag.py",
         },
         "output_roots": {
             "generalization": "artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization",
+            "seed_stability": "artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability",
         },
         "report_names": {
             "generalization": "m22_semantic_generalization_report.json",
+            "seed_stability": "m22_seed_stability_report.json",
         },
         "dataset_defaults": {
             "profile": "m21_dynamic_bridi_semantic_generalization_v1",
@@ -61,6 +64,7 @@ M22_REGISTRY: dict[str, dict[str, Any]] = {
             "M21.1.Q",
             "M21.1.R",
             "M21.1.S",
+            "M21.1.T",
         ],
     }
 }
