@@ -26,6 +26,27 @@ DIRECT_UNIFIED_EVAL_OUTPUT_ROOT = (
     REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "direct_unified_eval"
 )
 
+M22_REQUIRED_PROMOTION_GATES = {
+    "clean_accuracy_not_collapsed",
+    "trace_reconstruction_preserved",
+    "judri_causality_preserved",
+    "semantic_judri_causality_preserved",
+    "semantic_strict_improves_control",
+    "semantic_worst_improves_control",
+    "clean_drop_within_tolerance",
+    "semantic_training_exposed",
+    "semantic_coverage_metrics_available",
+    "relation_ood_metrics_available",
+    "relation_ood_surfaces_complete",
+    "relation_ood_surfaces_unseen_in_training",
+    "relation_ood_judri_causality_preserved",
+    "relation_ood_score_positive",
+    "m22_candidate_cell_evidence_present",
+    "m22_audit_candidate_cell_evidence_present",
+    "m22_blended_candidate_audit_evidence_present",
+    "explicit_m21_control_present",
+}
+
 KEY_METRICS = (
     "strict_accuracy",
     "overall_accuracy",
@@ -172,10 +193,22 @@ KEY_METRICS = (
     "semantic_coverage_oov_synonym_trace_exact_accuracy",
     "semantic_coverage_surface_seed_std_max",
     "semantic_coverage_surface_seed_min_accuracy",
+    "semantic_coverage_metrics_present",
     "semantic_coverage_training_exposure_rate",
     "semantic_coverage_train_fraction",
     "semantic_coverage_surface_count",
     "semantic_isolation_cell_count",
+    "m22_relation_ood_metrics_present",
+    "m22_relation_ood_strict_accuracy",
+    "m22_relation_ood_worst_surface_accuracy",
+    "m22_relation_ood_bridi_trace_exact_accuracy",
+    "m22_relation_ood_judri_causal_delta",
+    "m22_relation_ood_oov_token_rate",
+    "m22_relation_ood_surface_count",
+    "m22_relation_ood_surface_seed_std_max",
+    "m22_relation_ood_surface_seed_min_accuracy",
+    "m22_relation_ood_surface_training_overlap_rate",
+    "m22_hard_relation_ood_score",
     "semantic_coverage_lexical_shift_effect_strict_accuracy_delta",
     "semantic_coverage_lexical_shift_effect_worst_surface_accuracy_delta",
     "semantic_coverage_lexical_shift_effect_judri_causal_delta_delta",
@@ -204,6 +237,12 @@ KEY_METRICS = (
     "gauntlet_order_accuracy_spread",
     "m22_candidate_cell_count",
     "m22_candidate_cells_present",
+    "m22_suite_candidate_cell_count",
+    "m22_audit_candidate_cell_count",
+    "m22_audit_candidate_cells_present",
+    "m22_blended_candidate_cell_count",
+    "m22_audit_blended_candidate_cell_count",
+    "m22_audit_blended_candidate_present",
     "m22_semantic_generalization_score",
     "m22_semantic_strict_delta_vs_m21_control",
     "m22_semantic_worst_delta_vs_m21_control",
@@ -792,6 +831,21 @@ def _evaluate_m22_contract(
             return row
         if float(report_metrics.get("m22_promotion_candidate", 0.0) or 0.0) < 1.0:
             row = _missing_contract_row(test_id, contract, "M22 semantic generalization gate failed promotion")
+            row["metrics"] = metrics
+            return row
+        promotion_gates = generalization_payload.get("promotion_gates", {})
+        if not isinstance(promotion_gates, dict) or not promotion_gates:
+            row = _missing_contract_row(test_id, contract, "missing M22 promotion gate evidence")
+            row["metrics"] = metrics
+            return row
+        failed_gates = [str(key) for key, value in promotion_gates.items() if not bool(value)]
+        if failed_gates:
+            row = _missing_contract_row(test_id, contract, f"M22 promotion report has failed gates: {', '.join(failed_gates)}")
+            row["metrics"] = metrics
+            return row
+        missing_gates = sorted(M22_REQUIRED_PROMOTION_GATES.difference(str(key) for key in promotion_gates))
+        if missing_gates:
+            row = _missing_contract_row(test_id, contract, f"M22 promotion report is missing gates: {', '.join(missing_gates)}")
             row["metrics"] = metrics
             return row
     return {
@@ -1547,6 +1601,18 @@ def _m21_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("semantic_coverage_train_fraction", aggregate.get("semantic_coverage_train_fraction"))
         metrics.setdefault("semantic_coverage_surface_count", aggregate.get("semantic_coverage_surface_count"))
         metrics.setdefault("semantic_isolation_cell_count", aggregate.get("semantic_isolation_cell_count"))
+        for key in (
+            "m22_relation_ood_strict_accuracy",
+            "m22_relation_ood_worst_surface_accuracy",
+            "m22_relation_ood_bridi_trace_exact_accuracy",
+            "m22_relation_ood_judri_causal_delta",
+            "m22_relation_ood_oov_token_rate",
+            "m22_relation_ood_surface_count",
+            "m22_relation_ood_surface_seed_std_max",
+            "m22_relation_ood_surface_seed_min_accuracy",
+            "m22_relation_ood_surface_training_overlap_rate",
+        ):
+            metrics.setdefault(key, aggregate.get(key))
         for key, value in aggregate.items():
             if str(key).startswith("semantic_coverage_") and str(key).endswith("_delta"):
                 metrics.setdefault(str(key), value)

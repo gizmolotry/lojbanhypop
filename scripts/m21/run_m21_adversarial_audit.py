@@ -16,6 +16,7 @@ if str(REPO_ROOT / "src") not in sys.path:
 
 from lojban_evolution.m21.bridi import (  # noqa: E402
     M21DynamicBridiQFormer,
+    M22_RELATION_OOD_AUDIT_SURFACES,
     evaluate_model,
     generate_dynamic_bridi_adversarial_examples,
     semantic_training_surface_names,
@@ -26,6 +27,11 @@ from lojban_evolution.series_contract import assert_output_path_allowed, series_
 
 SEMANTIC_ISOLATION_CELLS = ("H", "I", "J", "K", "L", "M", "N", "O")
 M22_SEMANTIC_ISOLATION_CELLS = ("P", "Q", "R", "S", "T")
+DEFAULT_AUDIT_SURFACES = ("heldout_paraphrase", "role_distractor", "clausal_permutation", "oov_synonym")
+AUDIT_PROFILES = {
+    "m21-default": DEFAULT_AUDIT_SURFACES,
+    "m22-relation-ood": M22_RELATION_OOD_AUDIT_SURFACES,
+}
 SEMANTIC_ISOLATION_EFFECTS = {
     "lexical_shift": ("J", "H"),
     "role_binding": ("K", "H"),
@@ -60,6 +66,22 @@ def _read(path: Path | None) -> dict[str, Any]:
 
 def _parse_cell_list(value: str) -> set[str]:
     return {item.strip().upper() for item in str(value).split(",") if item.strip()}
+
+
+def _parse_surface_list(value: str | tuple[str, ...] | list[str] | None) -> tuple[str, ...]:
+    if value is None:
+        return tuple()
+    if isinstance(value, str):
+        return tuple(item.strip() for item in value.split(",") if item.strip())
+    return tuple(str(item).strip() for item in value if str(item).strip())
+
+
+def _resolve_audit_surfaces(args: argparse.Namespace) -> tuple[str, ...]:
+    profile = str(getattr(args, "audit_profile", "m21-default") or "m21-default")
+    has_surface_override = bool(getattr(args, "_surfaces_override", False))
+    if not has_surface_override and profile in AUDIT_PROFILES:
+        return AUDIT_PROFILES[profile]
+    return _parse_surface_list(getattr(args, "surfaces", None)) or DEFAULT_AUDIT_SURFACES
 
 
 def _checkpoint_rows(payload: dict[str, Any], selected_cells: set[str]) -> list[dict[str, Any]]:
@@ -178,7 +200,12 @@ def _with_adversarial_prefix(metrics: dict[str, Any], oov: dict[str, Any]) -> di
     return out
 
 
-def _surface_summary(rows: list[dict[str, Any]]) -> dict[str, dict[str, float]]:
+def _surface_summary(
+    rows: list[dict[str, Any]],
+    selected_surfaces: tuple[str, ...] | None = None,
+    metric_name: str = "strict_accuracy",
+) -> dict[str, dict[str, float]]:
+    selected = set(selected_surfaces or ())
     by_surface: dict[str, list[float]] = {}
     for row in rows:
         surfaces = row.get("metrics", {}).get("surface_metrics", {})
@@ -187,7 +214,10 @@ def _surface_summary(rows: list[dict[str, Any]]) -> dict[str, dict[str, float]]:
         for surface, metrics in surfaces.items():
             if not isinstance(metrics, dict):
                 continue
-            by_surface.setdefault(str(surface), []).append(float(metrics.get("strict_accuracy", 0.0) or 0.0))
+            surface_name = str(surface)
+            if selected and surface_name not in selected:
+                continue
+            by_surface.setdefault(surface_name, []).append(float(metrics.get(metric_name, 0.0) or 0.0))
     return {
         surface: {
             "mean": mean(values),
@@ -201,6 +231,62 @@ def _surface_summary(rows: list[dict[str, Any]]) -> dict[str, dict[str, float]]:
     }
 
 
+def _weighted_selected_surface_metric(
+    metrics: dict[str, Any],
+    selected_surfaces: tuple[str, ...],
+    metric_name: str,
+) -> float:
+    surfaces = metrics.get("surface_metrics", {})
+    if not isinstance(surfaces, dict):
+        return 0.0
+    weighted_total = 0.0
+    weight_total = 0.0
+    unweighted_values: list[float] = []
+    for surface in selected_surfaces:
+        surface_metrics = surfaces.get(surface)
+        if not isinstance(surface_metrics, dict):
+            continue
+        value = float(surface_metrics.get(metric_name, 0.0) or 0.0)
+        weight = float(surface_metrics.get("count", 0.0) or 0.0)
+        if weight > 0.0:
+            weighted_total += value * weight
+            weight_total += weight
+        unweighted_values.append(value)
+    if weight_total > 0.0:
+        return weighted_total / weight_total
+    return mean(unweighted_values) if unweighted_values else 0.0
+
+
+def _m22_relation_ood_seed_metrics(metrics: dict[str, Any], config: dict[str, Any]) -> dict[str, float]:
+    surfaces = metrics.get("surface_metrics", {})
+    if not isinstance(surfaces, dict):
+        surfaces = {}
+    present_surfaces = tuple(surface for surface in M22_RELATION_OOD_AUDIT_SURFACES if isinstance(surfaces.get(surface), dict))
+    strict_values = [float(surfaces[surface].get("strict_accuracy", 0.0) or 0.0) for surface in present_surfaces]
+    overlap_surfaces = set(present_surfaces).intersection(_config_surface_set(config))
+    return {
+        "m22_relation_ood_strict_accuracy": _weighted_selected_surface_metric(
+            metrics,
+            present_surfaces,
+            "strict_accuracy",
+        ),
+        "m22_relation_ood_worst_surface_accuracy": min(strict_values) if strict_values else 0.0,
+        "m22_relation_ood_bridi_trace_exact_accuracy": _weighted_selected_surface_metric(
+            metrics,
+            present_surfaces,
+            "bridi_trace_exact_accuracy",
+        ),
+        "m22_relation_ood_surface_count": float(len(present_surfaces)),
+        "m22_relation_ood_judri_causal_delta": float(metrics.get("adversarial_judri_causal_delta", 0.0) or 0.0),
+        "m22_relation_ood_oov_token_rate": float(metrics.get("adversarial_oov_token_rate", 0.0) or 0.0),
+        "m22_relation_ood_training_overlap_rate": float(len(overlap_surfaces) / max(1, len(present_surfaces))),
+        "m22_relation_ood_surface_training_overlap_rate": float(
+            len(overlap_surfaces) / max(1, len(present_surfaces))
+        ),
+        "m22_relation_ood_training_overlap_surface_count": float(len(overlap_surfaces)),
+    }
+
+
 def _surface_summary_metric(surface_summary: dict[str, dict[str, float]], key: str, reducer: str) -> float:
     values = [float(item.get(key, 0.0) or 0.0) for item in surface_summary.values()]
     if not values:
@@ -210,6 +296,15 @@ def _surface_summary_metric(surface_summary: dict[str, dict[str, float]], key: s
     if reducer == "min":
         return min(values)
     return mean(values)
+
+
+def _config_surface_set(config: dict[str, Any], key: str = "adversarial_train_surfaces") -> set[str]:
+    surfaces = config.get(key, [])
+    if isinstance(surfaces, str):
+        return {item.strip() for item in surfaces.split(",") if item.strip()}
+    if isinstance(surfaces, (list, tuple, set)):
+        return {str(item).strip() for item in surfaces if str(item).strip()}
+    return set()
 
 
 def _summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
@@ -239,6 +334,7 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "adversarial_surface_seed_std_max": _surface_summary_metric(surface_summary, "std", "max"),
         "adversarial_surface_seed_min_accuracy": _surface_summary_metric(surface_summary, "min", "min"),
     }
+    aggregate.update(_m22_relation_ood_metrics(rows))
     semantic_rows = [row for row in rows if _semantic_coverage_surface_count(row.get("config", {})) > 0]
     if semantic_rows:
         semantic_train_fractions = [
@@ -276,6 +372,63 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
     return aggregate
 
 
+def _m22_relation_ood_metrics(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    seed_metrics = [
+        _m22_relation_ood_seed_metrics(row.get("metrics", {}), row.get("config", {}))
+        for row in rows
+        if isinstance(row.get("metrics", {}), dict) and isinstance(row.get("config", {}), dict)
+    ]
+    relation_seed_metrics = [item for item in seed_metrics if item["m22_relation_ood_surface_count"] > 0.0]
+    surface_summary = _surface_summary(rows, M22_RELATION_OOD_AUDIT_SURFACES, "strict_accuracy")
+    trace_surface_summary = _surface_summary(rows, M22_RELATION_OOD_AUDIT_SURFACES, "bridi_trace_exact_accuracy")
+
+    def collect(key: str) -> list[float]:
+        return [float(item.get(key, 0.0) or 0.0) for item in relation_seed_metrics]
+
+    strict = collect("m22_relation_ood_strict_accuracy")
+    worst = collect("m22_relation_ood_worst_surface_accuracy")
+    trace = collect("m22_relation_ood_bridi_trace_exact_accuracy")
+    judri = collect("m22_relation_ood_judri_causal_delta")
+    oov = collect("m22_relation_ood_oov_token_rate")
+    surface_counts = collect("m22_relation_ood_surface_count")
+    overlap_rates = collect("m22_relation_ood_training_overlap_rate")
+    overlap_counts = collect("m22_relation_ood_training_overlap_surface_count")
+    strict_mean = mean(strict) if strict else 0.0
+    worst_mean = mean(worst) if worst else 0.0
+    trace_mean = mean(trace) if trace else 0.0
+    judri_mean = mean(judri) if judri else 0.0
+    oov_mean = mean(oov) if oov else 0.0
+    overlap_mean = mean(overlap_rates) if overlap_rates else 0.0
+    return {
+        "m22_relation_ood_seed_count": float(len(relation_seed_metrics)),
+        "m22_relation_ood_strict_accuracy": strict_mean,
+        "m22_relation_ood_strict_accuracy_mean": strict_mean,
+        "m22_relation_ood_strict_accuracy_std": pstdev(strict) if len(strict) > 1 else 0.0,
+        "m22_relation_ood_strict_accuracy_min": min(strict) if strict else 0.0,
+        "m22_relation_ood_worst_surface_accuracy": worst_mean,
+        "m22_relation_ood_worst_surface_accuracy_mean": worst_mean,
+        "m22_relation_ood_worst_surface_accuracy_std": pstdev(worst) if len(worst) > 1 else 0.0,
+        "m22_relation_ood_worst_surface_accuracy_min": min(worst) if worst else 0.0,
+        "m22_relation_ood_bridi_trace_exact_accuracy": trace_mean,
+        "m22_relation_ood_bridi_trace_exact_accuracy_mean": trace_mean,
+        "m22_relation_ood_bridi_trace_exact_accuracy_std": pstdev(trace) if len(trace) > 1 else 0.0,
+        "m22_relation_ood_bridi_trace_exact_accuracy_min": min(trace) if trace else 0.0,
+        "m22_relation_ood_judri_causal_delta": judri_mean,
+        "m22_relation_ood_judri_causal_delta_mean": judri_mean,
+        "m22_relation_ood_oov_token_rate": oov_mean,
+        "m22_relation_ood_oov_token_rate_mean": oov_mean,
+        "m22_relation_ood_surface_count": float(len(surface_summary)),
+        "m22_relation_ood_surface_count_mean": mean(surface_counts) if surface_counts else 0.0,
+        "m22_relation_ood_training_overlap_rate": overlap_mean,
+        "m22_relation_ood_surface_training_overlap_rate": overlap_mean,
+        "m22_relation_ood_training_overlap_surface_count_mean": mean(overlap_counts) if overlap_counts else 0.0,
+        "m22_relation_ood_surface_accuracy": surface_summary,
+        "m22_relation_ood_surface_trace_exact_accuracy": trace_surface_summary,
+        "m22_relation_ood_surface_seed_std_max": _surface_summary_metric(surface_summary, "std", "max"),
+        "m22_relation_ood_surface_seed_min_accuracy": _surface_summary_metric(surface_summary, "min", "min"),
+    }
+
+
 def _semantic_isolation_metrics(rows: list[dict[str, Any]]) -> dict[str, float]:
     cell_metrics: dict[str, dict[str, float]] = {}
     out: dict[str, float] = {}
@@ -301,13 +454,7 @@ def _semantic_isolation_metrics(rows: list[dict[str, Any]]) -> dict[str, float]:
 
 
 def _semantic_coverage_surface_count(config: dict[str, Any]) -> int:
-    surfaces = config.get("adversarial_train_surfaces", [])
-    if isinstance(surfaces, str):
-        selected = {item.strip() for item in surfaces.split(",") if item.strip()}
-    elif isinstance(surfaces, (list, tuple, set)):
-        selected = {str(item).strip() for item in surfaces if str(item).strip()}
-    else:
-        selected = set()
+    selected = _config_surface_set(config)
     return len(selected.intersection(set(semantic_training_surface_names())))
 
 
@@ -323,6 +470,7 @@ def run_audit(args: argparse.Namespace) -> dict[str, Any]:
     if not rows:
         raise FileNotFoundError("No M21 checkpoints found in --suite-report for the requested cells.")
     seed_reports: list[dict[str, Any]] = []
+    audit_surfaces = _resolve_audit_surfaces(args)
     for index, row in enumerate(rows):
         checkpoint_path = Path(row["checkpoint_path"])
         if not checkpoint_path.is_absolute():
@@ -332,16 +480,18 @@ def run_audit(args: argparse.Namespace) -> dict[str, Any]:
         examples = generate_dynamic_bridi_adversarial_examples(
             int(args.eval_size),
             seed=int(args.audit_seed) + seed + index * 1009,
-            surfaces=tuple(args.surfaces.split(",")),
+            surfaces=audit_surfaces,
         )
         metrics = evaluate_model(model, examples, vocab, batch_size=int(args.batch_size), device=str(args.device))
         audit_metrics = _with_adversarial_prefix(metrics, _oov_metrics(examples, vocab))
         audit_metrics["adversarial_train_fraction"] = float(config.get("adversarial_train_fraction", 0.0) or 0.0)
+        audit_metrics.update(_m22_relation_ood_seed_metrics(audit_metrics, config))
         seed_reports.append(
             {
                 **row,
                 "checkpoint_path": str(checkpoint_path),
                 "config": config,
+                "audit_surfaces": list(audit_surfaces),
                 "metrics": audit_metrics,
                 "sample_eval_rows": [example.to_json() for example in examples[:5]],
             }
@@ -365,7 +515,8 @@ def run_audit(args: argparse.Namespace) -> dict[str, Any]:
             "eval_size": int(args.eval_size),
             "batch_size": int(args.batch_size),
             "audit_seed": int(args.audit_seed),
-            "surfaces": [surface.strip() for surface in args.surfaces.split(",") if surface.strip()],
+            "audit_profile": str(getattr(args, "audit_profile", "m21-default")),
+            "surfaces": list(audit_surfaces),
             "device": str(args.device),
         },
         "aggregate_metrics": aggregate,
@@ -385,24 +536,29 @@ def run_audit(args: argparse.Namespace) -> dict[str, Any]:
         f"trace={aggregate['mean_adversarial_bridi_trace_exact_accuracy']:.4f} "
         f"judri_delta={aggregate['mean_adversarial_judri_causal_delta']:.4f} "
         f"oov_acc={aggregate['mean_adversarial_oov_synonym_accuracy']:.4f} "
-        f"oov_token_rate={aggregate['mean_adversarial_oov_token_rate']:.4f}"
+        f"oov_token_rate={aggregate['mean_adversarial_oov_token_rate']:.4f} "
+        f"m22_relation_ood={aggregate['m22_relation_ood_strict_accuracy_mean']:.4f}"
     )
     return payload
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     registry = M21_REGISTRY["M21"]
+    raw_argv = list(sys.argv[1:] if argv is None else argv)
     parser = argparse.ArgumentParser(description="Run M21 held-out adversarial prompt audit on saved dynamic bridi checkpoints.")
     parser.add_argument("--suite-report", type=Path, required=True)
     parser.add_argument("--cell-list", type=str, default="H,I,J,K,L,M,N,O")
     parser.add_argument("--eval-size", type=int, default=2048)
     parser.add_argument("--batch-size", type=int, default=512)
     parser.add_argument("--audit-seed", type=int, default=21017)
-    parser.add_argument("--surfaces", type=str, default="heldout_paraphrase,role_distractor,clausal_permutation,oov_synonym")
+    parser.add_argument("--audit-profile", type=str, choices=sorted(AUDIT_PROFILES), default="m21-default")
+    parser.add_argument("--surfaces", type=str, default=",".join(DEFAULT_AUDIT_SURFACES))
     parser.add_argument("--device", type=str, default="cpu")
     parser.add_argument("--output-root", type=Path, default=Path(registry["output_roots"]["adversarial_audit"]))
     parser.add_argument("--run-id", type=str, default="")
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+    args._surfaces_override = any(item == "--surfaces" or item.startswith("--surfaces=") for item in raw_argv)
+    return args
 
 
 if __name__ == "__main__":

@@ -54,13 +54,14 @@ def test_m22_generalization_gate_requires_semantic_lift_without_judri_regression
         "aggregate_metrics": {
             "semantic_coverage_strict_accuracy": 0.43,
             "semantic_coverage_worst_surface_accuracy": 0.35,
-            "semantic_coverage_judri_causal_delta": 0.31,
+            "semantic_coverage_judri_causal_delta": 0.79,
             "semantic_coverage_oov_token_rate": 0.12,
             "semantic_coverage_oov_synonym_accuracy": 0.34,
             "semantic_coverage_surface_seed_std_max": 0.04,
             "semantic_coverage_surface_seed_min_accuracy": 0.29,
             "semantic_coverage_training_exposure_rate": 1.0,
             "semantic_isolation_cell_count": 8.0,
+            **_hard_relation_ood_metrics(),
         },
         "seed_reports": [{"cell_key": "P"}, {"cell_key": "Q"}, {"cell_key": "R"}, {"cell_key": "S"}],
     }
@@ -84,8 +85,13 @@ def test_m22_generalization_gate_requires_semantic_lift_without_judri_regression
     assert metrics["m22_semantic_worst_delta_vs_m21_control"] == 0.04999999999999999
     assert metrics["m22_clean_accuracy_drop_vs_m21_control"] == 0.0
     assert metrics["m22_candidate_cell_count"] == 4.0
+    assert metrics["m22_audit_candidate_cell_count"] == 4.0
+    assert metrics["m22_audit_blended_candidate_present"] == 1.0
     assert metrics["semantic_coverage_oov_synonym_accuracy"] == 0.34
     assert metrics["semantic_coverage_surface_seed_std_max"] == 0.04
+    assert metrics["m22_relation_ood_strict_accuracy"] == 0.42
+    assert metrics["m22_hard_relation_ood_score"] == 0.36
+    assert payload["promotion_gates"]["relation_ood_metrics_available"] is True
     assert metrics["m22_promotion_candidate"] == 1.0
     assert payload["candidate_cells"] == ["P", "Q", "R", "S"]
     assert payload["comparison_policy"]["delta_baseline"] == "explicit_m21_control_direct_manifest"
@@ -148,8 +154,9 @@ def test_m22_generalization_gate_requires_exposure_isolation_and_control() -> No
 
     assert payload["metrics"]["m22_promotion_candidate"] == 0.0
     assert payload["promotion_gates"]["semantic_training_exposed"] is False
-    assert payload["promotion_gates"]["semantic_isolation_evidence_present"] is False
     assert payload["promotion_gates"]["m22_candidate_cell_evidence_present"] is True
+    assert payload["promotion_gates"]["m22_audit_candidate_cell_evidence_present"] is False
+    assert payload["promotion_gates"]["m22_blended_candidate_audit_evidence_present"] is False
     assert payload["promotion_gates"]["explicit_m21_control_present"] is False
 
 
@@ -186,6 +193,177 @@ def test_m22_generalization_gate_requires_explicit_pqr_candidate_cells() -> None
     assert payload["candidate_cells"] == []
     assert payload["metrics"]["m22_candidate_cell_count"] == 0.0
     assert payload["promotion_gates"]["m22_candidate_cell_evidence_present"] is False
+    assert payload["metrics"]["m22_promotion_candidate"] == 0.0
+
+
+def test_m22_generalization_gate_rejects_h_o_audit_for_m22_candidate_suite() -> None:
+    payload = build_m22_semantic_generalization_payload(
+        suite_payload={
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.85,
+                "mean_bridi_trace_exact_accuracy": 0.999,
+                "mean_judri_causal_delta": 0.79,
+            },
+            "cells": {"S": {}},
+        },
+        adversarial_payload={
+            "aggregate_metrics": {
+                "semantic_coverage_strict_accuracy": 0.95,
+                "semantic_coverage_worst_surface_accuracy": 0.95,
+                "semantic_coverage_judri_causal_delta": 0.95,
+                "semantic_coverage_training_exposure_rate": 1.0,
+            },
+            "seed_reports": [{"cell_key": "H"}, {"cell_key": "I"}, {"cell_key": "O"}],
+        },
+        control_manifest_payload={
+            "headline_metrics": {
+                "strict_accuracy": 0.85,
+                "semantic_coverage_strict_accuracy": 0.39,
+                "semantic_coverage_worst_surface_accuracy": 0.30,
+                "judri_causal_delta": 0.80,
+            }
+        },
+    )
+
+    assert payload["suite_candidate_cells"] == ["S"]
+    assert payload["audit_candidate_cells"] == []
+    assert payload["promotion_gates"]["m22_audit_candidate_cell_evidence_present"] is False
+    assert payload["metrics"]["m22_promotion_candidate"] == 0.0
+
+
+def test_m22_generalization_gate_requires_blended_candidate_not_p_only() -> None:
+    payload = build_m22_semantic_generalization_payload(
+        suite_payload={
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.85,
+                "mean_bridi_trace_exact_accuracy": 0.999,
+                "mean_judri_causal_delta": 0.79,
+            },
+            "cells": {"P": {}, "Q": {}, "R": {}},
+        },
+        adversarial_payload={
+            "aggregate_metrics": {
+                "semantic_coverage_strict_accuracy": 0.95,
+                "semantic_coverage_worst_surface_accuracy": 0.95,
+                "semantic_coverage_judri_causal_delta": 0.95,
+                "semantic_coverage_training_exposure_rate": 1.0,
+            },
+            "seed_reports": [{"cell_key": "P"}, {"cell_key": "Q"}, {"cell_key": "R"}],
+        },
+        control_manifest_payload={
+            "headline_metrics": {
+                "strict_accuracy": 0.85,
+                "semantic_coverage_strict_accuracy": 0.39,
+                "semantic_coverage_worst_surface_accuracy": 0.30,
+                "judri_causal_delta": 0.80,
+            }
+        },
+    )
+
+    assert payload["audit_candidate_cells"] == ["P", "Q", "R"]
+    assert payload["audit_blended_candidate_cells"] == []
+    assert payload["promotion_gates"]["m22_blended_candidate_audit_evidence_present"] is False
+    assert payload["metrics"]["m22_promotion_candidate"] == 0.0
+
+
+def test_m22_generalization_gate_blocks_low_semantic_judri_delta() -> None:
+    payload = build_m22_semantic_generalization_payload(
+        suite_payload={
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.85,
+                "mean_bridi_trace_exact_accuracy": 0.999,
+                "mean_judri_causal_delta": 0.79,
+            },
+            "cells": {"S": {}},
+        },
+        adversarial_payload={
+            "aggregate_metrics": {
+                "semantic_coverage_strict_accuracy": 0.95,
+                "semantic_coverage_worst_surface_accuracy": 0.95,
+                "semantic_coverage_judri_causal_delta": 0.05,
+                "semantic_coverage_training_exposure_rate": 1.0,
+            },
+            "seed_reports": [{"cell_key": "S"}],
+        },
+        control_manifest_payload={
+            "headline_metrics": {
+                "strict_accuracy": 0.85,
+                "semantic_coverage_strict_accuracy": 0.39,
+                "semantic_coverage_worst_surface_accuracy": 0.30,
+                "judri_causal_delta": 0.80,
+            }
+        },
+    )
+
+    assert payload["promotion_gates"]["semantic_judri_causality_preserved"] is False
+    assert payload["metrics"]["m22_promotion_candidate"] == 0.0
+
+
+def test_m22_generalization_gate_does_not_promote_generic_adversarial_fallback() -> None:
+    payload = build_m22_semantic_generalization_payload(
+        suite_payload={
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.85,
+                "mean_bridi_trace_exact_accuracy": 0.999,
+                "mean_judri_causal_delta": 0.79,
+            },
+            "cells": {"S": {}},
+        },
+        adversarial_payload={
+            "aggregate_metrics": {
+                "mean_adversarial_strict_accuracy": 0.95,
+                "mean_adversarial_worst_surface_accuracy": 0.95,
+                "mean_adversarial_judri_causal_delta": 0.95,
+                "semantic_coverage_training_exposure_rate": 1.0,
+            },
+            "seed_reports": [{"cell_key": "S"}],
+        },
+        control_manifest_payload={
+            "headline_metrics": {
+                "strict_accuracy": 0.85,
+                "semantic_coverage_strict_accuracy": 0.39,
+                "semantic_coverage_worst_surface_accuracy": 0.30,
+                "judri_causal_delta": 0.80,
+            }
+        },
+    )
+
+    assert payload["metrics"]["semantic_coverage_strict_accuracy"] == 0.95
+    assert payload["promotion_gates"]["semantic_coverage_metrics_available"] is False
+    assert payload["metrics"]["m22_promotion_candidate"] == 0.0
+
+
+def test_m22_generalization_gate_requires_hard_relation_ood_evidence() -> None:
+    payload = build_m22_semantic_generalization_payload(
+        suite_payload={
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.85,
+                "mean_bridi_trace_exact_accuracy": 0.999,
+                "mean_judri_causal_delta": 0.79,
+            },
+            "cells": {"S": {}},
+        },
+        adversarial_payload={
+            "aggregate_metrics": {
+                "semantic_coverage_strict_accuracy": 0.95,
+                "semantic_coverage_worst_surface_accuracy": 0.95,
+                "semantic_coverage_judri_causal_delta": 0.95,
+                "semantic_coverage_training_exposure_rate": 1.0,
+            },
+            "seed_reports": [{"cell_key": "S"}],
+        },
+        control_manifest_payload={
+            "headline_metrics": {
+                "strict_accuracy": 0.85,
+                "semantic_coverage_strict_accuracy": 0.39,
+                "semantic_coverage_worst_surface_accuracy": 0.30,
+                "judri_causal_delta": 0.80,
+            }
+        },
+    )
+
+    assert payload["promotion_gates"]["relation_ood_metrics_available"] is False
+    assert payload["promotion_gates"]["relation_ood_score_positive"] is False
     assert payload["metrics"]["m22_promotion_candidate"] == 0.0
 
 
@@ -241,7 +419,7 @@ def test_m22_runner_writes_report_from_fixture_paths(tmp_path: Path) -> None:
                     "mean_bridi_trace_exact_accuracy": 0.999,
                     "mean_judri_causal_delta": 0.79,
                 },
-                "cells": {"P": {}},
+                "cells": {"S": {}},
             }
         ),
         encoding="utf-8",
@@ -252,11 +430,12 @@ def test_m22_runner_writes_report_from_fixture_paths(tmp_path: Path) -> None:
                 "aggregate_metrics": {
                     "semantic_coverage_strict_accuracy": 0.43,
                     "semantic_coverage_worst_surface_accuracy": 0.35,
-                    "semantic_coverage_judri_causal_delta": 0.31,
+                    "semantic_coverage_judri_causal_delta": 0.79,
                     "semantic_coverage_training_exposure_rate": 1.0,
                     "semantic_isolation_cell_count": 8.0,
+                    **_hard_relation_ood_metrics(),
                 },
-                "seed_reports": [{"cell_key": "P"}],
+                "seed_reports": [{"cell_key": "S"}],
             }
         ),
         encoding="utf-8",
@@ -295,7 +474,7 @@ def test_m22_runner_writes_report_from_fixture_paths(tmp_path: Path) -> None:
 
     assert report_path.exists()
     assert payload["track"] == "M22"
-    assert payload["candidate_cells"] == ["P"]
+    assert payload["candidate_cells"] == ["S"]
     assert payload["source_reports"]["m21_suite_report"] == str(suite_path)
     assert "metrics" in payload
     assert "promotion_gates" in payload
@@ -371,7 +550,28 @@ def test_m22_seed_stability_aggregate_reports_ood_accuracy_and_surface_variance(
                     "semantic_coverage_strict_accuracy": 0.83,
                     "semantic_coverage_worst_surface_accuracy": 0.29,
                     "semantic_coverage_oov_synonym_accuracy": 0.29,
+                    **_hard_relation_ood_metrics(),
                     "m22_promotion_candidate": 1.0,
+                },
+                "promotion_gates": {
+                    "clean_accuracy_not_collapsed": True,
+                    "trace_reconstruction_preserved": True,
+                    "judri_causality_preserved": True,
+                    "semantic_judri_causality_preserved": True,
+                    "semantic_strict_improves_control": True,
+                    "semantic_worst_improves_control": True,
+                    "clean_drop_within_tolerance": True,
+                    "semantic_training_exposed": True,
+                    "semantic_coverage_metrics_available": True,
+                    "relation_ood_metrics_available": True,
+                    "relation_ood_surfaces_complete": True,
+                    "relation_ood_surfaces_unseen_in_training": True,
+                    "relation_ood_judri_causality_preserved": True,
+                    "relation_ood_score_positive": True,
+                    "m22_candidate_cell_evidence_present": True,
+                    "m22_audit_candidate_cell_evidence_present": True,
+                    "m22_blended_candidate_audit_evidence_present": True,
+                    "explicit_m21_control_present": True,
                 },
             }
         ),
@@ -401,4 +601,19 @@ def test_m22_seed_stability_aggregate_reports_ood_accuracy_and_surface_variance(
     assert metrics["audit_seed_adversarial_oov_synonym_accuracy_mean"] == 0.29000000000000004
     assert metrics["m22_seed_stability_surface_accuracy"]["oov_synonym"]["std"] == pytest.approx(0.02)
     assert metrics["m22_seed_stability_promotion_rate"] == 1.0
+    assert metrics["m22_seed_stability_gate_evidence_rate"] == 1.0
     assert (output_root / "fixture" / "m22_seed_stability_report.json").exists()
+
+
+def _hard_relation_ood_metrics() -> dict[str, float]:
+    return {
+        "m22_relation_ood_strict_accuracy": 0.42,
+        "m22_relation_ood_worst_surface_accuracy": 0.36,
+        "m22_relation_ood_bridi_trace_exact_accuracy": 0.98,
+        "m22_relation_ood_judri_causal_delta": 0.79,
+        "m22_relation_ood_oov_token_rate": 0.04,
+        "m22_relation_ood_surface_count": 4.0,
+        "m22_relation_ood_surface_seed_std_max": 0.03,
+        "m22_relation_ood_surface_seed_min_accuracy": 0.34,
+        "m22_relation_ood_surface_training_overlap_rate": 0.0,
+    }

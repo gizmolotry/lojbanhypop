@@ -3,10 +3,13 @@ from __future__ import annotations
 import torch
 
 from lojban_evolution.m21 import (
+    ANSWER_LABELS,
     CMAVO,
     GISMU,
     M21DynamicBridiQFormer,
+    M22_RELATION_OOD_AUDIT_SURFACES,
     M22_SEMANTIC_GENERALIZATION_TRAINING_SURFACES,
+    adversarial_surface_names,
     build_vocab,
     clamp_poincare_norm,
     compute_m21_loss,
@@ -201,6 +204,40 @@ def test_m22_semantic_surfaces_preserve_role_and_polarity_contrasts() -> None:
     assert excess_size.gismu_id == deficit_size.gismu_id
     assert CMAVO_TO_ID["excess"] in excess_size.cmavo_ids
     assert CMAVO_TO_ID["deficit"] in deficit_size.cmavo_ids
+
+
+def test_m22_relation_ood_surfaces_are_audit_only_and_balanced() -> None:
+    audit_surfaces = set(adversarial_surface_names())
+    training_surfaces = set(adversarial_training_surface_names())
+    semantic_surfaces = set(semantic_training_surface_names())
+    hard_surfaces = set(M22_RELATION_OOD_AUDIT_SURFACES)
+
+    assert hard_surfaces
+    assert hard_surfaces.issubset(audit_surfaces)
+    assert hard_surfaces.issubset(set(RESERVED_ADVERSARIAL_AUDIT_SURFACES))
+    assert hard_surfaces.isdisjoint(training_surfaces)
+    assert hard_surfaces.isdisjoint(semantic_surfaces)
+
+    examples = generate_dynamic_bridi_adversarial_examples(
+        len(ANSWER_LABELS) * len(M22_RELATION_OOD_AUDIT_SURFACES),
+        seed=132,
+        surfaces=M22_RELATION_OOD_AUDIT_SURFACES,
+    )
+
+    assert {row.surface for row in examples} == hard_surfaces
+    assert {row.answer_label for row in examples} == set(ANSWER_LABELS)
+    assert all(row.is_relation_ood for row in examples)
+    assert all(row.template_family == "m22_relation_ood" for row in examples)
+    assert all(row.template_id for row in examples)
+    assert all(row.surface in row.template_id and row.answer_label in row.template_id for row in examples)
+    assert all(row.to_json()["is_relation_ood"] is True for row in examples)
+    assert all(any(frame.active for frame in row.frames) for row in examples)
+    label_counts = {label: sum(row.answer_label == label for row in examples) for label in ANSWER_LABELS}
+    assert label_counts == {label: len(M22_RELATION_OOD_AUDIT_SURFACES) for label in ANSWER_LABELS}
+    for surface in hard_surfaces:
+        surface_rows = [row for row in examples if row.surface == surface]
+        assert len(surface_rows) == len(ANSWER_LABELS)
+        assert {row.answer_label for row in surface_rows} == set(ANSWER_LABELS)
 
 
 def test_m21_grid_contains_semantic_coverage_ablation_cells() -> None:

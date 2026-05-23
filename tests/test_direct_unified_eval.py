@@ -724,17 +724,48 @@ def test_build_direct_unified_eval_manifest_m22_semantic_generalization() -> Non
                 "judri_causal_delta": 0.79,
                 "semantic_coverage_strict_accuracy": 0.43,
                 "semantic_coverage_worst_surface_accuracy": 0.35,
-                "semantic_coverage_judri_causal_delta": 0.31,
+                "semantic_coverage_judri_causal_delta": 0.79,
                 "semantic_coverage_oov_synonym_accuracy": 0.34,
                 "m22_candidate_cell_count": 4.0,
                 "m22_candidate_cells_present": 1.0,
-                "m22_semantic_generalization_score": 0.31,
+                "m22_audit_candidate_cell_count": 4.0,
+                "m22_audit_blended_candidate_present": 1.0,
+                "semantic_coverage_metrics_present": 1.0,
+                "m22_relation_ood_metrics_present": 1.0,
+                "m22_relation_ood_strict_accuracy": 0.42,
+                "m22_relation_ood_worst_surface_accuracy": 0.36,
+                "m22_relation_ood_bridi_trace_exact_accuracy": 0.98,
+                "m22_relation_ood_judri_causal_delta": 0.79,
+                "m22_relation_ood_surface_count": 4.0,
+                "m22_relation_ood_surface_training_overlap_rate": 0.0,
+                "m22_hard_relation_ood_score": 0.36,
+                "m22_semantic_generalization_score": 0.35,
                 "m22_semantic_strict_delta_vs_m21_control": 0.04,
                 "m22_semantic_worst_delta_vs_m21_control": 0.03,
                 "m22_clean_accuracy_drop_vs_m21_control": 0.0,
                 "m22_judri_delta_drop_vs_m21_control": 0.01,
                 "m22_promotion_gate_pass_rate": 1.0,
                 "m22_promotion_candidate": 1.0,
+            },
+            "promotion_gates": {
+                "clean_accuracy_not_collapsed": True,
+                "trace_reconstruction_preserved": True,
+                "judri_causality_preserved": True,
+                "semantic_judri_causality_preserved": True,
+                "semantic_strict_improves_control": True,
+                "semantic_worst_improves_control": True,
+                "clean_drop_within_tolerance": True,
+                "semantic_training_exposed": True,
+                "semantic_coverage_metrics_available": True,
+                "relation_ood_metrics_available": True,
+                "relation_ood_surfaces_complete": True,
+                "relation_ood_surfaces_unseen_in_training": True,
+                "relation_ood_judri_causality_preserved": True,
+                "relation_ood_score_positive": True,
+                "m22_candidate_cell_evidence_present": True,
+                "m22_audit_candidate_cell_evidence_present": True,
+                "m22_blended_candidate_audit_evidence_present": True,
+                "explicit_m21_control_present": True,
             },
         },
     )
@@ -750,7 +781,9 @@ def test_build_direct_unified_eval_manifest_m22_semantic_generalization() -> Non
     assert manifest["track"] == "M22"
     assert manifest["headline_metrics"]["m22_candidate_cell_count"] == 4.0
     assert manifest["headline_metrics"]["semantic_coverage_oov_synonym_accuracy"] == 0.34
-    assert manifest["headline_metrics"]["m22_semantic_generalization_score"] == 0.31
+    assert manifest["headline_metrics"]["m22_semantic_generalization_score"] == 0.35
+    assert manifest["headline_metrics"]["m22_relation_ood_strict_accuracy"] == 0.42
+    assert manifest["headline_metrics"]["m22_hard_relation_ood_score"] == 0.36
     statuses = {row["test_id"]: row["status"] for row in manifest["contract_results"]}
     assert statuses["m22.semantic_coverage_generalization"] == "available"
     assert any(row["target"] == "M21.1.O" for row in manifest["comparison_targets_resolved"])
@@ -758,6 +791,82 @@ def test_build_direct_unified_eval_manifest_m22_semantic_generalization() -> Non
     rendered = render_direct_unified_eval_markdown(manifest)
     assert "Direct Unified Eval: M22 (M22)" in rendered
     assert "m22.semantic_coverage_generalization" in rendered
+
+
+def test_build_direct_unified_eval_manifest_m22_rejects_inconsistent_promotion_gates() -> None:
+    tmp_path = _scratch_dir()
+    generalization_path = _write_json(
+        tmp_path / "m22_semantic_generalization_report.json",
+        {
+            "track": "M22",
+            "metrics": {
+                "strict_accuracy": 0.85,
+                "bridi_trace_exact_accuracy": 0.999,
+                "judri_causal_delta": 0.79,
+                "semantic_coverage_strict_accuracy": 0.43,
+                "semantic_coverage_worst_surface_accuracy": 0.35,
+                "semantic_coverage_judri_causal_delta": 0.79,
+                "m22_semantic_generalization_score": 0.35,
+                "m22_promotion_gate_pass_rate": 1.0,
+                "m22_promotion_candidate": 1.0,
+            },
+            "promotion_gates": {
+                "clean_accuracy_not_collapsed": True,
+                "m22_audit_candidate_cell_evidence_present": False,
+            },
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M22",
+        track="M22",
+        m22_generalization_report_path=generalization_path,
+        history_manifest_path=None,
+    )
+
+    row = next(row for row in manifest["contract_results"] if row["test_id"] == "m22.semantic_coverage_generalization")
+    assert row["status"] == "missing"
+    assert "failed gates" in " ".join(row["notes"])
+
+
+def test_build_direct_unified_eval_manifest_m22_rejects_incomplete_promotion_gates() -> None:
+    tmp_path = _scratch_dir()
+    generalization_path = _write_json(
+        tmp_path / "m22_semantic_generalization_report.json",
+        {
+            "track": "M22",
+            "metrics": {
+                "strict_accuracy": 0.85,
+                "bridi_trace_exact_accuracy": 0.999,
+                "judri_causal_delta": 0.79,
+                "semantic_coverage_strict_accuracy": 0.43,
+                "semantic_coverage_worst_surface_accuracy": 0.35,
+                "semantic_coverage_judri_causal_delta": 0.79,
+                "m22_relation_ood_strict_accuracy": 0.42,
+                "m22_relation_ood_worst_surface_accuracy": 0.36,
+                "m22_relation_ood_judri_causal_delta": 0.79,
+                "m22_semantic_generalization_score": 0.35,
+                "m22_hard_relation_ood_score": 0.36,
+                "m22_promotion_gate_pass_rate": 1.0,
+                "m22_promotion_candidate": 1.0,
+            },
+            "promotion_gates": {
+                "clean_accuracy_not_collapsed": True,
+                "trace_reconstruction_preserved": True,
+            },
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M22",
+        track="M22",
+        m22_generalization_report_path=generalization_path,
+        history_manifest_path=None,
+    )
+
+    row = next(row for row in manifest["contract_results"] if row["test_id"] == "m22.semantic_coverage_generalization")
+    assert row["status"] == "missing"
+    assert "missing gates" in " ".join(row["notes"])
 
 
 def test_build_direct_unified_eval_manifest_m22_failed_promotion_is_not_available() -> None:

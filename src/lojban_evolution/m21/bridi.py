@@ -90,7 +90,13 @@ PEOPLE = ("Alex", "Riley", "Jordan", "Morgan", "Taylor", "Casey", "Sam", "Quinn"
 ALT_NOUNS = ("lantern", "marble", "folder", "button", "ticket", "cup", "shell", "cable", "key", "map")
 TOKEN_RE = re.compile(r"[a-z0-9_]+", re.IGNORECASE)
 
-RESERVED_ADVERSARIAL_AUDIT_SURFACES = ("oov_synonym", "role_distractor")
+M22_RELATION_OOD_AUDIT_SURFACES = (
+    "relation_composition_ood",
+    "role_inversion_ood",
+    "polarity_scope_ood",
+    "decoy_relation_ood",
+)
+RESERVED_ADVERSARIAL_AUDIT_SURFACES = ("oov_synonym", "role_distractor") + M22_RELATION_OOD_AUDIT_SURFACES
 LEGACY_ADVERSARIAL_TRAINING_SURFACES = ("heldout_paraphrase", "clausal_permutation")
 SEMANTIC_COVERAGE_TRAINING_SURFACES = (
     "lexical_shift_train",
@@ -205,6 +211,9 @@ class DynamicBridiExample:
     counterfactual_group: str
     entity_signature: str
     is_floating: bool = False
+    template_id: str = ""
+    template_family: str = ""
+    is_relation_ood: bool = False
 
     def to_json(self) -> dict[str, Any]:
         payload = asdict(self)
@@ -832,12 +841,127 @@ def _m22_semantic_generalization_template_bank() -> dict[str, tuple[tuple[str, s
         ),
     }
 
+
+def _m22_relation_ood_template_bank() -> dict[str, tuple[tuple[str, str], ...]]:
+    return {
+        "size_excess": (
+            ("relation_composition_ood", "{object2} fit after {container} was checked, but {object} failed because its volume exceeded the remaining space."),
+            ("role_inversion_ood", "{container} accepted {object2}; the non-accepted item was {object} because it was too large."),
+            ("polarity_scope_ood", "It was not a shortage problem: {object} had surplus size for {container}."),
+            ("decoy_relation_ood", "{object2} was heavy, but the cause for {object} was oversized shape in {container}."),
+        ),
+        "size_deficit": (
+            ("relation_composition_ood", "{object2} filled part of {container}, then {object} still left unused space."),
+            ("role_inversion_ood", "{container} filled around {object2}; the undersized item was {object}."),
+            ("polarity_scope_ood", "It was not surplus size: {object} was too small for {container}."),
+            ("decoy_relation_ood", "{object2} was bulky, but {object} caused the gap by being undersized."),
+        ),
+        "weight_excess": (
+            ("relation_composition_ood", "After {person} moved {object2}, lifting {object} still failed because of weight."),
+            ("role_inversion_ood", "{person} lifted {object2}; the unlifted item was {object} due to heaviness."),
+            ("polarity_scope_ood", "It was not lightness: {object} had too much weight for {person}."),
+            ("decoy_relation_ood", "{container} was narrow, but {person}'s failure with {object} came from weight."),
+        ),
+        "weight_deficit": (
+            ("relation_composition_ood", "After {object2} resisted motion, {object} moved because low weight made it easy."),
+            ("role_inversion_ood", "{object2} stayed still; the item that shifted from low weight was {object}."),
+            ("polarity_scope_ood", "It was not heaviness: {object} moved because weight was deficient."),
+            ("decoy_relation_ood", "{container} held another item, but {object} moved from low weight."),
+        ),
+        "transfer_success": (
+            ("relation_composition_ood", "After {person} observed the offer, {giver} completed the handoff and {receiver} held {object}."),
+            ("role_inversion_ood", "The path was from {giver} to {receiver}; {receiver}, not {giver}, ended with {object}."),
+            ("polarity_scope_ood", "The event was not a refusal: custody of {object} reached {receiver}."),
+            ("decoy_relation_ood", "{person} liked {object2}, but the relevant event was {giver} transferring {object} to {receiver}."),
+        ),
+        "transfer_refused": (
+            ("relation_composition_ood", "After {person} saw the offer, {receiver} blocked the handoff of {object} from {giver}."),
+            ("role_inversion_ood", "The refuser was {receiver}, not {giver}; {object} did not transfer."),
+            ("polarity_scope_ood", "The event was not completed: {receiver} refused {object}."),
+            ("decoy_relation_ood", "{object2} changed hands elsewhere, but {receiver} rejected {object} from {giver}."),
+        ),
+        "preference_like": (
+            ("relation_composition_ood", "After comparing {object2}, {person} chose {object} because it was favored."),
+            ("role_inversion_ood", "{object2} was passed over; the liked item for {person} was {object}."),
+            ("polarity_scope_ood", "The attitude was not avoidance: {person} favored {object}."),
+            ("decoy_relation_ood", "{giver} moved {object2}, but {person}'s relevant state was liking {object}."),
+        ),
+        "preference_dislike": (
+            ("relation_composition_ood", "After accepting {object2}, {person} still avoided {object} because it was disfavored."),
+            ("role_inversion_ood", "{object2} was acceptable; the disliked item for {person} was {object}."),
+            ("polarity_scope_ood", "The attitude was not preference: {person} avoided {object}."),
+            ("decoy_relation_ood", "{receiver} held {object2}, but {person}'s relevant state was dislike of {object}."),
+        ),
+        "containment_success": (
+            ("relation_composition_ood", "After {object2} was removed, {container} enclosed {object}."),
+            ("role_inversion_ood", "{object2} stayed outside; the contained item in {container} was {object}."),
+            ("polarity_scope_ood", "The result was not blocking: {container} held {object}."),
+            ("decoy_relation_ood", "{person} disliked {object2}, but {container} successfully held {object}."),
+        ),
+        "containment_blocked": (
+            ("relation_composition_ood", "After {object2} passed nearby, {container} still barred {object}."),
+            ("role_inversion_ood", "{container} admitted {object2}; the blocked item was {object}."),
+            ("polarity_scope_ood", "The result was not containment: {container} prevented {object}."),
+            ("decoy_relation_ood", "{person} lifted {object2}, but the relevant relation was {container} blocking {object}."),
+        ),
+        "visibility_clear": (
+            ("relation_composition_ood", "After {object2} moved away, {observer} could see {object}."),
+            ("role_inversion_ood", "{observer} missed {object2}; the visible item was {object}."),
+            ("polarity_scope_ood", "The view was not obstructed: {observer} saw {object}."),
+            ("decoy_relation_ood", "{container} held {object2}, but {observer}'s relevant relation was seeing {object}."),
+        ),
+        "visibility_blocked": (
+            ("relation_composition_ood", "After {object2} became visible, {object} remained hidden from {observer}."),
+            ("role_inversion_ood", "{observer} saw {object2}; the hidden item was {object}."),
+            ("polarity_scope_ood", "The view was not clear: {object} stayed hidden from {observer}."),
+            ("decoy_relation_ood", "{giver} moved {object2}, but {observer}'s relevant relation to {object} was blocked sight."),
+        ),
+        "quantity_excess": (
+            ("relation_composition_ood", "After excluding {object2}s, the {count} {object}s still exceeded the limit."),
+            ("role_inversion_ood", "{object2}s were not counted; the excessive counted set was {object}s."),
+            ("polarity_scope_ood", "The count problem was not shortage: there were too many {object}s."),
+            ("decoy_relation_ood", "{container} blocked {object2}, but the relevant issue was surplus {object}s."),
+        ),
+        "quantity_deficit": (
+            ("relation_composition_ood", "After excluding {object2}s, the {count} {object}s still fell short."),
+            ("role_inversion_ood", "{object2}s were not counted; the deficient counted set was {object}s."),
+            ("polarity_scope_ood", "The count problem was not surplus: there were too few {object}s."),
+            ("decoy_relation_ood", "{container} held {object2}, but the relevant issue was deficient {object}s."),
+        ),
+        "motion_allowed": (
+            ("relation_composition_ood", "After {object2} stayed behind, permission let {person} move {object} toward {container}."),
+            ("role_inversion_ood", "The permission applied to {person} moving {object}, not {object2}."),
+            ("polarity_scope_ood", "Motion was not forbidden: authorization let {person} move {object}."),
+            ("decoy_relation_ood", "{receiver} disliked {object2}, but {person}'s motion of {object} was permitted."),
+        ),
+        "motion_blocked": (
+            ("relation_composition_ood", "After {object2} moved, permission still failed for {person} moving {object}."),
+            ("role_inversion_ood", "{person} moved {object2}; the blocked motion concerned {object}."),
+            ("polarity_scope_ood", "Motion was not allowed: authorization blocked {person} from moving {object}."),
+            ("decoy_relation_ood", "{container} held {object2}, but {person}'s motion of {object} was forbidden."),
+        ),
+        "permission_granted": (
+            ("relation_composition_ood", "After {object2} was denied, the rule still allowed {person} to use {object}."),
+            ("role_inversion_ood", "The allowed target for {person} was {object}, not {object2}."),
+            ("polarity_scope_ood", "The rule was not denial: {person} received permission for {object}."),
+            ("decoy_relation_ood", "{giver} transferred {object2}, but the relevant rule allowed {person} to use {object}."),
+        ),
+        "permission_denied": (
+            ("relation_composition_ood", "After {object2} was allowed, the rule still denied {person} use of {object}."),
+            ("role_inversion_ood", "The denied target for {person} was {object}, not {object2}."),
+            ("polarity_scope_ood", "The rule was not permission: {person} was forbidden from using {object}."),
+            ("decoy_relation_ood", "{receiver} accepted {object2}, but the relevant rule denied {person} use of {object}."),
+        ),
+    }
+
+
 def _with_semantic_coverage_surfaces(
     base: dict[str, tuple[tuple[str, str], ...]],
 ) -> dict[str, tuple[tuple[str, str], ...]]:
     semantic_bank = _semantic_coverage_template_bank()
     role_curriculum_bank = _role_binding_curriculum_template_bank()
     m22_bank = _m22_semantic_generalization_template_bank()
+    relation_ood_bank = _m22_relation_ood_template_bank()
     expanded: dict[str, tuple[tuple[str, str], ...]] = {}
     for answer_label, templates in base.items():
         expanded[answer_label] = (
@@ -845,6 +969,7 @@ def _with_semantic_coverage_surfaces(
             + semantic_bank.get(answer_label, tuple())
             + role_curriculum_bank.get(answer_label, tuple())
             + m22_bank.get(answer_label, tuple())
+            + relation_ood_bank.get(answer_label, tuple())
         )
     return expanded
 
@@ -860,6 +985,61 @@ def semantic_training_surface_names() -> tuple[str, ...]:
 
 def adversarial_training_surface_names() -> tuple[str, ...]:
     return LEGACY_ADVERSARIAL_TRAINING_SURFACES + semantic_training_surface_names()
+
+
+def _adversarial_template_family(surface: str) -> str:
+    if surface in M22_RELATION_OOD_AUDIT_SURFACES:
+        return "m22_relation_ood"
+    if surface in M22_SEMANTIC_GENERALIZATION_TRAINING_SURFACES:
+        return "m22_semantic_generalization_train"
+    if surface in SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES:
+        return "semantic_role_curriculum_train"
+    if surface in SEMANTIC_COVERAGE_TRAINING_SURFACES:
+        return "semantic_coverage_train"
+    if surface in LEGACY_ADVERSARIAL_TRAINING_SURFACES:
+        return "legacy_adversarial_train"
+    return "reserved_adversarial_audit"
+
+
+def _balanced_relation_ood_schedule(
+    size: int,
+    *,
+    labels: Sequence[str],
+    surfaces: Sequence[str],
+    rng: random.Random,
+) -> list[tuple[str, str]]:
+    unique_surfaces = tuple(dict.fromkeys(surfaces))
+    grid = [(answer_label, surface) for answer_label in labels for surface in unique_surfaces]
+    if int(size) <= 0 or not grid:
+        return []
+
+    schedule: list[tuple[str, str]] = []
+    full_cycles, remainder = divmod(int(size), len(grid))
+    for _ in range(full_cycles):
+        cycle = list(grid)
+        rng.shuffle(cycle)
+        schedule.extend(cycle)
+
+    if remainder:
+        remaining = list(grid)
+        rng.shuffle(remaining)
+        label_counts: dict[str, int] = defaultdict(int)
+        surface_counts: dict[str, int] = defaultdict(int)
+        for _ in range(remainder):
+            best_idx = min(
+                range(len(remaining)),
+                key=lambda item_idx: (
+                    label_counts[remaining[item_idx][0]],
+                    surface_counts[remaining[item_idx][1]],
+                    label_counts[remaining[item_idx][0]] + surface_counts[remaining[item_idx][1]],
+                ),
+            )
+            answer_label, surface = remaining.pop(best_idx)
+            label_counts[answer_label] += 1
+            surface_counts[surface] += 1
+            schedule.append((answer_label, surface))
+
+    return schedule
 
 
 def _validated_adversarial_surfaces(
@@ -897,18 +1077,45 @@ def generate_dynamic_bridi_adversarial_examples(
     selected_surfaces = _validated_adversarial_surfaces(surfaces)
     rows: list[DynamicBridiExample] = []
     labels = list(ANSWER_LABELS)
+    hard_ood_surfaces = set(M22_RELATION_OOD_AUDIT_SURFACES)
+    selected_hard_only = bool(selected_surfaces) and set(selected_surfaces).issubset(hard_ood_surfaces)
+    hard_ood_schedule = (
+        _balanced_relation_ood_schedule(int(size), labels=labels, surfaces=selected_surfaces, rng=rng)
+        if selected_hard_only
+        else []
+    )
     for idx in range(int(size)):
-        answer_label = labels[idx % len(labels)] if idx < len(labels) * 2 else rng.choice(labels)
-        candidates = [item for item in banks[answer_label] if item[0] in selected_surfaces]
+        if hard_ood_schedule:
+            answer_label, target_surface = hard_ood_schedule[idx]
+            candidates = [
+                (template_idx, surface, template)
+                for template_idx, (surface, template) in enumerate(banks[answer_label])
+                if surface == target_surface
+            ]
+        else:
+            answer_label = labels[idx % len(labels)] if idx < len(labels) * 2 else rng.choice(labels)
+            candidates = [
+                (template_idx, surface, template)
+                for template_idx, (surface, template) in enumerate(banks[answer_label])
+                if surface in selected_surfaces
+            ]
         if not candidates:
             raise ValueError(f"No M21 adversarial templates for answer '{answer_label}' on surfaces {selected_surfaces}.")
-        surface, template = rng.choice(candidates)
-        role_surfaces = {"role_distractor", "role_binding_train", "role_chain_generalization_train", *SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES}
+        template_index, surface, template = candidates[idx % len(candidates)] if hard_ood_schedule else rng.choice(candidates)
+        role_surfaces = {
+            "role_distractor",
+            "role_binding_train",
+            "role_chain_generalization_train",
+            *SEMANTIC_ROLE_CURRICULUM_TRAINING_SURFACES,
+            *M22_RELATION_OOD_AUDIT_SURFACES,
+        }
         values = _values(rng, "renamed" if surface in role_surfaces else "purged")
         entities = _entity_tuple(values)
         prompt = template.format(**values)
         spec = specs[answer_label]
         frames = tuple(spec["frames"](values))
+        is_relation_ood = surface in hard_ood_surfaces
+        template_family = _adversarial_template_family(surface)
         rows.append(
             DynamicBridiExample(
                 prompt=prompt,
@@ -920,6 +1127,9 @@ def generate_dynamic_bridi_adversarial_examples(
                 counterfactual_group=answer_label,
                 entity_signature="|".join(entities),
                 is_floating=False,
+                template_id=f"{template_family}:{answer_label}:{surface}:{template_index}",
+                template_family=template_family,
+                is_relation_ood=is_relation_ood,
             )
         )
     rng.shuffle(rows)

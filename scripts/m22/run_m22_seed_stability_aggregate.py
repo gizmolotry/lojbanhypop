@@ -34,6 +34,13 @@ AUDIT_KEYS = (
     "adversarial_oov_synonym_accuracy",
     "adversarial_oov_synonym_trace_exact_accuracy",
     "adversarial_oov_token_rate",
+    "m22_relation_ood_strict_accuracy",
+    "m22_relation_ood_worst_surface_accuracy",
+    "m22_relation_ood_judri_causal_delta",
+    "m22_relation_ood_oov_token_rate",
+    "m22_relation_ood_surface_count",
+    "m22_relation_ood_surface_seed_std_max",
+    "m22_relation_ood_surface_seed_min_accuracy",
 )
 
 GATE_KEYS = (
@@ -43,6 +50,11 @@ GATE_KEYS = (
     "semantic_coverage_judri_causal_delta",
     "semantic_coverage_oov_synonym_accuracy",
     "semantic_coverage_oov_token_rate",
+    "m22_relation_ood_strict_accuracy",
+    "m22_relation_ood_worst_surface_accuracy",
+    "m22_relation_ood_judri_causal_delta",
+    "m22_hard_relation_ood_score",
+    "m22_relation_ood_surface_count",
     "m22_semantic_strict_delta_vs_m21_control",
     "m22_semantic_worst_delta_vs_m21_control",
     "m22_clean_accuracy_drop_vs_m21_control",
@@ -156,6 +168,13 @@ def _gate_rows(payloads: list[dict[str, Any]]) -> list[dict[str, Any]]:
         if not isinstance(metrics, dict):
             continue
         row = {key: _num(metrics.get(key)) for key in GATE_KEYS}
+        gates = payload.get("promotion_gates", {})
+        gates_present = isinstance(gates, dict) and bool(gates)
+        gates_pass = gates_present and all(bool(value) for value in gates.values())
+        row["promotion_gates_present"] = float(gates_present)
+        row["promotion_gates_pass"] = float(gates_pass)
+        if "m22_promotion_candidate" in row:
+            row["m22_promotion_candidate"] = float(row["m22_promotion_candidate"] >= 1.0 and gates_pass)
         row["run_id"] = str(payload.get("run_id", ""))
         rows.append(row)
     return rows
@@ -199,6 +218,8 @@ def _build_metrics(
     promotion_values = [row["m22_promotion_candidate"] for row in gate_rows if "m22_promotion_candidate" in row]
     metrics["m22_seed_stability_promotion_rate"] = mean(promotion_values) if promotion_values else 0.0
     metrics["m22_seed_stability_all_gates_promote"] = float(bool(promotion_values) and all(value >= 1.0 for value in promotion_values))
+    gate_evidence = [row.get("promotion_gates_present", 0.0) for row in gate_rows]
+    metrics["m22_seed_stability_gate_evidence_rate"] = mean(gate_evidence) if gate_evidence else 0.0
     return metrics
 
 
@@ -221,6 +242,7 @@ def _render_markdown(payload: dict[str, Any]) -> str:
         f"- audit worst-surface mean/min: `{metrics['audit_seed_adversarial_worst_surface_accuracy_mean']:.4f}` / `{metrics['audit_seed_adversarial_worst_surface_accuracy_min']:.4f}`",
         f"- OOD synonym accuracy mean/min: `{metrics['audit_seed_adversarial_oov_synonym_accuracy_mean']:.4f}` / `{metrics['audit_seed_adversarial_oov_synonym_accuracy_min']:.4f}`",
         f"- OOD token rate mean: `{metrics['audit_seed_adversarial_oov_token_rate_mean']:.4f}`",
+        f"- hard relation-OOD strict/worst/judri mean: `{metrics['audit_seed_m22_relation_ood_strict_accuracy_mean']:.4f}` / `{metrics['audit_seed_m22_relation_ood_worst_surface_accuracy_mean']:.4f}` / `{metrics['audit_seed_m22_relation_ood_judri_causal_delta_mean']:.4f}`",
         "",
         "## Surface Variance",
         "",
@@ -292,6 +314,13 @@ def run_seed_stability(args: argparse.Namespace) -> dict[str, Any]:
         "diagnostic_only": [
             "audit_seed_adversarial_oov_synonym_accuracy_mean",
             "audit_seed_adversarial_oov_token_rate_mean",
+            "audit_seed_m22_relation_ood_strict_accuracy_mean",
+            "audit_seed_m22_relation_ood_worst_surface_accuracy_mean",
+            "audit_seed_m22_relation_ood_judri_causal_delta_mean",
+            "audit_seed_m22_relation_ood_oov_token_rate_mean",
+            "audit_seed_m22_relation_ood_surface_count_mean",
+            "audit_seed_m22_relation_ood_surface_seed_std_max_mean",
+            "audit_seed_m22_relation_ood_surface_seed_min_accuracy_mean",
         ],
         "notes": [
             "This report aggregates completed M22 runs; it does not retrain or change promotion thresholds.",
@@ -311,6 +340,7 @@ def run_seed_stability(args: argparse.Namespace) -> dict[str, Any]:
         f"strict={metrics['suite_seed_strict_accuracy_mean']:.4f} "
         f"audit={metrics['audit_seed_adversarial_strict_accuracy_mean']:.4f} "
         f"oov_acc={metrics['audit_seed_adversarial_oov_synonym_accuracy_mean']:.4f} "
+        f"rel_ood={metrics['audit_seed_m22_relation_ood_strict_accuracy_mean']:.4f} "
         f"promote={metrics['m22_seed_stability_promotion_rate']:.4f}"
     )
     return payload

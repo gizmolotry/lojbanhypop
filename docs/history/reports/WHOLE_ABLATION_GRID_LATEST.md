@@ -1,9 +1,9 @@
 # Whole Ablation Grid
 
-- run_id: `m22_oodfix_whole_grid_20260523`
-- generated: `2026-05-23T12:05:57.059227+00:00`
-- history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_oodfix_history_20260523/ablation_history_manifest.json`
-- program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m22_oodfix_spine_20260523/ablation_program_spine_manifest.json`
+- run_id: `m22_mixed_ood_whole_grid_20260523`
+- generated: `2026-05-23T12:58:50.198388+00:00`
+- history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
+- program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m22_mixed_ood_program_spine_20260523/ablation_program_spine_manifest.json`
 
 ## Coverage
 
@@ -33,7 +33,7 @@
 | `L` | `fresh_legacy_lane` | `e=21 r=3 a=17 d=1` | `runs/l_series/l6_ablation/legacy_grid/legacy_grid_retrospective_20260413/20260414_004443/l6_ablation_manifest.json` | executed_rows=3.0000, mean_scope_constraint=0.3432, best_scope_constraint=0.3810 |
 | `J/L Hypercube` | `history_only` | `e=0 r=0 a=0 d=0` | `` |  |
 | `Phase Eval` | `fresh_legacy_lane` | `e=14 r=14 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/legacy_grid/legacy_grid_retrospective_20260413/phase5_objective_ablation.json` | full_total_regularizer=2.9140, dead_term_count=0.0000, dominant_term=0.0000, dominant_term_value=56.2299 |
-| `M1` | `artifact_anchor` | `e=5 r=5 a=0 d=0` | `runs/j_series/test_run_true_coconut_f23b04e91cce41a199ec99099c6fe223/20260522_194057/run_h_series.json` |  |
+| `M1` | `artifact_anchor` | `e=5 r=5 a=0 d=0` | `runs/j_series/test_run_true_coconut_d72f24907c594ce8bed4e1ff8345f686/20260523_120720/run_h_series.json` |  |
 | `M2` | `artifact_anchor` | `e=3 r=3 a=0 d=0` | `runs/l_series/l6_ablation/legacy_grid/legacy_grid_retrospective_20260413/20260414_004443/l6_ablation_manifest.json` |  |
 | `M3` | `artifact_anchor` | `e=48 r=12 a=36 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m_bridge_ablation_test_suite/full_program_probe_20260413/m_bridge_ablation_suite_manifest.json` | bridge_track_count=3.0000, harmful_track_count=1.0000 |
 | `M4` | `artifact_anchor` | `e=2 r=2 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m4_2_predicate_grounding/bridge_base_v1/m4_2_20260312_bridge_base_v1/m4_2_predicate_grounding_report.json` |  |
@@ -49,8 +49,8 @@
 | `M19` | `artifact_anchor` | `e=14 r=14 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m19_31_e2_promoted_package_20260506/direct_unified_eval_manifest.json` | mainline_overall_accuracy=0.6000, mainline_avg_tokens=30.8400, mainline_lift_vs_random=0.5700, mainline_audit_qformer_accuracy=0.6000 |
 | `M20` | `artifact_anchor` | `e=7 r=7 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/direct_m20_whole_ledger_20260514/direct_unified_eval_manifest.json` | strict_accuracy=0.9998, synthetic_world_accuracy=0.9998, dictionary_coverage=0.9998, factorized_exact_accuracy=0.9998 |
 | `M21` | `artifact_anchor` | `e=21 r=21 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m21_role_curriculum_mno_direct_48e_20260521/direct_unified_eval_manifest.json` | strict_accuracy=0.8494, bridi_trace_exact_accuracy=0.9996, gismu_accuracy=0.9999, cmavo_accuracy=0.9996 |
-| `M22` | `artifact_anchor` | `e=1 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m22_blended_s_96e_confirm2_oodfix_direct_20260523/direct_unified_eval_manifest.json` | m22_promotion_candidate=1.0000, m22_promotion_gate_pass_rate=1.0000, strict_accuracy=0.8467, m22_candidate_cell_count=1.0000 |
-| `Control Plane` | `control_plane_manifest` | `e=0 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_oodfix_history_20260523/ablation_history_manifest.json` |  |
+| `M22` | `artifact_anchor` | `e=1 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m22_blended_s_96e_confirm2_mixed_ood_direct_20260523/direct_unified_eval_manifest.json` | m22_promotion_candidate=0.0000, m22_promotion_gate_pass_rate=0.9444, strict_accuracy=0.8467, m22_candidate_cell_count=1.0000 |
+| `Control Plane` | `control_plane_manifest` | `e=0 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json` |  |
 
 ## Comparison Policy
 

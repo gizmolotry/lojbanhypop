@@ -1,7 +1,7 @@
 # Ablation Program Map
 
-- Generated UTC: `2026-05-23T12:01:55.692847+00:00`
-- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_oodfix_history_20260523/ablation_history_manifest.json`
+- Generated UTC: `2026-05-23T12:58:42.243117+00:00`
+- Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
 - Concentrated family count: `38`
 
 ## Program Layers
@@ -539,7 +539,7 @@
 - Family groups: `m_track`
 - Scripts: `scripts/m22/run_m22_seed_stability_aggregate.py, scripts/m22/run_m22_semantic_generalization.py`
 - DAGs: `airflow/dags/m22/lojban_m22_semantic_generalization_dag.py`
-- Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_s_96e_six_seed_stability_20260523, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_s_96e_six_seed_stability_20260523/m22_seed_stability_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability_test/fixture, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability_test/fixture/m22_seed_stability_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_blended_s_48e_gate_20260521, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_blended_s_48e_gate_20260521/m22_semantic_generalization_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_blended_s_96e_confirm2_gate_20260522, artifacts/runs/telemetry/raw/ablation/hypercube/m22_semantic_generalization/m22_blended_s_96e_confirm2_gate_20260522/m22_semantic_generalization_report.json`
+- Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_s_96e_six_seed_mixed_ood_stability_20260523, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_s_96e_six_seed_mixed_ood_stability_20260523/m22_seed_stability_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_s_96e_six_seed_stability_20260523, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_s_96e_six_seed_stability_20260523/m22_seed_stability_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_s_96e_six_seed_stability_hardened_20260523, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_s_96e_six_seed_stability_hardened_20260523/m22_seed_stability_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_t025_96e_six_seed_mixed_ood_stability_20260523, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_t025_96e_six_seed_mixed_ood_stability_20260523/m22_seed_stability_report.json`
 
 ### History
 

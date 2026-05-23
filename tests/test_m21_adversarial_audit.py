@@ -91,6 +91,67 @@ def test_m22_semantic_cells_count_as_isolation_evidence_without_breaking_h_o_eff
     assert "semantic_coverage_lexical_shift_effect_strict_accuracy_delta" not in summary
 
 
+def test_m22_relation_ood_metrics_report_seed_surface_and_overlap_diagnostics() -> None:
+    audit = _load_audit_module()
+    rows = [
+        _relation_ood_row(
+            "S",
+            "relation_composition_ood,role_binding_train",
+            {
+                "relation_composition_ood": (0.80, 0.90, 4.0),
+                "role_inversion_ood": (0.60, 0.80, 4.0),
+                "polarity_scope_ood": (0.70, 0.85, 4.0),
+                "decoy_relation_ood": (0.50, 0.75, 4.0),
+            },
+        ),
+        _relation_ood_row(
+            "S",
+            "role_binding_train",
+            {
+                "relation_composition_ood": (0.70, 0.88, 4.0),
+                "role_inversion_ood": (0.55, 0.78, 4.0),
+                "polarity_scope_ood": (0.65, 0.83, 4.0),
+                "decoy_relation_ood": (0.45, 0.73, 4.0),
+            },
+        ),
+    ]
+
+    summary = audit._summarize(rows)
+
+    assert summary["m22_relation_ood_seed_count"] == 2.0
+    assert summary["m22_relation_ood_surface_count"] == 4.0
+    assert summary["m22_relation_ood_surface_count_mean"] == 4.0
+    assert summary["m22_relation_ood_strict_accuracy_mean"] == pytest.approx(0.61875)
+    assert summary["m22_relation_ood_strict_accuracy_min"] == pytest.approx(0.5875)
+    assert summary["m22_relation_ood_worst_surface_accuracy_mean"] == pytest.approx(0.475)
+    assert summary["m22_relation_ood_bridi_trace_exact_accuracy_mean"] == pytest.approx(0.815)
+    assert summary["m22_relation_ood_training_overlap_rate"] == pytest.approx(0.125)
+    assert summary["m22_relation_ood_training_overlap_surface_count_mean"] == pytest.approx(0.5)
+    assert summary["m22_relation_ood_surface_accuracy"]["decoy_relation_ood"]["min"] == pytest.approx(0.45)
+    assert summary["m22_relation_ood_surface_trace_exact_accuracy"]["role_inversion_ood"]["mean"] == pytest.approx(0.79)
+    assert summary["m22_relation_ood_surface_seed_std_max"] > 0.0
+    assert summary["m22_relation_ood_surface_seed_min_accuracy"] == pytest.approx(0.45)
+
+
+def test_m22_relation_ood_audit_profile_resolves_surfaces_without_breaking_overrides() -> None:
+    audit = _load_audit_module()
+
+    profiled_args = audit.parse_args(["--suite-report", "suite.json", "--audit-profile", "m22-relation-ood"])
+    override_args = audit.parse_args(
+        [
+            "--suite-report",
+            "suite.json",
+            "--audit-profile",
+            "m22-relation-ood",
+            "--surfaces",
+            "oov_synonym",
+        ]
+    )
+
+    assert audit._resolve_audit_surfaces(profiled_args) == audit.M22_RELATION_OOD_AUDIT_SURFACES
+    assert audit._resolve_audit_surfaces(override_args) == ("oov_synonym",)
+
+
 def _row(
     cell: str,
     surfaces: str,
@@ -116,6 +177,38 @@ def _row(
                 "heldout_paraphrase": {"strict_accuracy": strict},
                 "oov_synonym": {"strict_accuracy": 0.30},
                 "role_distractor": {"strict_accuracy": worst},
+            },
+        },
+    }
+
+
+def _relation_ood_row(
+    cell: str,
+    train_surfaces: str,
+    relation_surface_metrics: dict[str, tuple[float, float, float]],
+) -> dict[str, object]:
+    strict = sum(item[0] for item in relation_surface_metrics.values()) / len(relation_surface_metrics)
+    trace = sum(item[1] for item in relation_surface_metrics.values()) / len(relation_surface_metrics)
+    return {
+        "cell_key": cell,
+        "config": {
+            "adversarial_train_fraction": 0.25,
+            "adversarial_train_surfaces": train_surfaces,
+        },
+        "metrics": {
+            "adversarial_strict_accuracy": strict,
+            "adversarial_bridi_trace_exact_accuracy": trace,
+            "adversarial_worst_surface_accuracy": min(item[0] for item in relation_surface_metrics.values()),
+            "adversarial_judri_causal_delta": 0.50,
+            "adversarial_oov_synonym_accuracy": 0.0,
+            "adversarial_oov_token_rate": 0.0,
+            "surface_metrics": {
+                surface: {
+                    "strict_accuracy": strict_accuracy,
+                    "bridi_trace_exact_accuracy": trace_accuracy,
+                    "count": count,
+                }
+                for surface, (strict_accuracy, trace_accuracy, count) in relation_surface_metrics.items()
             },
         },
     }
