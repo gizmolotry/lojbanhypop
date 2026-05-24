@@ -47,6 +47,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--m21-gauntlet-report", type=Path, default=None)
     parser.add_argument("--m21-adversarial-audit-report", type=Path, default=None)
     parser.add_argument("--m22-generalization-report", type=Path, default=None)
+    parser.add_argument("--m23-relevance-report", type=Path, default=None)
 
     parser.add_argument("--execute-m19-direct", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--base-model", type=str, default="C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct")
@@ -75,8 +76,8 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     family_key = str(args.family).strip().upper()
-    if family_key not in {"M19", "M20", "M21", "M22"}:
-        raise NotImplementedError("Direct unified eval runner currently supports the M19, M20, M21, and M22 families only.")
+    if family_key not in {"M19", "M20", "M21", "M22", "M23"}:
+        raise NotImplementedError("Direct unified eval runner currently supports the M19, M20, M21, M22, and M23 families only.")
     if family_key != "M19" and bool(args.execute_m19_direct):
         raise ValueError("--execute-m19-direct is only valid for family M19.")
 
@@ -116,6 +117,7 @@ def main() -> None:
         m21_gauntlet_report_path=args.m21_gauntlet_report,
         m21_adversarial_audit_report_path=args.m21_adversarial_audit_report,
         m22_generalization_report_path=args.m22_generalization_report,
+        m23_relevance_report_path=args.m23_relevance_report,
         history_manifest_path=history_manifest,
     )
     manifest["run_id"] = run_id
@@ -142,6 +144,7 @@ def main() -> None:
         "m21_gauntlet_report": _repo_string(args.m21_gauntlet_report) if args.m21_gauntlet_report else None,
         "m21_adversarial_audit_report": _repo_string(args.m21_adversarial_audit_report) if args.m21_adversarial_audit_report else None,
         "m22_generalization_report": _repo_string(args.m22_generalization_report) if args.m22_generalization_report else None,
+        "m23_relevance_report": _repo_string(args.m23_relevance_report) if args.m23_relevance_report else None,
     }
 
     manifest_path = output_dir / "direct_unified_eval_manifest.json"

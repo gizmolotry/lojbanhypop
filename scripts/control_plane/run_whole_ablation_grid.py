@@ -43,6 +43,7 @@ DEFAULT_M21_SYNTHETIC_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "r
 DEFAULT_M21_ACTUAL_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m21_actual_bridge_suite"
 DEFAULT_M21_LOCK_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m21_lock_suite"
 DEFAULT_M22_GENERALIZATION_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m22_semantic_generalization"
+DEFAULT_M23_RELEVANCE_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m23_relevance_suite"
 
 STAGE_ORDER = [
     "A-G",
@@ -69,6 +70,7 @@ STAGE_ORDER = [
     "M20",
     "M21",
     "M22",
+    "M23",
     "Control Plane",
 ]
 
@@ -129,6 +131,17 @@ KEY_METRICS = [
     "judri_causal_delta",
     "trace_tokens",
     "accuracy_per_trace_token",
+    "decoy_relation_ood_accuracy",
+    "worst_surface_accuracy",
+    "relevance_top1_accuracy",
+    "relevance_margin",
+    "oracle_relevance_accuracy",
+    "random_relevance_accuracy",
+    "no_relevance_accuracy",
+    "decoy_only_accuracy",
+    "m23_router_decoy_lift_vs_scale",
+    "m23_router_worst_surface_lift_vs_scale",
+    "m23_oracle_relevance_lift",
     "semantic_coverage_strict_accuracy",
     "semantic_coverage_worst_surface_accuracy",
     "semantic_coverage_judri_causal_delta",
@@ -198,7 +211,7 @@ def main() -> None:
             row = _m3_row(stage, m_bridge)
         elif stage_key == "M11":
             row = _m11_row(stage, m_bridge)
-        elif stage_key in {"M14", "M18", "M19", "M20", "M21", "M22"}:
+        elif stage_key in {"M14", "M18", "M19", "M20", "M21", "M22", "M23"}:
             row = _special_stage_row(stage)
         elif stage_key == "Control Plane":
             row = _control_plane_row(stage, history_manifest, program_spine_manifest, legacy_grid_manifest, m_bridge_manifest)
@@ -352,7 +365,7 @@ def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
     anchor = _explicit_stage_anchor(stage_key) or _resolve_generic_anchor(stage)
     payload = _read_json_optional(anchor) if anchor else None
     metrics = _special_stage_metrics(stage_key, payload)
-    stage_for_row = _stage_with_direct_contract(stage, payload) if stage_key in {"M19", "M20", "M21", "M22"} else stage
+    stage_for_row = _stage_with_direct_contract(stage, payload) if stage_key in {"M19", "M20", "M21", "M22", "M23"} else stage
     supplemental: list[str] = []
     notes: list[str] = []
     if stage_key == "M14":
@@ -392,12 +405,14 @@ def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
             supplemental.append(_repo_relative(lock_anchor) or "")
     if stage_key == "M22":
         notes.append("M22 is a semantic coverage generalization gate over M21 controls; failed promotion remains visible as evidence, not success")
+    if stage_key == "M23":
+        notes.append("M23 is the causal relevance-router fork over the M21/M22 bridi substrate; promotion depends on decoy OOD lift, not clean accuracy alone")
     return _row(
         stage_for_row,
         "artifact_anchor" if anchor else "runnable_no_anchor",
         _repo_relative(anchor) if anchor else None,
         [path for path in supplemental if path],
-        _limit_metrics(metrics, limit=18 if stage_key in {"M21", "M22"} else 8),
+        _limit_metrics(metrics, limit=18 if stage_key in {"M21", "M22", "M23"} else 8),
         notes,
     )
 
@@ -528,6 +543,13 @@ def _explicit_stage_anchor(stage_key: str) -> Path | None:
         generalization_anchor = _latest_named_manifest(DEFAULT_M22_GENERALIZATION_ROOT, "m22_semantic_generalization_report.json")
         if generalization_anchor and generalization_anchor.exists():
             return generalization_anchor
+    if stage_key == "M23":
+        direct_anchor = _latest_direct_unified_eval_anchor("M23")
+        if direct_anchor and direct_anchor.exists():
+            return direct_anchor
+        relevance_anchor = _latest_named_manifest(DEFAULT_M23_RELEVANCE_ROOT, "m23_relevance_suite_report.json")
+        if relevance_anchor and relevance_anchor.exists():
+            return relevance_anchor
     return None
 
 
@@ -775,6 +797,40 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                 },
             )
         return metrics
+    if stage_key == "M23":
+        metrics: dict[str, float] = {}
+        headline = payload.get("headline_metrics", {})
+        aggregate = payload.get("aggregate_metrics", {})
+        top = payload.get("metrics", {})
+        for source in (headline, aggregate, top, payload):
+            if not isinstance(source, dict):
+                continue
+            _merge_existing_metrics(
+                metrics,
+                source,
+                {
+                    "strict_accuracy": ("strict_accuracy", "mean_strict_accuracy"),
+                    "decoy_relation_ood_accuracy": ("decoy_relation_ood_accuracy", "mean_decoy_relation_ood_accuracy"),
+                    "worst_surface_accuracy": ("worst_surface_accuracy", "mean_worst_surface_accuracy"),
+                    "bridi_trace_exact_accuracy": ("bridi_trace_exact_accuracy", "mean_bridi_trace_exact_accuracy"),
+                    "relevance_top1_accuracy": ("relevance_top1_accuracy", "mean_relevance_top1_accuracy"),
+                    "relevance_margin": ("relevance_margin", "mean_relevance_margin"),
+                    "oracle_relevance_accuracy": ("oracle_relevance_accuracy", "mean_oracle_relevance_accuracy"),
+                    "random_relevance_accuracy": ("random_relevance_accuracy", "mean_random_relevance_accuracy"),
+                    "no_relevance_accuracy": ("no_relevance_accuracy", "mean_no_relevance_accuracy"),
+                    "decoy_only_accuracy": ("decoy_only_accuracy", "mean_decoy_only_accuracy"),
+                    "m23_router_decoy_lift_vs_scale": "m23_router_decoy_lift_vs_scale",
+                    "m23_router_worst_surface_lift_vs_scale": "m23_router_worst_surface_lift_vs_scale",
+                    "m23_oracle_relevance_lift": "m23_oracle_relevance_lift",
+                    "accuracy_per_token": "accuracy_per_token",
+                    "accuracy_per_trace_token": "accuracy_per_trace_token",
+                },
+            )
+        if isinstance(payload.get("cells"), dict):
+            best_id, best_cell = _best_cell(payload["cells"])
+            if best_id and isinstance(best_cell, dict):
+                metrics["best_cell_accuracy"] = _best_cell_metric(best_cell)
+        return metrics
     return _generic_metrics(payload)
 
 
@@ -992,7 +1048,7 @@ def _render_markdown(manifest: dict[str, Any]) -> str:
     lines.extend(["", "## Read", ""])
     lines.append("- The fresh part of the whole grid is now the recovered legacy runnable surface: A-G, H/H5/J, L6, and the phase-eval lanes under one manifest.")
     lines.append("- The modern M rows are represented through artifact-backed anchors and the control-plane lineage manifests, so the whole program is visible without pretending every stage was freshly retrained.")
-    lines.append("- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, and M22 the semantic-coverage generalization gate.")
+    lines.append("- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, and M23 the causal relevance-router fork.")
     return "\n".join(lines) + "\n"
 
 

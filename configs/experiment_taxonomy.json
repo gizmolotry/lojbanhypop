@@ -502,6 +502,45 @@
         "m22_candidate_cells_present"
       ],
       "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
+    },
+    "M23": {
+      "question_boundary": "causal frame relevance over the M21/M22 dynamic bridi substrate",
+      "architectural_thesis": "hold the Lojbanic dictionary and dynamic bridi trace fixed, then test whether answer-causal frame selection requires an explicit relevance router under decoy relation OOD.",
+      "allowed_ablation_axes": [
+        "scale control with decoy-balanced training",
+        "lightweight frame relevance scoring head",
+        "single relevance rank margin loss",
+        "oracle/random/uniform/decoy-only eval read paths",
+        "six-seed decoy relation OOD stability"
+      ],
+      "forbidden_drift_axes": [
+        "new dictionary expansion",
+        "new broad gauntlet surfaces unrelated to relevance",
+        "phrase accuracy as canonical metric",
+        "promotion from clean accuracy without decoy OOD lift"
+      ],
+      "promotion_basis": [
+        "decoy_relation_ood_accuracy",
+        "worst_surface_accuracy",
+        "relevance_top1_accuracy",
+        "m23_router_decoy_lift_vs_scale"
+      ],
+      "metrics_primary": [
+        "decoy_relation_ood_accuracy",
+        "worst_surface_accuracy",
+        "strict_accuracy",
+        "relevance_top1_accuracy"
+      ],
+      "metrics_guardrail": [
+        "bridi_trace_exact_accuracy",
+        "oracle_relevance_accuracy",
+        "random_relevance_accuracy",
+        "no_relevance_accuracy",
+        "decoy_only_accuracy",
+        "accuracy_per_token",
+        "accuracy_per_trace_token"
+      ],
+      "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
     }
   },
   "comparison_defaults": {
@@ -1077,6 +1116,34 @@
         "m22_promotion_candidate"
       ],
       "surface": "m22_semantic_generalization"
+    },
+    "m23.causal_relevance_router": {
+      "test_id": "m23.causal_relevance_router",
+      "family": "M23",
+      "description": "M23 decides whether decoy relation OOD brittleness is solved by decoy-balanced scale alone or by an explicit causal relevance selector over active bridi frames.",
+      "metrics": [
+        "strict_accuracy",
+        "bridi_trace_exact_accuracy",
+        "decoy_relation_ood_accuracy",
+        "worst_surface_accuracy",
+        "relevance_top1_accuracy",
+        "relevance_margin",
+        "oracle_relevance_accuracy",
+        "random_relevance_accuracy",
+        "no_relevance_accuracy",
+        "decoy_only_accuracy",
+        "oracle_relevance_delta",
+        "random_relevance_delta",
+        "decoy_only_delta",
+        "m23_router_decoy_lift_vs_scale",
+        "m23_router_worst_surface_lift_vs_scale",
+        "m23_oracle_relevance_lift",
+        "avg_tokens",
+        "accuracy_per_token",
+        "trace_tokens",
+        "accuracy_per_trace_token"
+      ],
+      "surface": "m23_relevance_suite"
     }
   },
   "family_comparison_contracts": {
@@ -1366,6 +1433,22 @@
         "M21.1.R",
         "M21.1.S",
         "M21.1.T"
+      ],
+      "inherit_required_test_contracts": false
+    },
+    "M23": {
+      "historical_comparison_families": [
+        "M22"
+      ],
+      "required_test_contracts": [
+        "m23.causal_relevance_router"
+      ],
+      "explicit_compare_entries": [
+        "M22",
+        "M21.1.S",
+        "M21.1.T",
+        "M23.A",
+        "M23.B"
       ],
       "inherit_required_test_contracts": false
     }
@@ -1908,6 +1991,34 @@
         "semantic_coverage_strict_accuracy",
         "semantic_coverage_worst_surface_accuracy",
         "m22_semantic_generalization_score"
+      ]
+    },
+    {
+      "transition_id": "M22_to_M23",
+      "status": "active_branch",
+      "from_major": "M22",
+      "to_major": "M23",
+      "selected_upstream": "M21.1.T",
+      "inherits_components": [
+        "dynamic bridi Q-former",
+        "M22 semantic coverage and hard relation OOD audit surfaces",
+        "judri-gated bridge",
+        "strict accuracy canonical metric"
+      ],
+      "reopened_components": [
+        "decoy relation OOD brittleness",
+        "answer-causal frame relevance",
+        "oracle/random/no-selector relevance ablations"
+      ],
+      "rejected_components": [
+        "new dictionary family",
+        "additional broad gauntlet surfaces before relevance is isolated"
+      ],
+      "promotion_basis": [
+        "decoy_relation_ood_accuracy",
+        "worst_surface_accuracy",
+        "m23_router_decoy_lift_vs_scale",
+        "relevance_top1_accuracy"
       ]
     }
   ]

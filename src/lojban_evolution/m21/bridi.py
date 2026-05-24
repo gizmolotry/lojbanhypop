@@ -1424,6 +1424,9 @@ class M21DynamicBridiQFormer(nn.Module):
             clip_masks.extend(handoff_clips)
         return {
             "prompt_state": prompt_state,
+            "frame_state": frame_state,
+            "frame_repr": frame_repr,
+            "trace_state": trace_state,
             "active_logits": active_logits,
             "stop_logits": stop_logits,
             "gismu_logits": gismu_logits,

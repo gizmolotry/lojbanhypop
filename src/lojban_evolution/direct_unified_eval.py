@@ -17,6 +17,7 @@ from .m19.family import M19_REGISTRY
 from .m20.family import M20_REGISTRY
 from .m21.family import M21_REGISTRY
 from .m22.family import M22_REGISTRY
+from .m23.family import M23_REGISTRY
 from .repo_paths import REPO_ROOT, repo_relative
 from .series_contract import series_metadata
 
@@ -250,6 +251,21 @@ KEY_METRICS = (
     "m22_judri_delta_drop_vs_m21_control",
     "m22_promotion_gate_pass_rate",
     "m22_promotion_candidate",
+    "clean_accuracy",
+    "worst_surface_accuracy",
+    "decoy_relation_ood_accuracy",
+    "relevance_top1_accuracy",
+    "relevance_margin",
+    "oracle_relevance_accuracy",
+    "random_relevance_accuracy",
+    "no_relevance_accuracy",
+    "decoy_only_accuracy",
+    "oracle_relevance_delta",
+    "random_relevance_delta",
+    "decoy_only_delta",
+    "m23_router_decoy_lift_vs_scale",
+    "m23_router_worst_surface_lift_vs_scale",
+    "m23_oracle_relevance_lift",
 )
 
 _REFERENCE_ROOTS: dict[str, list[Path]] = {
@@ -291,6 +307,10 @@ _REFERENCE_ROOTS: dict[str, list[Path]] = {
     ],
     "M22": [
         REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m22_semantic_generalization",
+        REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "direct_unified_eval",
+    ],
+    "M23": [
+        REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m23_relevance_suite",
         REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "direct_unified_eval",
     ],
     "M10": [
@@ -484,6 +504,20 @@ def discover_m22_surfaces(
     }
 
 
+def discover_m23_surfaces(
+    *,
+    relevance_report_path: Path | None = None,
+) -> dict[str, dict[str, Any]]:
+    registry = M23_REGISTRY["M23"]
+    relevance_path = relevance_report_path or _latest_named_manifest(
+        REPO_ROOT / registry["output_roots"]["suite"],
+        registry["report_names"]["suite"],
+    )
+    return {
+        "relevance_suite": _surface_record("relevance_suite", relevance_path),
+    }
+
+
 def build_direct_unified_eval_manifest(
     *,
     family_key: str,
@@ -506,6 +540,7 @@ def build_direct_unified_eval_manifest(
     m21_gauntlet_report_path: Path | None = None,
     m21_adversarial_audit_report_path: Path | None = None,
     m22_generalization_report_path: Path | None = None,
+    m23_relevance_report_path: Path | None = None,
     history_manifest_path: Path | None = None,
     taxonomy: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -549,6 +584,11 @@ def build_direct_unified_eval_manifest(
         direct_surfaces = discover_m22_surfaces(
             generalization_report_path=m22_generalization_report_path,
         )
+    elif family_key == "M23":
+        resolved_track = str(track or "M23")
+        direct_surfaces = discover_m23_surfaces(
+            relevance_report_path=m23_relevance_report_path,
+        )
     else:
         raise NotImplementedError(f"Direct unified eval is currently implemented for family '{family_key}' only.")
 
@@ -570,6 +610,7 @@ def build_direct_unified_eval_manifest(
     m21_gauntlet_payload = direct_surfaces.get("gauntlet", {}).get("payload") if family_key == "M21" else None
     m21_adversarial_payload = direct_surfaces.get("adversarial_audit", {}).get("payload") if family_key == "M21" else None
     m22_generalization_payload = direct_surfaces.get("generalization", {}).get("payload") if family_key == "M22" else None
+    m23_relevance_payload = direct_surfaces.get("relevance_suite", {}).get("payload") if family_key == "M23" else None
     historical_references = _resolve_historical_family_references(contract, history_manifest_path)
     comparison_targets = _resolve_comparison_targets(contract, history_manifest_path)
     reference_surface_index = _build_reference_surface_index(historical_references, comparison_targets)
@@ -594,6 +635,7 @@ def build_direct_unified_eval_manifest(
         m21_gauntlet_payload=m21_gauntlet_payload,
         m21_adversarial_payload=m21_adversarial_payload,
         m22_generalization_payload=m22_generalization_payload,
+        m23_relevance_payload=m23_relevance_payload,
         reference_surface_index=reference_surface_index,
     )
 
@@ -616,6 +658,7 @@ def build_direct_unified_eval_manifest(
         m21_gauntlet_payload=m21_gauntlet_payload,
         m21_adversarial_payload=m21_adversarial_payload,
         m22_generalization_payload=m22_generalization_payload,
+        m23_relevance_payload=m23_relevance_payload,
     )
     direct_report_paths = {
         name: surface["path"]
@@ -646,6 +689,8 @@ def build_direct_unified_eval_manifest(
         notes.append("M21 direct surfaces combine dynamic bridi synthetic assay, lock-suite, minimal actual bridge, and M19-style gauntlet adapter reports.")
     if family_key == "M22":
         notes.append("M22 direct surfaces evaluate semantic coverage generalization over fixed M21 dynamic bridi controls.")
+    if family_key == "M23":
+        notes.append("M23 direct surfaces test whether an explicit frame relevance selector beats M22-style scale on decoy relation OOD.")
 
     manifest = {
         "schema_version": DIRECT_UNIFIED_EVAL_VERSION,
@@ -758,6 +803,7 @@ def _evaluate_contracts(
     m21_gauntlet_payload: dict[str, Any] | None = None,
     m21_adversarial_payload: dict[str, Any] | None = None,
     m22_generalization_payload: dict[str, Any] | None = None,
+    m23_relevance_payload: dict[str, Any] | None = None,
     reference_surface_index: dict[str, dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     reference_surface_index = reference_surface_index or {}
@@ -800,6 +846,10 @@ def _evaluate_contracts(
             row = _evaluate_m22_contract(test_id, contract, m22_generalization_payload)
             rows.append(_attach_reference_surface(row, contract, reference_surface_index))
             continue
+        if family_key == "M23":
+            row = _evaluate_m23_contract(test_id, contract, m23_relevance_payload)
+            rows.append(_attach_reference_surface(row, contract, reference_surface_index))
+            continue
         rows.append(
             {
                 "test_id": test_id,
@@ -811,6 +861,29 @@ def _evaluate_contracts(
             }
         )
     return rows
+
+
+def _evaluate_m23_contract(
+    test_id: str,
+    contract: dict[str, Any],
+    relevance_payload: dict[str, Any] | None,
+) -> dict[str, Any]:
+    metrics = _filtered_metrics(_m23_suite_metrics(relevance_payload), tuple(contract.get("metrics", [])))
+    if not metrics:
+        return _missing_contract_row(test_id, contract, f"missing M23 direct surface for {test_id}")
+    notes = ["M23 contract is evaluated from the causal relevance router suite over M21/M22 dynamic bridi traces."]
+    if test_id == "m23.causal_relevance_router":
+        aggregate = relevance_payload.get("aggregate_metrics", {}) if isinstance(relevance_payload, dict) else {}
+        conclusion = str(aggregate.get("conclusion", ""))
+        notes.append(f"hypothesis interpretation: {conclusion or 'not reported'}")
+    return {
+        "test_id": test_id,
+        "surface": contract.get("surface"),
+        "status": "available",
+        "provenance": "artifact",
+        "metrics": metrics,
+        "notes": notes,
+    }
 
 
 def _evaluate_m22_contract(
@@ -1422,6 +1495,7 @@ def _build_headline_metrics(
     m21_gauntlet_payload: dict[str, Any] | None = None,
     m21_adversarial_payload: dict[str, Any] | None = None,
     m22_generalization_payload: dict[str, Any] | None = None,
+    m23_relevance_payload: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     headline: dict[str, Any] = {}
     if isinstance(benchmark_payload, dict):
@@ -1534,7 +1608,54 @@ def _build_headline_metrics(
     if isinstance(m22_generalization_payload, dict) and isinstance(m22_generalization_payload.get("metrics"), dict):
         for key, value in _filtered_metrics(m22_generalization_payload["metrics"], KEY_METRICS).items():
             headline[key] = value
+    if isinstance(m23_relevance_payload, dict):
+        for key, value in _filtered_metrics(_m23_suite_metrics(m23_relevance_payload), KEY_METRICS).items():
+            headline[key] = value
     return {k: v for k, v in headline.items() if v is not None}
+
+
+def _m23_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
+    if not isinstance(payload, dict):
+        return {}
+    metrics: dict[str, Any] = {}
+    aggregate = payload.get("aggregate_metrics", {})
+    if isinstance(aggregate, dict):
+        metrics.update(aggregate)
+        metrics.setdefault("strict_accuracy", aggregate.get("mean_strict_accuracy"))
+        metrics.setdefault("synthetic_world_accuracy", aggregate.get("mean_strict_accuracy"))
+        metrics.setdefault("bridi_trace_exact_accuracy", aggregate.get("mean_bridi_trace_exact_accuracy"))
+        metrics.setdefault("decoy_relation_ood_accuracy", aggregate.get("mean_decoy_relation_ood_accuracy"))
+        metrics.setdefault("worst_surface_accuracy", aggregate.get("mean_worst_surface_accuracy"))
+        metrics.setdefault("relevance_top1_accuracy", aggregate.get("mean_relevance_top1_accuracy"))
+        metrics.setdefault("relevance_margin", aggregate.get("mean_relevance_margin"))
+        metrics.setdefault("oracle_relevance_accuracy", aggregate.get("mean_oracle_relevance_accuracy"))
+        metrics.setdefault("random_relevance_accuracy", aggregate.get("mean_random_relevance_accuracy"))
+        metrics.setdefault("no_relevance_accuracy", aggregate.get("mean_no_relevance_accuracy"))
+        metrics.setdefault("decoy_only_accuracy", aggregate.get("mean_decoy_only_accuracy"))
+        metrics.setdefault("oracle_relevance_delta", aggregate.get("mean_oracle_relevance_delta"))
+        metrics.setdefault("random_relevance_delta", aggregate.get("mean_random_relevance_delta"))
+        metrics.setdefault("decoy_only_delta", aggregate.get("mean_decoy_only_delta"))
+        metrics.setdefault("m23_router_decoy_lift_vs_scale", aggregate.get("m23_router_decoy_lift_vs_scale"))
+        metrics.setdefault("m23_router_worst_surface_lift_vs_scale", aggregate.get("m23_router_worst_surface_lift_vs_scale"))
+        metrics.setdefault("m23_oracle_relevance_lift", aggregate.get("m23_oracle_relevance_lift"))
+        metrics.setdefault("avg_tokens", aggregate.get("avg_tokens"))
+        metrics.setdefault("accuracy_per_token", aggregate.get("accuracy_per_token"))
+        metrics.setdefault("trace_tokens", aggregate.get("trace_tokens"))
+        metrics.setdefault("accuracy_per_trace_token", aggregate.get("accuracy_per_trace_token"))
+    seed_rows: list[dict[str, Any]] = []
+    cells = payload.get("cells", {})
+    if isinstance(cells, dict):
+        for cell in cells.values():
+            if not isinstance(cell, dict):
+                continue
+            for row in cell.get("seed_reports", []):
+                if isinstance(row, dict) and isinstance(row.get("metrics"), dict):
+                    seed_rows.append(row["metrics"])
+    for key in KEY_METRICS:
+        values = [float(row[key]) for row in seed_rows if isinstance(row.get(key), (int, float))]
+        if values and key not in metrics:
+            metrics[key] = sum(values) / len(values)
+    return {key: value for key, value in metrics.items() if value is not None}
 
 
 def _m21_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
@@ -1773,6 +1894,8 @@ def _preferred_names_for_target(target: str) -> list[str]:
         ]
     if upper.startswith("M22"):
         return ["m22_semantic_generalization_report.json", "direct_unified_eval_manifest.json"]
+    if upper.startswith("M23"):
+        return ["m23_relevance_suite_report.json", "m23_relevance_train_report.json", "direct_unified_eval_manifest.json"]
     return []
 
 

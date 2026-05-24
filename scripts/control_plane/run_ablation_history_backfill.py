@@ -1371,7 +1371,7 @@ def _collect_telemetry_reports(registry: dict[str, dict[str, Any]], source_paths
                         source_paths=[_path_str(path)],
                         evidence_class="artifact",
                         confidence_level="high",
-                        reproducibility_status="runnable" if track in {"M3.18", "M3.19", "M14", "M18", "M19", "M19.3", "M19.4", "M20", "M20.1", "M21", "M21.1"} else "artifact_only",
+                        reproducibility_status="runnable" if track in {"M3.18", "M3.19", "M14", "M18", "M19", "M19.3", "M19.4", "M20", "M20.1", "M21", "M21.1", "M22", "M23"} else "artifact_only",
                         metrics=metrics,
                         normalized_metrics=normalize_metric_surface(metrics),
                         reported_at=str(payload.get("timestamp") or payload.get("generated_utc") or "") or None,

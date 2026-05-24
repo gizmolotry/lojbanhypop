@@ -1,15 +1,15 @@
 # Whole Ablation Grid
 
-- run_id: `m22_mixed_ood_whole_grid_20260523`
-- generated: `2026-05-23T12:58:50.198388+00:00`
+- run_id: `m23_whole_grid_six_seed_20260524`
+- generated: `2026-05-24T18:28:16.430549+00:00`
 - history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
-- program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m22_mixed_ood_program_spine_20260523/ablation_program_spine_manifest.json`
+- program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m23_spine_refresh_20260524/ablation_program_spine_manifest.json`
 
 ## Coverage
 
-- stages: `25`
+- stages: `26`
 - fresh legacy surfaces: `6`
-- artifact anchors: `17`
+- artifact anchors: `18`
 - history-only stages: `1`
 
 ## Legacy Grid Status
@@ -50,6 +50,7 @@
 | `M20` | `artifact_anchor` | `e=7 r=7 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/direct_m20_whole_ledger_20260514/direct_unified_eval_manifest.json` | strict_accuracy=0.9998, synthetic_world_accuracy=0.9998, dictionary_coverage=0.9998, factorized_exact_accuracy=0.9998 |
 | `M21` | `artifact_anchor` | `e=21 r=21 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m21_role_curriculum_mno_direct_48e_20260521/direct_unified_eval_manifest.json` | strict_accuracy=0.8494, bridi_trace_exact_accuracy=0.9996, gismu_accuracy=0.9999, cmavo_accuracy=0.9996 |
 | `M22` | `artifact_anchor` | `e=1 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m22_blended_s_96e_confirm2_mixed_ood_direct_20260523/direct_unified_eval_manifest.json` | m22_promotion_candidate=0.0000, m22_promotion_gate_pass_rate=0.9444, strict_accuracy=0.8467, m22_candidate_cell_count=1.0000 |
+| `M23` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m23_relevance_six_seed_direct_20260524/direct_unified_eval_manifest.json` | strict_accuracy=0.9387, decoy_relation_ood_accuracy=0.9663, worst_surface_accuracy=0.8296, bridi_trace_exact_accuracy=0.0361 |
 | `Control Plane` | `control_plane_manifest` | `e=0 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json` |  |
 
 ## Comparison Policy
@@ -156,9 +157,15 @@
 - historical families carried forward: `M21`
 - required test contracts: `m22.semantic_coverage_generalization`
 
+### M23
+
+- automatic compare-against: `M23, M22, M21, M20, M21.1.S, M21.1.T, M23.A, M23.B`
+- historical families carried forward: `M22`
+- required test contracts: `m23.causal_relevance_router`
+
 
 ## Read
 
 - The fresh part of the whole grid is now the recovered legacy runnable surface: A-G, H/H5/J, L6, and the phase-eval lanes under one manifest.
 - The modern M rows are represented through artifact-backed anchors and the control-plane lineage manifests, so the whole program is visible without pretending every stage was freshly retrained.
-- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, and M22 the semantic-coverage generalization gate.
+- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, and M23 the causal relevance-router fork.

@@ -196,3 +196,26 @@ def test_m22_is_visible_in_whole_grid_stage_order_and_metrics() -> None:
     assert metrics["semantic_coverage_strict_accuracy"] == 0.653
     assert metrics["m22_semantic_generalization_score"] == 0.181
     assert metrics["m22_promotion_candidate"] == 0.0
+
+
+def test_m23_special_stage_metrics_and_order() -> None:
+    whole_grid = _load_whole_grid_module()
+    payload = {
+        "aggregate_metrics": {
+            "mean_strict_accuracy": 0.72,
+            "mean_decoy_relation_ood_accuracy": 0.64,
+            "mean_worst_surface_accuracy": 0.61,
+            "mean_relevance_top1_accuracy": 0.83,
+            "m23_router_decoy_lift_vs_scale": 0.12,
+            "m23_oracle_relevance_lift": 0.03,
+        }
+    }
+
+    metrics = whole_grid._special_stage_metrics("M23", payload)
+
+    assert "M23" in whole_grid.STAGE_ORDER
+    assert whole_grid.STAGE_ORDER.index("M22") < whole_grid.STAGE_ORDER.index("M23")
+    assert metrics["strict_accuracy"] == 0.72
+    assert metrics["decoy_relation_ood_accuracy"] == 0.64
+    assert metrics["relevance_top1_accuracy"] == 0.83
+    assert metrics["m23_router_decoy_lift_vs_scale"] == 0.12

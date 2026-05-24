@@ -1,9 +1,9 @@
 # Ablation Program Spine
 
-- Generated UTC: `2026-05-23T12:58:42.243880+00:00`
+- Generated UTC: `2026-05-24T18:17:48.128840+00:00`
 - Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
 - Source taxonomy config: `configs/experiment_taxonomy.json`
-- Stage count: `25`
+- Stage count: `26`
 
 This is the ordered research spine of the project: legacy letter-series families, normalized M-major families, and the control plane that keeps the program auditable.
 
@@ -544,7 +544,24 @@ This is the ordered research spine of the project: legacy letter-series families
 - Scripts: `scripts/m22/run_m22_seed_stability_aggregate.py, scripts/m22/run_m22_semantic_generalization.py`
 - DAGs: `airflow/dags/m22/lojban_m22_semantic_generalization_dag.py`
 
-## 25. Control Plane
+## 25. M23
+
+- Kind: `major_series`
+- Layer: `causal_relevance_substrate`
+- Objective: hold the Lojbanic dictionary and dynamic bridi trace fixed, then test whether answer-causal frame selection requires an explicit relevance router under decoy relation OOD.
+- Entry count: `0`
+- Runnable rows: `0`
+- Question boundary: causal frame relevance over the M21/M22 dynamic bridi substrate
+- Thesis: hold the Lojbanic dictionary and dynamic bridi trace fixed, then test whether answer-causal frame selection requires an explicit relevance router under decoy relation OOD.
+- Allowed axes: `scale control with decoy-balanced training, lightweight frame relevance scoring head, single relevance rank margin loss, oracle/random/uniform/decoy-only eval read paths, six-seed decoy relation OOD stability`
+- Frozen/forbidden drift: `new dictionary expansion, new broad gauntlet surfaces unrelated to relevance, phrase accuracy as canonical metric, promotion from clean accuracy without decoy OOD lift`
+- Promotion basis: `decoy_relation_ood_accuracy, worst_surface_accuracy, relevance_top1_accuracy, m23_router_decoy_lift_vs_scale`
+- Primary metrics: `decoy_relation_ood_accuracy, worst_surface_accuracy, strict_accuracy, relevance_top1_accuracy`
+- Guardrail metrics: `bridi_trace_exact_accuracy, oracle_relevance_accuracy, random_relevance_accuracy, no_relevance_accuracy, decoy_only_accuracy, accuracy_per_token, accuracy_per_trace_token`
+- Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
+- DAGs: `airflow/dags/m23/lojban_m23_relevance_router_dag.py`
+
+## 26. Control Plane
 
 - Kind: `control_plane`
 - Layer: `control_plane`

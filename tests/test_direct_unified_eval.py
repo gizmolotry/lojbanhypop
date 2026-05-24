@@ -907,3 +907,51 @@ def test_build_direct_unified_eval_manifest_m22_failed_promotion_is_not_availabl
     assert semantic_row["status"] == "missing"
     assert "failed promotion" in " ".join(semantic_row["notes"])
     assert semantic_row["metrics"]["m22_promotion_candidate"] == 0.0
+
+
+def test_build_direct_unified_eval_manifest_m23_relevance_suite() -> None:
+    tmp_path = _scratch_dir()
+    relevance_path = _write_json(
+        tmp_path / "m23_relevance_suite_report.json",
+        {
+            "track": "M23",
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.72,
+                "mean_bridi_trace_exact_accuracy": 0.91,
+                "mean_decoy_relation_ood_accuracy": 0.64,
+                "mean_worst_surface_accuracy": 0.61,
+                "mean_relevance_top1_accuracy": 0.83,
+                "mean_relevance_margin": 0.44,
+                "mean_oracle_relevance_accuracy": 0.75,
+                "mean_random_relevance_accuracy": 0.31,
+                "mean_no_relevance_accuracy": 0.58,
+                "mean_decoy_only_accuracy": 0.22,
+                "mean_oracle_relevance_delta": 0.03,
+                "mean_random_relevance_delta": 0.41,
+                "mean_decoy_only_delta": 0.50,
+                "m23_router_decoy_lift_vs_scale": 0.12,
+                "m23_router_worst_surface_lift_vs_scale": 0.09,
+                "m23_oracle_relevance_lift": 0.03,
+            },
+            "cells": {},
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M23",
+        track="M23",
+        m23_relevance_report_path=relevance_path,
+        history_manifest_path=None,
+    )
+
+    assert manifest["family_key"] == "M23"
+    assert manifest["track"] == "M23"
+    assert manifest["headline_metrics"]["decoy_relation_ood_accuracy"] == 0.64
+    assert manifest["headline_metrics"]["relevance_top1_accuracy"] == 0.83
+    assert manifest["headline_metrics"]["m23_router_decoy_lift_vs_scale"] == 0.12
+    rows = {row["test_id"]: row for row in manifest["contract_results"]}
+    assert rows["m23.causal_relevance_router"]["status"] == "available"
+    assert any(row["target"] == "M23.B" for row in manifest["comparison_targets_resolved"])
+    rendered = render_direct_unified_eval_markdown(manifest)
+    assert "Direct Unified Eval: M23 (M23)" in rendered
+    assert "m23.causal_relevance_router" in rendered
