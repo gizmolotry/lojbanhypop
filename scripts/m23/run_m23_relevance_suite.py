@@ -49,6 +49,8 @@ def _variant_args(base: argparse.Namespace, variant: dict[str, Any]) -> dict[str
         "use_relevance_router": bool(variant.get("use_relevance_router", base.use_relevance_router)),
         "relevance_rank_weight": float(variant.get("relevance_rank_weight", base.relevance_rank_weight)),
         "relevance_margin": float(variant.get("relevance_margin", base.relevance_margin)),
+        "trace_weight": float(variant.get("trace_weight", base.trace_weight)),
+        "trace_exact_surrogate_weight": float(variant.get("trace_exact_surrogate_weight", base.trace_exact_surrogate_weight)),
         "clean_train_fraction": float(variant.get("clean_train_fraction", base.clean_train_fraction)),
         "judri_bridge_gate": bool(variant.get("judri_bridge_gate", base.judri_bridge_gate)),
     }
@@ -71,6 +73,8 @@ def _summarize(seed_reports: list[dict[str, Any]], stable_threshold: float) -> d
         "mean_bridi_trace_exact_accuracy": mean(_collect(rows, "bridi_trace_exact_accuracy")) if rows else 0.0,
         "mean_relevance_top1_accuracy": mean(_collect(rows, "relevance_top1_accuracy")) if rows else 0.0,
         "mean_relevance_margin": mean(_collect(rows, "relevance_margin")) if rows else 0.0,
+        "mean_loss_trace_exact_surrogate": mean(_collect(rows, "loss_trace_exact_surrogate")) if rows else 0.0,
+        "mean_trace_exact_surrogate_weight": mean(_collect(rows, "trace_exact_surrogate_weight")) if rows else 0.0,
         "mean_oracle_relevance_accuracy": mean(_collect(rows, "oracle_relevance_accuracy")) if rows else 0.0,
         "mean_random_relevance_accuracy": mean(_collect(rows, "random_relevance_accuracy")) if rows else 0.0,
         "mean_no_relevance_accuracy": mean(_collect(rows, "no_relevance_accuracy")) if rows else 0.0,
@@ -89,10 +93,23 @@ def _summarize(seed_reports: list[dict[str, Any]], stable_threshold: float) -> d
 def _interpret(cells: dict[str, Any]) -> dict[str, Any]:
     a = cells.get("A", {}).get("aggregate_metrics", {})
     b = cells.get("B", {}).get("aggregate_metrics", {})
+    c = cells.get("C", {}).get("aggregate_metrics", {})
+    if c and not (a or b):
+        return {
+            "conclusion": "trace_punishment_diagnostic_only",
+            "m23_router_decoy_lift_vs_scale": 0.0,
+            "m23_router_worst_surface_lift_vs_scale": 0.0,
+            "m23_oracle_relevance_lift": 0.0,
+            "m23_trace_punish_trace_exact_lift_vs_scale": 0.0,
+            "m23_trace_punish_decoy_delta_vs_scale": 0.0,
+            "m23_trace_punish_strict_delta_vs_scale": 0.0,
+        }
     scale_decoy = float(a.get("mean_decoy_relation_ood_accuracy", 0.0) or 0.0)
     router_decoy = float(b.get("mean_decoy_relation_ood_accuracy", 0.0) or 0.0)
     scale_worst = float(a.get("mean_worst_surface_accuracy", 0.0) or 0.0)
     router_worst = float(b.get("mean_worst_surface_accuracy", 0.0) or 0.0)
+    scale_trace = float(a.get("mean_bridi_trace_exact_accuracy", 0.0) or 0.0)
+    scale_strict = float(a.get("mean_strict_accuracy", 0.0) or 0.0)
     oracle_delta = float(b.get("mean_oracle_relevance_delta", 0.0) or a.get("mean_oracle_relevance_delta", 0.0) or 0.0)
     learned_lift = router_decoy - scale_decoy
     if scale_decoy >= 0.70 and router_decoy <= scale_decoy + 0.01:
@@ -108,6 +125,9 @@ def _interpret(cells: dict[str, Any]) -> dict[str, Any]:
         "m23_router_decoy_lift_vs_scale": learned_lift,
         "m23_router_worst_surface_lift_vs_scale": router_worst - scale_worst,
         "m23_oracle_relevance_lift": oracle_delta,
+        "m23_trace_punish_trace_exact_lift_vs_scale": float(c.get("mean_bridi_trace_exact_accuracy", 0.0) or 0.0) - scale_trace if c else 0.0,
+        "m23_trace_punish_decoy_delta_vs_scale": float(c.get("mean_decoy_relation_ood_accuracy", 0.0) or 0.0) - scale_decoy if c else 0.0,
+        "m23_trace_punish_strict_delta_vs_scale": float(c.get("mean_strict_accuracy", 0.0) or 0.0) - scale_strict if c else 0.0,
     }
 
 
@@ -138,7 +158,7 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
                     "--max-frames", str(int(args.max_frames)),
                     "--max-places", str(int(args.max_places)),
                     "--max-entities", str(int(args.max_entities)),
-                    "--trace-weight", str(float(args.trace_weight)),
+                    "--trace-weight", str(variant["trace_weight"]),
                     "--answer-weight", str(float(args.answer_weight)),
                     "--counterfactual-weight", str(float(args.counterfactual_weight)),
                     "--brivi-lock-weight", str(float(args.brivi_lock_weight)),
@@ -149,6 +169,7 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
                     "--pointer-necessity-margin", str(float(args.pointer_necessity_margin)),
                     "--relevance-rank-weight", str(variant["relevance_rank_weight"]),
                     "--relevance-margin", str(variant["relevance_margin"]),
+                    "--trace-exact-surrogate-weight", str(variant["trace_exact_surrogate_weight"]),
                     "--use-relevance-router" if variant["use_relevance_router"] else "--no-use-relevance-router",
                     "--clean-train-fraction", str(variant["clean_train_fraction"]),
                     "--clean-eval-fraction", str(float(args.clean_eval_fraction)),
@@ -228,7 +249,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     defaults = registry["dataset_defaults"]
     parser = argparse.ArgumentParser(description="Run the M23 causal relevance router suite.")
     parser.add_argument("--seed-list", type=str, default="23,29,31,37,41,43")
-    parser.add_argument("--cell-list", type=str, default="A,B")
+    parser.add_argument("--cell-list", type=str, default="A,B,C")
     parser.add_argument("--train-size", type=int, default=int(defaults["train_size"]))
     parser.add_argument("--eval-size", type=int, default=int(defaults["eval_size"]))
     parser.add_argument("--epochs", type=int, default=16)
@@ -250,6 +271,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--pointer-necessity-margin", type=float, default=0.05)
     parser.add_argument("--relevance-rank-weight", type=float, default=0.0)
     parser.add_argument("--relevance-margin", type=float, default=0.15)
+    parser.add_argument("--trace-exact-surrogate-weight", type=float, default=0.0)
     parser.add_argument("--use-relevance-router", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--clean-train-fraction", type=float, default=0.35)
     parser.add_argument("--clean-eval-fraction", type=float, default=0.35)

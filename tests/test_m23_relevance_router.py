@@ -57,6 +57,22 @@ def test_m23_model_forward_and_rank_loss_are_finite() -> None:
     )
     assert torch.isfinite(loss)
     assert pieces["loss_relevance_rank"] >= 0.0
+    loss_punished, punished_pieces = compute_m23_loss(
+        outputs,
+        batch,
+        use_relevance_answer=True,
+        relevance_rank_weight=1.0,
+        trace_exact_surrogate_weight=0.5,
+        trace_weight=1.0,
+        answer_weight=1.0,
+        counterfactual_weight=0.0,
+        brivi_lock_weight=0.0,
+        frame_necessity_weight=0.0,
+        mdl_weight=0.0,
+    )
+    assert torch.isfinite(loss_punished)
+    assert punished_pieces["loss_trace_exact_surrogate"] >= 0.0
+    assert loss_punished >= loss
 
 
 def test_m23_tiny_train_runs_scale_and_router() -> None:

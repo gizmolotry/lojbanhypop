@@ -276,6 +276,33 @@ def relevance_rank_loss(outputs: dict[str, torch.Tensor], batch: dict[str, Any],
     return torch.relu(float(margin) + decoy_score[valid] - relevant_score[valid]).mean()
 
 
+def trace_exact_surrogate_loss(outputs: dict[str, torch.Tensor], batch: dict[str, Any]) -> torch.Tensor:
+    """Differentiable pressure for whole-trace exactness, not just averaged component quality."""
+
+    device = outputs["active_logits"].device
+    active_targets = batch["active_targets"].to(device)
+    active_mask = active_targets > 0.5
+    stop_targets = batch["stop_targets"].to(device)
+    gismu_targets = batch["gismu_targets"].to(device)
+    cmavo_targets = batch["cmavo_targets"].to(device)
+    judri_targets = batch["judri_targets"].to(device)
+    active_loss = F.binary_cross_entropy_with_logits(outputs["active_logits"], active_targets, reduction="none").sum(dim=-1)
+    stop_loss = F.binary_cross_entropy_with_logits(outputs["stop_logits"], stop_targets, reduction="none").sum(dim=-1)
+    gismu_loss = F.cross_entropy(
+        outputs["gismu_logits"].reshape(-1, outputs["gismu_logits"].shape[-1]),
+        gismu_targets.reshape(-1),
+        reduction="none",
+    ).view_as(gismu_targets)
+    cmavo_loss = F.binary_cross_entropy_with_logits(outputs["cmavo_logits"], cmavo_targets, reduction="none").sum(dim=-1)
+    judri_loss = F.cross_entropy(
+        outputs["judri_logits"].reshape(-1, outputs["judri_logits"].shape[-1]),
+        judri_targets.reshape(-1),
+        reduction="none",
+    ).view(judri_targets.shape).sum(dim=-1)
+    frame_loss = ((gismu_loss + cmavo_loss + judri_loss) * active_mask.float()).sum(dim=-1)
+    return (active_loss + stop_loss + frame_loss).mean()
+
+
 def compute_m23_loss(
     outputs: dict[str, torch.Tensor],
     batch: dict[str, Any],
@@ -283,6 +310,7 @@ def compute_m23_loss(
     use_relevance_answer: bool,
     relevance_rank_weight: float = 1.0,
     relevance_margin: float = 0.15,
+    trace_exact_surrogate_weight: float = 0.0,
     **m21_loss_kwargs: Any,
 ) -> tuple[torch.Tensor, dict[str, float]]:
     loss_outputs = dict(outputs)
@@ -291,9 +319,13 @@ def compute_m23_loss(
     total, pieces = compute_m21_loss(loss_outputs, batch, **m21_loss_kwargs)
     rank = relevance_rank_loss(outputs, batch, margin=float(relevance_margin))
     total = total + float(relevance_rank_weight) * rank
+    trace_exact = trace_exact_surrogate_loss(outputs, batch)
+    total = total + float(trace_exact_surrogate_weight) * trace_exact
     pieces["loss_relevance_rank"] = float(rank.detach().cpu().item())
+    pieces["loss_trace_exact_surrogate"] = float(trace_exact.detach().cpu().item())
     pieces["relevance_rank_weight"] = float(relevance_rank_weight)
     pieces["relevance_margin"] = float(relevance_margin)
+    pieces["trace_exact_surrogate_weight"] = float(trace_exact_surrogate_weight)
     return total, pieces
 
 
@@ -469,6 +501,7 @@ def train_m23_relevance_router(
     pointer_necessity_margin: float = 0.05,
     relevance_rank_weight: float = 0.0,
     relevance_margin: float = 0.15,
+    trace_exact_surrogate_weight: float = 0.0,
     use_relevance_router: bool = False,
     relevance_temperature: float = 1.0,
     clean_train_fraction: float = 0.35,
@@ -528,6 +561,7 @@ def train_m23_relevance_router(
                 use_relevance_answer=bool(use_relevance_router),
                 relevance_rank_weight=float(relevance_rank_weight),
                 relevance_margin=float(relevance_margin),
+                trace_exact_surrogate_weight=float(trace_exact_surrogate_weight),
                 trace_weight=float(trace_weight),
                 answer_weight=float(answer_weight),
                 counterfactual_weight=float(counterfactual_weight),
@@ -562,6 +596,7 @@ def train_m23_relevance_router(
     )
     metrics["use_relevance_router"] = float(1.0 if use_relevance_router else 0.0)
     metrics["relevance_rank_weight"] = float(relevance_rank_weight)
+    metrics["trace_exact_surrogate_weight"] = float(trace_exact_surrogate_weight)
     metrics["clean_train_fraction"] = float(clean_train_fraction)
     return {
         "model": model,
@@ -593,6 +628,7 @@ def train_m23_relevance_router(
             "pointer_necessity_margin": float(pointer_necessity_margin),
             "relevance_rank_weight": float(relevance_rank_weight),
             "relevance_margin": float(relevance_margin),
+            "trace_exact_surrogate_weight": float(trace_exact_surrogate_weight),
             "use_relevance_router": bool(use_relevance_router),
             "relevance_temperature": float(relevance_temperature),
             "clean_train_fraction": float(clean_train_fraction),

@@ -38,6 +38,20 @@ M23_RELEVANCE_GRID: list[dict[str, Any]] = [
             "judri_bridge_gate": True,
         },
     },
+    {
+        "cell_key": "C",
+        "cell_id": m23_cell_id("C"),
+        "lock": "trace_punishment",
+        "label": "Scale control plus exact bridi-trace punishment",
+        "variant": {
+            "use_relevance_router": False,
+            "relevance_rank_weight": 0.0,
+            "trace_weight": 2.5,
+            "trace_exact_surrogate_weight": 0.5,
+            "clean_train_fraction": 0.35,
+            "judri_bridge_gate": True,
+        },
+    },
 ]
 
 
@@ -89,6 +103,7 @@ M23_REGISTRY: dict[str, dict[str, Any]] = {
             "M21.1.T",
             "M23.A",
             "M23.B",
+            "M23.C",
         ],
         "default_grid": deepcopy(M23_RELEVANCE_GRID),
     }

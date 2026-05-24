@@ -511,7 +511,8 @@
         "lightweight frame relevance scoring head",
         "single relevance rank margin loss",
         "oracle/random/uniform/decoy-only eval read paths",
-        "six-seed decoy relation OOD stability"
+        "six-seed decoy relation OOD stability",
+        "trace exact punishment diagnostic"
       ],
       "forbidden_drift_axes": [
         "new dictionary expansion",
@@ -538,7 +539,9 @@
         "no_relevance_accuracy",
         "decoy_only_accuracy",
         "accuracy_per_token",
-        "accuracy_per_trace_token"
+        "accuracy_per_trace_token",
+        "loss_trace_exact_surrogate",
+        "trace_exact_surrogate_weight"
       ],
       "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
     }
@@ -1141,7 +1144,9 @@
         "avg_tokens",
         "accuracy_per_token",
         "trace_tokens",
-        "accuracy_per_trace_token"
+        "accuracy_per_trace_token",
+        "loss_trace_exact_surrogate",
+        "trace_exact_surrogate_weight"
       ],
       "surface": "m23_relevance_suite"
     }
@@ -1448,7 +1453,8 @@
         "M21.1.S",
         "M21.1.T",
         "M23.A",
-        "M23.B"
+        "M23.B",
+        "M23.C"
       ],
       "inherit_required_test_contracts": false
     }

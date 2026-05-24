@@ -256,6 +256,8 @@ KEY_METRICS = (
     "decoy_relation_ood_accuracy",
     "relevance_top1_accuracy",
     "relevance_margin",
+    "loss_trace_exact_surrogate",
+    "trace_exact_surrogate_weight",
     "oracle_relevance_accuracy",
     "random_relevance_accuracy",
     "no_relevance_accuracy",
@@ -266,6 +268,9 @@ KEY_METRICS = (
     "m23_router_decoy_lift_vs_scale",
     "m23_router_worst_surface_lift_vs_scale",
     "m23_oracle_relevance_lift",
+    "m23_trace_punish_trace_exact_lift_vs_scale",
+    "m23_trace_punish_decoy_delta_vs_scale",
+    "m23_trace_punish_strict_delta_vs_scale",
 )
 
 _REFERENCE_ROOTS: dict[str, list[Path]] = {
@@ -1628,6 +1633,8 @@ def _m23_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("worst_surface_accuracy", aggregate.get("mean_worst_surface_accuracy"))
         metrics.setdefault("relevance_top1_accuracy", aggregate.get("mean_relevance_top1_accuracy"))
         metrics.setdefault("relevance_margin", aggregate.get("mean_relevance_margin"))
+        metrics.setdefault("loss_trace_exact_surrogate", aggregate.get("mean_loss_trace_exact_surrogate"))
+        metrics.setdefault("trace_exact_surrogate_weight", aggregate.get("mean_trace_exact_surrogate_weight"))
         metrics.setdefault("oracle_relevance_accuracy", aggregate.get("mean_oracle_relevance_accuracy"))
         metrics.setdefault("random_relevance_accuracy", aggregate.get("mean_random_relevance_accuracy"))
         metrics.setdefault("no_relevance_accuracy", aggregate.get("mean_no_relevance_accuracy"))
@@ -1638,6 +1645,9 @@ def _m23_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("m23_router_decoy_lift_vs_scale", aggregate.get("m23_router_decoy_lift_vs_scale"))
         metrics.setdefault("m23_router_worst_surface_lift_vs_scale", aggregate.get("m23_router_worst_surface_lift_vs_scale"))
         metrics.setdefault("m23_oracle_relevance_lift", aggregate.get("m23_oracle_relevance_lift"))
+        metrics.setdefault("m23_trace_punish_trace_exact_lift_vs_scale", aggregate.get("m23_trace_punish_trace_exact_lift_vs_scale"))
+        metrics.setdefault("m23_trace_punish_decoy_delta_vs_scale", aggregate.get("m23_trace_punish_decoy_delta_vs_scale"))
+        metrics.setdefault("m23_trace_punish_strict_delta_vs_scale", aggregate.get("m23_trace_punish_strict_delta_vs_scale"))
         metrics.setdefault("avg_tokens", aggregate.get("avg_tokens"))
         metrics.setdefault("accuracy_per_token", aggregate.get("accuracy_per_token"))
         metrics.setdefault("trace_tokens", aggregate.get("trace_tokens"))

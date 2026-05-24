@@ -75,6 +75,7 @@ def run_train(args: argparse.Namespace) -> dict[str, Any]:
         pointer_necessity_margin=float(args.pointer_necessity_margin),
         relevance_rank_weight=float(args.relevance_rank_weight),
         relevance_margin=float(args.relevance_margin),
+        trace_exact_surrogate_weight=float(args.trace_exact_surrogate_weight),
         use_relevance_router=bool(args.use_relevance_router),
         relevance_temperature=float(args.relevance_temperature),
         clean_train_fraction=float(args.clean_train_fraction),
@@ -168,6 +169,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--pointer-necessity-margin", type=float, default=0.05)
     parser.add_argument("--relevance-rank-weight", type=float, default=0.0)
     parser.add_argument("--relevance-margin", type=float, default=0.15)
+    parser.add_argument("--trace-exact-surrogate-weight", type=float, default=0.0)
     parser.add_argument("--use-relevance-router", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--relevance-temperature", type=float, default=1.0)
     parser.add_argument("--clean-train-fraction", type=float, default=0.35)
