@@ -20,6 +20,7 @@ def test_m24_suite_cli_help() -> None:
     assert "--generator-epochs" in result.stdout
     assert "--advisor-epochs" in result.stdout
     assert "--trace-weight" in result.stdout
+    assert "--mdl-weight" in result.stdout
 
 
 def test_m24_suite_cli_tiny_smoke_writes_report() -> None:
@@ -49,6 +50,8 @@ def test_m24_suite_cli_tiny_smoke_writes_report() -> None:
             "16",
             "--advisor-hidden-dim",
             "16",
+            "--mdl-weight",
+            "0.1",
             "--run-id",
             run_id,
         ],
@@ -59,6 +62,13 @@ def test_m24_suite_cli_tiny_smoke_writes_report() -> None:
     )
     assert "M24 substrate compression report written" in result.stdout
     payload = json.loads(report.read_text(encoding="utf-8"))
+    assert payload["config"]["mdl_weight"] == 0.1
+    assert payload["seed_reports"][0]["config"]["mdl_weight"] == 0.1
+    assert payload["seed_reports"][0]["stage1_config"]["mdl_weight"] == 0.1
+    assert payload["seed_reports"][0]["stage1_metrics"]["trace_exact_surrogate_weight"] == payload["config"]["trace_exact_surrogate_weight"]
     assert payload["aggregate_metrics"]["mean_strict_accuracy"] >= 0.0
     assert "mean_substrate_claim_score" in payload["aggregate_metrics"]
+    assert "mean_shuffled_trace_accuracy" in payload["aggregate_metrics"]
+    assert "mean_predicted_vs_shuffled_delta" in payload["aggregate_metrics"]
+    assert "mean_token_reduction_ratio" in payload["aggregate_metrics"]
     assert payload["seed_reports"][0]["lock_status"]["symbolic_trace_only"] is True

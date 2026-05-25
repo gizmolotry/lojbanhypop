@@ -153,11 +153,13 @@ KEY_METRICS = [
     "predicted_trace_accuracy",
     "oracle_trace_accuracy",
     "random_trace_accuracy",
+    "shuffled_trace_accuracy",
     "zero_trace_accuracy",
     "prompt_only_accuracy",
     "advisor_vs_prompt_delta",
     "m24_strict_delta_vs_prompt_only",
     "predicted_vs_random_delta",
+    "predicted_vs_shuffled_delta",
     "oracle_trained_oracle_trace_accuracy",
     "oracle_trained_predicted_trace_accuracy",
     "oracle_trained_random_trace_accuracy",
@@ -190,12 +192,14 @@ KEY_METRICS = [
     "packed_to_prompt_ratio",
     "prompt_to_packed_ratio",
     "packed_symbol_compression_ratio",
+    "mdl_weight",
     "token_reduction_ratio",
     "mean_token_reduction_ratio",
     "token_ratio_vs_m23",
     "compression_lift_vs_m23",
     "compression_adjusted_strict_accuracy",
     "strict_accuracy_per_substrate_token",
+    "m24_gate_packed_trace_shorter_than_prompt",
     "phrase_accuracy",
     "phrase_exact_accuracy",
     "semantic_coverage_strict_accuracy",
@@ -464,7 +468,10 @@ def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
     if stage_key == "M23":
         notes.append("M23 is the causal relevance-router fork over the M21/M22 bridi substrate; promotion depends on decoy OOD lift, not clean accuracy alone")
     if stage_key == "M24":
-        notes.append("M24 is the substrate-first compression fork; strict accuracy is canonical and phrase accuracy is diagnostic only")
+        notes.append(
+            "M24 is the M24.1 matched trace corruption and compression-pressure fork; "
+            "strict accuracy is canonical, phrase accuracy is diagnostic only, and promotion requires m24_promotion_candidate=1.0"
+        )
     return _row(
         stage_for_row,
         "artifact_anchor" if anchor else "runnable_no_anchor",
@@ -916,9 +923,20 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                     "strict_accuracy": ("strict_accuracy", "mean_strict_accuracy"),
                     "m24_promotion_candidate": ("m24_promotion_candidate", "mean_m24_promotion_candidate"),
                     "m24_promotion_gate_pass_rate": ("m24_promotion_gate_pass_rate", "mean_m24_promotion_gate_pass_rate"),
+                    "predicted_vs_shuffled_delta": (
+                        "predicted_vs_shuffled_delta",
+                        "mean_predicted_vs_shuffled_delta",
+                    ),
+                    "shuffled_trace_accuracy": ("shuffled_trace_accuracy", "mean_shuffled_trace_accuracy"),
                     "predicted_vs_random_delta": ("predicted_vs_random_delta", "mean_predicted_vs_random_delta"),
                     "advisor_vs_prompt_delta": ("advisor_vs_prompt_delta", "mean_advisor_vs_prompt_delta"),
                     "packed_symbol_to_prompt_ratio": ("packed_symbol_to_prompt_ratio", "mean_packed_symbol_to_prompt_ratio"),
+                    "token_reduction_ratio": ("token_reduction_ratio", "mean_token_reduction_ratio"),
+                    "mdl_weight": ("mdl_weight", "mean_mdl_weight"),
+                    "m24_gate_packed_trace_shorter_than_prompt": (
+                        "m24_gate_packed_trace_shorter_than_prompt",
+                        "mean_m24_gate_packed_trace_shorter_than_prompt",
+                    ),
                     "generator_parameter_max_delta_after_advisor": (
                         "generator_parameter_max_delta_after_advisor",
                         "mean_generator_parameter_max_delta_after_advisor",
@@ -953,7 +971,6 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                     "packed_to_prompt_ratio": ("packed_to_prompt_ratio", "mean_packed_to_prompt_ratio"),
                     "prompt_to_packed_ratio": ("prompt_to_packed_ratio", "mean_prompt_to_packed_ratio"),
                     "packed_symbol_compression_ratio": ("packed_symbol_compression_ratio", "mean_packed_symbol_compression_ratio"),
-                    "token_reduction_ratio": ("token_reduction_ratio", "mean_token_reduction_ratio"),
                     "token_ratio_vs_m23": "token_ratio_vs_m23",
                     "compression_lift_vs_m23": "compression_lift_vs_m23",
                     "avg_tokens": ("avg_tokens", "mean_avg_tokens"),

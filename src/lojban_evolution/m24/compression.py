@@ -17,16 +17,20 @@ from lojban_evolution.bridi_substrate import (
     packed_trace_component_accuracy,
     packed_trace_spec,
     random_packed_trace_like,
+    shuffled_packed_trace_like,
     zero_packed_trace_like,
 )
 from lojban_evolution.m21.bridi import ANSWER_LABELS, CMAVO, DEFAULT_MAX_ENTITIES, DEFAULT_MAX_PLACES, GISMU, tokenize
 from lojban_evolution.m23.relevance import M23RelevanceDataset, M23RelevanceExample, m23_collate, train_m23_relevance_router
 
 
+DEFAULT_M24_MDL_WEIGHT = 0.01
+
+
 M24_LOCKS: dict[str, str] = {
     "substrate_first": "the generator is reused from M23/M21 dynamic bridi and is frozen before advisor training",
     "symbolic_trace_only": "the advisor consumes packed integer bridi traces, not frame_repr/trace_state/prompt_state",
-    "compression_controls": "predicted, oracle, random, zero/no-trace, and prompt-only paths are evaluated side-by-side",
+    "compression_controls": "predicted, oracle, shuffled, random, zero/no-trace, and prompt-only paths are evaluated side-by-side",
 }
 
 DISALLOWED_ADVISOR_TRACE_INPUTS = ("frame_repr", "trace_state", "prompt_state")
@@ -248,16 +252,19 @@ def evaluate_m24_substrate_compression(
         outputs = generator(input_ids)
         predicted = pack_symbolic_trace_from_outputs(outputs, max_frames=advisor.max_frames, max_places=advisor.max_places).to(device_obj)
         oracle = pack_symbolic_trace_from_batch(batch, max_frames=advisor.max_frames, max_places=advisor.max_places).to(device_obj)
+        shuffled_trace = shuffled_packed_trace_like(predicted, seed=int(seed) + batch_idx).to(device_obj)
         random_trace = random_packed_trace_like(oracle, seed=int(seed) + batch_idx, max_entities=advisor.max_entities).to(device_obj)
         zero_trace = zero_packed_trace_like(oracle).to(device_obj)
         merged_logits["predicted_trace"].append(advisor(predicted).detach().cpu())
         merged_logits["oracle_trace"].append(advisor(oracle).detach().cpu())
+        merged_logits["shuffled_trace"].append(advisor(shuffled_trace).detach().cpu())
         merged_logits["random_trace"].append(advisor(random_trace).detach().cpu())
         merged_logits["zero_trace"].append(advisor(zero_trace).detach().cpu())
         merged_logits["prompt_only"].append(prompt_control(input_ids).detach().cpu())
         if oracle_advisor is not None:
             merged_logits["oracle_trained_oracle_trace"].append(oracle_advisor(oracle).detach().cpu())
             merged_logits["oracle_trained_predicted_trace"].append(oracle_advisor(predicted).detach().cpu())
+            merged_logits["oracle_trained_shuffled_trace"].append(oracle_advisor(shuffled_trace).detach().cpu())
             merged_logits["oracle_trained_random_trace"].append(oracle_advisor(random_trace).detach().cpu())
             merged_logits["oracle_trained_zero_trace"].append(oracle_advisor(zero_trace).detach().cpu())
         targets.append(target.detach().cpu())
@@ -272,11 +279,13 @@ def evaluate_m24_substrate_compression(
     component_metrics = packed_trace_component_accuracy(predicted_all, oracle_all)
     predicted_accuracy = _accuracy(logits_all["predicted_trace"], target_all)
     oracle_accuracy = _accuracy(logits_all["oracle_trace"], target_all)
+    shuffled_accuracy = _accuracy(logits_all["shuffled_trace"], target_all)
     random_accuracy = _accuracy(logits_all["random_trace"], target_all)
     zero_accuracy = _accuracy(logits_all["zero_trace"], target_all)
     prompt_accuracy = _accuracy(logits_all["prompt_only"], target_all)
     oracle_trained_oracle_accuracy = _accuracy(logits_all["oracle_trained_oracle_trace"], target_all) if "oracle_trained_oracle_trace" in logits_all else 0.0
     oracle_trained_predicted_accuracy = _accuracy(logits_all["oracle_trained_predicted_trace"], target_all) if "oracle_trained_predicted_trace" in logits_all else 0.0
+    oracle_trained_shuffled_accuracy = _accuracy(logits_all["oracle_trained_shuffled_trace"], target_all) if "oracle_trained_shuffled_trace" in logits_all else 0.0
     oracle_trained_random_accuracy = _accuracy(logits_all["oracle_trained_random_trace"], target_all) if "oracle_trained_random_trace" in logits_all else 0.0
     oracle_trained_zero_accuracy = _accuracy(logits_all["oracle_trained_zero_trace"], target_all) if "oracle_trained_zero_trace" in logits_all else 0.0
     surface_metrics: dict[str, dict[str, float]] = {}
@@ -293,7 +302,9 @@ def evaluate_m24_substrate_compression(
     oracle_nonzero = float(oracle_all.ne(0).float().sum(dim=(-1, -2)).mean().item()) if oracle_all.numel() else 0.0
     packed_symbol_to_prompt_ratio = predicted_nonzero / max(1.0, mean_prompt_tokens)
     prompt_to_packed_symbol_ratio = mean_prompt_tokens / max(1.0, predicted_nonzero)
+    token_reduction_ratio = 1.0 - packed_symbol_to_prompt_ratio
     advisor_vs_prompt_delta = predicted_accuracy - prompt_accuracy
+    predicted_vs_shuffled_delta = predicted_accuracy - shuffled_accuracy
     predicted_vs_random_delta = predicted_accuracy - random_accuracy
     predicted_vs_zero_delta = predicted_accuracy - zero_accuracy
     oracle_trace_delta = oracle_accuracy - predicted_accuracy
@@ -305,13 +316,15 @@ def evaluate_m24_substrate_compression(
         min(
             1.0,
             0.35 * float(component_metrics["bridi_trace_exact_accuracy"])
-            + 0.25 * max(0.0, predicted_vs_random_delta)
+            + 0.15 * max(0.0, predicted_vs_shuffled_delta)
+            + 0.10 * max(0.0, predicted_vs_random_delta)
             + 0.20 * max(0.0, advisor_vs_prompt_delta)
             + 0.10 * max(0.0, predicted_vs_zero_delta)
             + 0.10 * max(0.0, oracle_trained_trace_delta),
         ),
     )
     promotion_gates = {
+        "trace_beats_shuffled": predicted_vs_shuffled_delta >= 0.10,
         "trace_beats_random": predicted_vs_random_delta >= 0.10,
         "trace_beats_zero": predicted_vs_zero_delta >= 0.10,
         "trace_matches_oracle_upper_bound": predicted_trace_gap_to_oracle_upper_bound <= 0.05,
@@ -324,17 +337,20 @@ def evaluate_m24_substrate_compression(
         "strict_accuracy": predicted_accuracy,
         "predicted_trace_accuracy": predicted_accuracy,
         "oracle_trace_accuracy": oracle_accuracy,
+        "shuffled_trace_accuracy": shuffled_accuracy,
         "random_trace_accuracy": random_accuracy,
         "zero_trace_accuracy": zero_accuracy,
         "no_trace_accuracy": zero_accuracy,
         "prompt_only_accuracy": prompt_accuracy,
         "advisor_vs_prompt_delta": advisor_vs_prompt_delta,
         "m24_strict_delta_vs_prompt_only": advisor_vs_prompt_delta,
+        "predicted_vs_shuffled_delta": predicted_vs_shuffled_delta,
         "predicted_vs_random_delta": predicted_vs_random_delta,
         "predicted_vs_zero_delta": predicted_vs_zero_delta,
         "oracle_trace_delta": oracle_trace_delta,
         "oracle_trained_oracle_trace_accuracy": oracle_trained_oracle_accuracy,
         "oracle_trained_predicted_trace_accuracy": oracle_trained_predicted_accuracy,
+        "oracle_trained_shuffled_trace_accuracy": oracle_trained_shuffled_accuracy,
         "oracle_trained_random_trace_accuracy": oracle_trained_random_accuracy,
         "oracle_trained_zero_trace_accuracy": oracle_trained_zero_accuracy,
         "oracle_trained_trace_delta": oracle_trained_trace_delta,
@@ -353,6 +369,7 @@ def evaluate_m24_substrate_compression(
         "prompt_to_packed_symbol_ratio": prompt_to_packed_symbol_ratio,
         "packed_to_prompt_ratio": packed_symbol_to_prompt_ratio,
         "prompt_to_packed_ratio": prompt_to_packed_symbol_ratio,
+        "token_reduction_ratio": token_reduction_ratio,
         "compression_ratio": prompt_to_packed_symbol_ratio,
         "packed_symbol_compression_ratio": packed_symbol_to_prompt_ratio,
         "oracle_symbol_compression_ratio": oracle_nonzero / max(1.0, mean_prompt_tokens),
@@ -362,11 +379,13 @@ def evaluate_m24_substrate_compression(
         "substrate_claim_score": substrate_claim_score,
         "m24_promotion_gate_pass_rate": promotion_gate_pass_rate,
         "m24_promotion_candidate": 1.0 if all(promotion_gates.values()) else 0.0,
+        "m24_gate_trace_beats_shuffled": 1.0 if promotion_gates["trace_beats_shuffled"] else 0.0,
         "m24_gate_trace_beats_random": 1.0 if promotion_gates["trace_beats_random"] else 0.0,
         "m24_gate_trace_beats_zero": 1.0 if promotion_gates["trace_beats_zero"] else 0.0,
         "m24_gate_trace_matches_oracle_upper_bound": 1.0 if promotion_gates["trace_matches_oracle_upper_bound"] else 0.0,
         "m24_gate_trace_beats_prompt_only": 1.0 if promotion_gates["trace_beats_prompt_only"] else 0.0,
         "m24_gate_packed_trace_shorter_than_prompt": 1.0 if promotion_gates["packed_trace_is_shorter_than_prompt"] else 0.0,
+        "m24_gate_token_reduction_positive": 1.0 if promotion_gates["packed_trace_is_shorter_than_prompt"] else 0.0,
         "m24_gate_nonzero_exact_trace_reconstruction": 1.0 if promotion_gates["nonzero_exact_trace_reconstruction"] else 0.0,
         **component_metrics,
     }
@@ -391,6 +410,7 @@ def train_m24_substrate_compression(
     max_entities: int = DEFAULT_MAX_ENTITIES,
     trace_weight: float = 2.5,
     answer_weight: float = 0.2,
+    mdl_weight: float = DEFAULT_M24_MDL_WEIGHT,
     trace_exact_surrogate_weight: float = 0.5,
     clean_train_fraction: float = 0.35,
     clean_eval_fraction: float = 0.35,
@@ -416,7 +436,7 @@ def train_m24_substrate_compression(
         counterfactual_weight=1.25,
         brivi_lock_weight=1.5,
         frame_necessity_weight=1.0,
-        mdl_weight=0.01,
+        mdl_weight=float(mdl_weight),
         relevance_rank_weight=0.0,
         trace_exact_surrogate_weight=float(trace_exact_surrogate_weight),
         use_relevance_router=False,
@@ -500,6 +520,7 @@ def train_m24_substrate_compression(
     metrics["generator_parameters_unchanged_after_advisor"] = 1.0 if max_delta <= 0.0 else 0.0
     metrics["advisor_primary_trace_is_symbolic"] = 1.0 if advisor_contract["primary_trace_input_is_symbolic"] else 0.0
     metrics["continuous_trace_smuggling_detected"] = 0.0 if all(advisor_contract.values()) else 1.0
+    metrics["mdl_weight"] = float(mdl_weight)
     return {
         "generator": generator,
         "advisor": advisor,
@@ -513,6 +534,7 @@ def train_m24_substrate_compression(
         "oracle_advisor_history": oracle_advisor_history,
         "prompt_history": prompt_history,
         "stage1_metrics": stage1["metrics"],
+        "stage1_config": stage1["config"],
         "metrics": metrics,
         "config": {
             "train_size": int(train_size),
@@ -532,6 +554,7 @@ def train_m24_substrate_compression(
             "max_entities": int(max_entities),
             "trace_weight": float(trace_weight),
             "answer_weight": float(answer_weight),
+            "mdl_weight": float(mdl_weight),
             "trace_exact_surrogate_weight": float(trace_exact_surrogate_weight),
             "clean_train_fraction": float(clean_train_fraction),
             "clean_eval_fraction": float(clean_eval_fraction),
@@ -551,7 +574,14 @@ def metric_lock_status(metrics: dict[str, Any]) -> dict[str, bool]:
         "generator_unchanged_after_advisor": float(metrics.get("generator_parameters_unchanged_after_advisor", 0.0)) == 1.0,
         "compression_controls": all(
             key in metrics
-            for key in ("predicted_trace_accuracy", "oracle_trace_accuracy", "random_trace_accuracy", "zero_trace_accuracy", "prompt_only_accuracy")
+            for key in (
+                "predicted_trace_accuracy",
+                "oracle_trace_accuracy",
+                "shuffled_trace_accuracy",
+                "random_trace_accuracy",
+                "zero_trace_accuracy",
+                "prompt_only_accuracy",
+            )
         ),
     }
 

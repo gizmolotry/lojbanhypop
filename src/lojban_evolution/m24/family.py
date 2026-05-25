@@ -21,6 +21,7 @@ M24_SUBSTRATE_COMPRESSION_GRID: list[dict[str, Any]] = [
         "variant": {
             "trace_weight": 2.5,
             "answer_weight": 0.2,
+            "mdl_weight": 0.01,
             "trace_exact_surrogate_weight": 0.5,
         },
     }
@@ -59,6 +60,7 @@ M24_REGISTRY: dict[str, dict[str, Any]] = {
         "parameter_axes": [
             "trace_weight",
             "answer_weight",
+            "mdl_weight",
             "trace_exact_surrogate_weight",
             "advisor_hidden_dim",
             "seed",

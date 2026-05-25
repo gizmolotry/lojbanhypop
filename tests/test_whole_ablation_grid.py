@@ -240,6 +240,10 @@ def test_m24_special_stage_metrics_and_order() -> None:
             "accuracy_per_trace_token": 0.1062,
             "compression_adjusted_strict_accuracy": 1.91,
             "strict_accuracy_per_substrate_token": 0.1062,
+            "shuffled_trace_accuracy": 0.11,
+            "predicted_vs_shuffled_delta": 0.58,
+            "mdl_weight": 0.025,
+            "m24_gate_packed_trace_shorter_than_prompt": 1.0,
         }
     }
 
@@ -247,9 +251,13 @@ def test_m24_special_stage_metrics_and_order() -> None:
 
     assert "M24" in whole_grid.STAGE_ORDER
     assert whole_grid.STAGE_ORDER.index("M23") < whole_grid.STAGE_ORDER.index("M24")
-    assert list(metrics)[:3] == ["strict_accuracy", "overall_phrase_accuracy", "phrase_accuracy"]
+    assert list(metrics)[:3] == ["strict_accuracy", "predicted_vs_shuffled_delta", "shuffled_trace_accuracy"]
     assert metrics["strict_accuracy"] == 0.69
     assert metrics["overall_phrase_accuracy"] == 0.74
     assert metrics["compression_ratio"] == 0.3611
     assert metrics["token_reduction_ratio"] == 0.6389
+    assert metrics["shuffled_trace_accuracy"] == 0.11
+    assert metrics["predicted_vs_shuffled_delta"] == 0.58
+    assert metrics["mdl_weight"] == 0.025
+    assert metrics["m24_gate_packed_trace_shorter_than_prompt"] == 1.0
     assert metrics["strict_accuracy_per_substrate_token"] == 0.1062

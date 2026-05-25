@@ -12,7 +12,12 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT / "src") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from lojban_evolution.m24.compression import M24_LOCKS, metric_lock_status, train_m24_substrate_compression  # noqa: E402
+from lojban_evolution.m24.compression import (  # noqa: E402
+    DEFAULT_M24_MDL_WEIGHT,
+    M24_LOCKS,
+    metric_lock_status,
+    train_m24_substrate_compression,
+)
 from lojban_evolution.m24.family import M24_FAMILY_VERSION, M24_REGISTRY  # noqa: E402
 from lojban_evolution.series_contract import assert_output_path_allowed, lineage_metadata, series_metadata, validate_series_outputs  # noqa: E402
 
@@ -50,15 +55,18 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
         "strict_accuracy",
         "predicted_trace_accuracy",
         "oracle_trace_accuracy",
+        "shuffled_trace_accuracy",
         "random_trace_accuracy",
         "zero_trace_accuracy",
         "prompt_only_accuracy",
         "advisor_vs_prompt_delta",
         "m24_strict_delta_vs_prompt_only",
+        "predicted_vs_shuffled_delta",
         "predicted_vs_random_delta",
         "oracle_trace_delta",
         "oracle_trained_oracle_trace_accuracy",
         "oracle_trained_predicted_trace_accuracy",
+        "oracle_trained_shuffled_trace_accuracy",
         "oracle_trained_random_trace_accuracy",
         "oracle_trained_zero_trace_accuracy",
         "oracle_trained_trace_delta",
@@ -74,6 +82,7 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
         "prompt_to_packed_symbol_ratio",
         "packed_to_prompt_ratio",
         "prompt_to_packed_ratio",
+        "token_reduction_ratio",
         "compression_ratio",
         "substrate_token_count",
         "reference_token_count",
@@ -83,12 +92,15 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
         "substrate_claim_score",
         "m24_promotion_gate_pass_rate",
         "m24_promotion_candidate",
+        "m24_gate_trace_beats_shuffled",
         "m24_gate_trace_beats_random",
         "m24_gate_trace_beats_zero",
         "m24_gate_trace_matches_oracle_upper_bound",
         "m24_gate_trace_beats_prompt_only",
         "m24_gate_packed_trace_shorter_than_prompt",
+        "m24_gate_token_reduction_positive",
         "m24_gate_nonzero_exact_trace_reconstruction",
+        "mdl_weight",
         "generator_parameter_max_delta_after_advisor",
         "generator_parameters_unchanged_after_advisor",
     )
@@ -126,6 +138,7 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
             max_entities=int(args.max_entities),
             trace_weight=float(args.trace_weight),
             answer_weight=float(args.answer_weight),
+            mdl_weight=float(args.mdl_weight),
             trace_exact_surrogate_weight=float(args.trace_exact_surrogate_weight),
             clean_train_fraction=float(args.clean_train_fraction),
             clean_eval_fraction=float(args.clean_eval_fraction),
@@ -140,6 +153,7 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
                 "metrics": metrics,
                 "lock_status": locks,
                 "stage1_metrics": result["stage1_metrics"],
+                "stage1_config": result["stage1_config"],
                 "stage1_history": result["stage1_history"],
                 "advisor_history": result["advisor_history"],
                 "oracle_advisor_history": result["oracle_advisor_history"],
@@ -180,6 +194,7 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
             "prompt_epochs": int(args.prompt_epochs),
             "trace_weight": float(args.trace_weight),
             "answer_weight": float(args.answer_weight),
+            "mdl_weight": float(args.mdl_weight),
             "trace_exact_surrogate_weight": float(args.trace_exact_surrogate_weight),
         },
         "architecture_locks": M24_LOCKS,
@@ -220,6 +235,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--max-entities", type=int, default=8)
     parser.add_argument("--trace-weight", type=float, default=2.5)
     parser.add_argument("--answer-weight", type=float, default=0.2)
+    parser.add_argument("--mdl-weight", type=float, default=DEFAULT_M24_MDL_WEIGHT)
     parser.add_argument("--trace-exact-surrogate-weight", type=float, default=0.5)
     parser.add_argument("--clean-train-fraction", type=float, default=0.35)
     parser.add_argument("--clean-eval-fraction", type=float, default=0.35)

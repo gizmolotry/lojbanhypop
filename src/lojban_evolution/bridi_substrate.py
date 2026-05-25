@@ -125,6 +125,30 @@ def random_packed_trace_like(packed: torch.Tensor, *, seed: int = 0, max_entitie
     return out
 
 
+def shuffled_packed_trace_like(packed: torch.Tensor, *, seed: int = 0) -> torch.Tensor:
+    """Return whole packed traces permuted across the batch.
+
+    This preserves valid trace-level symbol distributions while breaking the
+    prompt/answer alignment that a downstream advisor could exploit.
+    """
+
+    if packed.shape[0] <= 1:
+        return packed.detach().clone()
+    generator = torch.Generator(device="cpu").manual_seed(int(seed))
+    batch_size = int(packed.shape[0])
+    perm = torch.randperm(batch_size, generator=generator, device="cpu")
+    arange = torch.arange(batch_size, device="cpu")
+    if bool(perm.eq(arange).any().item()):
+        for shift in range(1, batch_size):
+            candidate = torch.roll(perm, shifts=shift)
+            if not bool(candidate.eq(arange).any().item()):
+                perm = candidate
+                break
+        else:
+            perm = torch.roll(arange, shifts=1)
+    return packed.detach().clone()[perm.to(packed.device)]
+
+
 def packed_trace_exact_accuracy(predicted: torch.Tensor, oracle: torch.Tensor) -> float:
     if predicted.numel() == 0 or oracle.numel() == 0:
         return 0.0

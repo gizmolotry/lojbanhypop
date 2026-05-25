@@ -546,12 +546,14 @@
       "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
     },
     "M24": {
-      "question_boundary": "substrate-first compression probe over the M23 causal relevance substrate",
-      "architectural_thesis": "test whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only, while recording strict accuracy and token accounting without treating phrase accuracy as canonical.",
+      "question_boundary": "M24.1 matched trace corruption and compression-pressure follow-up over the M23 causal relevance substrate",
+      "architectural_thesis": "test whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only, while M24.1 adds matched shuffled-trace controls and MDL/compression pressure; strict_accuracy remains canonical and phrase accuracy is diagnostic only.",
       "allowed_ablation_axes": [
         "substrate token budget",
         "compression objective weight",
         "relevance-trace distillation",
+        "matched trace corruption control",
+        "MDL compression pressure",
         "token-ratio comparison against M23",
         "strict-accuracy retention under compression"
       ],
@@ -564,17 +566,22 @@
       "promotion_basis": [
         "strict_accuracy retention against prompt/M23 controls",
         "m24_promotion_gate_pass_rate",
-        "m24_promotion_candidate",
+        "m24_promotion_candidate must equal 1.0 for any promotion",
         "predicted_vs_random_delta",
+        "predicted_vs_shuffled_delta",
         "packed_symbol_to_prompt_ratio below 1.0"
       ],
       "metrics_primary": [
         "strict_accuracy",
         "predicted_trace_accuracy",
         "predicted_vs_random_delta",
+        "shuffled_trace_accuracy",
+        "predicted_vs_shuffled_delta",
         "m24_promotion_gate_pass_rate",
         "m24_promotion_candidate",
         "packed_symbol_to_prompt_ratio",
+        "token_reduction_ratio",
+        "mdl_weight",
         "strict_accuracy_per_substrate_token"
       ],
       "metrics_guardrail": [
@@ -585,7 +592,8 @@
         "random_trace_accuracy",
         "zero_trace_accuracy",
         "reference_token_count",
-        "substrate_token_count"
+        "substrate_token_count",
+        "m24_gate_packed_trace_shorter_than_prompt"
       ],
       "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
     }
@@ -1197,17 +1205,19 @@
     "m24.substrate_first_compression": {
       "test_id": "m24.substrate_first_compression",
       "family": "M24",
-      "description": "M24 tests whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only. Promotion requires causal trace lift, strict retention, exactness evidence, and actual token reduction; phrase accuracy is diagnostic only.",
+      "description": "M24.1 tests whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only under matched trace corruption and compression pressure. Promotion requires causal trace lift, strict_accuracy retention, exactness evidence, actual token reduction, and m24_promotion_candidate=1.0; phrase accuracy is diagnostic only.",
       "metrics": [
         "strict_accuracy",
         "predicted_trace_accuracy",
         "oracle_trained_oracle_trace_accuracy",
         "oracle_trained_predicted_trace_accuracy",
         "random_trace_accuracy",
+        "shuffled_trace_accuracy",
         "zero_trace_accuracy",
         "prompt_only_accuracy",
         "advisor_vs_prompt_delta",
         "predicted_vs_random_delta",
+        "predicted_vs_shuffled_delta",
         "oracle_trained_trace_delta",
         "predicted_trace_gap_to_oracle_upper_bound",
         "cross_advisor_oracle_gap",
@@ -1219,6 +1229,8 @@
         "reference_token_count",
         "compression_ratio",
         "packed_symbol_to_prompt_ratio",
+        "token_reduction_ratio",
+        "mdl_weight",
         "packed_to_prompt_ratio",
         "prompt_to_packed_ratio",
         "strict_accuracy_per_substrate_token",
@@ -1556,7 +1568,8 @@
         "M23",
         "M23.B",
         "M23.C",
-        "M24"
+        "M24",
+        "M24.1"
       ],
       "inherit_required_test_contracts": false
     }

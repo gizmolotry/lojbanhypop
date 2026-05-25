@@ -279,11 +279,13 @@ KEY_METRICS = (
     "predicted_trace_accuracy",
     "oracle_trace_accuracy",
     "random_trace_accuracy",
+    "shuffled_trace_accuracy",
     "zero_trace_accuracy",
     "prompt_only_accuracy",
     "advisor_vs_prompt_delta",
     "m24_strict_delta_vs_prompt_only",
     "predicted_vs_random_delta",
+    "predicted_vs_shuffled_delta",
     "oracle_trained_oracle_trace_accuracy",
     "oracle_trained_predicted_trace_accuracy",
     "oracle_trained_random_trace_accuracy",
@@ -316,12 +318,14 @@ KEY_METRICS = (
     "packed_to_prompt_ratio",
     "prompt_to_packed_ratio",
     "packed_symbol_compression_ratio",
+    "mdl_weight",
     "token_reduction_ratio",
     "mean_token_reduction_ratio",
     "token_ratio_vs_m23",
     "compression_lift_vs_m23",
     "compression_adjusted_strict_accuracy",
     "strict_accuracy_per_substrate_token",
+    "m24_gate_packed_trace_shorter_than_prompt",
     "phrase_accuracy",
     "phrase_exact_accuracy",
 )
@@ -787,7 +791,10 @@ def build_direct_unified_eval_manifest(
     if family_key == "M23":
         notes.append("M23 direct surfaces test whether an explicit frame relevance selector beats M22-style scale on decoy relation OOD.")
     if family_key == "M24":
-        notes.append("M24 direct surfaces test substrate-first compression; strict accuracy remains canonical and phrase accuracy is diagnostic only.")
+        notes.append(
+            "M24 direct surfaces test M24.1 matched trace corruption and compression pressure; "
+            "strict accuracy remains canonical and phrase accuracy is diagnostic only."
+        )
 
     manifest = {
         "schema_version": DIRECT_UNIFIED_EVAL_VERSION,
@@ -974,9 +981,11 @@ def _evaluate_m24_contract(
     if not metrics:
         return _missing_contract_row(test_id, contract, f"missing M24 direct surface for {test_id}")
     notes = [
-        "M24 contract is evaluated from the substrate-first compression report.",
+        "M24 contract is evaluated from the M24.1 matched trace corruption and compression-pressure report.",
         "strict_accuracy is canonical; phrase accuracy metrics are diagnostic only.",
     ]
+    if float(metrics.get("m24_promotion_candidate", 0.0) or 0.0) < 1.0:
+        notes.append("M24 remains explicitly non-promoted unless m24_promotion_candidate=1.0.")
     return {
         "test_id": test_id,
         "surface": contract.get("surface"),
@@ -1770,11 +1779,13 @@ def _m24_compression_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("predicted_trace_accuracy", aggregate.get("mean_predicted_trace_accuracy"))
         metrics.setdefault("oracle_trace_accuracy", aggregate.get("mean_oracle_trace_accuracy"))
         metrics.setdefault("random_trace_accuracy", aggregate.get("mean_random_trace_accuracy"))
+        metrics.setdefault("shuffled_trace_accuracy", aggregate.get("mean_shuffled_trace_accuracy"))
         metrics.setdefault("zero_trace_accuracy", aggregate.get("mean_zero_trace_accuracy"))
         metrics.setdefault("prompt_only_accuracy", aggregate.get("mean_prompt_only_accuracy"))
         metrics.setdefault("advisor_vs_prompt_delta", aggregate.get("mean_advisor_vs_prompt_delta"))
         metrics.setdefault("m24_strict_delta_vs_prompt_only", aggregate.get("mean_m24_strict_delta_vs_prompt_only"))
         metrics.setdefault("predicted_vs_random_delta", aggregate.get("mean_predicted_vs_random_delta"))
+        metrics.setdefault("predicted_vs_shuffled_delta", aggregate.get("mean_predicted_vs_shuffled_delta"))
         metrics.setdefault("oracle_trained_oracle_trace_accuracy", aggregate.get("mean_oracle_trained_oracle_trace_accuracy"))
         metrics.setdefault("oracle_trained_predicted_trace_accuracy", aggregate.get("mean_oracle_trained_predicted_trace_accuracy"))
         metrics.setdefault("oracle_trained_random_trace_accuracy", aggregate.get("mean_oracle_trained_random_trace_accuracy"))
@@ -1795,10 +1806,15 @@ def _m24_compression_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("packed_to_prompt_ratio", aggregate.get("mean_packed_to_prompt_ratio"))
         metrics.setdefault("prompt_to_packed_ratio", aggregate.get("mean_prompt_to_packed_ratio"))
         metrics.setdefault("packed_symbol_compression_ratio", aggregate.get("mean_packed_symbol_compression_ratio"))
+        metrics.setdefault("mdl_weight", aggregate.get("mean_mdl_weight"))
         metrics.setdefault("compression_ratio", aggregate.get("mean_compression_ratio"))
         if metrics.get("compression_ratio") is None:
             metrics["compression_ratio"] = aggregate.get("mean_prompt_to_packed_symbol_ratio")
         metrics.setdefault("token_reduction_ratio", aggregate.get("mean_token_reduction_ratio"))
+        metrics.setdefault(
+            "m24_gate_packed_trace_shorter_than_prompt",
+            aggregate.get("mean_m24_gate_packed_trace_shorter_than_prompt"),
+        )
     for source_name in ("headline_metrics", "metrics"):
         source = payload.get(source_name, {})
         if isinstance(source, dict):
@@ -1807,7 +1823,12 @@ def _m24_compression_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
             metrics.setdefault("phrase_accuracy", source.get("overall_phrase_accuracy"))
             metrics.setdefault("substrate_token_count", source.get("mean_substrate_token_count"))
             metrics.setdefault("compression_ratio", source.get("mean_compression_ratio"))
+            metrics.setdefault("mdl_weight", source.get("mean_mdl_weight"))
             metrics.setdefault("token_reduction_ratio", source.get("mean_token_reduction_ratio"))
+            metrics.setdefault(
+                "m24_gate_packed_trace_shorter_than_prompt",
+                source.get("mean_m24_gate_packed_trace_shorter_than_prompt"),
+            )
     seed_rows: list[dict[str, Any]] = []
     cells = payload.get("cells", {})
     if isinstance(cells, dict):
