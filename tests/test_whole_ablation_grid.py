@@ -244,14 +244,53 @@ def test_m24_special_stage_metrics_and_order() -> None:
             "predicted_vs_shuffled_delta": 0.58,
             "mdl_weight": 0.025,
             "m24_gate_packed_trace_shorter_than_prompt": 1.0,
-        }
+            "m24_gate_trace_beats_random": 1.0,
+            "m24_gate_trace_beats_zero": 1.0,
+            "m24_gate_trace_beats_shuffled": 1.0,
+            "m24_gate_trace_matches_oracle_upper_bound": 0.0,
+            "m24_gate_trace_beats_prompt_only": 0.0,
+            "m24_gate_nonzero_exact_trace_reconstruction": 1.0,
+            "m24_gate_token_reduction_positive": 1.0,
+            "m24_2_hard_bottleneck_strict_accuracy": 0.67,
+            "m24_2_hard_bottleneck_token_count": 4.0,
+            "m24_2_hard_bottleneck_compression_ratio": 0.2222,
+            "m24_2_hard_bottleneck_accuracy_per_token": 0.1675,
+            "m24_2_hard_bottleneck_delta_vs_m24_1": -0.02,
+            "m24_2_hard_bottleneck_delta_vs_prompt_only": -0.07,
+            "m24_2_hard_bottleneck_symbol_error_rate": 0.03,
+            "m24_2_hard_bottleneck_score": 0.41,
+            "m24_2_promotion_gate_pass_rate": 0.6,
+            "m24_2_promotion_candidate": 0.0,
+            "m24_2_gate_hard_bottleneck_configured": 1.0,
+            "m24_2_gate_strict_accuracy_retained": 1.0,
+            "m24_2_gate_trace_beats_shuffled_strong": 0.0,
+            "m24_2_gate_trace_beats_random_strong": 1.0,
+            "m24_2_gate_trace_exact_floor": 1.0,
+            "m24_2_gate_symbol_budget_respected": 1.0,
+            "m24_2_gate_hard_trace_beats_random": 1.0,
+            "m24_2_gate_hard_trace_beats_prompt_only": 0.0,
+            "m24_2_gate_token_reduction_positive": 1.0,
+        },
+        "aggregate_metrics": {
+            "mean_m24_2_hard_bottleneck_trace_exact_accuracy": 0.62,
+            "mean_judri_binding_accuracy": 0.66,
+        },
+        "cells": {
+            "phrase_only": {"metrics": {"strict_accuracy": 0.10, "overall_accuracy": 0.99}},
+            "strict_best": {"metrics": {"strict_accuracy": 0.80, "overall_accuracy": 0.70}},
+        },
     }
 
     metrics = whole_grid._special_stage_metrics("M24", payload)
 
     assert "M24" in whole_grid.STAGE_ORDER
     assert whole_grid.STAGE_ORDER.index("M23") < whole_grid.STAGE_ORDER.index("M24")
-    assert list(metrics)[:3] == ["strict_accuracy", "predicted_vs_shuffled_delta", "shuffled_trace_accuracy"]
+    assert list(metrics)[:4] == [
+        "strict_accuracy",
+        "m24_2_promotion_candidate",
+        "m24_2_promotion_gate_pass_rate",
+        "m24_2_hard_bottleneck_compression_ratio",
+    ]
     assert metrics["strict_accuracy"] == 0.69
     assert metrics["overall_phrase_accuracy"] == 0.74
     assert metrics["compression_ratio"] == 0.3611
@@ -260,4 +299,20 @@ def test_m24_special_stage_metrics_and_order() -> None:
     assert metrics["predicted_vs_shuffled_delta"] == 0.58
     assert metrics["mdl_weight"] == 0.025
     assert metrics["m24_gate_packed_trace_shorter_than_prompt"] == 1.0
+    assert metrics["m24_gate_trace_beats_random"] == 1.0
+    assert metrics["m24_gate_trace_beats_zero"] == 1.0
+    assert metrics["m24_gate_trace_beats_shuffled"] == 1.0
+    assert metrics["m24_gate_trace_matches_oracle_upper_bound"] == 0.0
+    assert metrics["m24_gate_trace_beats_prompt_only"] == 0.0
+    assert metrics["m24_gate_nonzero_exact_trace_reconstruction"] == 1.0
+    assert metrics["m24_2_hard_bottleneck_strict_accuracy"] == 0.67
+    assert metrics["m24_2_hard_bottleneck_trace_exact_accuracy"] == 0.62
+    assert metrics["m24_2_hard_bottleneck_token_count"] == 4.0
+    assert metrics["m24_2_hard_bottleneck_score"] == 0.41
+    assert metrics["m24_2_promotion_candidate"] == 0.0
+    assert metrics["m24_2_gate_strict_accuracy_retained"] == 1.0
+    assert metrics["m24_2_gate_trace_beats_shuffled_strong"] == 0.0
+    assert metrics["m24_2_gate_trace_exact_floor"] == 1.0
     assert metrics["strict_accuracy_per_substrate_token"] == 0.1062
+    assert metrics["judri_binding_accuracy"] == 0.66
+    assert metrics["best_cell_accuracy"] == 0.80

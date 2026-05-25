@@ -1,9 +1,9 @@
 # Whole Ablation Grid
 
-- run_id: `m24_1_six_seed_mdl005_grid_v2_20260525`
-- generated: `2026-05-25T17:20:26.428715+00:00`
+- run_id: `m24_2_budget14_probe_grid_v2_20260525`
+- generated: `2026-05-25T17:58:31.274738+00:00`
 - history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
-- program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m24_1_six_seed_mdl005_spine_20260525/ablation_program_spine_manifest.json`
+- program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m24_2_program_spine_v2_20260525/ablation_program_spine_manifest.json`
 
 ## Coverage
 
@@ -51,7 +51,7 @@
 | `M21` | `artifact_anchor` | `e=21 r=21 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m21_role_curriculum_mno_direct_48e_20260521/direct_unified_eval_manifest.json` | strict_accuracy=0.8494, bridi_trace_exact_accuracy=0.9996, gismu_accuracy=0.9999, cmavo_accuracy=0.9996 |
 | `M22` | `artifact_anchor` | `e=1 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m22_blended_s_96e_confirm2_mixed_ood_direct_20260523/direct_unified_eval_manifest.json` | m22_promotion_candidate=0.0000, m22_promotion_gate_pass_rate=0.9444, strict_accuracy=0.8467, m22_candidate_cell_count=1.0000 |
 | `M23` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m23_trace_punish_direct_20260524/direct_unified_eval_manifest.json` | strict_accuracy=0.9517, decoy_relation_ood_accuracy=0.9817, worst_surface_accuracy=0.8605, bridi_trace_exact_accuracy=0.2839 |
-| `M24` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m24_1_six_seed_mdl005_direct_20260525/direct_unified_eval_manifest.json` | strict_accuracy=0.7064, m24_promotion_candidate=0.0000, m24_promotion_gate_pass_rate=0.4286, predicted_vs_shuffled_delta=0.6506 |
+| `M24` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m24_2_seed23_budget14_probe_v3_direct_20260525/direct_unified_eval_manifest.json` | strict_accuracy=0.4413, m24_2_promotion_candidate=0.0000, m24_2_promotion_gate_pass_rate=0.4286, m24_2_hard_bottleneck_compression_ratio=0.8083 |
 | `Control Plane` | `control_plane_manifest` | `e=0 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json` |  |
 
 ## Comparison Policy
@@ -166,7 +166,7 @@
 
 ### M24
 
-- automatic compare-against: `M24, M23, M22, M21, M20, M23.B, M23.C, M24.1`
+- automatic compare-against: `M24, M23, M22, M21, M20, M23.B, M23.C, M24.1, M24.2`
 - historical families carried forward: `M23`
 - required test contracts: `m24.substrate_first_compression`
 

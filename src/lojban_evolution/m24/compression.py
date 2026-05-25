@@ -12,9 +12,12 @@ from torch.utils.data import DataLoader
 
 from lojban_evolution.bridi_substrate import (
     assert_symbolic_trace_contract,
+    budget_packed_trace_symbols,
     pack_symbolic_trace_from_batch,
     pack_symbolic_trace_from_outputs,
     packed_trace_component_accuracy,
+    packed_trace_exact_accuracy,
+    packed_trace_symbol_counts,
     packed_trace_spec,
     random_packed_trace_like,
     shuffled_packed_trace_like,
@@ -36,6 +39,44 @@ M24_LOCKS: dict[str, str] = {
 DISALLOWED_ADVISOR_TRACE_INPUTS = ("frame_repr", "trace_state", "prompt_state")
 
 
+def m24_2_promotion_gate_metrics(
+    *,
+    hard_bottleneck_configured: bool,
+    strict_accuracy: float,
+    predicted_vs_shuffled_delta: float,
+    predicted_vs_random_delta: float,
+    hard_bottleneck_trace_accuracy: float,
+    effective_packed_symbol_to_prompt_ratio: float,
+    symbol_budget_respected: bool,
+    advisor_vs_prompt_delta: float = 0.0,
+) -> dict[str, float]:
+    """Return per-run M24.2 promotion gates as float metrics."""
+
+    gates = {
+        "hard_bottleneck_configured": bool(hard_bottleneck_configured),
+        "strict_accuracy_retained": float(strict_accuracy) >= 0.68,
+        "trace_beats_shuffled_strong": float(predicted_vs_shuffled_delta) >= 0.60,
+        "trace_beats_random_strong": float(predicted_vs_random_delta) >= 0.60,
+        "trace_exact_floor": float(hard_bottleneck_trace_accuracy) >= 0.05,
+        "token_reduction_positive": float(effective_packed_symbol_to_prompt_ratio) < 1.0,
+        "symbol_budget_respected": bool(symbol_budget_respected),
+    }
+    pass_rate = sum(1.0 for passed in gates.values() if passed) / max(1, len(gates))
+    return {
+        "m24_2_promotion_gate_pass_rate": pass_rate,
+        "m24_2_promotion_candidate": 1.0 if all(gates.values()) else 0.0,
+        "m24_2_gate_hard_bottleneck_configured": 1.0 if gates["hard_bottleneck_configured"] else 0.0,
+        "m24_2_gate_strict_accuracy_retained": 1.0 if gates["strict_accuracy_retained"] else 0.0,
+        "m24_2_gate_trace_beats_shuffled_strong": 1.0 if gates["trace_beats_shuffled_strong"] else 0.0,
+        "m24_2_gate_trace_beats_random_strong": 1.0 if gates["trace_beats_random_strong"] else 0.0,
+        "m24_2_gate_trace_exact_floor": 1.0 if gates["trace_exact_floor"] else 0.0,
+        "m24_2_gate_symbol_budget_respected": 1.0 if gates["symbol_budget_respected"] else 0.0,
+        "m24_2_gate_hard_trace_beats_random": 1.0 if gates["trace_beats_random_strong"] else 0.0,
+        "m24_2_gate_hard_trace_beats_prompt_only": 1.0 if float(advisor_vs_prompt_delta) >= 0.0 else 0.0,
+        "m24_2_gate_token_reduction_positive": 1.0 if gates["token_reduction_positive"] else 0.0,
+    }
+
+
 class PackedTraceAdvisor(nn.Module):
     """Trace-only answer advisor over packed integer bridi symbols."""
 
@@ -49,11 +90,19 @@ class PackedTraceAdvisor(nn.Module):
         max_places: int = DEFAULT_MAX_PLACES,
         max_entities: int = DEFAULT_MAX_ENTITIES,
         hidden_dim: int = 64,
+        active_frame_budget: int | None = None,
+        trace_symbol_budget: int | None = None,
     ) -> None:
         super().__init__()
         self.max_frames = int(max_frames)
         self.max_places = int(max_places)
         self.max_entities = int(max_entities)
+        if active_frame_budget is not None and int(active_frame_budget) < 0:
+            raise ValueError("active_frame_budget must be non-negative or None.")
+        if trace_symbol_budget is not None and int(trace_symbol_budget) < 0:
+            raise ValueError("trace_symbol_budget must be non-negative or None.")
+        self.active_frame_budget = int(active_frame_budget) if active_frame_budget is not None and int(active_frame_budget) > 0 else None
+        self.trace_symbol_budget = int(trace_symbol_budget) if trace_symbol_budget is not None and int(trace_symbol_budget) > 0 else None
         self.spec = packed_trace_spec(max_frames=self.max_frames, max_places=self.max_places)
         dim = int(hidden_dim)
         self.active_embed = nn.Embedding(2, dim)
@@ -66,6 +115,11 @@ class PackedTraceAdvisor(nn.Module):
 
     def forward(self, packed_trace: torch.Tensor) -> torch.Tensor:
         assert_symbolic_trace_contract(packed_trace)
+        packed_trace = budget_packed_trace_symbols(
+            packed_trace,
+            symbol_budget=self.trace_symbol_budget,
+            active_frame_budget=self.active_frame_budget,
+        )
         x = packed_trace.long()
         if x.shape[1] != self.max_frames:
             x = x[:, : self.max_frames]
@@ -244,16 +298,34 @@ def evaluate_m24_substrate_compression(
     targets: list[torch.Tensor] = []
     predicted_traces: list[torch.Tensor] = []
     oracle_traces: list[torch.Tensor] = []
+    predicted_traces_before_bottleneck: list[torch.Tensor] = []
+    oracle_traces_before_bottleneck: list[torch.Tensor] = []
     prompt_token_counts: list[float] = []
     surfaces: list[str] = []
+    active_frame_budget = int(advisor.active_frame_budget or 0)
+    trace_symbol_budget = int(advisor.trace_symbol_budget or 0)
     for batch_idx, batch in enumerate(loader):
         input_ids = batch["input_ids"].to(device_obj)
         target = batch["answer_id"].to(device_obj)
         outputs = generator(input_ids)
-        predicted = pack_symbolic_trace_from_outputs(outputs, max_frames=advisor.max_frames, max_places=advisor.max_places).to(device_obj)
-        oracle = pack_symbolic_trace_from_batch(batch, max_frames=advisor.max_frames, max_places=advisor.max_places).to(device_obj)
+        predicted_before = pack_symbolic_trace_from_outputs(outputs, max_frames=advisor.max_frames, max_places=advisor.max_places).to(device_obj)
+        oracle_before = pack_symbolic_trace_from_batch(batch, max_frames=advisor.max_frames, max_places=advisor.max_places).to(device_obj)
+        predicted = budget_packed_trace_symbols(
+            predicted_before,
+            symbol_budget=advisor.trace_symbol_budget,
+            active_frame_budget=advisor.active_frame_budget,
+        ).to(device_obj)
+        oracle = budget_packed_trace_symbols(
+            oracle_before,
+            symbol_budget=advisor.trace_symbol_budget,
+            active_frame_budget=advisor.active_frame_budget,
+        ).to(device_obj)
         shuffled_trace = shuffled_packed_trace_like(predicted, seed=int(seed) + batch_idx).to(device_obj)
-        random_trace = random_packed_trace_like(oracle, seed=int(seed) + batch_idx, max_entities=advisor.max_entities).to(device_obj)
+        random_trace = budget_packed_trace_symbols(
+            random_packed_trace_like(oracle_before, seed=int(seed) + batch_idx, max_entities=advisor.max_entities),
+            symbol_budget=advisor.trace_symbol_budget,
+            active_frame_budget=advisor.active_frame_budget,
+        ).to(device_obj)
         zero_trace = zero_packed_trace_like(oracle).to(device_obj)
         merged_logits["predicted_trace"].append(advisor(predicted).detach().cpu())
         merged_logits["oracle_trace"].append(advisor(oracle).detach().cpu())
@@ -270,12 +342,16 @@ def evaluate_m24_substrate_compression(
         targets.append(target.detach().cpu())
         predicted_traces.append(predicted.detach().cpu())
         oracle_traces.append(oracle.detach().cpu())
+        predicted_traces_before_bottleneck.append(predicted_before.detach().cpu())
+        oracle_traces_before_bottleneck.append(oracle_before.detach().cpu())
         prompt_token_counts.extend([float(ids.ne(0).sum().detach().cpu().item()) for ids in input_ids])
         surfaces.extend(batch["surface"])
     target_all = torch.cat(targets, dim=0)
     logits_all = {key: torch.cat(value, dim=0) for key, value in merged_logits.items()}
     predicted_all = torch.cat(predicted_traces, dim=0)
     oracle_all = torch.cat(oracle_traces, dim=0)
+    predicted_before_all = torch.cat(predicted_traces_before_bottleneck, dim=0)
+    oracle_before_all = torch.cat(oracle_traces_before_bottleneck, dim=0)
     component_metrics = packed_trace_component_accuracy(predicted_all, oracle_all)
     predicted_accuracy = _accuracy(logits_all["predicted_trace"], target_all)
     oracle_accuracy = _accuracy(logits_all["oracle_trace"], target_all)
@@ -298,11 +374,39 @@ def evaluate_m24_substrate_compression(
         }
     mean_prompt_tokens = sum(prompt_token_counts) / max(1, len(prompt_token_counts))
     packed_symbols = float(advisor.max_frames * advisor.spec.width)
-    predicted_nonzero = float(predicted_all.ne(0).float().sum(dim=(-1, -2)).mean().item()) if predicted_all.numel() else 0.0
-    oracle_nonzero = float(oracle_all.ne(0).float().sum(dim=(-1, -2)).mean().item()) if oracle_all.numel() else 0.0
-    packed_symbol_to_prompt_ratio = predicted_nonzero / max(1.0, mean_prompt_tokens)
-    prompt_to_packed_symbol_ratio = mean_prompt_tokens / max(1.0, predicted_nonzero)
+    diagnostic_mean_predicted_raw_nonzero_entries = float(predicted_all.ne(0).float().sum(dim=(-1, -2)).mean().item()) if predicted_all.numel() else 0.0
+    diagnostic_mean_oracle_raw_nonzero_entries = float(oracle_all.ne(0).float().sum(dim=(-1, -2)).mean().item()) if oracle_all.numel() else 0.0
+    predicted_symbol_counts_before = packed_trace_symbol_counts(predicted_before_all) if predicted_before_all.numel() else torch.zeros(0, dtype=torch.long)
+    predicted_symbol_counts_after = packed_trace_symbol_counts(predicted_all) if predicted_all.numel() else torch.zeros(0, dtype=torch.long)
+    oracle_symbol_counts_before = packed_trace_symbol_counts(oracle_before_all) if oracle_before_all.numel() else torch.zeros(0, dtype=torch.long)
+    oracle_symbol_counts_after = packed_trace_symbol_counts(oracle_all) if oracle_all.numel() else torch.zeros(0, dtype=torch.long)
+    mean_predicted_symbols_before = float(predicted_symbol_counts_before.float().mean().item()) if predicted_symbol_counts_before.numel() else 0.0
+    mean_predicted_symbols_after = float(predicted_symbol_counts_after.float().mean().item()) if predicted_symbol_counts_after.numel() else 0.0
+    mean_oracle_symbols_before = float(oracle_symbol_counts_before.float().mean().item()) if oracle_symbol_counts_before.numel() else 0.0
+    mean_oracle_symbols_after = float(oracle_symbol_counts_after.float().mean().item()) if oracle_symbol_counts_after.numel() else 0.0
+    if trace_symbol_budget > 0:
+        predicted_symbol_budget_overflow_rate = float(predicted_symbol_counts_before.gt(trace_symbol_budget).float().mean().item()) if predicted_symbol_counts_before.numel() else 0.0
+        oracle_symbol_budget_overflow_rate = float(oracle_symbol_counts_before.gt(trace_symbol_budget).float().mean().item()) if oracle_symbol_counts_before.numel() else 0.0
+    else:
+        predicted_symbol_budget_overflow_rate = 0.0
+        oracle_symbol_budget_overflow_rate = 0.0
+    predicted_dropped = (predicted_symbol_counts_before - predicted_symbol_counts_after).clamp_min(0)
+    oracle_dropped = (oracle_symbol_counts_before - oracle_symbol_counts_after).clamp_min(0)
+    predicted_bottleneck_symbol_drop_rate = (
+        float(predicted_dropped.float().sum().item()) / max(1.0, float(predicted_symbol_counts_before.float().sum().item()))
+        if predicted_symbol_counts_before.numel()
+        else 0.0
+    )
+    oracle_bottleneck_symbol_drop_rate = (
+        float(oracle_dropped.float().sum().item()) / max(1.0, float(oracle_symbol_counts_before.float().sum().item()))
+        if oracle_symbol_counts_before.numel()
+        else 0.0
+    )
+    packed_symbol_to_prompt_ratio = mean_predicted_symbols_after / max(1.0, mean_prompt_tokens)
+    prompt_to_packed_symbol_ratio = mean_prompt_tokens / max(1.0, mean_predicted_symbols_after)
     token_reduction_ratio = 1.0 - packed_symbol_to_prompt_ratio
+    effective_packed_symbol_to_prompt_ratio = mean_predicted_symbols_after / max(1.0, mean_prompt_tokens)
+    effective_token_reduction_ratio = 1.0 - effective_packed_symbol_to_prompt_ratio
     advisor_vs_prompt_delta = predicted_accuracy - prompt_accuracy
     predicted_vs_shuffled_delta = predicted_accuracy - shuffled_accuracy
     predicted_vs_random_delta = predicted_accuracy - random_accuracy
@@ -333,6 +437,26 @@ def evaluate_m24_substrate_compression(
         "nonzero_exact_trace_reconstruction": float(component_metrics["bridi_trace_exact_accuracy"]) > 0.0,
     }
     promotion_gate_pass_rate = sum(1.0 for passed in promotion_gates.values() if passed) / max(1, len(promotion_gates))
+    hard_bottleneck_trace_accuracy = packed_trace_exact_accuracy(predicted_all, oracle_all)
+    hard_bottleneck_vs_shuffled_delta = predicted_vs_shuffled_delta
+    hard_bottleneck_vs_random_delta = predicted_vs_random_delta
+    hard_bottleneck_configured = active_frame_budget > 0 or trace_symbol_budget > 0
+    symbol_budget_respected = trace_symbol_budget <= 0 or (
+        bool(predicted_symbol_counts_after.le(trace_symbol_budget).all().item())
+        and bool(oracle_symbol_counts_after.le(trace_symbol_budget).all().item())
+    )
+    m24_2_gate_metrics = m24_2_promotion_gate_metrics(
+        hard_bottleneck_configured=hard_bottleneck_configured,
+        strict_accuracy=predicted_accuracy,
+        predicted_vs_shuffled_delta=hard_bottleneck_vs_shuffled_delta,
+        predicted_vs_random_delta=hard_bottleneck_vs_random_delta,
+        hard_bottleneck_trace_accuracy=hard_bottleneck_trace_accuracy,
+        effective_packed_symbol_to_prompt_ratio=effective_packed_symbol_to_prompt_ratio,
+        symbol_budget_respected=symbol_budget_respected,
+        advisor_vs_prompt_delta=advisor_vs_prompt_delta,
+    )
+    hard_bottleneck_accuracy_per_token = predicted_accuracy / max(1.0, mean_predicted_symbols_after)
+    hard_bottleneck_symbol_error_rate = 1.0 - hard_bottleneck_trace_accuracy
     return {
         "strict_accuracy": predicted_accuracy,
         "predicted_trace_accuracy": predicted_accuracy,
@@ -360,22 +484,48 @@ def evaluate_m24_substrate_compression(
         "surface_metrics": surface_metrics,
         "prompt_mean_tokens": mean_prompt_tokens,
         "reference_token_count": mean_prompt_tokens,
-        "substrate_token_count": predicted_nonzero,
-        "substrate_tokens": predicted_nonzero,
+        "substrate_token_count": mean_predicted_symbols_after,
+        "substrate_tokens": mean_predicted_symbols_after,
         "packed_trace_symbols": packed_symbols,
-        "mean_predicted_nonzero_symbols": predicted_nonzero,
-        "mean_oracle_nonzero_symbols": oracle_nonzero,
+        "diagnostic_mean_predicted_raw_nonzero_entries": diagnostic_mean_predicted_raw_nonzero_entries,
+        "diagnostic_mean_oracle_raw_nonzero_entries": diagnostic_mean_oracle_raw_nonzero_entries,
         "packed_symbol_to_prompt_ratio": packed_symbol_to_prompt_ratio,
         "prompt_to_packed_symbol_ratio": prompt_to_packed_symbol_ratio,
         "packed_to_prompt_ratio": packed_symbol_to_prompt_ratio,
         "prompt_to_packed_ratio": prompt_to_packed_symbol_ratio,
         "token_reduction_ratio": token_reduction_ratio,
+        "active_frame_budget": float(active_frame_budget),
+        "trace_symbol_budget": float(trace_symbol_budget),
+        "hard_trace_length_bottleneck_active": 1.0 if active_frame_budget > 0 else 0.0,
+        "hard_symbol_budget_active": 1.0 if trace_symbol_budget > 0 else 0.0,
+        "mean_predicted_emitted_symbols_before_bottleneck": mean_predicted_symbols_before,
+        "mean_predicted_emitted_symbols_after_bottleneck": mean_predicted_symbols_after,
+        "mean_oracle_emitted_symbols_before_bottleneck": mean_oracle_symbols_before,
+        "mean_oracle_emitted_symbols_after_bottleneck": mean_oracle_symbols_after,
+        "predicted_symbol_budget_overflow_rate": predicted_symbol_budget_overflow_rate,
+        "oracle_symbol_budget_overflow_rate": oracle_symbol_budget_overflow_rate,
+        "predicted_bottleneck_symbol_drop_rate": predicted_bottleneck_symbol_drop_rate,
+        "oracle_bottleneck_symbol_drop_rate": oracle_bottleneck_symbol_drop_rate,
+        "effective_packed_symbol_to_prompt_ratio": effective_packed_symbol_to_prompt_ratio,
+        "effective_token_reduction_ratio": effective_token_reduction_ratio,
+        "hard_bottleneck_trace_accuracy": hard_bottleneck_trace_accuracy,
+        "hard_bottleneck_vs_shuffled_delta": hard_bottleneck_vs_shuffled_delta,
+        "hard_bottleneck_vs_random_delta": hard_bottleneck_vs_random_delta,
+        "m24_2_hard_bottleneck_strict_accuracy": predicted_accuracy,
+        "m24_2_hard_bottleneck_trace_exact_accuracy": hard_bottleneck_trace_accuracy,
+        "m24_2_hard_bottleneck_token_count": mean_predicted_symbols_after,
+        "m24_2_hard_bottleneck_compression_ratio": effective_packed_symbol_to_prompt_ratio,
+        "m24_2_hard_bottleneck_accuracy_per_token": hard_bottleneck_accuracy_per_token,
+        "m24_2_hard_bottleneck_delta_vs_prompt_only": advisor_vs_prompt_delta,
+        "m24_2_hard_bottleneck_symbol_error_rate": hard_bottleneck_symbol_error_rate,
+        "m24_2_hard_bottleneck_score": m24_2_gate_metrics["m24_2_promotion_gate_pass_rate"],
+        **m24_2_gate_metrics,
         "compression_ratio": prompt_to_packed_symbol_ratio,
         "packed_symbol_compression_ratio": packed_symbol_to_prompt_ratio,
-        "oracle_symbol_compression_ratio": oracle_nonzero / max(1.0, mean_prompt_tokens),
-        "accuracy_per_packed_symbol": predicted_accuracy / max(1.0, predicted_nonzero),
-        "accuracy_per_trace_token": predicted_accuracy / max(1.0, predicted_nonzero),
-        "strict_accuracy_per_substrate_token": predicted_accuracy / max(1.0, predicted_nonzero),
+        "oracle_symbol_compression_ratio": mean_oracle_symbols_after / max(1.0, mean_prompt_tokens),
+        "accuracy_per_packed_symbol": predicted_accuracy / max(1.0, mean_predicted_symbols_after),
+        "accuracy_per_trace_token": predicted_accuracy / max(1.0, mean_predicted_symbols_after),
+        "strict_accuracy_per_substrate_token": predicted_accuracy / max(1.0, mean_predicted_symbols_after),
         "substrate_claim_score": substrate_claim_score,
         "m24_promotion_gate_pass_rate": promotion_gate_pass_rate,
         "m24_promotion_candidate": 1.0 if all(promotion_gates.values()) else 0.0,
@@ -412,6 +562,8 @@ def train_m24_substrate_compression(
     answer_weight: float = 0.2,
     mdl_weight: float = DEFAULT_M24_MDL_WEIGHT,
     trace_exact_surrogate_weight: float = 0.5,
+    active_frame_budget: int | None = None,
+    trace_symbol_budget: int | None = None,
     clean_train_fraction: float = 0.35,
     clean_eval_fraction: float = 0.35,
     device: str | torch.device = "cpu",
@@ -455,12 +607,16 @@ def train_m24_substrate_compression(
         max_places=int(max_places),
         max_entities=int(max_entities),
         hidden_dim=int(advisor_hidden_dim),
+        active_frame_budget=active_frame_budget,
+        trace_symbol_budget=trace_symbol_budget,
     ).to(device_obj)
     oracle_advisor = PackedTraceAdvisor(
         max_frames=int(max_frames),
         max_places=int(max_places),
         max_entities=int(max_entities),
         hidden_dim=int(advisor_hidden_dim),
+        active_frame_budget=active_frame_budget,
+        trace_symbol_budget=trace_symbol_budget,
     ).to(device_obj)
     prompt_control = PromptOnlyControl(vocab_size=len(stage1["vocab"]), embedding_dim=max(8, int(embedding_dim) // 2), hidden_dim=int(advisor_hidden_dim)).to(device_obj)
     advisor_history = _train_trace_advisor(
@@ -521,6 +677,8 @@ def train_m24_substrate_compression(
     metrics["advisor_primary_trace_is_symbolic"] = 1.0 if advisor_contract["primary_trace_input_is_symbolic"] else 0.0
     metrics["continuous_trace_smuggling_detected"] = 0.0 if all(advisor_contract.values()) else 1.0
     metrics["mdl_weight"] = float(mdl_weight)
+    metrics["active_frame_budget"] = float(advisor.active_frame_budget or 0)
+    metrics["trace_symbol_budget"] = float(advisor.trace_symbol_budget or 0)
     return {
         "generator": generator,
         "advisor": advisor,
@@ -556,6 +714,8 @@ def train_m24_substrate_compression(
             "answer_weight": float(answer_weight),
             "mdl_weight": float(mdl_weight),
             "trace_exact_surrogate_weight": float(trace_exact_surrogate_weight),
+            "active_frame_budget": int(advisor.active_frame_budget or 0),
+            "trace_symbol_budget": int(advisor.trace_symbol_budget or 0),
             "clean_train_fraction": float(clean_train_fraction),
             "clean_eval_fraction": float(clean_eval_fraction),
             "stage1_reused_m23_training_path": True,

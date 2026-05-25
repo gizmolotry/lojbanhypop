@@ -546,13 +546,14 @@
       "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
     },
     "M24": {
-      "question_boundary": "M24.1 matched trace corruption and compression-pressure follow-up over the M23 causal relevance substrate",
-      "architectural_thesis": "test whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only, while M24.1 adds matched shuffled-trace controls and MDL/compression pressure; strict_accuracy remains canonical and phrase accuracy is diagnostic only.",
+      "question_boundary": "M24.1 matched trace corruption and M24.2 hard symbolic trace bottleneck follow-up over the M23 causal relevance substrate",
+      "architectural_thesis": "test whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only, while M24.1 adds matched shuffled-trace controls and MDL/compression pressure and M24.2 hardens that same M24 family into an explicit symbolic trace bottleneck; strict_accuracy remains canonical and phrase accuracy is diagnostic only.",
       "allowed_ablation_axes": [
         "substrate token budget",
         "compression objective weight",
         "relevance-trace distillation",
         "matched trace corruption control",
+        "hard symbolic trace bottleneck",
         "MDL compression pressure",
         "token-ratio comparison against M23",
         "strict-accuracy retention under compression"
@@ -579,6 +580,9 @@
         "predicted_vs_shuffled_delta",
         "m24_promotion_gate_pass_rate",
         "m24_promotion_candidate",
+        "m24_2_hard_bottleneck_score",
+        "m24_2_promotion_gate_pass_rate",
+        "m24_2_promotion_candidate",
         "packed_symbol_to_prompt_ratio",
         "token_reduction_ratio",
         "mdl_weight",
@@ -593,7 +597,17 @@
         "zero_trace_accuracy",
         "reference_token_count",
         "substrate_token_count",
-        "m24_gate_packed_trace_shorter_than_prompt"
+        "m24_gate_packed_trace_shorter_than_prompt",
+        "m24_2_hard_bottleneck_trace_exact_accuracy",
+        "m24_2_hard_bottleneck_symbol_error_rate",
+        "m24_2_gate_hard_bottleneck_configured",
+        "m24_2_gate_strict_accuracy_retained",
+        "m24_2_gate_trace_beats_shuffled_strong",
+        "m24_2_gate_trace_beats_random_strong",
+        "m24_2_gate_trace_exact_floor",
+        "m24_2_gate_symbol_budget_respected",
+        "m24_2_gate_hard_trace_beats_random",
+        "m24_2_gate_hard_trace_beats_prompt_only"
       ],
       "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
     }
@@ -1205,7 +1219,7 @@
     "m24.substrate_first_compression": {
       "test_id": "m24.substrate_first_compression",
       "family": "M24",
-      "description": "M24.1 tests whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only under matched trace corruption and compression pressure. Promotion requires causal trace lift, strict_accuracy retention, exactness evidence, actual token reduction, and m24_promotion_candidate=1.0; phrase accuracy is diagnostic only.",
+      "description": "M24.1 tests whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only under matched trace corruption and compression pressure. M24.2 adds a hard symbolic trace bottleneck inside the same M24 architecture family. Promotion requires causal trace lift, strict_accuracy retention, exactness evidence, actual token reduction, and the relevant promotion candidate flag equal to 1.0; phrase accuracy is diagnostic only.",
       "metrics": [
         "strict_accuracy",
         "predicted_trace_accuracy",
@@ -1245,7 +1259,32 @@
         "m24_gate_packed_trace_shorter_than_prompt",
         "m24_gate_nonzero_exact_trace_reconstruction",
         "generator_parameter_max_delta_after_advisor",
-        "generator_parameters_unchanged_after_advisor"
+        "generator_parameters_unchanged_after_advisor",
+        "overall_phrase_accuracy",
+        "phrase_accuracy",
+        "phrase_exact_accuracy",
+        "m24_gate_trace_beats_shuffled",
+        "m24_gate_token_reduction_positive",
+        "m24_2_hard_bottleneck_strict_accuracy",
+        "m24_2_hard_bottleneck_trace_exact_accuracy",
+        "m24_2_hard_bottleneck_token_count",
+        "m24_2_hard_bottleneck_compression_ratio",
+        "m24_2_hard_bottleneck_accuracy_per_token",
+        "m24_2_hard_bottleneck_delta_vs_m24_1",
+        "m24_2_hard_bottleneck_delta_vs_prompt_only",
+        "m24_2_hard_bottleneck_symbol_error_rate",
+        "m24_2_hard_bottleneck_score",
+        "m24_2_promotion_gate_pass_rate",
+        "m24_2_promotion_candidate",
+        "m24_2_gate_hard_bottleneck_configured",
+        "m24_2_gate_strict_accuracy_retained",
+        "m24_2_gate_trace_beats_shuffled_strong",
+        "m24_2_gate_trace_beats_random_strong",
+        "m24_2_gate_trace_exact_floor",
+        "m24_2_gate_symbol_budget_respected",
+        "m24_2_gate_hard_trace_beats_random",
+        "m24_2_gate_hard_trace_beats_prompt_only",
+        "m24_2_gate_token_reduction_positive"
       ],
       "surface": "m24_substrate_compression"
     }
@@ -1569,7 +1608,8 @@
         "M23.B",
         "M23.C",
         "M24",
-        "M24.1"
+        "M24.1",
+        "M24.2"
       ],
       "inherit_required_test_contracts": false
     }

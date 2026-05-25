@@ -1003,6 +1003,35 @@ def test_build_direct_unified_eval_manifest_m24_substrate_first_compression() ->
                 "m24_promotion_gate_pass_rate": 0.5,
                 "m24_promotion_candidate": 0.0,
                 "m24_gate_packed_trace_shorter_than_prompt": 1.0,
+                "m24_gate_trace_beats_random": 1.0,
+                "m24_gate_trace_beats_zero": 1.0,
+                "m24_gate_trace_beats_shuffled": 1.0,
+                "m24_gate_trace_matches_oracle_upper_bound": 0.0,
+                "m24_gate_trace_beats_prompt_only": 0.0,
+                "m24_gate_nonzero_exact_trace_reconstruction": 1.0,
+                "m24_gate_token_reduction_positive": 1.0,
+                "m24_2_hard_bottleneck_strict_accuracy": 0.67,
+                "m24_2_hard_bottleneck_token_count": 4.0,
+                "m24_2_hard_bottleneck_compression_ratio": 0.2222,
+                "m24_2_hard_bottleneck_accuracy_per_token": 0.1675,
+                "m24_2_hard_bottleneck_delta_vs_m24_1": -0.02,
+                "m24_2_hard_bottleneck_delta_vs_prompt_only": -0.07,
+                "m24_2_hard_bottleneck_symbol_error_rate": 0.03,
+                "m24_2_hard_bottleneck_score": 0.41,
+                "m24_2_promotion_gate_pass_rate": 0.6,
+                "m24_2_promotion_candidate": 0.0,
+                "m24_2_gate_hard_bottleneck_configured": 1.0,
+                "m24_2_gate_strict_accuracy_retained": 1.0,
+                "m24_2_gate_trace_beats_shuffled_strong": 0.0,
+                "m24_2_gate_trace_beats_random_strong": 1.0,
+                "m24_2_gate_trace_exact_floor": 1.0,
+                "m24_2_gate_symbol_budget_respected": 1.0,
+                "m24_2_gate_hard_trace_beats_random": 1.0,
+                "m24_2_gate_hard_trace_beats_prompt_only": 0.0,
+                "m24_2_gate_token_reduction_positive": 1.0,
+            },
+            "aggregate_metrics": {
+                "mean_m24_2_hard_bottleneck_trace_exact_accuracy": 0.62,
             },
         },
     )
@@ -1023,20 +1052,45 @@ def test_build_direct_unified_eval_manifest_m24_substrate_first_compression() ->
     assert manifest["headline_metrics"]["predicted_vs_shuffled_delta"] == 0.58
     assert manifest["headline_metrics"]["mdl_weight"] == 0.025
     assert manifest["headline_metrics"]["m24_gate_packed_trace_shorter_than_prompt"] == 1.0
+    assert manifest["headline_metrics"]["m24_gate_trace_beats_random"] == 1.0
+    assert manifest["headline_metrics"]["m24_gate_trace_beats_zero"] == 1.0
+    assert manifest["headline_metrics"]["m24_gate_trace_beats_shuffled"] == 1.0
+    assert manifest["headline_metrics"]["m24_gate_trace_matches_oracle_upper_bound"] == 0.0
+    assert manifest["headline_metrics"]["m24_gate_trace_beats_prompt_only"] == 0.0
+    assert manifest["headline_metrics"]["m24_gate_nonzero_exact_trace_reconstruction"] == 1.0
+    assert manifest["headline_metrics"]["m24_2_hard_bottleneck_strict_accuracy"] == 0.67
+    assert manifest["headline_metrics"]["m24_2_hard_bottleneck_trace_exact_accuracy"] == 0.62
+    assert manifest["headline_metrics"]["m24_2_hard_bottleneck_score"] == 0.41
+    assert manifest["headline_metrics"]["m24_2_promotion_candidate"] == 0.0
+    assert manifest["headline_metrics"]["m24_2_gate_trace_beats_shuffled_strong"] == 0.0
+    assert manifest["headline_metrics"]["m24_2_gate_trace_exact_floor"] == 1.0
     assert manifest["headline_metrics"]["overall_phrase_accuracy"] == 0.74
+    assert manifest["headline_metrics"]["strict_accuracy"] == 0.69
     rows = {row["test_id"]: row for row in manifest["contract_results"]}
-    assert rows["m24.substrate_first_compression"]["status"] == "available"
+    assert rows["m24.substrate_first_compression"]["status"] == "missing"
+    assert rows["m24.substrate_first_compression"]["promotion_status"] == "m24_2_non_promoted"
     assert rows["m24.substrate_first_compression"]["metrics"]["strict_accuracy"] == 0.69
+    assert rows["m24.substrate_first_compression"]["metrics"]["overall_phrase_accuracy"] == 0.74
     assert rows["m24.substrate_first_compression"]["metrics"]["predicted_vs_random_delta"] == 0.61
     assert rows["m24.substrate_first_compression"]["metrics"]["shuffled_trace_accuracy"] == 0.11
     assert rows["m24.substrate_first_compression"]["metrics"]["predicted_vs_shuffled_delta"] == 0.58
     assert rows["m24.substrate_first_compression"]["metrics"]["mdl_weight"] == 0.025
     assert rows["m24.substrate_first_compression"]["metrics"]["token_reduction_ratio"] == 0.6389
     assert rows["m24.substrate_first_compression"]["metrics"]["m24_gate_packed_trace_shorter_than_prompt"] == 1.0
+    assert rows["m24.substrate_first_compression"]["metrics"]["m24_gate_trace_beats_random"] == 1.0
+    assert rows["m24.substrate_first_compression"]["metrics"]["m24_gate_trace_beats_zero"] == 1.0
+    assert rows["m24.substrate_first_compression"]["metrics"]["m24_gate_trace_matches_oracle_upper_bound"] == 0.0
+    assert rows["m24.substrate_first_compression"]["metrics"]["m24_gate_trace_beats_prompt_only"] == 0.0
+    assert rows["m24.substrate_first_compression"]["metrics"]["m24_gate_nonzero_exact_trace_reconstruction"] == 1.0
     assert rows["m24.substrate_first_compression"]["metrics"]["substrate_claim_score"] == 0.44
     assert rows["m24.substrate_first_compression"]["metrics"]["m24_promotion_candidate"] == 0.0
+    assert rows["m24.substrate_first_compression"]["metrics"]["m24_2_hard_bottleneck_token_count"] == 4.0
+    assert rows["m24.substrate_first_compression"]["metrics"]["m24_2_gate_strict_accuracy_retained"] == 1.0
+    assert rows["m24.substrate_first_compression"]["metrics"]["m24_2_gate_trace_beats_shuffled_strong"] == 0.0
+    assert rows["m24.substrate_first_compression"]["metrics"]["m24_2_gate_hard_trace_beats_random"] == 1.0
     assert any("strict_accuracy is canonical" in note for note in rows["m24.substrate_first_compression"]["notes"])
     assert any("non-promoted" in note for note in rows["m24.substrate_first_compression"]["notes"])
+    assert any("M24.2 remains explicitly non-promoted" in note for note in rows["m24.substrate_first_compression"]["notes"])
     assert any(row["target"] == "M23.C" for row in manifest["comparison_targets_resolved"])
     rendered = render_direct_unified_eval_markdown(manifest)
     assert "Direct Unified Eval: M24 (M24)" in rendered

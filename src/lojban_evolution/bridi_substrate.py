@@ -107,6 +107,96 @@ def zero_packed_trace_like(packed: torch.Tensor) -> torch.Tensor:
     return torch.zeros_like(packed, dtype=torch.long)
 
 
+def truncate_packed_trace_active_frames(packed: torch.Tensor, *, active_frame_budget: int | None) -> torch.Tensor:
+    """Keep only the first N active frames per trace and zero inactive payloads."""
+
+    assert_symbolic_trace_contract(packed)
+    spec = packed_trace_spec(max_frames=int(packed.shape[1]), max_places=max(0, int(packed.shape[2]) - 3 - len(CMAVO)))
+    out = packed.detach().clone()
+    active = out[..., spec.active_col].long().gt(0)
+    out[~active] = 0
+    if active_frame_budget is None:
+        return out
+    budget = int(active_frame_budget)
+    if budget < 0:
+        raise ValueError("active_frame_budget must be non-negative or None.")
+    active_rank = active.long().cumsum(dim=1)
+    drop_mask = active & active_rank.gt(budget)
+    out[drop_mask] = 0
+    return out
+
+
+def packed_trace_symbol_counts(packed: torch.Tensor) -> torch.Tensor:
+    """Count emitted grammar symbols in each packed trace.
+
+    Active frames emit an active marker and a gismu id, regardless of whether
+    the gismu id is zero. Other counted symbols are set stop/cmavo bits and
+    nonzero judri slots on active frames.
+    """
+
+    assert_symbolic_trace_contract(packed)
+    spec = packed_trace_spec(max_frames=int(packed.shape[1]), max_places=max(0, int(packed.shape[2]) - 3 - len(CMAVO)))
+    x = packed.long()
+    active = x[..., spec.active_col].gt(0)
+    active_counts = active.long().sum(dim=1) * 2
+    stop_counts = x[..., spec.stop_col].gt(0).logical_and(active).long().sum(dim=1)
+    cmavo_counts = x[..., spec.cmavo_start : spec.cmavo_start + len(CMAVO)].gt(0).logical_and(active.unsqueeze(-1)).long().sum(dim=(1, 2))
+    judri_counts = x[..., spec.judri_start :].gt(0).logical_and(active.unsqueeze(-1)).long().sum(dim=(1, 2))
+    return active_counts + stop_counts + cmavo_counts + judri_counts
+
+
+def budget_packed_trace_symbols(
+    packed: torch.Tensor,
+    *,
+    symbol_budget: int | None,
+    active_frame_budget: int | None = None,
+) -> torch.Tensor:
+    """Retain packed trace symbols in deterministic frame order under a budget."""
+
+    assert_symbolic_trace_contract(packed)
+    frame_limited = truncate_packed_trace_active_frames(packed, active_frame_budget=active_frame_budget)
+    if symbol_budget is None:
+        return frame_limited
+    budget = int(symbol_budget)
+    if budget < 0:
+        raise ValueError("symbol_budget must be non-negative or None.")
+    spec = packed_trace_spec(max_frames=int(frame_limited.shape[1]), max_places=max(0, int(frame_limited.shape[2]) - 3 - len(CMAVO)))
+    out = torch.zeros_like(frame_limited)
+    x = frame_limited.detach()
+    cmavo_end = min(int(x.shape[2]), spec.cmavo_start + len(CMAVO))
+    judri_start = min(int(x.shape[2]), spec.judri_start)
+    for batch_idx in range(int(x.shape[0])):
+        remaining = budget
+        for frame_idx in range(int(x.shape[1])):
+            if remaining <= 0:
+                break
+            if int(x[batch_idx, frame_idx, spec.active_col].item()) <= 0:
+                continue
+            if remaining < 2:
+                break
+            out[batch_idx, frame_idx, spec.active_col] = x[batch_idx, frame_idx, spec.active_col]
+            out[batch_idx, frame_idx, spec.gismu_col] = x[batch_idx, frame_idx, spec.gismu_col]
+            remaining -= 2
+            if int(x[batch_idx, frame_idx, spec.stop_col].item()) > 0 and remaining > 0:
+                out[batch_idx, frame_idx, spec.stop_col] = x[batch_idx, frame_idx, spec.stop_col]
+                remaining -= 1
+            for cmavo_col in range(spec.cmavo_start, cmavo_end):
+                if remaining <= 0:
+                    break
+                if int(x[batch_idx, frame_idx, cmavo_col].item()) > 0:
+                    out[batch_idx, frame_idx, cmavo_col] = x[batch_idx, frame_idx, cmavo_col]
+                    remaining -= 1
+            if remaining <= 0:
+                continue
+            for judri_col in range(judri_start, int(x.shape[2])):
+                if remaining <= 0:
+                    break
+                if int(x[batch_idx, frame_idx, judri_col].item()) > 0:
+                    out[batch_idx, frame_idx, judri_col] = x[batch_idx, frame_idx, judri_col]
+                    remaining -= 1
+    return out
+
+
 def random_packed_trace_like(packed: torch.Tensor, *, seed: int = 0, max_entities: int = 8) -> torch.Tensor:
     """Return a random integer trace with the same symbolic layout."""
 

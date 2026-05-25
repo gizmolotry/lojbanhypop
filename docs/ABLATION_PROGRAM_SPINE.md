@@ -1,6 +1,6 @@
 # Ablation Program Spine
 
-- Generated UTC: `2026-05-25T17:19:11.882309+00:00`
+- Generated UTC: `2026-05-25T17:58:05.603439+00:00`
 - Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
 - Source taxonomy config: `configs/experiment_taxonomy.json`
 - Stage count: `27`
@@ -565,16 +565,16 @@ This is the ordered research spine of the project: legacy letter-series families
 
 - Kind: `major_series`
 - Layer: `substrate_compression`
-- Objective: test whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only, while M24.1 adds matched shuffled-trace controls and MDL/compression pressure; strict_accuracy remains canonical and phrase accuracy is diagnostic only.
+- Objective: test whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only, while M24.1 adds matched shuffled-trace controls and MDL/compression pressure and M24.2 hardens that same M24 family into an explicit symbolic trace bottleneck; strict_accuracy remains canonical and phrase accuracy is diagnostic only.
 - Entry count: `0`
 - Runnable rows: `0`
-- Question boundary: M24.1 matched trace corruption and compression-pressure follow-up over the M23 causal relevance substrate
-- Thesis: test whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only, while M24.1 adds matched shuffled-trace controls and MDL/compression pressure; strict_accuracy remains canonical and phrase accuracy is diagnostic only.
-- Allowed axes: `substrate token budget, compression objective weight, relevance-trace distillation, matched trace corruption control, MDL compression pressure, token-ratio comparison against M23, strict-accuracy retention under compression`
+- Question boundary: M24.1 matched trace corruption and M24.2 hard symbolic trace bottleneck follow-up over the M23 causal relevance substrate
+- Thesis: test whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only, while M24.1 adds matched shuffled-trace controls and MDL/compression pressure and M24.2 hardens that same M24 family into an explicit symbolic trace bottleneck; strict_accuracy remains canonical and phrase accuracy is diagnostic only.
+- Allowed axes: `substrate token budget, compression objective weight, relevance-trace distillation, matched trace corruption control, hard symbolic trace bottleneck, MDL compression pressure, token-ratio comparison against M23, strict-accuracy retention under compression`
 - Frozen/forbidden drift: `phrase accuracy as canonical metric, new broad semantic gauntlet unrelated to compression, decoder bridge changes as the primary result, compression claims without token accounting`
 - Promotion basis: `strict_accuracy retention against prompt/M23 controls, m24_promotion_gate_pass_rate, m24_promotion_candidate must equal 1.0 for any promotion, predicted_vs_random_delta, predicted_vs_shuffled_delta, packed_symbol_to_prompt_ratio below 1.0`
-- Primary metrics: `strict_accuracy, predicted_trace_accuracy, predicted_vs_random_delta, shuffled_trace_accuracy, predicted_vs_shuffled_delta, m24_promotion_gate_pass_rate, m24_promotion_candidate, packed_symbol_to_prompt_ratio, token_reduction_ratio, mdl_weight, strict_accuracy_per_substrate_token`
-- Guardrail metrics: `prompt_only_accuracy, advisor_vs_prompt_delta, bridi_trace_exact_accuracy, oracle_trained_oracle_trace_accuracy, random_trace_accuracy, zero_trace_accuracy, reference_token_count, substrate_token_count, m24_gate_packed_trace_shorter_than_prompt`
+- Primary metrics: `strict_accuracy, predicted_trace_accuracy, predicted_vs_random_delta, shuffled_trace_accuracy, predicted_vs_shuffled_delta, m24_promotion_gate_pass_rate, m24_promotion_candidate, m24_2_hard_bottleneck_score, m24_2_promotion_gate_pass_rate, m24_2_promotion_candidate, packed_symbol_to_prompt_ratio, token_reduction_ratio, mdl_weight, strict_accuracy_per_substrate_token`
+- Guardrail metrics: `prompt_only_accuracy, advisor_vs_prompt_delta, bridi_trace_exact_accuracy, oracle_trained_oracle_trace_accuracy, random_trace_accuracy, zero_trace_accuracy, reference_token_count, substrate_token_count, m24_gate_packed_trace_shorter_than_prompt, m24_2_hard_bottleneck_trace_exact_accuracy, m24_2_hard_bottleneck_symbol_error_rate, m24_2_gate_hard_bottleneck_configured, m24_2_gate_strict_accuracy_retained, m24_2_gate_trace_beats_shuffled_strong, m24_2_gate_trace_beats_random_strong, m24_2_gate_trace_exact_floor, m24_2_gate_symbol_budget_respected, m24_2_gate_hard_trace_beats_random, m24_2_gate_hard_trace_beats_prompt_only`
 - Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
 - DAGs: `airflow/dags/m24/lojban_m24_substrate_compression_dag.py`
 

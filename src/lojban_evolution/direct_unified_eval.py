@@ -326,6 +326,33 @@ KEY_METRICS = (
     "compression_adjusted_strict_accuracy",
     "strict_accuracy_per_substrate_token",
     "m24_gate_packed_trace_shorter_than_prompt",
+    "m24_gate_trace_beats_random",
+    "m24_gate_trace_beats_zero",
+    "m24_gate_trace_beats_shuffled",
+    "m24_gate_trace_matches_oracle_upper_bound",
+    "m24_gate_trace_beats_prompt_only",
+    "m24_gate_nonzero_exact_trace_reconstruction",
+    "m24_gate_token_reduction_positive",
+    "m24_2_hard_bottleneck_strict_accuracy",
+    "m24_2_hard_bottleneck_trace_exact_accuracy",
+    "m24_2_hard_bottleneck_token_count",
+    "m24_2_hard_bottleneck_compression_ratio",
+    "m24_2_hard_bottleneck_accuracy_per_token",
+    "m24_2_hard_bottleneck_delta_vs_m24_1",
+    "m24_2_hard_bottleneck_delta_vs_prompt_only",
+    "m24_2_hard_bottleneck_symbol_error_rate",
+    "m24_2_hard_bottleneck_score",
+    "m24_2_promotion_gate_pass_rate",
+    "m24_2_promotion_candidate",
+    "m24_2_gate_hard_bottleneck_configured",
+    "m24_2_gate_strict_accuracy_retained",
+    "m24_2_gate_trace_beats_shuffled_strong",
+    "m24_2_gate_trace_beats_random_strong",
+    "m24_2_gate_trace_exact_floor",
+    "m24_2_gate_symbol_budget_respected",
+    "m24_2_gate_hard_trace_beats_random",
+    "m24_2_gate_hard_trace_beats_prompt_only",
+    "m24_2_gate_token_reduction_positive",
     "phrase_accuracy",
     "phrase_exact_accuracy",
 )
@@ -986,12 +1013,23 @@ def _evaluate_m24_contract(
     ]
     if float(metrics.get("m24_promotion_candidate", 0.0) or 0.0) < 1.0:
         notes.append("M24 remains explicitly non-promoted unless m24_promotion_candidate=1.0.")
+    m24_2_candidate_present = "m24_2_promotion_candidate" in metrics
+    m24_2_candidate = float(metrics.get("m24_2_promotion_candidate", 0.0) or 0.0)
+    promotion_status = "promoted"
+    status = "available"
+    if m24_2_candidate_present and m24_2_candidate < 1.0:
+        promotion_status = "m24_2_non_promoted"
+        notes.append("M24.2 remains explicitly non-promoted unless m24_2_promotion_candidate=1.0.")
+        if m24_2_candidate == 0.0:
+            status = "missing"
+            notes.append("M24.2 hard-bottleneck promotion failed with m24_2_promotion_candidate=0.0.")
     return {
         "test_id": test_id,
         "surface": contract.get("surface"),
-        "status": "available",
+        "status": status,
         "provenance": "artifact",
         "metrics": metrics,
+        "promotion_status": promotion_status,
         "notes": notes,
     }
 
@@ -1800,7 +1838,10 @@ def _m24_compression_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("bridi_trace_exact_accuracy", aggregate.get("mean_bridi_trace_exact_accuracy"))
         metrics.setdefault("gismu_accuracy", aggregate.get("mean_gismu_accuracy"))
         metrics.setdefault("cmavo_accuracy", aggregate.get("mean_cmavo_accuracy"))
-        metrics.setdefault("judri_binding_accuracy", aggregate.get("mean_judri_accuracy"))
+        metrics.setdefault(
+            "judri_binding_accuracy",
+            aggregate.get("mean_judri_binding_accuracy", aggregate.get("mean_judri_accuracy")),
+        )
         metrics.setdefault("packed_symbol_to_prompt_ratio", aggregate.get("mean_packed_symbol_to_prompt_ratio"))
         metrics.setdefault("prompt_to_packed_symbol_ratio", aggregate.get("mean_prompt_to_packed_symbol_ratio"))
         metrics.setdefault("packed_to_prompt_ratio", aggregate.get("mean_packed_to_prompt_ratio"))
@@ -1815,6 +1856,42 @@ def _m24_compression_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
             "m24_gate_packed_trace_shorter_than_prompt",
             aggregate.get("mean_m24_gate_packed_trace_shorter_than_prompt"),
         )
+        metrics.setdefault("m24_gate_trace_beats_shuffled", aggregate.get("mean_m24_gate_trace_beats_shuffled"))
+        metrics.setdefault("m24_gate_trace_beats_random", aggregate.get("mean_m24_gate_trace_beats_random"))
+        metrics.setdefault("m24_gate_trace_beats_zero", aggregate.get("mean_m24_gate_trace_beats_zero"))
+        metrics.setdefault(
+            "m24_gate_trace_matches_oracle_upper_bound",
+            aggregate.get("mean_m24_gate_trace_matches_oracle_upper_bound"),
+        )
+        metrics.setdefault("m24_gate_trace_beats_prompt_only", aggregate.get("mean_m24_gate_trace_beats_prompt_only"))
+        metrics.setdefault(
+            "m24_gate_nonzero_exact_trace_reconstruction",
+            aggregate.get("mean_m24_gate_nonzero_exact_trace_reconstruction"),
+        )
+        metrics.setdefault("m24_gate_token_reduction_positive", aggregate.get("mean_m24_gate_token_reduction_positive"))
+        for key in (
+            "m24_2_hard_bottleneck_strict_accuracy",
+            "m24_2_hard_bottleneck_trace_exact_accuracy",
+            "m24_2_hard_bottleneck_token_count",
+            "m24_2_hard_bottleneck_compression_ratio",
+            "m24_2_hard_bottleneck_accuracy_per_token",
+            "m24_2_hard_bottleneck_delta_vs_m24_1",
+            "m24_2_hard_bottleneck_delta_vs_prompt_only",
+            "m24_2_hard_bottleneck_symbol_error_rate",
+            "m24_2_hard_bottleneck_score",
+            "m24_2_promotion_gate_pass_rate",
+            "m24_2_promotion_candidate",
+            "m24_2_gate_hard_bottleneck_configured",
+            "m24_2_gate_strict_accuracy_retained",
+            "m24_2_gate_trace_beats_shuffled_strong",
+            "m24_2_gate_trace_beats_random_strong",
+            "m24_2_gate_trace_exact_floor",
+            "m24_2_gate_symbol_budget_respected",
+            "m24_2_gate_hard_trace_beats_random",
+            "m24_2_gate_hard_trace_beats_prompt_only",
+            "m24_2_gate_token_reduction_positive",
+        ):
+            metrics.setdefault(key, aggregate.get(f"mean_{key}"))
     for source_name in ("headline_metrics", "metrics"):
         source = payload.get(source_name, {})
         if isinstance(source, dict):
@@ -1829,6 +1906,42 @@ def _m24_compression_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
                 "m24_gate_packed_trace_shorter_than_prompt",
                 source.get("mean_m24_gate_packed_trace_shorter_than_prompt"),
             )
+            metrics.setdefault("m24_gate_trace_beats_shuffled", source.get("mean_m24_gate_trace_beats_shuffled"))
+            metrics.setdefault("m24_gate_trace_beats_random", source.get("mean_m24_gate_trace_beats_random"))
+            metrics.setdefault("m24_gate_trace_beats_zero", source.get("mean_m24_gate_trace_beats_zero"))
+            metrics.setdefault(
+                "m24_gate_trace_matches_oracle_upper_bound",
+                source.get("mean_m24_gate_trace_matches_oracle_upper_bound"),
+            )
+            metrics.setdefault("m24_gate_trace_beats_prompt_only", source.get("mean_m24_gate_trace_beats_prompt_only"))
+            metrics.setdefault(
+                "m24_gate_nonzero_exact_trace_reconstruction",
+                source.get("mean_m24_gate_nonzero_exact_trace_reconstruction"),
+            )
+            metrics.setdefault("m24_gate_token_reduction_positive", source.get("mean_m24_gate_token_reduction_positive"))
+            for key in (
+                "m24_2_hard_bottleneck_strict_accuracy",
+                "m24_2_hard_bottleneck_trace_exact_accuracy",
+                "m24_2_hard_bottleneck_token_count",
+                "m24_2_hard_bottleneck_compression_ratio",
+                "m24_2_hard_bottleneck_accuracy_per_token",
+                "m24_2_hard_bottleneck_delta_vs_m24_1",
+                "m24_2_hard_bottleneck_delta_vs_prompt_only",
+                "m24_2_hard_bottleneck_symbol_error_rate",
+                "m24_2_hard_bottleneck_score",
+                "m24_2_promotion_gate_pass_rate",
+                "m24_2_promotion_candidate",
+                "m24_2_gate_hard_bottleneck_configured",
+                "m24_2_gate_strict_accuracy_retained",
+                "m24_2_gate_trace_beats_shuffled_strong",
+                "m24_2_gate_trace_beats_random_strong",
+                "m24_2_gate_trace_exact_floor",
+                "m24_2_gate_symbol_budget_respected",
+                "m24_2_gate_hard_trace_beats_random",
+                "m24_2_gate_hard_trace_beats_prompt_only",
+                "m24_2_gate_token_reduction_positive",
+            ):
+                metrics.setdefault(key, source.get(f"mean_{key}"))
     seed_rows: list[dict[str, Any]] = []
     cells = payload.get("cells", {})
     if isinstance(cells, dict):

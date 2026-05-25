@@ -200,6 +200,33 @@ KEY_METRICS = [
     "compression_adjusted_strict_accuracy",
     "strict_accuracy_per_substrate_token",
     "m24_gate_packed_trace_shorter_than_prompt",
+    "m24_gate_trace_beats_random",
+    "m24_gate_trace_beats_zero",
+    "m24_gate_trace_beats_shuffled",
+    "m24_gate_trace_matches_oracle_upper_bound",
+    "m24_gate_trace_beats_prompt_only",
+    "m24_gate_nonzero_exact_trace_reconstruction",
+    "m24_gate_token_reduction_positive",
+    "m24_2_hard_bottleneck_strict_accuracy",
+    "m24_2_hard_bottleneck_trace_exact_accuracy",
+    "m24_2_hard_bottleneck_token_count",
+    "m24_2_hard_bottleneck_compression_ratio",
+    "m24_2_hard_bottleneck_accuracy_per_token",
+    "m24_2_hard_bottleneck_delta_vs_m24_1",
+    "m24_2_hard_bottleneck_delta_vs_prompt_only",
+    "m24_2_hard_bottleneck_symbol_error_rate",
+    "m24_2_hard_bottleneck_score",
+    "m24_2_promotion_gate_pass_rate",
+    "m24_2_promotion_candidate",
+    "m24_2_gate_hard_bottleneck_configured",
+    "m24_2_gate_strict_accuracy_retained",
+    "m24_2_gate_trace_beats_shuffled_strong",
+    "m24_2_gate_trace_beats_random_strong",
+    "m24_2_gate_trace_exact_floor",
+    "m24_2_gate_symbol_budget_respected",
+    "m24_2_gate_hard_trace_beats_random",
+    "m24_2_gate_hard_trace_beats_prompt_only",
+    "m24_2_gate_token_reduction_positive",
     "phrase_accuracy",
     "phrase_exact_accuracy",
     "semantic_coverage_strict_accuracy",
@@ -937,6 +964,114 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                         "m24_gate_packed_trace_shorter_than_prompt",
                         "mean_m24_gate_packed_trace_shorter_than_prompt",
                     ),
+                    "m24_gate_trace_beats_shuffled": (
+                        "m24_gate_trace_beats_shuffled",
+                        "mean_m24_gate_trace_beats_shuffled",
+                    ),
+                    "m24_gate_trace_beats_random": (
+                        "m24_gate_trace_beats_random",
+                        "mean_m24_gate_trace_beats_random",
+                    ),
+                    "m24_gate_trace_beats_zero": (
+                        "m24_gate_trace_beats_zero",
+                        "mean_m24_gate_trace_beats_zero",
+                    ),
+                    "m24_gate_trace_matches_oracle_upper_bound": (
+                        "m24_gate_trace_matches_oracle_upper_bound",
+                        "mean_m24_gate_trace_matches_oracle_upper_bound",
+                    ),
+                    "m24_gate_trace_beats_prompt_only": (
+                        "m24_gate_trace_beats_prompt_only",
+                        "mean_m24_gate_trace_beats_prompt_only",
+                    ),
+                    "m24_gate_nonzero_exact_trace_reconstruction": (
+                        "m24_gate_nonzero_exact_trace_reconstruction",
+                        "mean_m24_gate_nonzero_exact_trace_reconstruction",
+                    ),
+                    "m24_gate_token_reduction_positive": (
+                        "m24_gate_token_reduction_positive",
+                        "mean_m24_gate_token_reduction_positive",
+                    ),
+                    "m24_2_hard_bottleneck_strict_accuracy": (
+                        "m24_2_hard_bottleneck_strict_accuracy",
+                        "mean_m24_2_hard_bottleneck_strict_accuracy",
+                    ),
+                    "m24_2_hard_bottleneck_trace_exact_accuracy": (
+                        "m24_2_hard_bottleneck_trace_exact_accuracy",
+                        "mean_m24_2_hard_bottleneck_trace_exact_accuracy",
+                    ),
+                    "m24_2_hard_bottleneck_token_count": (
+                        "m24_2_hard_bottleneck_token_count",
+                        "mean_m24_2_hard_bottleneck_token_count",
+                    ),
+                    "m24_2_hard_bottleneck_compression_ratio": (
+                        "m24_2_hard_bottleneck_compression_ratio",
+                        "mean_m24_2_hard_bottleneck_compression_ratio",
+                    ),
+                    "m24_2_hard_bottleneck_accuracy_per_token": (
+                        "m24_2_hard_bottleneck_accuracy_per_token",
+                        "mean_m24_2_hard_bottleneck_accuracy_per_token",
+                    ),
+                    "m24_2_hard_bottleneck_delta_vs_m24_1": (
+                        "m24_2_hard_bottleneck_delta_vs_m24_1",
+                        "mean_m24_2_hard_bottleneck_delta_vs_m24_1",
+                    ),
+                    "m24_2_hard_bottleneck_delta_vs_prompt_only": (
+                        "m24_2_hard_bottleneck_delta_vs_prompt_only",
+                        "mean_m24_2_hard_bottleneck_delta_vs_prompt_only",
+                    ),
+                    "m24_2_hard_bottleneck_symbol_error_rate": (
+                        "m24_2_hard_bottleneck_symbol_error_rate",
+                        "mean_m24_2_hard_bottleneck_symbol_error_rate",
+                    ),
+                    "m24_2_hard_bottleneck_score": (
+                        "m24_2_hard_bottleneck_score",
+                        "mean_m24_2_hard_bottleneck_score",
+                    ),
+                    "m24_2_promotion_gate_pass_rate": (
+                        "m24_2_promotion_gate_pass_rate",
+                        "mean_m24_2_promotion_gate_pass_rate",
+                    ),
+                    "m24_2_promotion_candidate": (
+                        "m24_2_promotion_candidate",
+                        "mean_m24_2_promotion_candidate",
+                    ),
+                    "m24_2_gate_hard_bottleneck_configured": (
+                        "m24_2_gate_hard_bottleneck_configured",
+                        "mean_m24_2_gate_hard_bottleneck_configured",
+                    ),
+                    "m24_2_gate_strict_accuracy_retained": (
+                        "m24_2_gate_strict_accuracy_retained",
+                        "mean_m24_2_gate_strict_accuracy_retained",
+                    ),
+                    "m24_2_gate_trace_beats_shuffled_strong": (
+                        "m24_2_gate_trace_beats_shuffled_strong",
+                        "mean_m24_2_gate_trace_beats_shuffled_strong",
+                    ),
+                    "m24_2_gate_trace_beats_random_strong": (
+                        "m24_2_gate_trace_beats_random_strong",
+                        "mean_m24_2_gate_trace_beats_random_strong",
+                    ),
+                    "m24_2_gate_trace_exact_floor": (
+                        "m24_2_gate_trace_exact_floor",
+                        "mean_m24_2_gate_trace_exact_floor",
+                    ),
+                    "m24_2_gate_symbol_budget_respected": (
+                        "m24_2_gate_symbol_budget_respected",
+                        "mean_m24_2_gate_symbol_budget_respected",
+                    ),
+                    "m24_2_gate_hard_trace_beats_random": (
+                        "m24_2_gate_hard_trace_beats_random",
+                        "mean_m24_2_gate_hard_trace_beats_random",
+                    ),
+                    "m24_2_gate_hard_trace_beats_prompt_only": (
+                        "m24_2_gate_hard_trace_beats_prompt_only",
+                        "mean_m24_2_gate_hard_trace_beats_prompt_only",
+                    ),
+                    "m24_2_gate_token_reduction_positive": (
+                        "m24_2_gate_token_reduction_positive",
+                        "mean_m24_2_gate_token_reduction_positive",
+                    ),
                     "generator_parameter_max_delta_after_advisor": (
                         "generator_parameter_max_delta_after_advisor",
                         "mean_generator_parameter_max_delta_after_advisor",
@@ -948,6 +1083,11 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                     "overall_phrase_accuracy": ("overall_phrase_accuracy", "mean_overall_phrase_accuracy"),
                     "phrase_accuracy": ("phrase_accuracy", "mean_phrase_accuracy"),
                     "phrase_exact_accuracy": ("phrase_exact_accuracy", "mean_phrase_exact_accuracy"),
+                    "judri_binding_accuracy": (
+                        "judri_binding_accuracy",
+                        "mean_judri_binding_accuracy",
+                        "mean_judri_accuracy",
+                    ),
                     "substrate_token_count": (
                         "substrate_token_count",
                         "mean_substrate_token_count",
@@ -1013,7 +1153,27 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
             best_id, best_cell = _best_cell(payload["cells"])
             if best_id and isinstance(best_cell, dict):
                 metrics["best_cell_accuracy"] = _best_cell_metric(best_cell)
-        return metrics
+        priority = (
+            "strict_accuracy",
+            "m24_2_promotion_candidate",
+            "m24_2_promotion_gate_pass_rate",
+            "m24_2_hard_bottleneck_compression_ratio",
+            "m24_2_hard_bottleneck_token_count",
+            "m24_2_gate_strict_accuracy_retained",
+            "m24_2_gate_trace_beats_shuffled_strong",
+            "m24_2_gate_trace_exact_floor",
+            "m24_promotion_candidate",
+            "m24_promotion_gate_pass_rate",
+            "predicted_vs_shuffled_delta",
+            "shuffled_trace_accuracy",
+        )
+        ordered_metrics: dict[str, float] = {}
+        for key in priority:
+            if key in metrics:
+                ordered_metrics[key] = metrics[key]
+        for key, value in metrics.items():
+            ordered_metrics.setdefault(key, value)
+        return ordered_metrics
     return _generic_metrics(payload)
 
 
@@ -1048,7 +1208,7 @@ def _best_cell(cells: dict[str, Any]) -> tuple[str | None, dict[str, Any] | None
 def _best_cell_metric(cell: dict[str, Any]) -> float:
     metrics = cell.get("metrics", {})
     if isinstance(metrics, dict):
-        for key in ("overall_accuracy", "held_out_accuracy", "accuracy"):
+        for key in ("strict_accuracy", "mean_strict_accuracy", "overall_accuracy", "held_out_accuracy", "accuracy"):
             if key in metrics:
                 return _float_or_zero(metrics[key])
     aggregate = cell.get("aggregate_metrics", {})
