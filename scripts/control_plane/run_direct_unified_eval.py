@@ -20,12 +20,20 @@ from lojban_evolution.series_contract import assert_output_path_allowed, validat
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_HISTORY_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "ablation_history_backfill"
+DEFAULT_TRACK_BY_FAMILY = {
+    "M19": "M19",
+    "M20": "M20.1",
+    "M21": "M21.1",
+    "M22": "M22",
+    "M23": "M23",
+    "M24": "M24",
+}
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build one direct, contract-aware unified eval manifest.")
     parser.add_argument("--family", type=str, default="M19")
-    parser.add_argument("--track", type=str, default="M19")
+    parser.add_argument("--track", type=str, default="")
     parser.add_argument("--output-root", type=Path, default=DIRECT_UNIFIED_EVAL_OUTPUT_ROOT)
     parser.add_argument("--run-id", type=str, default="")
     parser.add_argument("--history-manifest", type=Path, default=None)
@@ -48,6 +56,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--m21-adversarial-audit-report", type=Path, default=None)
     parser.add_argument("--m22-generalization-report", type=Path, default=None)
     parser.add_argument("--m23-relevance-report", type=Path, default=None)
+    parser.add_argument("--m24-compression-report", type=Path, default=None)
 
     parser.add_argument("--execute-m19-direct", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--base-model", type=str, default="C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct")
@@ -76,10 +85,11 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     family_key = str(args.family).strip().upper()
-    if family_key not in {"M19", "M20", "M21", "M22", "M23"}:
-        raise NotImplementedError("Direct unified eval runner currently supports the M19, M20, M21, M22, and M23 families only.")
+    if family_key not in {"M19", "M20", "M21", "M22", "M23", "M24"}:
+        raise NotImplementedError("Direct unified eval runner currently supports the M19, M20, M21, M22, M23, and M24 families only.")
     if family_key != "M19" and bool(args.execute_m19_direct):
         raise ValueError("--execute-m19-direct is only valid for family M19.")
+    resolved_track = str(args.track).strip() or DEFAULT_TRACK_BY_FAMILY[family_key]
 
     output_root, output_root_rel = _validated_output_root(args.output_root)
     run_id = args.run_id.strip() or datetime.now(timezone.utc).strftime("direct_unified_eval_%Y%m%d_%H%M%S")
@@ -98,7 +108,7 @@ def main() -> None:
     history_manifest = args.history_manifest or _latest_named_manifest(DEFAULT_HISTORY_ROOT, "ablation_history_manifest.json")
     manifest = build_direct_unified_eval_manifest(
         family_key=family_key,
-        track=str(args.track),
+        track=resolved_track,
         benchmark_report_path=benchmark_report,
         audit_report_path=audit_report,
         integrity_report_path=integrity_report,
@@ -118,13 +128,14 @@ def main() -> None:
         m21_adversarial_audit_report_path=args.m21_adversarial_audit_report,
         m22_generalization_report_path=args.m22_generalization_report,
         m23_relevance_report_path=args.m23_relevance_report,
+        m24_compression_report_path=args.m24_compression_report,
         history_manifest_path=history_manifest,
     )
     manifest["run_id"] = run_id
     manifest["history_manifest"] = _repo_string(history_manifest) if history_manifest else None
     manifest["config"] = {
         "family": str(args.family),
-        "track": str(args.track),
+        "track": resolved_track,
         "execute_m19_direct": bool(args.execute_m19_direct),
         "benchmark_report": _repo_string(benchmark_report) if benchmark_report else None,
         "audit_report": _repo_string(audit_report) if audit_report else None,
@@ -145,6 +156,7 @@ def main() -> None:
         "m21_adversarial_audit_report": _repo_string(args.m21_adversarial_audit_report) if args.m21_adversarial_audit_report else None,
         "m22_generalization_report": _repo_string(args.m22_generalization_report) if args.m22_generalization_report else None,
         "m23_relevance_report": _repo_string(args.m23_relevance_report) if args.m23_relevance_report else None,
+        "m24_compression_report": _repo_string(args.m24_compression_report) if args.m24_compression_report else None,
     }
 
     manifest_path = output_dir / "direct_unified_eval_manifest.json"

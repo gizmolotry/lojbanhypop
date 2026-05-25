@@ -44,6 +44,7 @@ DEFAULT_M21_ACTUAL_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw"
 DEFAULT_M21_LOCK_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m21_lock_suite"
 DEFAULT_M22_GENERALIZATION_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m22_semantic_generalization"
 DEFAULT_M23_RELEVANCE_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m23_relevance_suite"
+DEFAULT_M24_COMPRESSION_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m24_substrate_compression"
 
 STAGE_ORDER = [
     "A-G",
@@ -71,6 +72,7 @@ STAGE_ORDER = [
     "M21",
     "M22",
     "M23",
+    "M24",
     "Control Plane",
 ]
 
@@ -79,6 +81,7 @@ KEY_METRICS = [
     "headline_accuracy",
     "headline_macro_f1",
     "overall_accuracy",
+    "overall_phrase_accuracy",
     "held_out_accuracy",
     "logical_accuracy",
     "mean_intervention_delta_gold",
@@ -147,6 +150,54 @@ KEY_METRICS = [
     "m23_trace_punish_trace_exact_lift_vs_scale",
     "m23_trace_punish_decoy_delta_vs_scale",
     "m23_trace_punish_strict_delta_vs_scale",
+    "predicted_trace_accuracy",
+    "oracle_trace_accuracy",
+    "random_trace_accuracy",
+    "zero_trace_accuracy",
+    "prompt_only_accuracy",
+    "advisor_vs_prompt_delta",
+    "m24_strict_delta_vs_prompt_only",
+    "predicted_vs_random_delta",
+    "oracle_trained_oracle_trace_accuracy",
+    "oracle_trained_predicted_trace_accuracy",
+    "oracle_trained_random_trace_accuracy",
+    "oracle_trained_trace_delta",
+    "predicted_trace_gap_to_oracle_upper_bound",
+    "cross_advisor_oracle_gap",
+    "substrate_claim_score",
+    "m24_promotion_gate_pass_rate",
+    "m24_promotion_candidate",
+    "generator_parameter_max_delta_after_advisor",
+    "generator_parameters_unchanged_after_advisor",
+    "substrate_token_count",
+    "mean_substrate_token_count",
+    "avg_substrate_token_count",
+    "substrate_tokens",
+    "mean_substrate_tokens",
+    "avg_substrate_tokens",
+    "reference_token_count",
+    "mean_reference_token_count",
+    "reference_tokens",
+    "mean_reference_tokens",
+    "baseline_token_count",
+    "mean_baseline_token_count",
+    "baseline_tokens",
+    "mean_baseline_tokens",
+    "compression_ratio",
+    "mean_compression_ratio",
+    "packed_symbol_to_prompt_ratio",
+    "prompt_to_packed_symbol_ratio",
+    "packed_to_prompt_ratio",
+    "prompt_to_packed_ratio",
+    "packed_symbol_compression_ratio",
+    "token_reduction_ratio",
+    "mean_token_reduction_ratio",
+    "token_ratio_vs_m23",
+    "compression_lift_vs_m23",
+    "compression_adjusted_strict_accuracy",
+    "strict_accuracy_per_substrate_token",
+    "phrase_accuracy",
+    "phrase_exact_accuracy",
     "semantic_coverage_strict_accuracy",
     "semantic_coverage_worst_surface_accuracy",
     "semantic_coverage_judri_causal_delta",
@@ -216,7 +267,7 @@ def main() -> None:
             row = _m3_row(stage, m_bridge)
         elif stage_key == "M11":
             row = _m11_row(stage, m_bridge)
-        elif stage_key in {"M14", "M18", "M19", "M20", "M21", "M22", "M23"}:
+        elif stage_key in {"M14", "M18", "M19", "M20", "M21", "M22", "M23", "M24"}:
             row = _special_stage_row(stage)
         elif stage_key == "Control Plane":
             row = _control_plane_row(stage, history_manifest, program_spine_manifest, legacy_grid_manifest, m_bridge_manifest)
@@ -370,7 +421,7 @@ def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
     anchor = _explicit_stage_anchor(stage_key) or _resolve_generic_anchor(stage)
     payload = _read_json_optional(anchor) if anchor else None
     metrics = _special_stage_metrics(stage_key, payload)
-    stage_for_row = _stage_with_direct_contract(stage, payload) if stage_key in {"M19", "M20", "M21", "M22", "M23"} else stage
+    stage_for_row = _stage_with_direct_contract(stage, payload) if stage_key in {"M19", "M20", "M21", "M22", "M23", "M24"} else stage
     supplemental: list[str] = []
     notes: list[str] = []
     if stage_key == "M14":
@@ -412,12 +463,14 @@ def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
         notes.append("M22 is a semantic coverage generalization gate over M21 controls; failed promotion remains visible as evidence, not success")
     if stage_key == "M23":
         notes.append("M23 is the causal relevance-router fork over the M21/M22 bridi substrate; promotion depends on decoy OOD lift, not clean accuracy alone")
+    if stage_key == "M24":
+        notes.append("M24 is the substrate-first compression fork; strict accuracy is canonical and phrase accuracy is diagnostic only")
     return _row(
         stage_for_row,
         "artifact_anchor" if anchor else "runnable_no_anchor",
         _repo_relative(anchor) if anchor else None,
         [path for path in supplemental if path],
-        _limit_metrics(metrics, limit=18 if stage_key in {"M21", "M22", "M23"} else 8),
+        _limit_metrics(metrics, limit=18 if stage_key in {"M21", "M22", "M23", "M24"} else 8),
         notes,
     )
 
@@ -555,6 +608,13 @@ def _explicit_stage_anchor(stage_key: str) -> Path | None:
         relevance_anchor = _latest_named_manifest(DEFAULT_M23_RELEVANCE_ROOT, "m23_relevance_suite_report.json")
         if relevance_anchor and relevance_anchor.exists():
             return relevance_anchor
+    if stage_key == "M24":
+        direct_anchor = _latest_direct_unified_eval_anchor("M24")
+        if direct_anchor and direct_anchor.exists():
+            return direct_anchor
+        compression_anchor = _latest_named_manifest(DEFAULT_M24_COMPRESSION_ROOT, "m24_substrate_compression_report.json")
+        if compression_anchor and compression_anchor.exists():
+            return compression_anchor
     return None
 
 
@@ -841,6 +901,102 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
             if best_id and isinstance(best_cell, dict):
                 metrics["best_cell_accuracy"] = _best_cell_metric(best_cell)
         return metrics
+    if stage_key == "M24":
+        metrics: dict[str, float] = {}
+        headline = payload.get("headline_metrics", {})
+        aggregate = payload.get("aggregate_metrics", {})
+        top = payload.get("metrics", {})
+        for source in (headline, aggregate, top, payload):
+            if not isinstance(source, dict):
+                continue
+            _merge_existing_metrics(
+                metrics,
+                source,
+                {
+                    "strict_accuracy": ("strict_accuracy", "mean_strict_accuracy"),
+                    "m24_promotion_candidate": ("m24_promotion_candidate", "mean_m24_promotion_candidate"),
+                    "m24_promotion_gate_pass_rate": ("m24_promotion_gate_pass_rate", "mean_m24_promotion_gate_pass_rate"),
+                    "predicted_vs_random_delta": ("predicted_vs_random_delta", "mean_predicted_vs_random_delta"),
+                    "advisor_vs_prompt_delta": ("advisor_vs_prompt_delta", "mean_advisor_vs_prompt_delta"),
+                    "packed_symbol_to_prompt_ratio": ("packed_symbol_to_prompt_ratio", "mean_packed_symbol_to_prompt_ratio"),
+                    "generator_parameter_max_delta_after_advisor": (
+                        "generator_parameter_max_delta_after_advisor",
+                        "mean_generator_parameter_max_delta_after_advisor",
+                    ),
+                    "generator_parameters_unchanged_after_advisor": (
+                        "generator_parameters_unchanged_after_advisor",
+                        "mean_generator_parameters_unchanged_after_advisor",
+                    ),
+                    "overall_phrase_accuracy": ("overall_phrase_accuracy", "mean_overall_phrase_accuracy"),
+                    "phrase_accuracy": ("phrase_accuracy", "mean_phrase_accuracy"),
+                    "phrase_exact_accuracy": ("phrase_exact_accuracy", "mean_phrase_exact_accuracy"),
+                    "substrate_token_count": (
+                        "substrate_token_count",
+                        "mean_substrate_token_count",
+                        "avg_substrate_token_count",
+                        "substrate_tokens",
+                        "mean_substrate_tokens",
+                        "avg_substrate_tokens",
+                    ),
+                    "reference_token_count": (
+                        "reference_token_count",
+                        "mean_reference_token_count",
+                        "reference_tokens",
+                        "mean_reference_tokens",
+                        "baseline_token_count",
+                        "mean_baseline_token_count",
+                        "baseline_tokens",
+                        "mean_baseline_tokens",
+                    ),
+                    "compression_ratio": ("compression_ratio", "mean_compression_ratio"),
+                    "prompt_to_packed_symbol_ratio": ("prompt_to_packed_symbol_ratio", "mean_prompt_to_packed_symbol_ratio"),
+                    "packed_to_prompt_ratio": ("packed_to_prompt_ratio", "mean_packed_to_prompt_ratio"),
+                    "prompt_to_packed_ratio": ("prompt_to_packed_ratio", "mean_prompt_to_packed_ratio"),
+                    "packed_symbol_compression_ratio": ("packed_symbol_compression_ratio", "mean_packed_symbol_compression_ratio"),
+                    "token_reduction_ratio": ("token_reduction_ratio", "mean_token_reduction_ratio"),
+                    "token_ratio_vs_m23": "token_ratio_vs_m23",
+                    "compression_lift_vs_m23": "compression_lift_vs_m23",
+                    "avg_tokens": ("avg_tokens", "mean_avg_tokens"),
+                    "trace_tokens": ("trace_tokens", "mean_trace_tokens"),
+                    "accuracy_per_token": ("accuracy_per_token", "mean_accuracy_per_token"),
+                    "accuracy_per_trace_token": ("accuracy_per_trace_token", "mean_accuracy_per_trace_token"),
+                    "compression_adjusted_strict_accuracy": "compression_adjusted_strict_accuracy",
+                    "strict_accuracy_per_substrate_token": "strict_accuracy_per_substrate_token",
+                    "predicted_trace_accuracy": ("predicted_trace_accuracy", "mean_predicted_trace_accuracy"),
+                    "oracle_trace_accuracy": ("oracle_trace_accuracy", "mean_oracle_trace_accuracy"),
+                    "random_trace_accuracy": ("random_trace_accuracy", "mean_random_trace_accuracy"),
+                    "zero_trace_accuracy": ("zero_trace_accuracy", "mean_zero_trace_accuracy"),
+                    "prompt_only_accuracy": ("prompt_only_accuracy", "mean_prompt_only_accuracy"),
+                    "m24_strict_delta_vs_prompt_only": (
+                        "m24_strict_delta_vs_prompt_only",
+                        "mean_m24_strict_delta_vs_prompt_only",
+                    ),
+                    "oracle_trained_oracle_trace_accuracy": (
+                        "oracle_trained_oracle_trace_accuracy",
+                        "mean_oracle_trained_oracle_trace_accuracy",
+                    ),
+                    "oracle_trained_predicted_trace_accuracy": (
+                        "oracle_trained_predicted_trace_accuracy",
+                        "mean_oracle_trained_predicted_trace_accuracy",
+                    ),
+                    "oracle_trained_random_trace_accuracy": (
+                        "oracle_trained_random_trace_accuracy",
+                        "mean_oracle_trained_random_trace_accuracy",
+                    ),
+                    "oracle_trained_trace_delta": ("oracle_trained_trace_delta", "mean_oracle_trained_trace_delta"),
+                    "predicted_trace_gap_to_oracle_upper_bound": (
+                        "predicted_trace_gap_to_oracle_upper_bound",
+                        "mean_predicted_trace_gap_to_oracle_upper_bound",
+                    ),
+                    "cross_advisor_oracle_gap": ("cross_advisor_oracle_gap", "mean_cross_advisor_oracle_gap"),
+                    "substrate_claim_score": ("substrate_claim_score", "mean_substrate_claim_score"),
+                },
+            )
+        if isinstance(payload.get("cells"), dict):
+            best_id, best_cell = _best_cell(payload["cells"])
+            if best_id and isinstance(best_cell, dict):
+                metrics["best_cell_accuracy"] = _best_cell_metric(best_cell)
+        return metrics
     return _generic_metrics(payload)
 
 
@@ -1058,7 +1214,7 @@ def _render_markdown(manifest: dict[str, Any]) -> str:
     lines.extend(["", "## Read", ""])
     lines.append("- The fresh part of the whole grid is now the recovered legacy runnable surface: A-G, H/H5/J, L6, and the phase-eval lanes under one manifest.")
     lines.append("- The modern M rows are represented through artifact-backed anchors and the control-plane lineage manifests, so the whole program is visible without pretending every stage was freshly retrained.")
-    lines.append("- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, and M23 the causal relevance-router fork.")
+    lines.append("- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, M23 the causal relevance-router fork, and M24 the substrate-first compression fork.")
     return "\n".join(lines) + "\n"
 
 

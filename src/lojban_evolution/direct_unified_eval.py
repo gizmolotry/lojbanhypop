@@ -21,6 +21,11 @@ from .m23.family import M23_REGISTRY
 from .repo_paths import REPO_ROOT, repo_relative
 from .series_contract import series_metadata
 
+try:
+    from .m24.family import M24_REGISTRY
+except ModuleNotFoundError:  # pragma: no cover - M24 core registry may land in a parallel branch.
+    M24_REGISTRY: dict[str, dict[str, Any]] = {}
+
 
 DIRECT_UNIFIED_EVAL_VERSION = "1.0"
 DIRECT_UNIFIED_EVAL_OUTPUT_ROOT = (
@@ -271,6 +276,54 @@ KEY_METRICS = (
     "m23_trace_punish_trace_exact_lift_vs_scale",
     "m23_trace_punish_decoy_delta_vs_scale",
     "m23_trace_punish_strict_delta_vs_scale",
+    "predicted_trace_accuracy",
+    "oracle_trace_accuracy",
+    "random_trace_accuracy",
+    "zero_trace_accuracy",
+    "prompt_only_accuracy",
+    "advisor_vs_prompt_delta",
+    "m24_strict_delta_vs_prompt_only",
+    "predicted_vs_random_delta",
+    "oracle_trained_oracle_trace_accuracy",
+    "oracle_trained_predicted_trace_accuracy",
+    "oracle_trained_random_trace_accuracy",
+    "oracle_trained_trace_delta",
+    "predicted_trace_gap_to_oracle_upper_bound",
+    "cross_advisor_oracle_gap",
+    "substrate_claim_score",
+    "m24_promotion_gate_pass_rate",
+    "m24_promotion_candidate",
+    "generator_parameter_max_delta_after_advisor",
+    "generator_parameters_unchanged_after_advisor",
+    "substrate_token_count",
+    "mean_substrate_token_count",
+    "avg_substrate_token_count",
+    "substrate_tokens",
+    "mean_substrate_tokens",
+    "avg_substrate_tokens",
+    "reference_token_count",
+    "mean_reference_token_count",
+    "reference_tokens",
+    "mean_reference_tokens",
+    "baseline_token_count",
+    "mean_baseline_token_count",
+    "baseline_tokens",
+    "mean_baseline_tokens",
+    "compression_ratio",
+    "mean_compression_ratio",
+    "packed_symbol_to_prompt_ratio",
+    "prompt_to_packed_symbol_ratio",
+    "packed_to_prompt_ratio",
+    "prompt_to_packed_ratio",
+    "packed_symbol_compression_ratio",
+    "token_reduction_ratio",
+    "mean_token_reduction_ratio",
+    "token_ratio_vs_m23",
+    "compression_lift_vs_m23",
+    "compression_adjusted_strict_accuracy",
+    "strict_accuracy_per_substrate_token",
+    "phrase_accuracy",
+    "phrase_exact_accuracy",
 )
 
 _REFERENCE_ROOTS: dict[str, list[Path]] = {
@@ -316,6 +369,10 @@ _REFERENCE_ROOTS: dict[str, list[Path]] = {
     ],
     "M23": [
         REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m23_relevance_suite",
+        REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "direct_unified_eval",
+    ],
+    "M24": [
+        REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m24_substrate_compression",
         REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "direct_unified_eval",
     ],
     "M10": [
@@ -523,6 +580,30 @@ def discover_m23_surfaces(
     }
 
 
+def discover_m24_surfaces(
+    *,
+    compression_report_path: Path | None = None,
+) -> dict[str, dict[str, Any]]:
+    registry = M24_REGISTRY.get("M24", {})
+    output_roots = registry.get("output_roots", {}) if isinstance(registry, dict) else {}
+    report_names = registry.get("report_names", {}) if isinstance(registry, dict) else {}
+    root = output_roots.get("substrate_compression") or output_roots.get("suite")
+    report_name = (
+        report_names.get("substrate_compression")
+        or report_names.get("suite")
+        or "m24_substrate_compression_report.json"
+    )
+    compression_path = compression_report_path
+    if compression_path is None:
+        compression_path = _latest_named_manifest(
+            REPO_ROOT / str(root or "artifacts/runs/telemetry/raw/ablation/hypercube/m24_substrate_compression"),
+            str(report_name),
+        )
+    return {
+        "substrate_compression": _surface_record("substrate_compression", compression_path),
+    }
+
+
 def build_direct_unified_eval_manifest(
     *,
     family_key: str,
@@ -546,6 +627,7 @@ def build_direct_unified_eval_manifest(
     m21_adversarial_audit_report_path: Path | None = None,
     m22_generalization_report_path: Path | None = None,
     m23_relevance_report_path: Path | None = None,
+    m24_compression_report_path: Path | None = None,
     history_manifest_path: Path | None = None,
     taxonomy: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -594,6 +676,11 @@ def build_direct_unified_eval_manifest(
         direct_surfaces = discover_m23_surfaces(
             relevance_report_path=m23_relevance_report_path,
         )
+    elif family_key == "M24":
+        resolved_track = str(track or "M24")
+        direct_surfaces = discover_m24_surfaces(
+            compression_report_path=m24_compression_report_path,
+        )
     else:
         raise NotImplementedError(f"Direct unified eval is currently implemented for family '{family_key}' only.")
 
@@ -616,6 +703,7 @@ def build_direct_unified_eval_manifest(
     m21_adversarial_payload = direct_surfaces.get("adversarial_audit", {}).get("payload") if family_key == "M21" else None
     m22_generalization_payload = direct_surfaces.get("generalization", {}).get("payload") if family_key == "M22" else None
     m23_relevance_payload = direct_surfaces.get("relevance_suite", {}).get("payload") if family_key == "M23" else None
+    m24_compression_payload = direct_surfaces.get("substrate_compression", {}).get("payload") if family_key == "M24" else None
     historical_references = _resolve_historical_family_references(contract, history_manifest_path)
     comparison_targets = _resolve_comparison_targets(contract, history_manifest_path)
     reference_surface_index = _build_reference_surface_index(historical_references, comparison_targets)
@@ -641,6 +729,7 @@ def build_direct_unified_eval_manifest(
         m21_adversarial_payload=m21_adversarial_payload,
         m22_generalization_payload=m22_generalization_payload,
         m23_relevance_payload=m23_relevance_payload,
+        m24_compression_payload=m24_compression_payload,
         reference_surface_index=reference_surface_index,
     )
 
@@ -664,6 +753,7 @@ def build_direct_unified_eval_manifest(
         m21_adversarial_payload=m21_adversarial_payload,
         m22_generalization_payload=m22_generalization_payload,
         m23_relevance_payload=m23_relevance_payload,
+        m24_compression_payload=m24_compression_payload,
     )
     direct_report_paths = {
         name: surface["path"]
@@ -696,6 +786,8 @@ def build_direct_unified_eval_manifest(
         notes.append("M22 direct surfaces evaluate semantic coverage generalization over fixed M21 dynamic bridi controls.")
     if family_key == "M23":
         notes.append("M23 direct surfaces test whether an explicit frame relevance selector beats M22-style scale on decoy relation OOD.")
+    if family_key == "M24":
+        notes.append("M24 direct surfaces test substrate-first compression; strict accuracy remains canonical and phrase accuracy is diagnostic only.")
 
     manifest = {
         "schema_version": DIRECT_UNIFIED_EVAL_VERSION,
@@ -809,6 +901,7 @@ def _evaluate_contracts(
     m21_adversarial_payload: dict[str, Any] | None = None,
     m22_generalization_payload: dict[str, Any] | None = None,
     m23_relevance_payload: dict[str, Any] | None = None,
+    m24_compression_payload: dict[str, Any] | None = None,
     reference_surface_index: dict[str, dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     reference_surface_index = reference_surface_index or {}
@@ -855,6 +948,10 @@ def _evaluate_contracts(
             row = _evaluate_m23_contract(test_id, contract, m23_relevance_payload)
             rows.append(_attach_reference_surface(row, contract, reference_surface_index))
             continue
+        if family_key == "M24":
+            row = _evaluate_m24_contract(test_id, contract, m24_compression_payload)
+            rows.append(_attach_reference_surface(row, contract, reference_surface_index))
+            continue
         rows.append(
             {
                 "test_id": test_id,
@@ -866,6 +963,28 @@ def _evaluate_contracts(
             }
         )
     return rows
+
+
+def _evaluate_m24_contract(
+    test_id: str,
+    contract: dict[str, Any],
+    compression_payload: dict[str, Any] | None,
+) -> dict[str, Any]:
+    metrics = _filtered_metrics(_m24_compression_metrics(compression_payload), tuple(contract.get("metrics", [])))
+    if not metrics:
+        return _missing_contract_row(test_id, contract, f"missing M24 direct surface for {test_id}")
+    notes = [
+        "M24 contract is evaluated from the substrate-first compression report.",
+        "strict_accuracy is canonical; phrase accuracy metrics are diagnostic only.",
+    ]
+    return {
+        "test_id": test_id,
+        "surface": contract.get("surface"),
+        "status": "available",
+        "provenance": "artifact",
+        "metrics": metrics,
+        "notes": notes,
+    }
 
 
 def _evaluate_m23_contract(
@@ -1501,6 +1620,7 @@ def _build_headline_metrics(
     m21_adversarial_payload: dict[str, Any] | None = None,
     m22_generalization_payload: dict[str, Any] | None = None,
     m23_relevance_payload: dict[str, Any] | None = None,
+    m24_compression_payload: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     headline: dict[str, Any] = {}
     if isinstance(benchmark_payload, dict):
@@ -1616,7 +1736,97 @@ def _build_headline_metrics(
     if isinstance(m23_relevance_payload, dict):
         for key, value in _filtered_metrics(_m23_suite_metrics(m23_relevance_payload), KEY_METRICS).items():
             headline[key] = value
+    if isinstance(m24_compression_payload, dict):
+        for key, value in _filtered_metrics(_m24_compression_metrics(m24_compression_payload), KEY_METRICS).items():
+            headline[key] = value
     return {k: v for k, v in headline.items() if v is not None}
+
+
+def _m24_compression_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
+    if not isinstance(payload, dict):
+        return {}
+    metrics: dict[str, Any] = {}
+    for source_name in ("headline_metrics", "metrics", "aggregate_metrics"):
+        source = payload.get(source_name, {})
+        if isinstance(source, dict):
+            metrics.update(source)
+    aggregate = payload.get("aggregate_metrics", {})
+    if isinstance(aggregate, dict):
+        metrics.setdefault("strict_accuracy", aggregate.get("mean_strict_accuracy"))
+        metrics.setdefault("overall_phrase_accuracy", aggregate.get("mean_overall_phrase_accuracy"))
+        metrics.setdefault("phrase_accuracy", aggregate.get("mean_phrase_accuracy"))
+        metrics.setdefault("phrase_exact_accuracy", aggregate.get("mean_phrase_exact_accuracy"))
+        metrics.setdefault("avg_tokens", aggregate.get("mean_avg_tokens"))
+        metrics.setdefault("trace_tokens", aggregate.get("mean_trace_tokens"))
+        metrics.setdefault("accuracy_per_token", aggregate.get("mean_accuracy_per_token"))
+        metrics.setdefault("accuracy_per_trace_token", aggregate.get("mean_accuracy_per_trace_token"))
+        metrics.setdefault("substrate_token_count", aggregate.get("mean_substrate_token_count"))
+        metrics.setdefault("substrate_tokens", aggregate.get("mean_substrate_tokens"))
+        metrics.setdefault("reference_token_count", aggregate.get("mean_reference_token_count"))
+        metrics.setdefault("reference_tokens", aggregate.get("mean_reference_tokens"))
+        metrics.setdefault("baseline_token_count", aggregate.get("mean_baseline_token_count"))
+        metrics.setdefault("baseline_tokens", aggregate.get("mean_baseline_tokens"))
+        metrics.setdefault("compression_ratio", aggregate.get("mean_compression_ratio"))
+        metrics.setdefault("predicted_trace_accuracy", aggregate.get("mean_predicted_trace_accuracy"))
+        metrics.setdefault("oracle_trace_accuracy", aggregate.get("mean_oracle_trace_accuracy"))
+        metrics.setdefault("random_trace_accuracy", aggregate.get("mean_random_trace_accuracy"))
+        metrics.setdefault("zero_trace_accuracy", aggregate.get("mean_zero_trace_accuracy"))
+        metrics.setdefault("prompt_only_accuracy", aggregate.get("mean_prompt_only_accuracy"))
+        metrics.setdefault("advisor_vs_prompt_delta", aggregate.get("mean_advisor_vs_prompt_delta"))
+        metrics.setdefault("m24_strict_delta_vs_prompt_only", aggregate.get("mean_m24_strict_delta_vs_prompt_only"))
+        metrics.setdefault("predicted_vs_random_delta", aggregate.get("mean_predicted_vs_random_delta"))
+        metrics.setdefault("oracle_trained_oracle_trace_accuracy", aggregate.get("mean_oracle_trained_oracle_trace_accuracy"))
+        metrics.setdefault("oracle_trained_predicted_trace_accuracy", aggregate.get("mean_oracle_trained_predicted_trace_accuracy"))
+        metrics.setdefault("oracle_trained_random_trace_accuracy", aggregate.get("mean_oracle_trained_random_trace_accuracy"))
+        metrics.setdefault("oracle_trained_trace_delta", aggregate.get("mean_oracle_trained_trace_delta"))
+        metrics.setdefault("predicted_trace_gap_to_oracle_upper_bound", aggregate.get("mean_predicted_trace_gap_to_oracle_upper_bound"))
+        metrics.setdefault("cross_advisor_oracle_gap", aggregate.get("mean_cross_advisor_oracle_gap"))
+        metrics.setdefault("substrate_claim_score", aggregate.get("mean_substrate_claim_score"))
+        metrics.setdefault("m24_promotion_gate_pass_rate", aggregate.get("mean_m24_promotion_gate_pass_rate"))
+        metrics.setdefault("m24_promotion_candidate", aggregate.get("mean_m24_promotion_candidate"))
+        metrics.setdefault("generator_parameter_max_delta_after_advisor", aggregate.get("mean_generator_parameter_max_delta_after_advisor"))
+        metrics.setdefault("generator_parameters_unchanged_after_advisor", aggregate.get("mean_generator_parameters_unchanged_after_advisor"))
+        metrics.setdefault("bridi_trace_exact_accuracy", aggregate.get("mean_bridi_trace_exact_accuracy"))
+        metrics.setdefault("gismu_accuracy", aggregate.get("mean_gismu_accuracy"))
+        metrics.setdefault("cmavo_accuracy", aggregate.get("mean_cmavo_accuracy"))
+        metrics.setdefault("judri_binding_accuracy", aggregate.get("mean_judri_accuracy"))
+        metrics.setdefault("packed_symbol_to_prompt_ratio", aggregate.get("mean_packed_symbol_to_prompt_ratio"))
+        metrics.setdefault("prompt_to_packed_symbol_ratio", aggregate.get("mean_prompt_to_packed_symbol_ratio"))
+        metrics.setdefault("packed_to_prompt_ratio", aggregate.get("mean_packed_to_prompt_ratio"))
+        metrics.setdefault("prompt_to_packed_ratio", aggregate.get("mean_prompt_to_packed_ratio"))
+        metrics.setdefault("packed_symbol_compression_ratio", aggregate.get("mean_packed_symbol_compression_ratio"))
+        metrics.setdefault("compression_ratio", aggregate.get("mean_compression_ratio"))
+        if metrics.get("compression_ratio") is None:
+            metrics["compression_ratio"] = aggregate.get("mean_prompt_to_packed_symbol_ratio")
+        metrics.setdefault("token_reduction_ratio", aggregate.get("mean_token_reduction_ratio"))
+    for source_name in ("headline_metrics", "metrics"):
+        source = payload.get(source_name, {})
+        if isinstance(source, dict):
+            metrics.setdefault("strict_accuracy", source.get("mean_strict_accuracy"))
+            metrics.setdefault("overall_phrase_accuracy", source.get("phrase_accuracy"))
+            metrics.setdefault("phrase_accuracy", source.get("overall_phrase_accuracy"))
+            metrics.setdefault("substrate_token_count", source.get("mean_substrate_token_count"))
+            metrics.setdefault("compression_ratio", source.get("mean_compression_ratio"))
+            metrics.setdefault("token_reduction_ratio", source.get("mean_token_reduction_ratio"))
+    seed_rows: list[dict[str, Any]] = []
+    cells = payload.get("cells", {})
+    if isinstance(cells, dict):
+        for cell in cells.values():
+            if not isinstance(cell, dict):
+                continue
+            for row in cell.get("seed_reports", []):
+                if isinstance(row, dict) and isinstance(row.get("metrics"), dict):
+                    seed_rows.append(row["metrics"])
+    top_level_seed_rows = payload.get("seed_reports", [])
+    if isinstance(top_level_seed_rows, list):
+        for row in top_level_seed_rows:
+            if isinstance(row, dict) and isinstance(row.get("metrics"), dict):
+                seed_rows.append(row["metrics"])
+    for key in KEY_METRICS:
+        values = [float(row[key]) for row in seed_rows if isinstance(row.get(key), (int, float))]
+        if values and key not in metrics:
+            metrics[key] = sum(values) / len(values)
+    return {key: value for key, value in metrics.items() if value is not None}
 
 
 def _m23_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
@@ -1906,6 +2116,8 @@ def _preferred_names_for_target(target: str) -> list[str]:
         return ["m22_semantic_generalization_report.json", "direct_unified_eval_manifest.json"]
     if upper.startswith("M23"):
         return ["m23_relevance_suite_report.json", "m23_relevance_train_report.json", "direct_unified_eval_manifest.json"]
+    if upper.startswith("M24"):
+        return ["m24_substrate_compression_report.json", "direct_unified_eval_manifest.json"]
     return []
 
 

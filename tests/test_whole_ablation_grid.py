@@ -219,3 +219,37 @@ def test_m23_special_stage_metrics_and_order() -> None:
     assert metrics["decoy_relation_ood_accuracy"] == 0.64
     assert metrics["relevance_top1_accuracy"] == 0.83
     assert metrics["m23_router_decoy_lift_vs_scale"] == 0.12
+
+
+def test_m24_special_stage_metrics_and_order() -> None:
+    whole_grid = _load_whole_grid_module()
+    payload = {
+        "headline_metrics": {
+            "strict_accuracy": 0.69,
+            "overall_phrase_accuracy": 0.74,
+            "phrase_accuracy": 0.75,
+            "substrate_token_count": 6.5,
+            "reference_token_count": 18.0,
+            "compression_ratio": 0.3611,
+            "token_reduction_ratio": 0.6389,
+            "token_ratio_vs_m23": 0.42,
+            "compression_lift_vs_m23": 0.11,
+            "avg_tokens": 9.0,
+            "trace_tokens": 6.5,
+            "accuracy_per_token": 0.0767,
+            "accuracy_per_trace_token": 0.1062,
+            "compression_adjusted_strict_accuracy": 1.91,
+            "strict_accuracy_per_substrate_token": 0.1062,
+        }
+    }
+
+    metrics = whole_grid._special_stage_metrics("M24", payload)
+
+    assert "M24" in whole_grid.STAGE_ORDER
+    assert whole_grid.STAGE_ORDER.index("M23") < whole_grid.STAGE_ORDER.index("M24")
+    assert list(metrics)[:3] == ["strict_accuracy", "overall_phrase_accuracy", "phrase_accuracy"]
+    assert metrics["strict_accuracy"] == 0.69
+    assert metrics["overall_phrase_accuracy"] == 0.74
+    assert metrics["compression_ratio"] == 0.3611
+    assert metrics["token_reduction_ratio"] == 0.6389
+    assert metrics["strict_accuracy_per_substrate_token"] == 0.1062

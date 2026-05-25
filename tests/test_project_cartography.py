@@ -39,13 +39,16 @@ def test_series_registry_classifies_branch_series_surfaces() -> None:
         "scripts/m23/run_m23_relevance_suite.py": "M23",
         "airflow/dags/m23/lojban_m23_relevance_router_dag.py": "M23",
         "src/lojban_evolution/m23/relevance.py": "M23",
+        "src/lojban_evolution/m24/compression.py": "M24",
+        "scripts/m24/run_m24_substrate_compression_suite.py": "M24",
+        "airflow/dags/m24/lojban_m24_substrate_compression_dag.py": "M24",
     }
 
     for path, expected_series in cases.items():
         assert classify_surface_path(path).series == expected_series
 
 
-def test_series_registry_preserves_a_to_m22_ordering() -> None:
+def test_series_registry_preserves_a_to_m24_ordering() -> None:
     order = series_order()
 
     assert order[:5] == ["A-G", "H", "H5", "J", "L"]
@@ -53,7 +56,22 @@ def test_series_registry_preserves_a_to_m22_ordering() -> None:
     assert order.index("M21") < order.index("M22")
     assert "M23" in order
     assert order.index("M22") < order.index("M23")
-    assert {"A-G", "H", "H5", "J", "L", "M19", "M20", "M21", "M22", "M23"}.issubset(known_series())
+    assert "M24" in order
+    assert order.index("M23") < order.index("M24")
+    assert {"A-G", "H", "H5", "J", "L", "M19", "M20", "M21", "M22", "M23", "M24"}.issubset(known_series())
+
+
+def test_cartography_infers_m24_standard_family_paths() -> None:
+    cartography = _load_cartography_module()
+
+    cases = {
+        "src/lojban_evolution/m24/compression.py": "M24",
+        "scripts/m24/run_m24_substrate_compression_suite.py": "M24",
+        "airflow/dags/m24/lojban_m24_substrate_compression_dag.py": "M24",
+    }
+
+    for path, expected_series in cases.items():
+        assert cartography._infer_family(path) == expected_series
 
 
 def test_cartography_has_no_unclassified_runnable_surfaces() -> None:

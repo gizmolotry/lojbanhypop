@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -48,6 +49,67 @@ def test_run_direct_unified_eval_help() -> None:
     assert "usage:" in out.lower()
     assert "--family" in out
     assert "--execute-m19-direct" in out
+    assert "--m24-compression-report" in out
+
+
+def test_run_direct_unified_eval_m24_defaults_track_to_family() -> None:
+    report = (
+        REPO_ROOT
+        / "artifacts/runs/telemetry/raw/ablation/hypercube/m24_substrate_compression/pytest_m24_direct_track_fake/m24_substrate_compression_report.json"
+    )
+    report.parent.mkdir(parents=True, exist_ok=True)
+    report.write_text(
+        json.dumps(
+            {
+                "track": "M24",
+                "aggregate_metrics": {
+                    "mean_strict_accuracy": 0.25,
+                    "mean_predicted_trace_accuracy": 0.25,
+                    "mean_random_trace_accuracy": 0.05,
+                    "mean_zero_trace_accuracy": 0.05,
+                    "mean_prompt_only_accuracy": 0.30,
+                    "mean_predicted_vs_random_delta": 0.20,
+                    "mean_substrate_claim_score": 0.10,
+                    "mean_compression_ratio": 0.50,
+                    "mean_substrate_token_count": 12.0,
+                    "mean_reference_token_count": 6.0,
+                    "mean_m24_promotion_candidate": 0.0,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    run_id = "pytest_m24_direct_track_default"
+    env = dict(os.environ)
+    env["PYTHONPATH"] = str(REPO_ROOT / "src")
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(REPO_ROOT / "scripts/control_plane/run_direct_unified_eval.py"),
+            "--family",
+            "M24",
+            "--m24-compression-report",
+            str(report),
+            "--run-id",
+            run_id,
+        ],
+        cwd=str(REPO_ROOT),
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stderr
+    manifest = (
+        REPO_ROOT
+        / "artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval"
+        / run_id
+        / "direct_unified_eval_manifest.json"
+    )
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    assert payload["family_key"] == "M24"
+    assert payload["track"] == "M24"
+    assert payload["config"]["track"] == "M24"
 
 
 def test_run_m19_integrity_suite_help() -> None:

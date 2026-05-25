@@ -11,7 +11,7 @@ from lojban_airflow_utils import merge_conf, run_repo_script, sanitize_run_id, v
 
 DEFAULTS = {
     "family": "M19",
-    "track": "M19",
+    "track": "",
     "output_dir": "artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval",
     "run_id": "",
     "history_manifest": "",
@@ -28,6 +28,8 @@ DEFAULTS = {
     "m21_gauntlet_report": "",
     "m21_adversarial_audit_report": "",
     "m22_generalization_report": "",
+    "m23_relevance_report": "",
+    "m24_substrate_compression_report": "",
     "execute_m19_direct": False,
     "base_model": "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
     "bridge_path": "artifacts/models/m19/grid/m19_isolation_grid_20260409_v3/M19.3_8Q_128D_8S.pt",
@@ -56,7 +58,7 @@ def _run_direct_unified_eval(**context: object) -> None:
         "--family",
         str(cfg.get("family", "M19")),
         "--track",
-        str(cfg.get("track", "M19")),
+        str(cfg.get("track", "")),
         "--output-root",
         output_dir,
         "--run-id",
@@ -90,6 +92,10 @@ def _run_direct_unified_eval(**context: object) -> None:
         args.extend(["--m21-adversarial-audit-report", str(cfg.get("m21_adversarial_audit_report"))])
     if str(cfg.get("m22_generalization_report", "")).strip():
         args.extend(["--m22-generalization-report", str(cfg.get("m22_generalization_report"))])
+    if str(cfg.get("m23_relevance_report", "")).strip():
+        args.extend(["--m23-relevance-report", str(cfg.get("m23_relevance_report"))])
+    if str(cfg.get("m24_substrate_compression_report", "")).strip():
+        args.extend(["--m24-compression-report", str(cfg.get("m24_substrate_compression_report"))])
     if bool(cfg.get("execute_m19_direct", False)):
         args.extend(
             [
@@ -134,10 +140,10 @@ with DAG(
     schedule=None,
     catchup=False,
     max_active_runs=1,
-    tags=["lojban", "control-plane", "direct-eval", "m19", "m20", "m21", "m22", "lineage"],
+    tags=["lojban", "control-plane", "direct-eval", "m19", "m20", "m21", "m22", "m23", "m24", "lineage"],
     params={
         "family": Param("M19", type="string", minLength=1),
-        "track": Param("M19", type="string", minLength=1),
+        "track": Param("", type="string"),
         "output_dir": Param("artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval", type="string", minLength=1),
         "run_id": Param("", type="string"),
         "history_manifest": Param("", type="string"),
@@ -154,6 +160,8 @@ with DAG(
         "m21_gauntlet_report": Param("", type="string"),
         "m21_adversarial_audit_report": Param("", type="string"),
         "m22_generalization_report": Param("", type="string"),
+        "m23_relevance_report": Param("", type="string"),
+        "m24_substrate_compression_report": Param("", type="string"),
         "execute_m19_direct": Param(False, type="boolean"),
         "base_model": Param("C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct", type="string", minLength=1),
         "bridge_path": Param("artifacts/models/m19/grid/m19_isolation_grid_20260409_v3/M19.3_8Q_128D_8S.pt", type="string", minLength=1),

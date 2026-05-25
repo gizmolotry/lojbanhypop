@@ -1,6 +1,6 @@
 # Ablation Program Map
 
-- Generated UTC: `2026-05-24T20:47:10.378952+00:00`
+- Generated UTC: `2026-05-25T16:48:24.614835+00:00`
 - Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
 - Concentrated family count: `38`
 
@@ -9,6 +9,11 @@
 - `legacy_orchestration`: letter-era experiments and their early DAG architecture
 - `bridge_and_serialization`: early-to-mid M-series bridge, grounding, and serialization families
 - `manifold_and_return_path`: later manifold/native/discriminative/re-entry families
+- `dictionary_first_substrate`: M20 dictionary-first substrate branch
+- `dynamic_bridi_substrate`: M21 dynamic bridi substrate branch
+- `semantic_generalization_substrate`: M22 semantic coverage generalization gate
+- `causal_relevance_substrate`: M23 causal relevance-router fork
+- `substrate_compression`: M24 substrate compression branch
 - `control_plane`: the backfill, catalog, and aggregate-suite layer
 
 ## Concentrated Families

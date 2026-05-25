@@ -6,10 +6,10 @@ from dataclasses import asdict, dataclass
 from typing import Any, Iterable, Sequence
 
 import torch
-import torch.nn.functional as F
 from torch import nn
 from torch.utils.data import DataLoader
 
+from lojban_evolution.bridi_substrate import trace_exact_surrogate_loss
 from lojban_evolution.m21.bridi import (
     ANSWER_LABELS,
     ANSWER_TO_ID,
@@ -274,33 +274,6 @@ def relevance_rank_loss(outputs: dict[str, torch.Tensor], batch: dict[str, Any],
     relevant_score = logits.masked_fill(~relevant, low).max(dim=-1).values
     decoy_score = logits.masked_fill(~decoy, low).max(dim=-1).values
     return torch.relu(float(margin) + decoy_score[valid] - relevant_score[valid]).mean()
-
-
-def trace_exact_surrogate_loss(outputs: dict[str, torch.Tensor], batch: dict[str, Any]) -> torch.Tensor:
-    """Differentiable pressure for whole-trace exactness, not just averaged component quality."""
-
-    device = outputs["active_logits"].device
-    active_targets = batch["active_targets"].to(device)
-    active_mask = active_targets > 0.5
-    stop_targets = batch["stop_targets"].to(device)
-    gismu_targets = batch["gismu_targets"].to(device)
-    cmavo_targets = batch["cmavo_targets"].to(device)
-    judri_targets = batch["judri_targets"].to(device)
-    active_loss = F.binary_cross_entropy_with_logits(outputs["active_logits"], active_targets, reduction="none").sum(dim=-1)
-    stop_loss = F.binary_cross_entropy_with_logits(outputs["stop_logits"], stop_targets, reduction="none").sum(dim=-1)
-    gismu_loss = F.cross_entropy(
-        outputs["gismu_logits"].reshape(-1, outputs["gismu_logits"].shape[-1]),
-        gismu_targets.reshape(-1),
-        reduction="none",
-    ).view_as(gismu_targets)
-    cmavo_loss = F.binary_cross_entropy_with_logits(outputs["cmavo_logits"], cmavo_targets, reduction="none").sum(dim=-1)
-    judri_loss = F.cross_entropy(
-        outputs["judri_logits"].reshape(-1, outputs["judri_logits"].shape[-1]),
-        judri_targets.reshape(-1),
-        reduction="none",
-    ).view(judri_targets.shape).sum(dim=-1)
-    frame_loss = ((gismu_loss + cmavo_loss + judri_loss) * active_mask.float()).sum(dim=-1)
-    return (active_loss + stop_loss + frame_loss).mean()
 
 
 def compute_m23_loss(

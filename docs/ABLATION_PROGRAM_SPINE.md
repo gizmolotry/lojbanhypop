@@ -1,9 +1,9 @@
 # Ablation Program Spine
 
-- Generated UTC: `2026-05-24T20:47:10.333201+00:00`
+- Generated UTC: `2026-05-25T16:48:24.617077+00:00`
 - Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
 - Source taxonomy config: `configs/experiment_taxonomy.json`
-- Stage count: `26`
+- Stage count: `27`
 
 This is the ordered research spine of the project: legacy letter-series families, normalized M-major families, and the control plane that keeps the program auditable.
 
@@ -561,7 +561,24 @@ This is the ordered research spine of the project: legacy letter-series families
 - Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
 - DAGs: `airflow/dags/m23/lojban_m23_relevance_router_dag.py`
 
-## 26. Control Plane
+## 26. M24
+
+- Kind: `major_series`
+- Layer: `substrate_compression`
+- Objective: test whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only, while recording strict accuracy and token accounting without treating phrase accuracy as canonical.
+- Entry count: `0`
+- Runnable rows: `0`
+- Question boundary: substrate-first compression probe over the M23 causal relevance substrate
+- Thesis: test whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only, while recording strict accuracy and token accounting without treating phrase accuracy as canonical.
+- Allowed axes: `substrate token budget, compression objective weight, relevance-trace distillation, token-ratio comparison against M23, strict-accuracy retention under compression`
+- Frozen/forbidden drift: `phrase accuracy as canonical metric, new broad semantic gauntlet unrelated to compression, decoder bridge changes as the primary result, compression claims without token accounting`
+- Promotion basis: `strict_accuracy retention against prompt/M23 controls, m24_promotion_gate_pass_rate, m24_promotion_candidate, predicted_vs_random_delta, packed_symbol_to_prompt_ratio below 1.0`
+- Primary metrics: `strict_accuracy, predicted_trace_accuracy, predicted_vs_random_delta, m24_promotion_gate_pass_rate, m24_promotion_candidate, packed_symbol_to_prompt_ratio, strict_accuracy_per_substrate_token`
+- Guardrail metrics: `prompt_only_accuracy, advisor_vs_prompt_delta, bridi_trace_exact_accuracy, oracle_trained_oracle_trace_accuracy, random_trace_accuracy, zero_trace_accuracy, reference_token_count, substrate_token_count`
+- Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
+- DAGs: `airflow/dags/m24/lojban_m24_substrate_compression_dag.py`
+
+## 27. Control Plane
 
 - Kind: `control_plane`
 - Layer: `control_plane`

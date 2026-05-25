@@ -1,6 +1,6 @@
 {
   "version": "2026-05-20",
-  "purpose": "Series-aware registry for runnable scripts, DAGs, and scaffolding surfaces. This divides the codebase by research branch terminology from A-G through M23.",
+  "purpose": "Series-aware registry for runnable scripts, DAGs, and scaffolding surfaces. This divides the codebase by research branch terminology from A-G through M24.",
   "series_order": [
     "A-G",
     "H",
@@ -28,6 +28,7 @@
     "M21",
     "M22",
     "M23",
+    "M24",
     "control_plane",
     "data",
     "training",
@@ -151,6 +152,10 @@
     "M23": {
       "era": "active-branch",
       "question": "Causal relevance routing over dynamic bridi frames under decoy relation OOD."
+    },
+    "M24": {
+      "era": "active-branch",
+      "question": "Substrate-first compression over the M23 causal relevance substrate."
     }
   },
   "path_rules": [
@@ -460,6 +465,27 @@
       "kind": "script",
       "bucket": "m23",
       "owner": "M23"
+    },
+    {
+      "globs": [
+        "src/lojban_evolution/m24/**"
+      ],
+      "series": "M24",
+      "status": "active-library",
+      "kind": "library",
+      "bucket": "src/lojban_evolution/m24",
+      "owner": "M24"
+    },
+    {
+      "globs": [
+        "scripts/m24/*.py",
+        "airflow/dags/m24/*.py"
+      ],
+      "series": "M24",
+      "status": "active-family-runner",
+      "kind": "script",
+      "bucket": "m24",
+      "owner": "M24"
     },
     {
       "globs": [

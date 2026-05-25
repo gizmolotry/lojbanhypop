@@ -544,6 +544,50 @@
         "trace_exact_surrogate_weight"
       ],
       "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
+    },
+    "M24": {
+      "question_boundary": "substrate-first compression probe over the M23 causal relevance substrate",
+      "architectural_thesis": "test whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only, while recording strict accuracy and token accounting without treating phrase accuracy as canonical.",
+      "allowed_ablation_axes": [
+        "substrate token budget",
+        "compression objective weight",
+        "relevance-trace distillation",
+        "token-ratio comparison against M23",
+        "strict-accuracy retention under compression"
+      ],
+      "forbidden_drift_axes": [
+        "phrase accuracy as canonical metric",
+        "new broad semantic gauntlet unrelated to compression",
+        "decoder bridge changes as the primary result",
+        "compression claims without token accounting"
+      ],
+      "promotion_basis": [
+        "strict_accuracy retention against prompt/M23 controls",
+        "m24_promotion_gate_pass_rate",
+        "m24_promotion_candidate",
+        "predicted_vs_random_delta",
+        "packed_symbol_to_prompt_ratio below 1.0"
+      ],
+      "metrics_primary": [
+        "strict_accuracy",
+        "predicted_trace_accuracy",
+        "predicted_vs_random_delta",
+        "m24_promotion_gate_pass_rate",
+        "m24_promotion_candidate",
+        "packed_symbol_to_prompt_ratio",
+        "strict_accuracy_per_substrate_token"
+      ],
+      "metrics_guardrail": [
+        "prompt_only_accuracy",
+        "advisor_vs_prompt_delta",
+        "bridi_trace_exact_accuracy",
+        "oracle_trained_oracle_trace_accuracy",
+        "random_trace_accuracy",
+        "zero_trace_accuracy",
+        "reference_token_count",
+        "substrate_token_count"
+      ],
+      "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
     }
   },
   "comparison_defaults": {
@@ -1149,6 +1193,49 @@
         "trace_exact_surrogate_weight"
       ],
       "surface": "m23_relevance_suite"
+    },
+    "m24.substrate_first_compression": {
+      "test_id": "m24.substrate_first_compression",
+      "family": "M24",
+      "description": "M24 tests whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only. Promotion requires causal trace lift, strict retention, exactness evidence, and actual token reduction; phrase accuracy is diagnostic only.",
+      "metrics": [
+        "strict_accuracy",
+        "predicted_trace_accuracy",
+        "oracle_trained_oracle_trace_accuracy",
+        "oracle_trained_predicted_trace_accuracy",
+        "random_trace_accuracy",
+        "zero_trace_accuracy",
+        "prompt_only_accuracy",
+        "advisor_vs_prompt_delta",
+        "predicted_vs_random_delta",
+        "oracle_trained_trace_delta",
+        "predicted_trace_gap_to_oracle_upper_bound",
+        "cross_advisor_oracle_gap",
+        "bridi_trace_exact_accuracy",
+        "gismu_accuracy",
+        "cmavo_accuracy",
+        "judri_binding_accuracy",
+        "substrate_token_count",
+        "reference_token_count",
+        "compression_ratio",
+        "packed_symbol_to_prompt_ratio",
+        "packed_to_prompt_ratio",
+        "prompt_to_packed_ratio",
+        "strict_accuracy_per_substrate_token",
+        "substrate_claim_score",
+        "m24_strict_delta_vs_prompt_only",
+        "m24_promotion_gate_pass_rate",
+        "m24_promotion_candidate",
+        "m24_gate_trace_beats_random",
+        "m24_gate_trace_beats_zero",
+        "m24_gate_trace_matches_oracle_upper_bound",
+        "m24_gate_trace_beats_prompt_only",
+        "m24_gate_packed_trace_shorter_than_prompt",
+        "m24_gate_nonzero_exact_trace_reconstruction",
+        "generator_parameter_max_delta_after_advisor",
+        "generator_parameters_unchanged_after_advisor"
+      ],
+      "surface": "m24_substrate_compression"
     }
   },
   "family_comparison_contracts": {
@@ -1455,6 +1542,21 @@
         "M23.A",
         "M23.B",
         "M23.C"
+      ],
+      "inherit_required_test_contracts": false
+    },
+    "M24": {
+      "historical_comparison_families": [
+        "M23"
+      ],
+      "required_test_contracts": [
+        "m24.substrate_first_compression"
+      ],
+      "explicit_compare_entries": [
+        "M23",
+        "M23.B",
+        "M23.C",
+        "M24"
       ],
       "inherit_required_test_contracts": false
     }
@@ -2025,6 +2127,34 @@
         "worst_surface_accuracy",
         "m23_router_decoy_lift_vs_scale",
         "relevance_top1_accuracy"
+      ]
+    },
+    {
+      "transition_id": "M23_to_M24",
+      "status": "active_branch",
+      "from_major": "M23",
+      "to_major": "M24",
+      "selected_upstream": "M23.C",
+      "inherits_components": [
+        "causal relevance router evidence",
+        "dynamic bridi trace substrate",
+        "strict accuracy canonical metric",
+        "token efficiency accounting discipline"
+      ],
+      "reopened_components": [
+        "substrate token budget",
+        "compression objective",
+        "rate-distortion accounting over strict accuracy"
+      ],
+      "rejected_components": [
+        "phrase accuracy as canonical metric",
+        "compression claims without explicit token metrics"
+      ],
+      "promotion_basis": [
+        "strict_accuracy",
+        "compression_ratio",
+        "token_reduction_ratio",
+        "compression_adjusted_strict_accuracy"
       ]
     }
   ]

@@ -70,6 +70,7 @@ FAMILY_DAG_MAP: dict[str, list[str]] = {
     "M21": ["airflow/dags/m21/lojban_m21_dynamic_bridi_dag.py"],
     "M22": ["airflow/dags/m22/lojban_m22_semantic_generalization_dag.py"],
     "M23": ["airflow/dags/m23/lojban_m23_relevance_router_dag.py"],
+    "M24": ["airflow/dags/m24/lojban_m24_substrate_compression_dag.py"],
     "History": [
         "airflow/dags/control_plane/lojban_ablation_history_backfill_dag.py",
         "airflow/dags/m_bridge/lojban_m_bridge_ablation_test_suite_dag.py",
@@ -120,6 +121,7 @@ M_FAMILY_ORDER = [
     "M21",
     "M22",
     "M23",
+    "M24",
 ]
 
 
@@ -271,6 +273,8 @@ def _family_key(entry: dict[str, Any]) -> str | None:
         return "M22"
     if normalized.startswith("M23"):
         return "M23"
+    if normalized.startswith("M24"):
+        return "M24"
     return None
 
 
@@ -287,6 +291,8 @@ def _program_layer(family_key: str) -> str:
         return "semantic_generalization_substrate"
     if family_key == "M23":
         return "causal_relevance_substrate"
+    if family_key == "M24":
+        return "substrate_compression"
     return "manifold_and_return_path"
 
 
@@ -520,6 +526,11 @@ def _render_markdown(manifest: dict[str, Any]) -> str:
     lines.append("- `legacy_orchestration`: letter-era experiments and their early DAG architecture")
     lines.append("- `bridge_and_serialization`: early-to-mid M-series bridge, grounding, and serialization families")
     lines.append("- `manifold_and_return_path`: later manifold/native/discriminative/re-entry families")
+    lines.append("- `dictionary_first_substrate`: M20 dictionary-first substrate branch")
+    lines.append("- `dynamic_bridi_substrate`: M21 dynamic bridi substrate branch")
+    lines.append("- `semantic_generalization_substrate`: M22 semantic coverage generalization gate")
+    lines.append("- `causal_relevance_substrate`: M23 causal relevance-router fork")
+    lines.append("- `substrate_compression`: M24 substrate compression branch")
     lines.append("- `control_plane`: the backfill, catalog, and aggregate-suite layer")
     lines.append("")
     lines.append("## Concentrated Families")

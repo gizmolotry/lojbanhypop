@@ -12,7 +12,7 @@ from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow.utils.task_group import TaskGroup
 
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = Path(__file__).resolve().parents[3]
 TAXONOMY_PATH = REPO_ROOT / "configs" / "experiment_taxonomy.json"
 HISTORY_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "ablation_history_backfill"
 
@@ -322,6 +322,24 @@ M_STAGE_SPECS: list[dict[str, Any]] = [
         "title": "M21",
         "child_dags": ["lojban_m21_dynamic_bridi"],
     },
+    {
+        "task_id": "m22_semantic_generalization_substrate",
+        "stage_key": "M22",
+        "title": "M22",
+        "child_dags": ["lojban_m22_semantic_generalization"],
+    },
+    {
+        "task_id": "m23_causal_relevance_substrate",
+        "stage_key": "M23",
+        "title": "M23",
+        "child_dags": ["lojban_m23_relevance_router"],
+    },
+    {
+        "task_id": "m24_substrate_compression",
+        "stage_key": "M24",
+        "title": "M24",
+        "child_dags": ["lojban_m24_substrate_compression"],
+    },
 ]
 
 
@@ -519,7 +537,7 @@ with DAG(
         refresh_program_control_plane = TriggerDagRunOperator(
             task_id="refresh_program_control_plane",
             trigger_dag_id="lojban_ablation_program_spine",
-            wait_for_completion=False,
+            wait_for_completion=True,
             conf={"run_id": "{{ dag_run.run_id }}__program"},
         )
 
