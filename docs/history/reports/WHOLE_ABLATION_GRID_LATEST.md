@@ -1,7 +1,7 @@
 # Whole Ablation Grid
 
-- run_id: `m24_2_b9_g24_a24_grid_20260526`
-- generated: `2026-05-26T16:03:19.842730+00:00`
+- run_id: `m24_2_b12_g32_a32_sixseed_grid_20260526`
+- generated: `2026-05-26T23:23:15.341622+00:00`
 - history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
 - program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m24_2_program_spine_v2_20260525/ablation_program_spine_manifest.json`
 
@@ -51,7 +51,7 @@
 | `M21` | `artifact_anchor` | `e=21 r=21 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m21_role_curriculum_mno_direct_48e_20260521/direct_unified_eval_manifest.json` | strict_accuracy=0.8494, bridi_trace_exact_accuracy=0.9996, gismu_accuracy=0.9999, cmavo_accuracy=0.9996 |
 | `M22` | `artifact_anchor` | `e=1 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m22_blended_s_96e_confirm2_mixed_ood_direct_20260523/direct_unified_eval_manifest.json` | m22_promotion_candidate=0.0000, m22_promotion_gate_pass_rate=0.9444, strict_accuracy=0.8467, m22_candidate_cell_count=1.0000 |
 | `M23` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m23_trace_punish_direct_20260524/direct_unified_eval_manifest.json` | strict_accuracy=0.9517, decoy_relation_ood_accuracy=0.9817, worst_surface_accuracy=0.8605, bridi_trace_exact_accuracy=0.2839 |
-| `M24` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m24_2_b9_g24_a24_direct_20260526/direct_unified_eval_manifest.json` | strict_accuracy=0.6830, m24_2_promotion_candidate=1.0000, m24_2_promotion_gate_pass_rate=1.0000, m24_2_hard_bottleneck_compression_ratio=0.8010 |
+| `M24` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m24_2_b12_g32_a32_sixseed_direct_20260526/direct_unified_eval_manifest.json` | strict_accuracy=0.7250, m24_2_promotion_candidate=0.8333, m24_2_promotion_gate_pass_rate=0.9762, m24_2_hard_bottleneck_compression_ratio=0.9853 |
 | `Control Plane` | `control_plane_manifest` | `e=0 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json` |  |
 
 ## Comparison Policy
