@@ -1,6 +1,6 @@
 {
   "version": "2026-05-20",
-  "purpose": "Series-aware registry for runnable scripts, DAGs, and scaffolding surfaces. This divides the codebase by research branch terminology from A-G through M24.",
+  "purpose": "Series-aware registry for runnable scripts, DAGs, and scaffolding surfaces. This divides the codebase by research branch terminology from A-G through M25.",
   "series_order": [
     "A-G",
     "H",
@@ -29,6 +29,7 @@
     "M22",
     "M23",
     "M24",
+    "M25",
     "control_plane",
     "data",
     "training",
@@ -156,6 +157,10 @@
     "M24": {
       "era": "active-branch",
       "question": "Substrate-first compression over the M23 causal relevance substrate."
+    },
+    "M25": {
+      "era": "active-branch",
+      "question": "Emergent loose bridi grammar-action stream over the M24 substrate compression branch."
     }
   },
   "path_rules": [
@@ -486,6 +491,27 @@
       "kind": "script",
       "bucket": "m24",
       "owner": "M24"
+    },
+    {
+      "globs": [
+        "src/lojban_evolution/m25/**"
+      ],
+      "series": "M25",
+      "status": "active-library",
+      "kind": "library",
+      "bucket": "src/lojban_evolution/m25",
+      "owner": "M25"
+    },
+    {
+      "globs": [
+        "scripts/m25/*.py",
+        "airflow/dags/m25/*.py"
+      ],
+      "series": "M25",
+      "status": "active-family-runner",
+      "kind": "script",
+      "bucket": "m25",
+      "owner": "M25"
     },
     {
       "globs": [

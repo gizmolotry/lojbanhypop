@@ -610,6 +610,46 @@
         "m24_2_gate_hard_trace_beats_prompt_only"
       ],
       "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
+    },
+    "M25": {
+      "question_boundary": "M25 emergent bridi grammar-action stream over the M23/M24 symbolic substrate",
+      "architectural_thesis": "test whether a looser learned Lojbanic bridi stream can preserve causal symbolic compression without hardcoding fixed predicate rows; strict_accuracy remains canonical and phrase accuracy is diagnostic only.",
+      "allowed_ablation_axes": [
+        "loose grammar-action stream length",
+        "symbol budget",
+        "trace reconstruction weight",
+        "MDL compression pressure",
+        "predicted/oracle/shuffled/random/zero stream controls",
+        "matched prompt-only token accounting"
+      ],
+      "forbidden_drift_axes": [
+        "full hand-authored Lojban AST as the main result",
+        "phrase accuracy as canonical metric",
+        "continuous prompt-state leakage into the advisor",
+        "promotion without shuffled/random stream controls"
+      ],
+      "promotion_basis": [
+        "strict_accuracy",
+        "predicted_vs_random_delta",
+        "predicted_vs_shuffled_delta",
+        "loose_stream_exact_accuracy",
+        "token_reduction_ratio",
+        "m25_promotion_candidate"
+      ],
+      "metrics_primary": [
+        "strict_accuracy",
+        "predicted_stream_accuracy",
+        "loose_stream_exact_accuracy",
+        "predicted_vs_random_delta",
+        "predicted_vs_shuffled_delta"
+      ],
+      "metrics_guardrail": [
+        "prompt_only_accuracy",
+        "token_reduction_ratio",
+        "advisor_primary_trace_is_symbolic",
+        "continuous_trace_smuggling_detected",
+        "generator_parameters_unchanged_after_advisor"
+      ]
     }
   },
   "comparison_defaults": {
@@ -1287,6 +1327,52 @@
         "m24_2_gate_token_reduction_positive"
       ],
       "surface": "m24_substrate_compression"
+    },
+    "m25.emergent_bridi_stream": {
+      "test_id": "m25.emergent_bridi_stream",
+      "family": "M25",
+      "description": "M25 tests a loose integer bridi grammar-action stream (OPEN/PRED/MOD/ARG/LINK/CLOSE/STOP) as the symbolic substrate. Promotion requires strict accuracy retention, stream corruption controls, nonzero stream reconstruction, token reduction, and no continuous trace smuggling.",
+      "metrics": [
+        "strict_accuracy",
+        "predicted_stream_accuracy",
+        "oracle_stream_accuracy",
+        "shuffled_stream_accuracy",
+        "random_stream_accuracy",
+        "zero_stream_accuracy",
+        "prompt_only_accuracy",
+        "m25_strict_delta_vs_prompt_only",
+        "predicted_vs_random_delta",
+        "predicted_vs_shuffled_delta",
+        "oracle_stream_delta",
+        "stream_advisor_delta",
+        "loose_stream_exact_accuracy",
+        "stream_type_accuracy",
+        "stream_value_accuracy",
+        "stream_aux_accuracy",
+        "mean_predicted_emitted_symbols_after_bottleneck",
+        "mean_oracle_emitted_symbols_after_bottleneck",
+        "mean_prompt_tokens",
+        "loose_symbol_to_prompt_ratio",
+        "prompt_to_loose_symbol_ratio",
+        "token_reduction_ratio",
+        "accuracy_per_loose_symbol",
+        "accuracy_per_prompt_token",
+        "loose_symbol_budget",
+        "advisor_primary_trace_is_symbolic",
+        "continuous_trace_smuggling_detected",
+        "generator_parameter_max_delta_after_advisor",
+        "generator_parameters_unchanged_after_advisor",
+        "m25_promotion_gate_pass_rate",
+        "m25_promotion_candidate",
+        "m25_gate_strict_accuracy_retained",
+        "m25_gate_stream_beats_shuffled",
+        "m25_gate_stream_beats_random",
+        "m25_gate_token_reduction_positive",
+        "m25_gate_nonzero_stream_reconstruction",
+        "m25_gate_symbolic_trace_only",
+        "phrase_accuracy"
+      ],
+      "surface": "m25_emergent_bridi"
     }
   },
   "family_comparison_contracts": {
@@ -1610,6 +1696,23 @@
         "M24",
         "M24.1",
         "M24.2"
+      ],
+      "inherit_required_test_contracts": false
+    },
+    "M25": {
+      "historical_comparison_families": [
+        "M24"
+      ],
+      "required_test_contracts": [
+        "m25.emergent_bridi_stream"
+      ],
+      "explicit_compare_entries": [
+        "M23",
+        "M24",
+        "M24.1",
+        "M24.2",
+        "M25",
+        "M25.A"
       ],
       "inherit_required_test_contracts": false
     }
@@ -2208,6 +2311,36 @@
         "compression_ratio",
         "token_reduction_ratio",
         "compression_adjusted_strict_accuracy"
+      ]
+    },
+    {
+      "transition_id": "M24_to_M25",
+      "status": "active_branch",
+      "from_major": "M24",
+      "to_major": "M25",
+      "selected_upstream": "M24.2",
+      "inherits_components": [
+        "M23 decoy-balanced relevance data",
+        "M24 frozen trace-only advisor discipline",
+        "strict accuracy canonical metric",
+        "token efficiency accounting discipline"
+      ],
+      "reopened_components": [
+        "fixed frame row topology",
+        "looser emergent bridi grammar actions",
+        "stream-length rate-distortion accounting"
+      ],
+      "rejected_components": [
+        "full hand-authored Lojban AST as primary architecture",
+        "phrase accuracy as canonical metric",
+        "continuous trace leakage into the advisor"
+      ],
+      "promotion_basis": [
+        "strict_accuracy",
+        "predicted_vs_random_delta",
+        "predicted_vs_shuffled_delta",
+        "loose_stream_exact_accuracy",
+        "token_reduction_ratio"
       ]
     }
   ]

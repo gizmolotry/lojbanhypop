@@ -27,6 +27,7 @@ DEFAULT_TRACK_BY_FAMILY = {
     "M22": "M22",
     "M23": "M23",
     "M24": "M24",
+    "M25": "M25",
 }
 
 
@@ -57,6 +58,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--m22-generalization-report", type=Path, default=None)
     parser.add_argument("--m23-relevance-report", type=Path, default=None)
     parser.add_argument("--m24-compression-report", type=Path, default=None)
+    parser.add_argument("--m25-emergent-report", type=Path, default=None)
 
     parser.add_argument("--execute-m19-direct", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--base-model", type=str, default="C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct")
@@ -85,8 +87,8 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     family_key = str(args.family).strip().upper()
-    if family_key not in {"M19", "M20", "M21", "M22", "M23", "M24"}:
-        raise NotImplementedError("Direct unified eval runner currently supports the M19, M20, M21, M22, M23, and M24 families only.")
+    if family_key not in {"M19", "M20", "M21", "M22", "M23", "M24", "M25"}:
+        raise NotImplementedError("Direct unified eval runner currently supports the M19, M20, M21, M22, M23, M24, and M25 families only.")
     if family_key != "M19" and bool(args.execute_m19_direct):
         raise ValueError("--execute-m19-direct is only valid for family M19.")
     resolved_track = str(args.track).strip() or DEFAULT_TRACK_BY_FAMILY[family_key]
@@ -129,6 +131,7 @@ def main() -> None:
         m22_generalization_report_path=args.m22_generalization_report,
         m23_relevance_report_path=args.m23_relevance_report,
         m24_compression_report_path=args.m24_compression_report,
+        m25_emergent_report_path=args.m25_emergent_report,
         history_manifest_path=history_manifest,
     )
     manifest["run_id"] = run_id
@@ -157,6 +160,7 @@ def main() -> None:
         "m22_generalization_report": _repo_string(args.m22_generalization_report) if args.m22_generalization_report else None,
         "m23_relevance_report": _repo_string(args.m23_relevance_report) if args.m23_relevance_report else None,
         "m24_compression_report": _repo_string(args.m24_compression_report) if args.m24_compression_report else None,
+        "m25_emergent_report": _repo_string(args.m25_emergent_report) if args.m25_emergent_report else None,
     }
 
     manifest_path = output_dir / "direct_unified_eval_manifest.json"

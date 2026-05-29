@@ -1,9 +1,9 @@
 # Ablation Program Spine
 
-- Generated UTC: `2026-05-25T17:58:05.603439+00:00`
+- Generated UTC: `2026-05-29T19:44:31.396786+00:00`
 - Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
 - Source taxonomy config: `configs/experiment_taxonomy.json`
-- Stage count: `27`
+- Stage count: `28`
 
 This is the ordered research spine of the project: legacy letter-series families, normalized M-major families, and the control plane that keeps the program auditable.
 
@@ -578,7 +578,23 @@ This is the ordered research spine of the project: legacy letter-series families
 - Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
 - DAGs: `airflow/dags/m24/lojban_m24_substrate_compression_dag.py`
 
-## 27. Control Plane
+## 27. M25
+
+- Kind: `major_series`
+- Layer: `manifold_and_return_path`
+- Objective: test whether a looser learned Lojbanic bridi stream can preserve causal symbolic compression without hardcoding fixed predicate rows; strict_accuracy remains canonical and phrase accuracy is diagnostic only.
+- Entry count: `0`
+- Runnable rows: `0`
+- Question boundary: M25 emergent bridi grammar-action stream over the M23/M24 symbolic substrate
+- Thesis: test whether a looser learned Lojbanic bridi stream can preserve causal symbolic compression without hardcoding fixed predicate rows; strict_accuracy remains canonical and phrase accuracy is diagnostic only.
+- Allowed axes: `loose grammar-action stream length, symbol budget, trace reconstruction weight, MDL compression pressure, predicted/oracle/shuffled/random/zero stream controls, matched prompt-only token accounting`
+- Frozen/forbidden drift: `full hand-authored Lojban AST as the main result, phrase accuracy as canonical metric, continuous prompt-state leakage into the advisor, promotion without shuffled/random stream controls`
+- Promotion basis: `strict_accuracy, predicted_vs_random_delta, predicted_vs_shuffled_delta, loose_stream_exact_accuracy, token_reduction_ratio, m25_promotion_candidate`
+- Primary metrics: `strict_accuracy, predicted_stream_accuracy, loose_stream_exact_accuracy, predicted_vs_random_delta, predicted_vs_shuffled_delta`
+- Guardrail metrics: `prompt_only_accuracy, token_reduction_ratio, advisor_primary_trace_is_symbolic, continuous_trace_smuggling_detected, generator_parameters_unchanged_after_advisor`
+- DAGs: `airflow/dags/m25/lojban_m25_emergent_bridi_dag.py`
+
+## 28. Control Plane
 
 - Kind: `control_plane`
 - Layer: `control_plane`

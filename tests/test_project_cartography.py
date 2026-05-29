@@ -42,6 +42,9 @@ def test_series_registry_classifies_branch_series_surfaces() -> None:
         "src/lojban_evolution/m24/compression.py": "M24",
         "scripts/m24/run_m24_substrate_compression_suite.py": "M24",
         "airflow/dags/m24/lojban_m24_substrate_compression_dag.py": "M24",
+        "src/lojban_evolution/m25/emergent_bridi.py": "M25",
+        "scripts/m25/run_m25_emergent_bridi_suite.py": "M25",
+        "airflow/dags/m25/lojban_m25_emergent_bridi_dag.py": "M25",
     }
 
     for path, expected_series in cases.items():
@@ -58,16 +61,21 @@ def test_series_registry_preserves_a_to_m24_ordering() -> None:
     assert order.index("M22") < order.index("M23")
     assert "M24" in order
     assert order.index("M23") < order.index("M24")
-    assert {"A-G", "H", "H5", "J", "L", "M19", "M20", "M21", "M22", "M23", "M24"}.issubset(known_series())
+    assert "M25" in order
+    assert order.index("M24") < order.index("M25")
+    assert {"A-G", "H", "H5", "J", "L", "M19", "M20", "M21", "M22", "M23", "M24", "M25"}.issubset(known_series())
 
 
-def test_cartography_infers_m24_standard_family_paths() -> None:
+def test_cartography_infers_m24_and_m25_standard_family_paths() -> None:
     cartography = _load_cartography_module()
 
     cases = {
         "src/lojban_evolution/m24/compression.py": "M24",
         "scripts/m24/run_m24_substrate_compression_suite.py": "M24",
         "airflow/dags/m24/lojban_m24_substrate_compression_dag.py": "M24",
+        "src/lojban_evolution/m25/emergent_bridi.py": "M25",
+        "scripts/m25/run_m25_emergent_bridi_suite.py": "M25",
+        "airflow/dags/m25/lojban_m25_emergent_bridi_dag.py": "M25",
     }
 
     for path, expected_series in cases.items():

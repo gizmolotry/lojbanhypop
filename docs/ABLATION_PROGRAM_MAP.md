@@ -1,6 +1,6 @@
 # Ablation Program Map
 
-- Generated UTC: `2026-05-25T17:58:05.643429+00:00`
+- Generated UTC: `2026-05-29T19:44:31.394756+00:00`
 - Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
 - Concentrated family count: `38`
 
@@ -14,6 +14,7 @@
 - `semantic_generalization_substrate`: M22 semantic coverage generalization gate
 - `causal_relevance_substrate`: M23 causal relevance-router fork
 - `substrate_compression`: M24 substrate compression branch
+- `emergent_bridi_grammar`: M25 loose bridi grammar-action stream branch
 - `control_plane`: the backfill, catalog, and aggregate-suite layer
 
 ## Concentrated Families

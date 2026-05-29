@@ -262,6 +262,49 @@ def test_build_direct_unified_eval_manifest_dynamic_m19() -> None:
     assert guardrails["metrics"]["mean_latent_steps"] == 8.4
 
 
+def test_build_direct_unified_eval_manifest_m25_emergent_bridi() -> None:
+    tmp_path = _scratch_dir()
+    m25_path = _write_json(
+        tmp_path / "m25_emergent_bridi_report.json",
+        {
+            "track": "M25",
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.71,
+                "mean_predicted_stream_accuracy": 0.71,
+                "mean_oracle_stream_accuracy": 0.78,
+                "mean_shuffled_stream_accuracy": 0.42,
+                "mean_random_stream_accuracy": 0.39,
+                "mean_prompt_only_accuracy": 0.69,
+                "mean_loose_stream_exact_accuracy": 0.33,
+                "mean_token_reduction_ratio": 0.44,
+                "mean_m25_promotion_candidate": 1.0,
+                "mean_m25_promotion_gate_pass_rate": 1.0,
+            },
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M25",
+        track="M25",
+        m25_emergent_report_path=m25_path,
+        history_manifest_path=None,
+    )
+
+    assert manifest["family_key"] == "M25"
+    assert manifest["track"] == "M25"
+    assert manifest["headline_metrics"]["strict_accuracy"] == 0.71
+    assert manifest["headline_metrics"]["predicted_stream_accuracy"] == 0.71
+    assert manifest["headline_metrics"]["loose_stream_exact_accuracy"] == 0.33
+    contract = next(row for row in manifest["contract_results"] if row["test_id"] == "m25.emergent_bridi_stream")
+    assert contract["status"] == "available"
+    assert contract["promotion_status"] == "promoted"
+    assert contract["metrics"]["m25_promotion_candidate"] == 1.0
+
+    rendered = render_direct_unified_eval_markdown(manifest)
+    assert "Direct Unified Eval: M25 (M25)" in rendered
+    assert "m25.emergent_bridi_stream" in rendered
+
+
 def test_m21_direct_eval_keeps_pointer_gauntlet_surfaces_separate() -> None:
     tmp_path = _scratch_dir()
     suite_path = _write_json(

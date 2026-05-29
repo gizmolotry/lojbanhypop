@@ -316,3 +316,47 @@ def test_m24_special_stage_metrics_and_order() -> None:
     assert metrics["strict_accuracy_per_substrate_token"] == 0.1062
     assert metrics["judri_binding_accuracy"] == 0.66
     assert metrics["best_cell_accuracy"] == 0.80
+
+
+def test_m25_special_stage_metrics_and_order() -> None:
+    whole_grid = _load_whole_grid_module()
+    payload = {
+        "aggregate_metrics": {
+            "mean_strict_accuracy": 0.71,
+            "mean_predicted_stream_accuracy": 0.71,
+            "mean_oracle_stream_accuracy": 0.78,
+            "mean_shuffled_stream_accuracy": 0.42,
+            "mean_random_stream_accuracy": 0.39,
+            "mean_prompt_only_accuracy": 0.69,
+            "mean_m25_strict_delta_vs_prompt_only": 0.02,
+            "mean_predicted_vs_shuffled_delta": 0.29,
+            "mean_predicted_vs_random_delta": 0.32,
+            "mean_loose_stream_exact_accuracy": 0.33,
+            "mean_stream_type_accuracy": 0.81,
+            "mean_token_reduction_ratio": 0.44,
+            "mean_accuracy_per_loose_symbol": 0.12,
+            "mean_m25_promotion_gate_pass_rate": 1.0,
+            "mean_m25_promotion_candidate": 1.0,
+            "mean_m25_gate_stream_beats_shuffled": 1.0,
+        }
+    }
+
+    metrics = whole_grid._special_stage_metrics("M25", payload)
+
+    assert "M25" in whole_grid.STAGE_ORDER
+    assert whole_grid.STAGE_ORDER.index("M24") < whole_grid.STAGE_ORDER.index("M25")
+    assert whole_grid.STAGE_ORDER.index("M25") < whole_grid.STAGE_ORDER.index("Control Plane")
+    assert list(metrics)[:4] == [
+        "strict_accuracy",
+        "m25_promotion_candidate",
+        "m25_promotion_gate_pass_rate",
+        "loose_stream_exact_accuracy",
+    ]
+    assert metrics["strict_accuracy"] == 0.71
+    assert metrics["predicted_stream_accuracy"] == 0.71
+    assert metrics["shuffled_stream_accuracy"] == 0.42
+    assert metrics["predicted_vs_shuffled_delta"] == 0.29
+    assert metrics["loose_stream_exact_accuracy"] == 0.33
+    assert metrics["stream_type_accuracy"] == 0.81
+    assert metrics["token_reduction_ratio"] == 0.44
+    assert metrics["m25_promotion_candidate"] == 1.0

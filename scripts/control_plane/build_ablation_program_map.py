@@ -71,6 +71,7 @@ FAMILY_DAG_MAP: dict[str, list[str]] = {
     "M22": ["airflow/dags/m22/lojban_m22_semantic_generalization_dag.py"],
     "M23": ["airflow/dags/m23/lojban_m23_relevance_router_dag.py"],
     "M24": ["airflow/dags/m24/lojban_m24_substrate_compression_dag.py"],
+    "M25": ["airflow/dags/m25/lojban_m25_emergent_bridi_dag.py"],
     "History": [
         "airflow/dags/control_plane/lojban_ablation_history_backfill_dag.py",
         "airflow/dags/m_bridge/lojban_m_bridge_ablation_test_suite_dag.py",
@@ -122,6 +123,7 @@ M_FAMILY_ORDER = [
     "M22",
     "M23",
     "M24",
+    "M25",
 ]
 
 
@@ -275,6 +277,8 @@ def _family_key(entry: dict[str, Any]) -> str | None:
         return "M23"
     if normalized.startswith("M24"):
         return "M24"
+    if normalized.startswith("M25"):
+        return "M25"
     return None
 
 
@@ -293,6 +297,8 @@ def _program_layer(family_key: str) -> str:
         return "causal_relevance_substrate"
     if family_key == "M24":
         return "substrate_compression"
+    if family_key == "M25":
+        return "emergent_bridi_grammar"
     return "manifold_and_return_path"
 
 
@@ -531,6 +537,7 @@ def _render_markdown(manifest: dict[str, Any]) -> str:
     lines.append("- `semantic_generalization_substrate`: M22 semantic coverage generalization gate")
     lines.append("- `causal_relevance_substrate`: M23 causal relevance-router fork")
     lines.append("- `substrate_compression`: M24 substrate compression branch")
+    lines.append("- `emergent_bridi_grammar`: M25 loose bridi grammar-action stream branch")
     lines.append("- `control_plane`: the backfill, catalog, and aggregate-suite layer")
     lines.append("")
     lines.append("## Concentrated Families")

@@ -1,7 +1,7 @@
 # Whole Ablation Grid
 
-- run_id: `m24_2_b11_g32_a48_train12000_eval6000_tenseed_grid_20260528`
-- generated: `2026-05-28T21:57:50.155390+00:00`
+- run_id: `m25_medium_whole_grid_20260529`
+- generated: `2026-05-29T19:07:15.435821+00:00`
 - history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
 - program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m24_2_program_spine_v2_20260525/ablation_program_spine_manifest.json`
 
@@ -175,4 +175,4 @@
 
 - The fresh part of the whole grid is now the recovered legacy runnable surface: A-G, H/H5/J, L6, and the phase-eval lanes under one manifest.
 - The modern M rows are represented through artifact-backed anchors and the control-plane lineage manifests, so the whole program is visible without pretending every stage was freshly retrained.
-- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, M23 the causal relevance-router fork, and M24 the substrate-first compression fork.
+- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, M23 the causal relevance-router fork, M24 the substrate-first compression fork, and M25 the emergent loose bridi grammar stream fork.

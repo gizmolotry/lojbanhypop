@@ -45,6 +45,7 @@ DEFAULT_M21_LOCK_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" /
 DEFAULT_M22_GENERALIZATION_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m22_semantic_generalization"
 DEFAULT_M23_RELEVANCE_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m23_relevance_suite"
 DEFAULT_M24_COMPRESSION_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m24_substrate_compression"
+DEFAULT_M25_EMERGENT_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m25_emergent_bridi"
 
 STAGE_ORDER = [
     "A-G",
@@ -73,6 +74,7 @@ STAGE_ORDER = [
     "M22",
     "M23",
     "M24",
+    "M25",
     "Control Plane",
 ]
 
@@ -227,6 +229,31 @@ KEY_METRICS = [
     "m24_2_gate_hard_trace_beats_random",
     "m24_2_gate_hard_trace_beats_prompt_only",
     "m24_2_gate_token_reduction_positive",
+    "predicted_stream_accuracy",
+    "oracle_stream_accuracy",
+    "shuffled_stream_accuracy",
+    "random_stream_accuracy",
+    "zero_stream_accuracy",
+    "m25_strict_delta_vs_prompt_only",
+    "oracle_stream_delta",
+    "stream_advisor_delta",
+    "loose_stream_exact_accuracy",
+    "stream_type_accuracy",
+    "stream_value_accuracy",
+    "stream_aux_accuracy",
+    "loose_symbol_to_prompt_ratio",
+    "prompt_to_loose_symbol_ratio",
+    "loose_symbol_budget",
+    "accuracy_per_loose_symbol",
+    "accuracy_per_prompt_token",
+    "m25_promotion_gate_pass_rate",
+    "m25_promotion_candidate",
+    "m25_gate_strict_accuracy_retained",
+    "m25_gate_stream_beats_shuffled",
+    "m25_gate_stream_beats_random",
+    "m25_gate_token_reduction_positive",
+    "m25_gate_nonzero_stream_reconstruction",
+    "m25_gate_symbolic_trace_only",
     "phrase_accuracy",
     "phrase_exact_accuracy",
     "semantic_coverage_strict_accuracy",
@@ -298,7 +325,7 @@ def main() -> None:
             row = _m3_row(stage, m_bridge)
         elif stage_key == "M11":
             row = _m11_row(stage, m_bridge)
-        elif stage_key in {"M14", "M18", "M19", "M20", "M21", "M22", "M23", "M24"}:
+        elif stage_key in {"M14", "M18", "M19", "M20", "M21", "M22", "M23", "M24", "M25"}:
             row = _special_stage_row(stage)
         elif stage_key == "Control Plane":
             row = _control_plane_row(stage, history_manifest, program_spine_manifest, legacy_grid_manifest, m_bridge_manifest)
@@ -452,7 +479,7 @@ def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
     anchor = _explicit_stage_anchor(stage_key) or _resolve_generic_anchor(stage)
     payload = _read_json_optional(anchor) if anchor else None
     metrics = _special_stage_metrics(stage_key, payload)
-    stage_for_row = _stage_with_direct_contract(stage, payload) if stage_key in {"M19", "M20", "M21", "M22", "M23", "M24"} else stage
+    stage_for_row = _stage_with_direct_contract(stage, payload) if stage_key in {"M19", "M20", "M21", "M22", "M23", "M24", "M25"} else stage
     supplemental: list[str] = []
     notes: list[str] = []
     if stage_key == "M14":
@@ -499,12 +526,17 @@ def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
             "M24 is the M24.1 matched trace corruption and compression-pressure fork; "
             "strict accuracy is canonical, phrase accuracy is diagnostic only, and promotion requires m24_promotion_candidate=1.0"
         )
+    if stage_key == "M25":
+        notes.append(
+            "M25 is the emergent loose bridi grammar-action stream fork over M24.2; "
+            "strict accuracy is canonical, phrase accuracy is diagnostic only, and promotion requires m25_promotion_candidate=1.0"
+        )
     return _row(
         stage_for_row,
         "artifact_anchor" if anchor else "runnable_no_anchor",
         _repo_relative(anchor) if anchor else None,
         [path for path in supplemental if path],
-        _limit_metrics(metrics, limit=18 if stage_key in {"M21", "M22", "M23", "M24"} else 8),
+        _limit_metrics(metrics, limit=18 if stage_key in {"M21", "M22", "M23", "M24", "M25"} else 8),
         notes,
     )
 
@@ -649,6 +681,13 @@ def _explicit_stage_anchor(stage_key: str) -> Path | None:
         compression_anchor = _latest_named_manifest(DEFAULT_M24_COMPRESSION_ROOT, "m24_substrate_compression_report.json")
         if compression_anchor and compression_anchor.exists():
             return compression_anchor
+    if stage_key == "M25":
+        direct_anchor = _latest_direct_unified_eval_anchor("M25")
+        if direct_anchor and direct_anchor.exists():
+            return direct_anchor
+        emergent_anchor = _latest_named_manifest(DEFAULT_M25_EMERGENT_ROOT, "m25_emergent_bridi_report.json")
+        if emergent_anchor and emergent_anchor.exists():
+            return emergent_anchor
     return None
 
 
@@ -1174,6 +1213,66 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
         for key, value in metrics.items():
             ordered_metrics.setdefault(key, value)
         return ordered_metrics
+    if stage_key == "M25":
+        metrics: dict[str, float] = {}
+        headline = payload.get("headline_metrics", {})
+        aggregate = payload.get("aggregate_metrics", {})
+        top = payload.get("metrics", {})
+        for source in (headline, aggregate, top, payload):
+            if not isinstance(source, dict):
+                continue
+            _merge_existing_metrics(
+                metrics,
+                source,
+                {
+                    "strict_accuracy": ("strict_accuracy", "mean_strict_accuracy"),
+                    "predicted_stream_accuracy": ("predicted_stream_accuracy", "mean_predicted_stream_accuracy"),
+                    "oracle_stream_accuracy": ("oracle_stream_accuracy", "mean_oracle_stream_accuracy"),
+                    "shuffled_stream_accuracy": ("shuffled_stream_accuracy", "mean_shuffled_stream_accuracy"),
+                    "random_stream_accuracy": ("random_stream_accuracy", "mean_random_stream_accuracy"),
+                    "zero_stream_accuracy": ("zero_stream_accuracy", "mean_zero_stream_accuracy"),
+                    "prompt_only_accuracy": ("prompt_only_accuracy", "mean_prompt_only_accuracy"),
+                    "m25_strict_delta_vs_prompt_only": ("m25_strict_delta_vs_prompt_only", "mean_m25_strict_delta_vs_prompt_only"),
+                    "predicted_vs_shuffled_delta": ("predicted_vs_shuffled_delta", "mean_predicted_vs_shuffled_delta"),
+                    "predicted_vs_random_delta": ("predicted_vs_random_delta", "mean_predicted_vs_random_delta"),
+                    "oracle_stream_delta": ("oracle_stream_delta", "mean_oracle_stream_delta"),
+                    "stream_advisor_delta": ("stream_advisor_delta", "mean_stream_advisor_delta"),
+                    "loose_stream_exact_accuracy": ("loose_stream_exact_accuracy", "mean_loose_stream_exact_accuracy"),
+                    "stream_type_accuracy": ("stream_type_accuracy", "mean_stream_type_accuracy"),
+                    "stream_value_accuracy": ("stream_value_accuracy", "mean_stream_value_accuracy"),
+                    "stream_aux_accuracy": ("stream_aux_accuracy", "mean_stream_aux_accuracy"),
+                    "loose_symbol_to_prompt_ratio": ("loose_symbol_to_prompt_ratio", "mean_loose_symbol_to_prompt_ratio"),
+                    "prompt_to_loose_symbol_ratio": ("prompt_to_loose_symbol_ratio", "mean_prompt_to_loose_symbol_ratio"),
+                    "token_reduction_ratio": ("token_reduction_ratio", "mean_token_reduction_ratio"),
+                    "accuracy_per_loose_symbol": ("accuracy_per_loose_symbol", "mean_accuracy_per_loose_symbol"),
+                    "accuracy_per_prompt_token": ("accuracy_per_prompt_token", "mean_accuracy_per_prompt_token"),
+                    "m25_promotion_gate_pass_rate": ("m25_promotion_gate_pass_rate", "mean_m25_promotion_gate_pass_rate"),
+                    "m25_promotion_candidate": ("m25_promotion_candidate", "mean_m25_promotion_candidate"),
+                    "m25_gate_strict_accuracy_retained": ("m25_gate_strict_accuracy_retained", "mean_m25_gate_strict_accuracy_retained"),
+                    "m25_gate_stream_beats_shuffled": ("m25_gate_stream_beats_shuffled", "mean_m25_gate_stream_beats_shuffled"),
+                    "m25_gate_stream_beats_random": ("m25_gate_stream_beats_random", "mean_m25_gate_stream_beats_random"),
+                    "m25_gate_token_reduction_positive": ("m25_gate_token_reduction_positive", "mean_m25_gate_token_reduction_positive"),
+                    "m25_gate_nonzero_stream_reconstruction": ("m25_gate_nonzero_stream_reconstruction", "mean_m25_gate_nonzero_stream_reconstruction"),
+                    "m25_gate_symbolic_trace_only": ("m25_gate_symbolic_trace_only", "mean_m25_gate_symbolic_trace_only"),
+                    "generator_parameters_unchanged_after_advisor": ("generator_parameters_unchanged_after_advisor", "mean_generator_parameters_unchanged_after_advisor"),
+                },
+            )
+        priority = (
+            "strict_accuracy",
+            "m25_promotion_candidate",
+            "m25_promotion_gate_pass_rate",
+            "loose_stream_exact_accuracy",
+            "token_reduction_ratio",
+            "predicted_vs_shuffled_delta",
+            "predicted_vs_random_delta",
+        )
+        ordered_metrics: dict[str, float] = {}
+        for key in priority:
+            if key in metrics:
+                ordered_metrics[key] = metrics[key]
+        for key, value in metrics.items():
+            ordered_metrics.setdefault(key, value)
+        return ordered_metrics
     return _generic_metrics(payload)
 
 
@@ -1391,7 +1490,7 @@ def _render_markdown(manifest: dict[str, Any]) -> str:
     lines.extend(["", "## Read", ""])
     lines.append("- The fresh part of the whole grid is now the recovered legacy runnable surface: A-G, H/H5/J, L6, and the phase-eval lanes under one manifest.")
     lines.append("- The modern M rows are represented through artifact-backed anchors and the control-plane lineage manifests, so the whole program is visible without pretending every stage was freshly retrained.")
-    lines.append("- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, M23 the causal relevance-router fork, and M24 the substrate-first compression fork.")
+    lines.append("- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, M23 the causal relevance-router fork, M24 the substrate-first compression fork, and M25 the emergent loose bridi grammar stream fork.")
     return "\n".join(lines) + "\n"
 
 
