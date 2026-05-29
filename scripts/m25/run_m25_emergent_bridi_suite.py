@@ -53,6 +53,8 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
         "zero_stream_accuracy",
         "prompt_only_accuracy",
         "m25_strict_delta_vs_prompt_only",
+        "matched_prompt_accuracy",
+        "m25_strict_delta_vs_matched_prompt",
         "predicted_vs_shuffled_delta",
         "predicted_vs_random_delta",
         "oracle_stream_delta",
@@ -68,15 +70,23 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
         "mean_predicted_emitted_symbols_after_bottleneck",
         "mean_oracle_emitted_symbols_after_bottleneck",
         "mean_prompt_tokens",
+        "mean_matched_prompt_tokens",
         "loose_symbol_to_prompt_ratio",
         "prompt_to_loose_symbol_ratio",
+        "loose_symbol_to_matched_prompt_ratio",
+        "matched_prompt_to_loose_symbol_ratio",
         "token_reduction_ratio",
+        "matched_prompt_token_reduction_ratio",
         "accuracy_per_loose_symbol",
         "accuracy_per_prompt_token",
+        "matched_prompt_accuracy_per_token",
+        "m25_accuracy_per_symbol_delta_vs_matched_prompt",
         "loose_symbol_budget",
+        "matched_prompt_token_budget",
         "hard_symbol_budget_active",
         "advisor_primary_trace_is_symbolic",
         "continuous_trace_smuggling_detected",
+        "m25_gate_beats_matched_prompt",
         "generator_parameter_max_delta_after_advisor",
         "generator_parameters_unchanged_after_advisor",
         "m25_promotion_gate_pass_rate",
@@ -120,6 +130,7 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
             max_frames=int(args.max_frames),
             max_symbols=int(args.max_symbols),
             symbol_budget=int(args.symbol_budget) if int(args.symbol_budget) > 0 else None,
+            matched_prompt_budget=int(args.matched_prompt_budget) if int(args.matched_prompt_budget) > 0 else None,
             trace_weight=float(args.trace_weight),
             answer_weight=float(args.answer_weight),
             mdl_weight=float(args.mdl_weight),
@@ -137,6 +148,7 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
                 "advisor_history": result["advisor_history"],
                 "oracle_advisor_history": result["oracle_advisor_history"],
                 "prompt_history": result["prompt_history"],
+                "matched_prompt_history": result["matched_prompt_history"],
                 "sample_eval_rows": [row.to_json() for row in result["eval_examples"][:3]],
             }
         )
@@ -169,6 +181,7 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
             "prompt_epochs": int(args.prompt_epochs),
             "max_symbols": int(args.max_symbols),
             "symbol_budget": int(args.symbol_budget),
+            "matched_prompt_budget": int(args.matched_prompt_budget),
             "trace_weight": float(args.trace_weight),
             "answer_weight": float(args.answer_weight),
             "mdl_weight": float(args.mdl_weight),
@@ -178,6 +191,7 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
             "loose_integer_bridi_stream_only",
             "frozen_generator_before_advisor_training",
             "predicted_oracle_shuffled_random_zero_controls",
+            "matched_token_prompt_control",
         ],
         "seed_reports": seed_reports,
         "aggregate_metrics": aggregate,
@@ -205,6 +219,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--max-frames", type=int, default=6)
     parser.add_argument("--max-symbols", type=int, default=32)
     parser.add_argument("--symbol-budget", type=int, default=0)
+    parser.add_argument("--matched-prompt-budget", type=int, default=0)
     parser.add_argument("--trace-weight", type=float, default=2.0)
     parser.add_argument("--answer-weight", type=float, default=0.25)
     parser.add_argument("--mdl-weight", type=float, default=DEFAULT_M25_MDL_WEIGHT)

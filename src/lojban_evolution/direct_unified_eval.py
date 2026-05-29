@@ -364,6 +364,8 @@ KEY_METRICS = (
     "random_stream_accuracy",
     "zero_stream_accuracy",
     "m25_strict_delta_vs_prompt_only",
+    "matched_prompt_accuracy",
+    "m25_strict_delta_vs_matched_prompt",
     "oracle_stream_delta",
     "stream_advisor_delta",
     "loose_stream_exact_accuracy",
@@ -372,9 +374,17 @@ KEY_METRICS = (
     "stream_aux_accuracy",
     "loose_symbol_to_prompt_ratio",
     "prompt_to_loose_symbol_ratio",
+    "loose_symbol_to_matched_prompt_ratio",
+    "matched_prompt_to_loose_symbol_ratio",
     "loose_symbol_budget",
+    "matched_prompt_token_budget",
+    "mean_matched_prompt_tokens",
+    "matched_prompt_token_reduction_ratio",
     "accuracy_per_loose_symbol",
     "accuracy_per_prompt_token",
+    "matched_prompt_accuracy_per_token",
+    "m25_accuracy_per_symbol_delta_vs_matched_prompt",
+    "m25_gate_beats_matched_prompt",
     "m25_promotion_gate_pass_rate",
     "m25_promotion_candidate",
     "m25_gate_strict_accuracy_retained",
@@ -2128,6 +2138,8 @@ def _m25_emergent_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("zero_stream_accuracy", aggregate.get("mean_zero_stream_accuracy"))
         metrics.setdefault("prompt_only_accuracy", aggregate.get("mean_prompt_only_accuracy"))
         metrics.setdefault("m25_strict_delta_vs_prompt_only", aggregate.get("mean_m25_strict_delta_vs_prompt_only"))
+        metrics.setdefault("matched_prompt_accuracy", aggregate.get("mean_matched_prompt_accuracy"))
+        metrics.setdefault("m25_strict_delta_vs_matched_prompt", aggregate.get("mean_m25_strict_delta_vs_matched_prompt"))
         metrics.setdefault("predicted_vs_shuffled_delta", aggregate.get("mean_predicted_vs_shuffled_delta"))
         metrics.setdefault("predicted_vs_random_delta", aggregate.get("mean_predicted_vs_random_delta"))
         metrics.setdefault("oracle_stream_delta", aggregate.get("mean_oracle_stream_delta"))
@@ -2138,10 +2150,21 @@ def _m25_emergent_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("stream_aux_accuracy", aggregate.get("mean_stream_aux_accuracy"))
         metrics.setdefault("loose_symbol_to_prompt_ratio", aggregate.get("mean_loose_symbol_to_prompt_ratio"))
         metrics.setdefault("prompt_to_loose_symbol_ratio", aggregate.get("mean_prompt_to_loose_symbol_ratio"))
+        metrics.setdefault("loose_symbol_to_matched_prompt_ratio", aggregate.get("mean_loose_symbol_to_matched_prompt_ratio"))
+        metrics.setdefault("matched_prompt_to_loose_symbol_ratio", aggregate.get("mean_matched_prompt_to_loose_symbol_ratio"))
         metrics.setdefault("token_reduction_ratio", aggregate.get("mean_token_reduction_ratio"))
+        metrics.setdefault("matched_prompt_token_reduction_ratio", aggregate.get("mean_matched_prompt_token_reduction_ratio"))
         metrics.setdefault("accuracy_per_loose_symbol", aggregate.get("mean_accuracy_per_loose_symbol"))
         metrics.setdefault("accuracy_per_prompt_token", aggregate.get("mean_accuracy_per_prompt_token"))
+        metrics.setdefault("matched_prompt_accuracy_per_token", aggregate.get("mean_matched_prompt_accuracy_per_token"))
+        metrics.setdefault(
+            "m25_accuracy_per_symbol_delta_vs_matched_prompt",
+            aggregate.get("mean_m25_accuracy_per_symbol_delta_vs_matched_prompt"),
+        )
         metrics.setdefault("loose_symbol_budget", aggregate.get("mean_loose_symbol_budget"))
+        metrics.setdefault("matched_prompt_token_budget", aggregate.get("mean_matched_prompt_token_budget"))
+        metrics.setdefault("mean_matched_prompt_tokens", aggregate.get("mean_mean_matched_prompt_tokens"))
+        metrics.setdefault("m25_gate_beats_matched_prompt", aggregate.get("mean_m25_gate_beats_matched_prompt"))
         metrics.setdefault("m25_promotion_gate_pass_rate", aggregate.get("mean_m25_promotion_gate_pass_rate"))
         metrics.setdefault("m25_promotion_candidate", aggregate.get("mean_m25_promotion_candidate"))
     seed_rows: list[dict[str, Any]] = []

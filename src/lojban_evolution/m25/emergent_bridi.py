@@ -335,6 +335,18 @@ def budget_loose_stream_symbols(stream: torch.Tensor, symbol_budget: int | None 
     return out
 
 
+def budget_prompt_tokens(input_ids: torch.Tensor, token_budget: int | None = None) -> torch.Tensor:
+    """Keep only the same amount of prompt text as the bridi stream is allowed to use."""
+
+    if token_budget is None or int(token_budget) <= 0:
+        return input_ids.long()
+    out = torch.zeros_like(input_ids).long()
+    keep = min(int(token_budget), int(input_ids.shape[1]))
+    if keep > 0:
+        out[:, :keep] = input_ids[:, :keep].long()
+    return out
+
+
 def loose_stream_symbol_counts(stream: torch.Tensor) -> torch.Tensor:
     return stream[:, :, 0].ne(LOOSE_PAD).sum(dim=-1).float()
 
@@ -477,6 +489,7 @@ def _train_prompt_control(
     vocab: dict[str, int],
     *,
     max_symbols: int,
+    prompt_token_budget: int | None = None,
     epochs: int,
     batch_size: int,
     learning_rate: float,
@@ -494,7 +507,8 @@ def _train_prompt_control(
         batches = 0
         for batch in loader:
             target = batch["answer_id"].to(device)
-            logits = control(batch["input_ids"].to(device))
+            input_ids = budget_prompt_tokens(batch["input_ids"].to(device), prompt_token_budget)
+            logits = control(input_ids)
             loss = F.cross_entropy(logits, target)
             optimizer.zero_grad(set_to_none=True)
             loss.backward()
@@ -531,6 +545,8 @@ def evaluate_m25_emergent_bridi(
     batch_size: int = 128,
     device: str | torch.device = "cpu",
     seed: int = 0,
+    matched_prompt_control: PromptOnlyControl | None = None,
+    matched_prompt_budget: int | None = None,
 ) -> dict[str, Any]:
     device_obj = torch.device(device)
     dataset = M25LooseBridiDataset(examples, vocab, max_symbols=generator.max_symbols)
@@ -538,12 +554,15 @@ def evaluate_m25_emergent_bridi(
     generator.eval()
     advisor.eval()
     prompt_control.eval()
+    if matched_prompt_control is not None:
+        matched_prompt_control.eval()
     if oracle_advisor is not None:
         oracle_advisor.eval()
     logits: dict[str, list[torch.Tensor]] = defaultdict(list)
     streams: dict[str, list[torch.Tensor]] = defaultdict(list)
     targets: list[torch.Tensor] = []
     prompt_counts: list[torch.Tensor] = []
+    matched_prompt_counts: list[torch.Tensor] = []
     surfaces: list[str] = []
     with torch.no_grad():
         for batch_idx, batch in enumerate(loader):
@@ -561,6 +580,10 @@ def evaluate_m25_emergent_bridi(
                 logits["oracle_trained_oracle"].append(oracle_advisor(oracle).detach().cpu())
                 logits["oracle_trained_random"].append(oracle_advisor(random_stream).detach().cpu())
             logits["prompt"].append(prompt_control(input_ids).detach().cpu())
+            if matched_prompt_control is not None:
+                matched_input_ids = budget_prompt_tokens(input_ids, matched_prompt_budget)
+                logits["matched_prompt"].append(matched_prompt_control(matched_input_ids).detach().cpu())
+                matched_prompt_counts.append(matched_input_ids.ne(0).sum(dim=-1).float().detach().cpu())
             streams["predicted"].append(predicted.detach().cpu())
             streams["oracle"].append(oracle.detach().cpu())
             targets.append(target.detach().cpu())
@@ -575,11 +598,14 @@ def evaluate_m25_emergent_bridi(
     random_acc = _accuracy(all_logits["random"], target_all)
     zero_acc = _accuracy(all_logits["zero"], target_all)
     prompt_acc = _accuracy(all_logits["prompt"], target_all)
+    matched_prompt_acc = _accuracy(all_logits["matched_prompt"], target_all) if "matched_prompt" in all_logits else 0.0
     pred_count = loose_stream_symbol_counts(all_streams["predicted"])
     oracle_count = loose_stream_symbol_counts(all_streams["oracle"])
     prompt_count = torch.cat(prompt_counts, dim=0)
+    matched_prompt_count = torch.cat(matched_prompt_counts, dim=0) if matched_prompt_counts else torch.zeros_like(prompt_count)
     mean_pred = float(pred_count.mean().item()) if pred_count.numel() else 0.0
     mean_prompt = float(prompt_count.mean().item()) if prompt_count.numel() else 0.0
+    mean_matched_prompt = float(matched_prompt_count.mean().item()) if matched_prompt_count.numel() else 0.0
     metrics = {
         "strict_accuracy": predicted_acc,
         "synthetic_world_accuracy": predicted_acc,
@@ -591,6 +617,8 @@ def evaluate_m25_emergent_bridi(
         "zero_stream_accuracy": zero_acc,
         "prompt_only_accuracy": prompt_acc,
         "m25_strict_delta_vs_prompt_only": float(predicted_acc - prompt_acc),
+        "matched_prompt_accuracy": matched_prompt_acc,
+        "m25_strict_delta_vs_matched_prompt": float(predicted_acc - matched_prompt_acc),
         "predicted_vs_shuffled_delta": float(predicted_acc - shuffled_acc),
         "predicted_vs_random_delta": float(predicted_acc - random_acc),
         "oracle_stream_delta": float(oracle_acc - predicted_acc),
@@ -598,15 +626,25 @@ def evaluate_m25_emergent_bridi(
         "mean_predicted_emitted_symbols_after_bottleneck": mean_pred,
         "mean_oracle_emitted_symbols_after_bottleneck": float(oracle_count.mean().item()) if oracle_count.numel() else 0.0,
         "mean_prompt_tokens": mean_prompt,
+        "mean_matched_prompt_tokens": mean_matched_prompt,
         "loose_symbol_to_prompt_ratio": float(mean_pred / max(1.0, mean_prompt)),
         "prompt_to_loose_symbol_ratio": float(mean_prompt / max(1.0, mean_pred)),
+        "loose_symbol_to_matched_prompt_ratio": float(mean_pred / max(1.0, mean_matched_prompt)),
+        "matched_prompt_to_loose_symbol_ratio": float(mean_matched_prompt / max(1.0, mean_pred)),
         "token_reduction_ratio": float(1.0 - mean_pred / max(1.0, mean_prompt)),
+        "matched_prompt_token_reduction_ratio": float(1.0 - mean_matched_prompt / max(1.0, mean_prompt)),
         "accuracy_per_loose_symbol": float(predicted_acc / max(1.0, mean_pred)),
         "accuracy_per_prompt_token": float(prompt_acc / max(1.0, mean_prompt)),
+        "matched_prompt_accuracy_per_token": float(matched_prompt_acc / max(1.0, mean_matched_prompt)),
+        "m25_accuracy_per_symbol_delta_vs_matched_prompt": float(
+            predicted_acc / max(1.0, mean_pred) - matched_prompt_acc / max(1.0, mean_matched_prompt)
+        ),
         "loose_symbol_budget": float(advisor.symbol_budget or 0),
+        "matched_prompt_token_budget": float(matched_prompt_budget or 0),
         "hard_symbol_budget_active": 1.0 if advisor.symbol_budget is not None else 0.0,
         "advisor_primary_trace_is_symbolic": 1.0,
         "continuous_trace_smuggling_detected": 0.0,
+        "m25_gate_beats_matched_prompt": 1.0 if predicted_acc >= matched_prompt_acc else 0.0,
     }
     metrics.update(_component_accuracy(all_streams["predicted"], all_streams["oracle"]))
     if oracle_advisor is not None:
@@ -666,6 +704,7 @@ def train_m25_emergent_bridi(
     max_frames: int = DEFAULT_MAX_FRAMES,
     max_symbols: int = DEFAULT_MAX_SYMBOLS,
     symbol_budget: int | None = None,
+    matched_prompt_budget: int | None = None,
     trace_weight: float = 2.0,
     answer_weight: float = 0.25,
     mdl_weight: float = DEFAULT_M25_MDL_WEIGHT,
@@ -710,6 +749,16 @@ def train_m25_emergent_bridi(
     advisor = LooseStreamAdvisor(max_symbols=max_symbols, hidden_dim=advisor_hidden_dim, symbol_budget=symbol_budget).to(device_obj)
     oracle_advisor = LooseStreamAdvisor(max_symbols=max_symbols, hidden_dim=advisor_hidden_dim, symbol_budget=symbol_budget).to(device_obj)
     prompt_control = PromptOnlyControl(vocab_size=len(vocab), embedding_dim=max(8, embedding_dim // 2), hidden_dim=advisor_hidden_dim).to(device_obj)
+    resolved_matched_prompt_budget = int(matched_prompt_budget or 0)
+    if resolved_matched_prompt_budget <= 0:
+        resolved_matched_prompt_budget = int(symbol_budget or 0)
+    if resolved_matched_prompt_budget <= 0:
+        resolved_matched_prompt_budget = int(max_symbols)
+    matched_prompt_control = PromptOnlyControl(
+        vocab_size=len(vocab),
+        embedding_dim=max(8, embedding_dim // 2),
+        hidden_dim=advisor_hidden_dim,
+    ).to(device_obj)
     advisor_history = _train_stream_advisor(
         generator,
         advisor,
@@ -745,11 +794,25 @@ def train_m25_emergent_bridi(
         device=device_obj,
         seed=int(seed) + 300,
     )
+    matched_prompt_history = _train_prompt_control(
+        matched_prompt_control,
+        train_examples,
+        vocab,
+        max_symbols=int(max_symbols),
+        prompt_token_budget=resolved_matched_prompt_budget,
+        epochs=int(prompt_epochs if prompt_epochs is not None else advisor_epochs),
+        batch_size=int(batch_size),
+        learning_rate=float(advisor_learning_rate),
+        device=device_obj,
+        seed=int(seed) + 400,
+    )
     eval_payload = evaluate_m25_emergent_bridi(
         generator=generator,
         advisor=advisor,
         oracle_advisor=oracle_advisor,
         prompt_control=prompt_control,
+        matched_prompt_control=matched_prompt_control,
+        matched_prompt_budget=resolved_matched_prompt_budget,
         examples=eval_examples,
         vocab=vocab,
         batch_size=int(batch_size),
@@ -783,6 +846,7 @@ def train_m25_emergent_bridi(
             "max_frames": int(max_frames),
             "max_symbols": int(max_symbols),
             "symbol_budget": int(symbol_budget or 0),
+            "matched_prompt_budget": int(resolved_matched_prompt_budget),
             "trace_weight": float(trace_weight),
             "answer_weight": float(answer_weight),
             "mdl_weight": float(mdl_weight),
@@ -794,6 +858,7 @@ def train_m25_emergent_bridi(
         "advisor_history": advisor_history,
         "oracle_advisor_history": oracle_advisor_history,
         "prompt_history": prompt_history,
+        "matched_prompt_history": matched_prompt_history,
         "train_examples": train_examples,
         "eval_examples": eval_examples,
         "vocab_size": len(vocab),

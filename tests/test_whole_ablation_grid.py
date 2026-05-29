@@ -329,12 +329,17 @@ def test_m25_special_stage_metrics_and_order() -> None:
             "mean_random_stream_accuracy": 0.39,
             "mean_prompt_only_accuracy": 0.69,
             "mean_m25_strict_delta_vs_prompt_only": 0.02,
+            "mean_matched_prompt_accuracy": 0.52,
+            "mean_m25_strict_delta_vs_matched_prompt": 0.19,
             "mean_predicted_vs_shuffled_delta": 0.29,
             "mean_predicted_vs_random_delta": 0.32,
             "mean_loose_stream_exact_accuracy": 0.33,
             "mean_stream_type_accuracy": 0.81,
             "mean_token_reduction_ratio": 0.44,
             "mean_accuracy_per_loose_symbol": 0.12,
+            "mean_matched_prompt_accuracy_per_token": 0.065,
+            "mean_m25_accuracy_per_symbol_delta_vs_matched_prompt": 0.055,
+            "mean_m25_gate_beats_matched_prompt": 1.0,
             "mean_m25_promotion_gate_pass_rate": 1.0,
             "mean_m25_promotion_candidate": 1.0,
             "mean_m25_gate_stream_beats_shuffled": 1.0,
@@ -356,6 +361,8 @@ def test_m25_special_stage_metrics_and_order() -> None:
     assert metrics["predicted_stream_accuracy"] == 0.71
     assert metrics["shuffled_stream_accuracy"] == 0.42
     assert metrics["predicted_vs_shuffled_delta"] == 0.29
+    assert metrics["matched_prompt_accuracy"] == 0.52
+    assert metrics["m25_strict_delta_vs_matched_prompt"] == 0.19
     assert metrics["loose_stream_exact_accuracy"] == 0.33
     assert metrics["stream_type_accuracy"] == 0.81
     assert metrics["token_reduction_ratio"] == 0.44

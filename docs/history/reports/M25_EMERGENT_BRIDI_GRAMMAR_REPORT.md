@@ -49,6 +49,26 @@ M25 shows that the looser bridi grammar stream can become a meaningful symbolic 
 
 Prompt-only remains near perfect on this synthetic surface, so M25 is not a final assistant architecture. It is a stronger internal-language compression result than the initial M25 smoke runs.
 
+## Matched-Token Prompt Control
+
+The original prompt-only control is an intentionally unfair upper bound: it reads the whole English prompt. M25 now also trains and reports a matched-token prompt control. That classifier receives only the first `N` prompt tokens, where `N` defaults to the same hard symbol budget used by the loose bridi stream.
+
+New ledger metrics include:
+
+| Metric | Meaning |
+| --- | --- |
+| `matched_prompt_accuracy` | strict accuracy of the same-budget prompt-only classifier |
+| `m25_strict_delta_vs_matched_prompt` | bridi stream strict accuracy minus matched prompt strict accuracy |
+| `matched_prompt_token_budget` | text budget used by the matched prompt control |
+| `matched_prompt_accuracy_per_token` | matched prompt token-efficiency diagnostic |
+| `m25_accuracy_per_symbol_delta_vs_matched_prompt` | stream efficiency minus matched prompt efficiency |
+
+CPU plumbing smoke:
+
+`artifacts/runs/telemetry/raw/ablation/hypercube/m25_emergent_bridi/m25_matched_prompt_cpu_smoke_20260529/m25_emergent_bridi_report.json`
+
+The CPU smoke confirms the reporting path, not the scientific claim. It is tiny and undertrained. The matched-token control needs to be rerun at the medium and six-seed scales after CUDA recovers.
+
 ## Stress Attempt
 
 Attempted run:
@@ -66,4 +86,4 @@ This is recorded as a hardware/driver stress failure, not a model promotion fail
 1. Reboot before any further CUDA runs.
 2. Rerun the six-seed M25 pass with batch size 512 and periodic per-seed report writes.
 3. Add checkpoint/report flushing after each seed so a late CUDA failure does not erase completed seeds.
-4. Add a matched-token prompt baseline to test whether the symbolic stream beats a text-only baseline with the same token budget.
+4. Rerun the medium and six-seed M25 passes with the matched-token prompt baseline enabled.

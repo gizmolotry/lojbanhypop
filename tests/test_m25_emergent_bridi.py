@@ -16,6 +16,7 @@ from lojban_evolution.m25.emergent_bridi import (
     M25EmergentBridiQFormer,
     M25LooseBridiDataset,
     budget_loose_stream_symbols,
+    budget_prompt_tokens,
     generate_m25_emergent_bridi_examples,
     loose_stream_symbol_counts,
     m25_collate,
@@ -57,6 +58,16 @@ def test_m25_integer_stream_budget_and_controls_preserve_shape() -> None:
     assert sorted(shuffled.flatten().tolist()) == sorted(oracle.flatten().tolist())
 
 
+def test_m25_matched_prompt_budget_masks_prompt_tail() -> None:
+    input_ids = torch.tensor([[4, 5, 6, 7, 0], [8, 9, 0, 0, 0]], dtype=torch.long)
+
+    budgeted = budget_prompt_tokens(input_ids, token_budget=2)
+    disabled = budget_prompt_tokens(input_ids, token_budget=0)
+
+    assert budgeted.tolist() == [[4, 5, 0, 0, 0], [8, 9, 0, 0, 0]]
+    assert disabled.tolist() == input_ids.tolist()
+
+
 def test_m25_qformer_pack_and_advisor_rejects_continuous_smuggling() -> None:
     examples = generate_m25_emergent_bridi_examples(4, seed=27, max_symbols=12)
     vocab = build_vocab(examples)  # type: ignore[arg-type]
@@ -87,12 +98,14 @@ def test_m25_tiny_cpu_training_reports_symbolic_metrics() -> None:
         advisor_hidden_dim=16,
         max_symbols=16,
         symbol_budget=8,
+        matched_prompt_budget=8,
         mdl_weight=0.1,
         device="cpu",
     )
     metrics = result["metrics"]
 
     assert result["config"]["symbol_budget"] == 8
+    assert result["config"]["matched_prompt_budget"] == 8
     assert result["config"]["mdl_weight"] == 0.1
     assert metrics["generator_trainable_parameter_count_after_freeze"] == 0.0
     assert metrics["generator_parameters_unchanged_after_advisor"] == 1.0
@@ -106,12 +119,17 @@ def test_m25_tiny_cpu_training_reports_symbolic_metrics() -> None:
         "random_stream_accuracy",
         "zero_stream_accuracy",
         "prompt_only_accuracy",
+        "matched_prompt_accuracy",
+        "m25_strict_delta_vs_matched_prompt",
         "loose_stream_exact_accuracy",
         "stream_type_accuracy",
         "stream_value_accuracy",
         "stream_aux_accuracy",
         "token_reduction_ratio",
         "accuracy_per_loose_symbol",
+        "matched_prompt_accuracy_per_token",
+        "m25_accuracy_per_symbol_delta_vs_matched_prompt",
+        "m25_gate_beats_matched_prompt",
         "m25_promotion_gate_pass_rate",
         "m25_promotion_candidate",
     ):

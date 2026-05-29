@@ -22,6 +22,7 @@ def test_m25_suite_cli_help() -> None:
     )
     assert "--max-symbols" in result.stdout
     assert "--symbol-budget" in result.stdout
+    assert "--matched-prompt-budget" in result.stdout
     assert "--generator-epochs" in result.stdout
     assert "--advisor-epochs" in result.stdout
 
@@ -29,6 +30,7 @@ def test_m25_suite_cli_help() -> None:
 def test_m25_suite_cli_symbol_budget_default_is_disabled() -> None:
     args = runner.parse_args([])
     assert args.symbol_budget == 0
+    assert args.matched_prompt_budget == 0
 
 
 def test_m25_suite_cli_tiny_smoke_writes_report() -> None:
@@ -67,6 +69,8 @@ def test_m25_suite_cli_tiny_smoke_writes_report() -> None:
             "16",
             "--symbol-budget",
             "8",
+            "--matched-prompt-budget",
+            "8",
             "--mdl-weight",
             "0.1",
             "--run-id",
@@ -82,7 +86,12 @@ def test_m25_suite_cli_tiny_smoke_writes_report() -> None:
     assert payload["track"] == "M25"
     assert payload["config"]["max_symbols"] == 16
     assert payload["config"]["symbol_budget"] == 8
+    assert payload["config"]["matched_prompt_budget"] == 8
     assert payload["seed_reports"][0]["metrics"]["advisor_primary_trace_is_symbolic"] == 1.0
+    assert payload["seed_reports"][0]["config"]["matched_prompt_budget"] == 8
+    assert "matched_prompt_history" in payload["seed_reports"][0]
     assert "mean_strict_accuracy" in payload["aggregate_metrics"]
+    assert "mean_matched_prompt_accuracy" in payload["aggregate_metrics"]
+    assert "mean_m25_strict_delta_vs_matched_prompt" in payload["aggregate_metrics"]
     assert "mean_loose_stream_exact_accuracy" in payload["aggregate_metrics"]
     assert "mean_token_reduction_ratio" in payload["aggregate_metrics"]
