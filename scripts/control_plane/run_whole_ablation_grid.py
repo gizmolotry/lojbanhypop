@@ -46,6 +46,7 @@ DEFAULT_M22_GENERALIZATION_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry"
 DEFAULT_M23_RELEVANCE_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m23_relevance_suite"
 DEFAULT_M24_COMPRESSION_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m24_substrate_compression"
 DEFAULT_M25_EMERGENT_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m25_emergent_bridi"
+DEFAULT_M26_END_TO_END_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m26_end_to_end_loafman"
 
 STAGE_ORDER = [
     "A-G",
@@ -75,6 +76,7 @@ STAGE_ORDER = [
     "M23",
     "M24",
     "M25",
+    "M26",
     "Control Plane",
 ]
 
@@ -264,6 +266,19 @@ KEY_METRICS = [
     "m25_gate_token_reduction_positive",
     "m25_gate_nonzero_stream_reconstruction",
     "m25_gate_symbolic_trace_only",
+    "end_to_end_answer_accuracy",
+    "zero_trace_accuracy",
+    "predicted_vs_zero_delta",
+    "single_optimizer_end_to_end_training",
+    "hard_argmax_training_cut_detected",
+    "torch_no_grad_training_cut_detected",
+    "advisor_primary_trace_is_differentiable",
+    "answer_loss_generator_grad_norm",
+    "answer_loss_symbol_head_grad_norm",
+    "answer_loss_reaches_generator",
+    "answer_loss_reaches_symbol_heads",
+    "m26_spinal_cord_gate_pass_rate",
+    "m26_promotion_candidate",
     "phrase_accuracy",
     "phrase_exact_accuracy",
     "semantic_coverage_strict_accuracy",
@@ -335,7 +350,7 @@ def main() -> None:
             row = _m3_row(stage, m_bridge)
         elif stage_key == "M11":
             row = _m11_row(stage, m_bridge)
-        elif stage_key in {"M14", "M18", "M19", "M20", "M21", "M22", "M23", "M24", "M25"}:
+        elif stage_key in {"M14", "M18", "M19", "M20", "M21", "M22", "M23", "M24", "M25", "M26"}:
             row = _special_stage_row(stage)
         elif stage_key == "Control Plane":
             row = _control_plane_row(stage, history_manifest, program_spine_manifest, legacy_grid_manifest, m_bridge_manifest)
@@ -489,7 +504,7 @@ def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
     anchor = _explicit_stage_anchor(stage_key) or _resolve_generic_anchor(stage)
     payload = _read_json_optional(anchor) if anchor else None
     metrics = _special_stage_metrics(stage_key, payload)
-    stage_for_row = _stage_with_direct_contract(stage, payload) if stage_key in {"M19", "M20", "M21", "M22", "M23", "M24", "M25"} else stage
+    stage_for_row = _stage_with_direct_contract(stage, payload) if stage_key in {"M19", "M20", "M21", "M22", "M23", "M24", "M25", "M26"} else stage
     supplemental: list[str] = []
     notes: list[str] = []
     if stage_key == "M14":
@@ -541,12 +556,17 @@ def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
             "M25 is the emergent loose bridi grammar-action stream fork over M24.2; "
             "strict accuracy is canonical, phrase accuracy is diagnostic only, and promotion requires m25_promotion_candidate=1.0"
         )
+    if stage_key == "M26":
+        notes.append(
+            "M26 is the end-to-end Loafman spinal-cord fork over M25; "
+            "promotion means answer loss reaches the bridi generator, not yet full chatbot success"
+        )
     return _row(
         stage_for_row,
         "artifact_anchor" if anchor else "runnable_no_anchor",
         _repo_relative(anchor) if anchor else None,
         [path for path in supplemental if path],
-        _limit_metrics(metrics, limit=18 if stage_key in {"M21", "M22", "M23", "M24", "M25"} else 8),
+        _limit_metrics(metrics, limit=18 if stage_key in {"M21", "M22", "M23", "M24", "M25", "M26"} else 8),
         notes,
     )
 
@@ -698,6 +718,13 @@ def _explicit_stage_anchor(stage_key: str) -> Path | None:
         emergent_anchor = _latest_named_manifest(DEFAULT_M25_EMERGENT_ROOT, "m25_emergent_bridi_report.json")
         if emergent_anchor and emergent_anchor.exists():
             return emergent_anchor
+    if stage_key == "M26":
+        direct_anchor = _latest_direct_unified_eval_anchor("M26")
+        if direct_anchor and direct_anchor.exists():
+            return direct_anchor
+        end_to_end_anchor = _latest_named_manifest(DEFAULT_M26_END_TO_END_ROOT, "m26_end_to_end_loafman_report.json")
+        if end_to_end_anchor and end_to_end_anchor.exists():
+            return end_to_end_anchor
     return None
 
 
@@ -1313,6 +1340,87 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
         for key, value in metrics.items():
             ordered_metrics.setdefault(key, value)
         return ordered_metrics
+    if stage_key == "M26":
+        metrics: dict[str, float] = {}
+        headline = payload.get("headline_metrics", {})
+        aggregate = payload.get("aggregate_metrics", {})
+        top = payload.get("metrics", {})
+        for source in (headline, aggregate, top, payload):
+            if not isinstance(source, dict):
+                continue
+            _merge_existing_metrics(
+                metrics,
+                source,
+                {
+                    "strict_accuracy": ("strict_accuracy", "mean_strict_accuracy"),
+                    "end_to_end_answer_accuracy": ("end_to_end_answer_accuracy", "mean_end_to_end_answer_accuracy"),
+                    "shuffled_trace_accuracy": ("shuffled_trace_accuracy", "mean_shuffled_trace_accuracy"),
+                    "random_trace_accuracy": ("random_trace_accuracy", "mean_random_trace_accuracy"),
+                    "zero_trace_accuracy": ("zero_trace_accuracy", "mean_zero_trace_accuracy"),
+                    "predicted_vs_shuffled_delta": ("predicted_vs_shuffled_delta", "mean_predicted_vs_shuffled_delta"),
+                    "predicted_vs_random_delta": ("predicted_vs_random_delta", "mean_predicted_vs_random_delta"),
+                    "predicted_vs_zero_delta": ("predicted_vs_zero_delta", "mean_predicted_vs_zero_delta"),
+                    "loose_stream_exact_accuracy": ("loose_stream_exact_accuracy", "mean_loose_stream_exact_accuracy"),
+                    "stream_type_accuracy": ("stream_type_accuracy", "mean_stream_type_accuracy"),
+                    "stream_value_accuracy": ("stream_value_accuracy", "mean_stream_value_accuracy"),
+                    "stream_aux_accuracy": ("stream_aux_accuracy", "mean_stream_aux_accuracy"),
+                    "accuracy_per_loose_symbol": ("accuracy_per_loose_symbol", "mean_accuracy_per_loose_symbol"),
+                    "single_optimizer_end_to_end_training": (
+                        "single_optimizer_end_to_end_training",
+                        "mean_single_optimizer_end_to_end_training",
+                    ),
+                    "hard_argmax_training_cut_detected": (
+                        "hard_argmax_training_cut_detected",
+                        "mean_hard_argmax_training_cut_detected",
+                    ),
+                    "torch_no_grad_training_cut_detected": (
+                        "torch_no_grad_training_cut_detected",
+                        "mean_torch_no_grad_training_cut_detected",
+                    ),
+                    "advisor_primary_trace_is_differentiable": (
+                        "advisor_primary_trace_is_differentiable",
+                        "mean_advisor_primary_trace_is_differentiable",
+                    ),
+                    "answer_loss_generator_grad_norm": (
+                        "answer_loss_generator_grad_norm",
+                        "mean_answer_loss_generator_grad_norm",
+                    ),
+                    "answer_loss_symbol_head_grad_norm": (
+                        "answer_loss_symbol_head_grad_norm",
+                        "mean_answer_loss_symbol_head_grad_norm",
+                    ),
+                    "answer_loss_reaches_generator": (
+                        "answer_loss_reaches_generator",
+                        "mean_answer_loss_reaches_generator",
+                    ),
+                    "answer_loss_reaches_symbol_heads": (
+                        "answer_loss_reaches_symbol_heads",
+                        "mean_answer_loss_reaches_symbol_heads",
+                    ),
+                    "m26_spinal_cord_gate_pass_rate": (
+                        "m26_spinal_cord_gate_pass_rate",
+                        "mean_m26_spinal_cord_gate_pass_rate",
+                    ),
+                    "m26_promotion_candidate": ("m26_promotion_candidate", "mean_m26_promotion_candidate"),
+                },
+            )
+        priority = (
+            "strict_accuracy",
+            "m26_promotion_candidate",
+            "m26_spinal_cord_gate_pass_rate",
+            "answer_loss_reaches_generator",
+            "answer_loss_reaches_symbol_heads",
+            "single_optimizer_end_to_end_training",
+            "hard_argmax_training_cut_detected",
+            "predicted_vs_zero_delta",
+        )
+        ordered_metrics: dict[str, float] = {}
+        for key in priority:
+            if key in metrics:
+                ordered_metrics[key] = metrics[key]
+        for key, value in metrics.items():
+            ordered_metrics.setdefault(key, value)
+        return ordered_metrics
     return _generic_metrics(payload)
 
 
@@ -1530,7 +1638,7 @@ def _render_markdown(manifest: dict[str, Any]) -> str:
     lines.extend(["", "## Read", ""])
     lines.append("- The fresh part of the whole grid is now the recovered legacy runnable surface: A-G, H/H5/J, L6, and the phase-eval lanes under one manifest.")
     lines.append("- The modern M rows are represented through artifact-backed anchors and the control-plane lineage manifests, so the whole program is visible without pretending every stage was freshly retrained.")
-    lines.append("- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, M23 the causal relevance-router fork, M24 the substrate-first compression fork, and M25 the emergent loose bridi grammar stream fork.")
+    lines.append("- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, M23 the causal relevance-router fork, M24 the substrate-first compression fork, M25 the emergent loose bridi grammar stream fork, and M26 the end-to-end Loafman spinal-cord fork.")
     return "\n".join(lines) + "\n"
 
 

@@ -72,6 +72,7 @@ FAMILY_DAG_MAP: dict[str, list[str]] = {
     "M23": ["airflow/dags/m23/lojban_m23_relevance_router_dag.py"],
     "M24": ["airflow/dags/m24/lojban_m24_substrate_compression_dag.py"],
     "M25": ["airflow/dags/m25/lojban_m25_emergent_bridi_dag.py"],
+    "M26": ["airflow/dags/m26/lojban_m26_end_to_end_loafman_dag.py"],
     "History": [
         "airflow/dags/control_plane/lojban_ablation_history_backfill_dag.py",
         "airflow/dags/m_bridge/lojban_m_bridge_ablation_test_suite_dag.py",
@@ -124,6 +125,7 @@ M_FAMILY_ORDER = [
     "M23",
     "M24",
     "M25",
+    "M26",
 ]
 
 

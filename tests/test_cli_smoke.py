@@ -50,6 +50,7 @@ def test_run_direct_unified_eval_help() -> None:
     assert "--family" in out
     assert "--execute-m19-direct" in out
     assert "--m24-compression-report" in out
+    assert "--m26-end-to-end-report" in out
 
 
 def test_run_direct_unified_eval_m24_defaults_track_to_family() -> None:

@@ -657,6 +657,45 @@
         "continuous_trace_smuggling_detected",
         "generator_parameters_unchanged_after_advisor"
       ]
+    },
+    "M26": {
+      "question_boundary": "end-to-end Loafman spinal-cord verification",
+      "architectural_thesis": "turn the M25 loose bridi stream from a staged assay into one trainable prompt-to-bridi-to-advisor organism, proving final answer loss reaches the symbolic generator through a differentiable trace handoff.",
+      "allowed_ablation_axes": [
+        "differentiable soft bridi trace handoff",
+        "single optimizer generator/advisor training",
+        "answer-loss gradient flow probes",
+        "symbol budget over soft trace positions",
+        "zero/shuffled/random trace controls"
+      ],
+      "forbidden_drift_axes": [
+        "freezing the generator before advisor training",
+        "hard argmax or long integer packing on the training path",
+        "claiming chatbot-level English generation without base-LLM coupling",
+        "phrase accuracy as canonical accuracy"
+      ],
+      "promotion_basis": [
+        "answer_loss_reaches_generator",
+        "answer_loss_reaches_symbol_heads",
+        "single_optimizer_end_to_end_training",
+        "predicted_vs_zero_delta",
+        "m26_spinal_cord_gate_pass_rate"
+      ],
+      "metrics_primary": [
+        "strict_accuracy",
+        "end_to_end_answer_accuracy",
+        "answer_loss_reaches_generator",
+        "answer_loss_reaches_symbol_heads"
+      ],
+      "metrics_guardrail": [
+        "hard_argmax_training_cut_detected",
+        "torch_no_grad_training_cut_detected",
+        "predicted_vs_shuffled_delta",
+        "predicted_vs_random_delta",
+        "loose_stream_exact_accuracy",
+        "accuracy_per_loose_symbol"
+      ],
+      "baseline_manifest": "docs/baselines/m_series_bridge_baseline_manifest.json"
     }
   },
   "comparison_defaults": {
@@ -1390,6 +1429,48 @@
         "phrase_accuracy"
       ],
       "surface": "m25_emergent_bridi"
+    },
+    "m26.end_to_end_spinal_cord": {
+      "test_id": "m26.end_to_end_spinal_cord",
+      "family": "M26",
+      "description": "M26 verifies that the Loafman path exists as one differentiable PyTorch organism: final answer loss must backpropagate into the bridi stream generator and symbol heads through a soft trace-only advisor, with no hard argmax/no_grad training cut.",
+      "metrics": [
+        "strict_accuracy",
+        "end_to_end_answer_accuracy",
+        "shuffled_trace_accuracy",
+        "random_trace_accuracy",
+        "zero_trace_accuracy",
+        "predicted_vs_shuffled_delta",
+        "predicted_vs_random_delta",
+        "predicted_vs_zero_delta",
+        "loose_stream_exact_accuracy",
+        "stream_type_accuracy",
+        "stream_value_accuracy",
+        "stream_aux_accuracy",
+        "mean_predicted_emitted_symbols_after_bottleneck",
+        "accuracy_per_loose_symbol",
+        "single_optimizer_end_to_end_training",
+        "hard_argmax_training_cut_detected",
+        "torch_no_grad_training_cut_detected",
+        "advisor_primary_trace_is_differentiable",
+        "answer_loss_generator_grad_norm",
+        "answer_loss_symbol_head_grad_norm",
+        "answer_loss_advisor_grad_norm",
+        "answer_loss_reaches_generator",
+        "answer_loss_reaches_symbol_heads",
+        "trainable_parameter_count",
+        "generator_trainable_parameter_count",
+        "advisor_trainable_parameter_count",
+        "m26_gate_answer_loss_reaches_generator",
+        "m26_gate_answer_loss_reaches_symbol_heads",
+        "m26_gate_single_optimizer",
+        "m26_gate_no_hard_training_cut",
+        "m26_gate_stream_beats_zero",
+        "m26_spinal_cord_gate_pass_rate",
+        "m26_promotion_candidate",
+        "phrase_accuracy"
+      ],
+      "surface": "m26_end_to_end_loafman"
     }
   },
   "family_comparison_contracts": {
@@ -1730,6 +1811,23 @@
         "M24.2",
         "M25",
         "M25.A"
+      ],
+      "inherit_required_test_contracts": false
+    },
+    "M26": {
+      "historical_comparison_families": [
+        "M25"
+      ],
+      "required_test_contracts": [
+        "m26.end_to_end_spinal_cord"
+      ],
+      "explicit_compare_entries": [
+        "M23",
+        "M24.2",
+        "M25",
+        "M25.A",
+        "M26",
+        "M26.A"
       ],
       "inherit_required_test_contracts": false
     }
@@ -2358,6 +2456,34 @@
         "predicted_vs_shuffled_delta",
         "loose_stream_exact_accuracy",
         "token_reduction_ratio"
+      ]
+    },
+    {
+      "transition_id": "M25_to_M26",
+      "status": "active_branch",
+      "from_major": "M25",
+      "to_major": "M26",
+      "selected_upstream": "M25.A",
+      "inherits_components": [
+        "M25 loose bridi grammar-action stream emitter",
+        "M23/M25 decoy-balanced semantic source data",
+        "strict accuracy canonical metric",
+        "token efficiency and corruption-control skepticism"
+      ],
+      "reopened_components": [
+        "frozen generator/advisor boundary",
+        "hard integer trace packing during training",
+        "final-answer gradient flow through the symbiote path"
+      ],
+      "rejected_components": [
+        "staged advisor-only success as evidence of one Loafman organism",
+        "chatbot promotion before base-LLM end-to-end coupling exists"
+      ],
+      "promotion_basis": [
+        "answer_loss_reaches_generator",
+        "answer_loss_reaches_symbol_heads",
+        "single_optimizer_end_to_end_training",
+        "m26_spinal_cord_gate_pass_rate"
       ]
     }
   ]

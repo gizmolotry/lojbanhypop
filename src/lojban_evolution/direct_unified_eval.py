@@ -31,6 +31,11 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - M25 core registry may land in a parallel branch.
     M25_REGISTRY: dict[str, dict[str, Any]] = {}
 
+try:
+    from .m26.family import M26_REGISTRY
+except ModuleNotFoundError:  # pragma: no cover - M26 core registry may land in a parallel branch.
+    M26_REGISTRY: dict[str, dict[str, Any]] = {}
+
 
 DIRECT_UNIFIED_EVAL_VERSION = "1.0"
 DIRECT_UNIFIED_EVAL_OUTPUT_ROOT = (
@@ -393,6 +398,30 @@ KEY_METRICS = (
     "m25_gate_token_reduction_positive",
     "m25_gate_nonzero_stream_reconstruction",
     "m25_gate_symbolic_trace_only",
+    "end_to_end_answer_accuracy",
+    "shuffled_trace_accuracy",
+    "random_trace_accuracy",
+    "zero_trace_accuracy",
+    "predicted_vs_zero_delta",
+    "single_optimizer_end_to_end_training",
+    "hard_argmax_training_cut_detected",
+    "torch_no_grad_training_cut_detected",
+    "advisor_primary_trace_is_differentiable",
+    "answer_loss_generator_grad_norm",
+    "answer_loss_symbol_head_grad_norm",
+    "answer_loss_advisor_grad_norm",
+    "answer_loss_reaches_generator",
+    "answer_loss_reaches_symbol_heads",
+    "trainable_parameter_count",
+    "generator_trainable_parameter_count",
+    "advisor_trainable_parameter_count",
+    "m26_gate_answer_loss_reaches_generator",
+    "m26_gate_answer_loss_reaches_symbol_heads",
+    "m26_gate_single_optimizer",
+    "m26_gate_no_hard_training_cut",
+    "m26_gate_stream_beats_zero",
+    "m26_spinal_cord_gate_pass_rate",
+    "m26_promotion_candidate",
     "phrase_accuracy",
     "phrase_exact_accuracy",
 )
@@ -448,6 +477,10 @@ _REFERENCE_ROOTS: dict[str, list[Path]] = {
     ],
     "M25": [
         REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m25_emergent_bridi",
+        REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "direct_unified_eval",
+    ],
+    "M26": [
+        REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m26_end_to_end_loafman",
         REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "direct_unified_eval",
     ],
     "M10": [
@@ -699,6 +732,26 @@ def discover_m25_surfaces(
     }
 
 
+def discover_m26_surfaces(
+    *,
+    end_to_end_report_path: Path | None = None,
+) -> dict[str, dict[str, Any]]:
+    registry = M26_REGISTRY.get("M26", {})
+    output_roots = registry.get("output_roots", {}) if isinstance(registry, dict) else {}
+    report_names = registry.get("report_names", {}) if isinstance(registry, dict) else {}
+    root = output_roots.get("end_to_end_loafman") or output_roots.get("suite")
+    report_name = report_names.get("end_to_end_loafman") or report_names.get("suite") or "m26_end_to_end_loafman_report.json"
+    report_path = end_to_end_report_path
+    if report_path is None:
+        report_path = _latest_named_manifest(
+            REPO_ROOT / str(root or "artifacts/runs/telemetry/raw/ablation/hypercube/m26_end_to_end_loafman"),
+            str(report_name),
+        )
+    return {
+        "end_to_end_loafman": _surface_record("end_to_end_loafman", report_path),
+    }
+
+
 def build_direct_unified_eval_manifest(
     *,
     family_key: str,
@@ -724,6 +777,7 @@ def build_direct_unified_eval_manifest(
     m23_relevance_report_path: Path | None = None,
     m24_compression_report_path: Path | None = None,
     m25_emergent_report_path: Path | None = None,
+    m26_end_to_end_report_path: Path | None = None,
     history_manifest_path: Path | None = None,
     taxonomy: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -782,6 +836,11 @@ def build_direct_unified_eval_manifest(
         direct_surfaces = discover_m25_surfaces(
             emergent_report_path=m25_emergent_report_path,
         )
+    elif family_key == "M26":
+        resolved_track = str(track or "M26")
+        direct_surfaces = discover_m26_surfaces(
+            end_to_end_report_path=m26_end_to_end_report_path,
+        )
     else:
         raise NotImplementedError(f"Direct unified eval is currently implemented for family '{family_key}' only.")
 
@@ -806,6 +865,7 @@ def build_direct_unified_eval_manifest(
     m23_relevance_payload = direct_surfaces.get("relevance_suite", {}).get("payload") if family_key == "M23" else None
     m24_compression_payload = direct_surfaces.get("substrate_compression", {}).get("payload") if family_key == "M24" else None
     m25_emergent_payload = direct_surfaces.get("emergent_bridi", {}).get("payload") if family_key == "M25" else None
+    m26_end_to_end_payload = direct_surfaces.get("end_to_end_loafman", {}).get("payload") if family_key == "M26" else None
     historical_references = _resolve_historical_family_references(contract, history_manifest_path)
     comparison_targets = _resolve_comparison_targets(contract, history_manifest_path)
     reference_surface_index = _build_reference_surface_index(historical_references, comparison_targets)
@@ -833,6 +893,7 @@ def build_direct_unified_eval_manifest(
         m23_relevance_payload=m23_relevance_payload,
         m24_compression_payload=m24_compression_payload,
         m25_emergent_payload=m25_emergent_payload,
+        m26_end_to_end_payload=m26_end_to_end_payload,
         reference_surface_index=reference_surface_index,
     )
 
@@ -858,6 +919,7 @@ def build_direct_unified_eval_manifest(
         m23_relevance_payload=m23_relevance_payload,
         m24_compression_payload=m24_compression_payload,
         m25_emergent_payload=m25_emergent_payload,
+        m26_end_to_end_payload=m26_end_to_end_payload,
     )
     direct_report_paths = {
         name: surface["path"]
@@ -894,6 +956,11 @@ def build_direct_unified_eval_manifest(
         notes.append(
             "M24 direct surfaces test M24.1 matched trace corruption and compression pressure; "
             "strict accuracy remains canonical and phrase accuracy is diagnostic only."
+        )
+    if family_key == "M26":
+        notes.append(
+            "M26 direct surface tests whether final answer loss reaches the bridi generator through "
+            "one differentiable trace-only advisor path; it is a spinal-cord test, not a chatbot claim."
         )
 
     manifest = {
@@ -1010,6 +1077,7 @@ def _evaluate_contracts(
     m23_relevance_payload: dict[str, Any] | None = None,
     m24_compression_payload: dict[str, Any] | None = None,
     m25_emergent_payload: dict[str, Any] | None = None,
+    m26_end_to_end_payload: dict[str, Any] | None = None,
     reference_surface_index: dict[str, dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     reference_surface_index = reference_surface_index or {}
@@ -1064,6 +1132,10 @@ def _evaluate_contracts(
             row = _evaluate_m25_contract(test_id, contract, m25_emergent_payload)
             rows.append(_attach_reference_surface(row, contract, reference_surface_index))
             continue
+        if family_key == "M26":
+            row = _evaluate_m26_contract(test_id, contract, m26_end_to_end_payload)
+            rows.append(_attach_reference_surface(row, contract, reference_surface_index))
+            continue
         rows.append(
             {
                 "test_id": test_id,
@@ -1098,6 +1170,31 @@ def _evaluate_m25_contract(
         "provenance": "artifact",
         "metrics": metrics,
         "promotion_status": "promoted" if candidate >= 1.0 else "m25_non_promoted",
+        "notes": notes,
+    }
+
+
+def _evaluate_m26_contract(
+    test_id: str,
+    contract: dict[str, Any],
+    end_to_end_payload: dict[str, Any] | None,
+) -> dict[str, Any]:
+    metrics = _filtered_metrics(_m26_end_to_end_metrics(end_to_end_payload), tuple(contract.get("metrics", [])))
+    if not metrics:
+        return _missing_contract_row(test_id, contract, f"missing M26 direct surface for {test_id}")
+    notes = [
+        "M26 contract is evaluated from the end-to-end Loafman spinal-cord report.",
+        "This verifies differentiable final-answer gradient flow through the bridi generator.",
+        "M26 is not a chatbot promotion unless m26_promotion_candidate=1.0 and later base-LLM coupling exists.",
+    ]
+    candidate = float(metrics.get("m26_promotion_candidate", 0.0) or 0.0)
+    return {
+        "test_id": test_id,
+        "surface": contract.get("surface"),
+        "status": "available",
+        "provenance": "artifact",
+        "metrics": metrics,
+        "promotion_status": "promoted" if candidate >= 1.0 else "m26_spinal_cord_only",
         "notes": notes,
     }
 
@@ -1772,6 +1869,7 @@ def _build_headline_metrics(
     m23_relevance_payload: dict[str, Any] | None = None,
     m24_compression_payload: dict[str, Any] | None = None,
     m25_emergent_payload: dict[str, Any] | None = None,
+    m26_end_to_end_payload: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     headline: dict[str, Any] = {}
     if isinstance(benchmark_payload, dict):
@@ -1892,6 +1990,9 @@ def _build_headline_metrics(
             headline[key] = value
     if isinstance(m25_emergent_payload, dict):
         for key, value in _filtered_metrics(_m25_emergent_metrics(m25_emergent_payload), KEY_METRICS).items():
+            headline[key] = value
+    if isinstance(m26_end_to_end_payload, dict):
+        for key, value in _filtered_metrics(_m26_end_to_end_metrics(m26_end_to_end_payload), KEY_METRICS).items():
             headline[key] = value
     return {k: v for k, v in headline.items() if v is not None}
 
@@ -2178,6 +2279,64 @@ def _m25_emergent_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
     return {key: value for key, value in metrics.items() if value is not None}
 
 
+def _m26_end_to_end_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
+    if not isinstance(payload, dict):
+        return {}
+    metrics: dict[str, Any] = {}
+    for source_name in ("headline_metrics", "metrics", "aggregate_metrics"):
+        source = payload.get(source_name, {})
+        if isinstance(source, dict):
+            metrics.update(source)
+    aggregate = payload.get("aggregate_metrics", {})
+    if isinstance(aggregate, dict):
+        metrics.setdefault("strict_accuracy", aggregate.get("mean_strict_accuracy"))
+        metrics.setdefault("phrase_accuracy", aggregate.get("mean_phrase_accuracy"))
+        metrics.setdefault("end_to_end_answer_accuracy", aggregate.get("mean_end_to_end_answer_accuracy"))
+        metrics.setdefault("shuffled_trace_accuracy", aggregate.get("mean_shuffled_trace_accuracy"))
+        metrics.setdefault("random_trace_accuracy", aggregate.get("mean_random_trace_accuracy"))
+        metrics.setdefault("zero_trace_accuracy", aggregate.get("mean_zero_trace_accuracy"))
+        metrics.setdefault("predicted_vs_shuffled_delta", aggregate.get("mean_predicted_vs_shuffled_delta"))
+        metrics.setdefault("predicted_vs_random_delta", aggregate.get("mean_predicted_vs_random_delta"))
+        metrics.setdefault("predicted_vs_zero_delta", aggregate.get("mean_predicted_vs_zero_delta"))
+        metrics.setdefault("loose_stream_exact_accuracy", aggregate.get("mean_loose_stream_exact_accuracy"))
+        metrics.setdefault("stream_type_accuracy", aggregate.get("mean_stream_type_accuracy"))
+        metrics.setdefault("stream_value_accuracy", aggregate.get("mean_stream_value_accuracy"))
+        metrics.setdefault("stream_aux_accuracy", aggregate.get("mean_stream_aux_accuracy"))
+        metrics.setdefault(
+            "mean_predicted_emitted_symbols_after_bottleneck",
+            aggregate.get("mean_mean_predicted_emitted_symbols_after_bottleneck"),
+        )
+        metrics.setdefault("accuracy_per_loose_symbol", aggregate.get("mean_accuracy_per_loose_symbol"))
+        metrics.setdefault("single_optimizer_end_to_end_training", aggregate.get("mean_single_optimizer_end_to_end_training"))
+        metrics.setdefault("hard_argmax_training_cut_detected", aggregate.get("mean_hard_argmax_training_cut_detected"))
+        metrics.setdefault("torch_no_grad_training_cut_detected", aggregate.get("mean_torch_no_grad_training_cut_detected"))
+        metrics.setdefault("advisor_primary_trace_is_differentiable", aggregate.get("mean_advisor_primary_trace_is_differentiable"))
+        metrics.setdefault("answer_loss_generator_grad_norm", aggregate.get("mean_answer_loss_generator_grad_norm"))
+        metrics.setdefault("answer_loss_symbol_head_grad_norm", aggregate.get("mean_answer_loss_symbol_head_grad_norm"))
+        metrics.setdefault("answer_loss_advisor_grad_norm", aggregate.get("mean_answer_loss_advisor_grad_norm"))
+        metrics.setdefault("answer_loss_reaches_generator", aggregate.get("mean_answer_loss_reaches_generator"))
+        metrics.setdefault("answer_loss_reaches_symbol_heads", aggregate.get("mean_answer_loss_reaches_symbol_heads"))
+        metrics.setdefault("trainable_parameter_count", aggregate.get("mean_trainable_parameter_count"))
+        metrics.setdefault("generator_trainable_parameter_count", aggregate.get("mean_generator_trainable_parameter_count"))
+        metrics.setdefault("advisor_trainable_parameter_count", aggregate.get("mean_advisor_trainable_parameter_count"))
+        metrics.setdefault("m26_gate_answer_loss_reaches_generator", aggregate.get("mean_m26_gate_answer_loss_reaches_generator"))
+        metrics.setdefault("m26_gate_answer_loss_reaches_symbol_heads", aggregate.get("mean_m26_gate_answer_loss_reaches_symbol_heads"))
+        metrics.setdefault("m26_gate_single_optimizer", aggregate.get("mean_m26_gate_single_optimizer"))
+        metrics.setdefault("m26_gate_no_hard_training_cut", aggregate.get("mean_m26_gate_no_hard_training_cut"))
+        metrics.setdefault("m26_gate_stream_beats_zero", aggregate.get("mean_m26_gate_stream_beats_zero"))
+        metrics.setdefault("m26_spinal_cord_gate_pass_rate", aggregate.get("mean_m26_spinal_cord_gate_pass_rate"))
+        metrics.setdefault("m26_promotion_candidate", aggregate.get("mean_m26_promotion_candidate"))
+    seed_rows: list[dict[str, Any]] = []
+    for row in payload.get("seed_reports", []) if isinstance(payload.get("seed_reports"), list) else []:
+        if isinstance(row, dict) and isinstance(row.get("metrics"), dict):
+            seed_rows.append(row["metrics"])
+    for key in KEY_METRICS:
+        values = [float(row[key]) for row in seed_rows if isinstance(row.get(key), (int, float))]
+        if values and key not in metrics:
+            metrics[key] = sum(values) / len(values)
+    return {key: value for key, value in metrics.items() if value is not None}
+
+
 def _m21_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
     if not isinstance(payload, dict):
         return {}
@@ -2420,6 +2579,8 @@ def _preferred_names_for_target(target: str) -> list[str]:
         return ["m24_substrate_compression_report.json", "direct_unified_eval_manifest.json"]
     if upper.startswith("M25"):
         return ["m25_emergent_bridi_report.json", "direct_unified_eval_manifest.json"]
+    if upper.startswith("M26"):
+        return ["m26_end_to_end_loafman_report.json", "direct_unified_eval_manifest.json"]
     return []
 
 

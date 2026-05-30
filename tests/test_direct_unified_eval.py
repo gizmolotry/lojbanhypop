@@ -22,6 +22,47 @@ def _scratch_dir() -> Path:
     return root
 
 
+def test_build_direct_unified_eval_manifest_m26_spinal_cord() -> None:
+    tmp_path = _scratch_dir()
+    report_path = _write_json(
+        tmp_path / "m26_end_to_end_loafman_report.json",
+        {
+            "track": "M26",
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.42,
+                "mean_end_to_end_answer_accuracy": 0.42,
+                "mean_zero_trace_accuracy": 0.20,
+                "mean_predicted_vs_zero_delta": 0.22,
+                "mean_answer_loss_generator_grad_norm": 1.25,
+                "mean_answer_loss_symbol_head_grad_norm": 0.75,
+                "mean_answer_loss_advisor_grad_norm": 1.50,
+                "mean_answer_loss_reaches_generator": 1.0,
+                "mean_answer_loss_reaches_symbol_heads": 1.0,
+                "mean_single_optimizer_end_to_end_training": 1.0,
+                "mean_hard_argmax_training_cut_detected": 0.0,
+                "mean_torch_no_grad_training_cut_detected": 0.0,
+                "mean_advisor_primary_trace_is_differentiable": 1.0,
+                "mean_m26_spinal_cord_gate_pass_rate": 1.0,
+                "mean_m26_promotion_candidate": 1.0,
+            },
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M26",
+        track="M26",
+        m26_end_to_end_report_path=report_path,
+    )
+
+    assert manifest["family_key"] == "M26"
+    assert manifest["track"] == "M26"
+    assert manifest["headline_metrics"]["answer_loss_reaches_generator"] == 1.0
+    assert manifest["headline_metrics"]["m26_spinal_cord_gate_pass_rate"] == 1.0
+    spinal = next(row for row in manifest["contract_results"] if row["test_id"] == "m26.end_to_end_spinal_cord")
+    assert spinal["status"] == "available"
+    assert spinal["metrics"]["answer_loss_generator_grad_norm"] == 1.25
+
+
 def test_build_direct_unified_eval_manifest_static_m19() -> None:
     tmp_path = _scratch_dir()
     benchmark_path = _write_json(

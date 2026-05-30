@@ -30,6 +30,8 @@ DEFAULTS = {
     "m22_generalization_report": "",
     "m23_relevance_report": "",
     "m24_substrate_compression_report": "",
+    "m25_emergent_report": "",
+    "m26_end_to_end_report": "",
     "execute_m19_direct": False,
     "base_model": "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
     "bridge_path": "artifacts/models/m19/grid/m19_isolation_grid_20260409_v3/M19.3_8Q_128D_8S.pt",
@@ -96,6 +98,10 @@ def _run_direct_unified_eval(**context: object) -> None:
         args.extend(["--m23-relevance-report", str(cfg.get("m23_relevance_report"))])
     if str(cfg.get("m24_substrate_compression_report", "")).strip():
         args.extend(["--m24-compression-report", str(cfg.get("m24_substrate_compression_report"))])
+    if str(cfg.get("m25_emergent_report", "")).strip():
+        args.extend(["--m25-emergent-report", str(cfg.get("m25_emergent_report"))])
+    if str(cfg.get("m26_end_to_end_report", "")).strip():
+        args.extend(["--m26-end-to-end-report", str(cfg.get("m26_end_to_end_report"))])
     if bool(cfg.get("execute_m19_direct", False)):
         args.extend(
             [
@@ -140,7 +146,7 @@ with DAG(
     schedule=None,
     catchup=False,
     max_active_runs=1,
-    tags=["lojban", "control-plane", "direct-eval", "m19", "m20", "m21", "m22", "m23", "m24", "lineage"],
+    tags=["lojban", "control-plane", "direct-eval", "m19", "m20", "m21", "m22", "m23", "m24", "m25", "m26", "lineage"],
     params={
         "family": Param("M19", type="string", minLength=1),
         "track": Param("", type="string"),
@@ -162,6 +168,8 @@ with DAG(
         "m22_generalization_report": Param("", type="string"),
         "m23_relevance_report": Param("", type="string"),
         "m24_substrate_compression_report": Param("", type="string"),
+        "m25_emergent_report": Param("", type="string"),
+        "m26_end_to_end_report": Param("", type="string"),
         "execute_m19_direct": Param(False, type="boolean"),
         "base_model": Param("C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct", type="string", minLength=1),
         "bridge_path": Param("artifacts/models/m19/grid/m19_isolation_grid_20260409_v3/M19.3_8Q_128D_8S.pt", type="string", minLength=1),

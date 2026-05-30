@@ -1,9 +1,9 @@
 # Ablation Program Spine
 
-- Generated UTC: `2026-05-29T19:44:31.396786+00:00`
+- Generated UTC: `2026-05-30T19:28:34.690625+00:00`
 - Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
 - Source taxonomy config: `configs/experiment_taxonomy.json`
-- Stage count: `28`
+- Stage count: `29`
 
 This is the ordered research spine of the project: legacy letter-series families, normalized M-major families, and the control plane that keeps the program auditable.
 
@@ -589,12 +589,29 @@ This is the ordered research spine of the project: legacy letter-series families
 - Thesis: test whether a looser learned Lojbanic bridi stream can preserve causal symbolic compression without hardcoding fixed predicate rows; strict_accuracy remains canonical and phrase accuracy is diagnostic only.
 - Allowed axes: `loose grammar-action stream length, symbol budget, trace reconstruction weight, MDL compression pressure, predicted/oracle/shuffled/random/zero stream controls, matched prompt-only token accounting`
 - Frozen/forbidden drift: `full hand-authored Lojban AST as the main result, phrase accuracy as canonical metric, continuous prompt-state leakage into the advisor, promotion without shuffled/random stream controls`
-- Promotion basis: `strict_accuracy, predicted_vs_random_delta, predicted_vs_shuffled_delta, loose_stream_exact_accuracy, token_reduction_ratio, m25_promotion_candidate`
-- Primary metrics: `strict_accuracy, predicted_stream_accuracy, loose_stream_exact_accuracy, predicted_vs_random_delta, predicted_vs_shuffled_delta`
-- Guardrail metrics: `prompt_only_accuracy, token_reduction_ratio, advisor_primary_trace_is_symbolic, continuous_trace_smuggling_detected, generator_parameters_unchanged_after_advisor`
+- Promotion basis: `strict_accuracy, predicted_vs_random_delta, predicted_vs_shuffled_delta, loose_stream_exact_accuracy, token_reduction_ratio, matched_prompt_accuracy, m25_strict_delta_vs_matched_prompt, m25_promotion_candidate`
+- Primary metrics: `strict_accuracy, predicted_stream_accuracy, matched_prompt_accuracy, m25_strict_delta_vs_matched_prompt, loose_stream_exact_accuracy, predicted_vs_random_delta, predicted_vs_shuffled_delta`
+- Guardrail metrics: `prompt_only_accuracy, matched_prompt_accuracy, matched_prompt_token_budget, m25_gate_beats_matched_prompt, token_reduction_ratio, advisor_primary_trace_is_symbolic, continuous_trace_smuggling_detected, generator_parameters_unchanged_after_advisor`
 - DAGs: `airflow/dags/m25/lojban_m25_emergent_bridi_dag.py`
 
-## 28. Control Plane
+## 28. M26
+
+- Kind: `major_series`
+- Layer: `manifold_and_return_path`
+- Objective: turn the M25 loose bridi stream from a staged assay into one trainable prompt-to-bridi-to-advisor organism, proving final answer loss reaches the symbolic generator through a differentiable trace handoff.
+- Entry count: `0`
+- Runnable rows: `0`
+- Question boundary: end-to-end Loafman spinal-cord verification
+- Thesis: turn the M25 loose bridi stream from a staged assay into one trainable prompt-to-bridi-to-advisor organism, proving final answer loss reaches the symbolic generator through a differentiable trace handoff.
+- Allowed axes: `differentiable soft bridi trace handoff, single optimizer generator/advisor training, answer-loss gradient flow probes, symbol budget over soft trace positions, zero/shuffled/random trace controls`
+- Frozen/forbidden drift: `freezing the generator before advisor training, hard argmax or long integer packing on the training path, claiming chatbot-level English generation without base-LLM coupling, phrase accuracy as canonical accuracy`
+- Promotion basis: `answer_loss_reaches_generator, answer_loss_reaches_symbol_heads, single_optimizer_end_to_end_training, predicted_vs_zero_delta, m26_spinal_cord_gate_pass_rate`
+- Primary metrics: `strict_accuracy, end_to_end_answer_accuracy, answer_loss_reaches_generator, answer_loss_reaches_symbol_heads`
+- Guardrail metrics: `hard_argmax_training_cut_detected, torch_no_grad_training_cut_detected, predicted_vs_shuffled_delta, predicted_vs_random_delta, loose_stream_exact_accuracy, accuracy_per_loose_symbol`
+- Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
+- DAGs: `airflow/dags/m26/lojban_m26_end_to_end_loafman_dag.py`
+
+## 29. Control Plane
 
 - Kind: `control_plane`
 - Layer: `control_plane`

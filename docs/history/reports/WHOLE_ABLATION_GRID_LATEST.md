@@ -1,15 +1,15 @@
 # Whole Ablation Grid
 
-- run_id: `m25_large_48e_matched_whole_grid_20260530`
-- generated: `2026-05-30T16:49:26.941419+00:00`
+- run_id: `m26_spinal_cord_smoke_whole_grid_20260530_r3`
+- generated: `2026-05-30T19:29:48.263962+00:00`
 - history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
-- program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m25_program_spine_20260529/ablation_program_spine_manifest.json`
+- program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m26_spinal_cord_program_spine_20260530/ablation_program_spine_manifest.json`
 
 ## Coverage
 
-- stages: `28`
+- stages: `29`
 - fresh legacy surfaces: `6`
-- artifact anchors: `20`
+- artifact anchors: `21`
 - history-only stages: `1`
 
 ## Legacy Grid Status
@@ -53,6 +53,7 @@
 | `M23` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m23_trace_punish_direct_20260524/direct_unified_eval_manifest.json` | strict_accuracy=0.9517, decoy_relation_ood_accuracy=0.9817, worst_surface_accuracy=0.8605, bridi_trace_exact_accuracy=0.2839 |
 | `M24` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m24_2_b11_g32_a48_train12000_eval6000_tenseed_direct_20260528/direct_unified_eval_manifest.json` | strict_accuracy=0.7682, m24_2_promotion_candidate=1.0000, m24_2_promotion_gate_pass_rate=1.0000, m24_2_hard_bottleneck_compression_ratio=0.9446 |
 | `M25` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m25_large_48e_matched_direct_20260530/direct_unified_eval_manifest.json` | strict_accuracy=0.7104, m25_promotion_candidate=0.0000, m25_promotion_gate_pass_rate=0.8571, loose_stream_exact_accuracy=0.5105 |
+| `M26` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m26_spinal_cord_smoke_direct_20260530_r2/direct_unified_eval_manifest.json` | strict_accuracy=0.0625, m26_promotion_candidate=0.0000, m26_spinal_cord_gate_pass_rate=0.8000, answer_loss_reaches_generator=1.0000 |
 | `Control Plane` | `control_plane_manifest` | `e=0 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json` |  |
 
 ## Comparison Policy
@@ -177,9 +178,15 @@
 - historical families carried forward: `M24`
 - required test contracts: `m25.emergent_bridi_stream`
 
+### M26
+
+- automatic compare-against: `M26, M25, M24, M23, M22, M21, M20, M24.2, M25.A, M26.A`
+- historical families carried forward: `M25`
+- required test contracts: `m26.end_to_end_spinal_cord`
+
 
 ## Read
 
 - The fresh part of the whole grid is now the recovered legacy runnable surface: A-G, H/H5/J, L6, and the phase-eval lanes under one manifest.
 - The modern M rows are represented through artifact-backed anchors and the control-plane lineage manifests, so the whole program is visible without pretending every stage was freshly retrained.
-- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, M23 the causal relevance-router fork, M24 the substrate-first compression fork, and M25 the emergent loose bridi grammar stream fork.
+- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, M23 the causal relevance-router fork, M24 the substrate-first compression fork, M25 the emergent loose bridi grammar stream fork, and M26 the end-to-end Loafman spinal-cord fork.

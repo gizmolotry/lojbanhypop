@@ -1,6 +1,6 @@
 # Ablation Program Map
 
-- Generated UTC: `2026-05-29T19:44:31.394756+00:00`
+- Generated UTC: `2026-05-30T19:28:34.696246+00:00`
 - Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
 - Concentrated family count: `38`
 

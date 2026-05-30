@@ -21,7 +21,7 @@ DEFAULT_OUTPUT_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "
 DEFAULT_DOC_OUTPUT = REPO_ROOT / "docs" / "ABLATION_PROGRAM_SPINE.md"
 
 LETTER_STAGE_ORDER = ["A-G", "H", "H5", "J", "L", "J/L Hypercube", "Phase Eval"]
-M_STAGE_ORDER = ["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "M10", "M11", "M14", "M18", "M19", "M20", "M21", "M22", "M23", "M24", "M25"]
+M_STAGE_ORDER = ["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "M10", "M11", "M14", "M18", "M19", "M20", "M21", "M22", "M23", "M24", "M25", "M26"]
 EXTRA_STAGE_DAGS = {
     "M19": ["airflow/dags/m19/lojban_m19_family_dag.py"],
     "M20": ["airflow/dags/m20/lojban_m20_dictionary_first_dag.py"],
@@ -30,6 +30,7 @@ EXTRA_STAGE_DAGS = {
     "M23": ["airflow/dags/m23/lojban_m23_relevance_router_dag.py"],
     "M24": ["airflow/dags/m24/lojban_m24_substrate_compression_dag.py"],
     "M25": ["airflow/dags/m25/lojban_m25_emergent_bridi_dag.py"],
+    "M26": ["airflow/dags/m26/lojban_m26_end_to_end_loafman_dag.py"],
 }
 
 

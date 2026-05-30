@@ -382,3 +382,38 @@ def test_m25_special_stage_metrics_and_order() -> None:
     assert metrics["stream_type_accuracy"] == 0.81
     assert metrics["token_reduction_ratio"] == 0.44
     assert metrics["m25_promotion_candidate"] == 1.0
+
+
+def test_m26_special_stage_metrics_and_order() -> None:
+    whole_grid = _load_whole_grid_module()
+    payload = {
+        "aggregate_metrics": {
+            "mean_strict_accuracy": 0.44,
+            "mean_end_to_end_answer_accuracy": 0.44,
+            "mean_zero_trace_accuracy": 0.20,
+            "mean_predicted_vs_zero_delta": 0.24,
+            "mean_answer_loss_generator_grad_norm": 1.5,
+            "mean_answer_loss_symbol_head_grad_norm": 0.8,
+            "mean_answer_loss_reaches_generator": 1.0,
+            "mean_answer_loss_reaches_symbol_heads": 1.0,
+            "mean_single_optimizer_end_to_end_training": 1.0,
+            "mean_hard_argmax_training_cut_detected": 0.0,
+            "mean_m26_spinal_cord_gate_pass_rate": 1.0,
+            "mean_m26_promotion_candidate": 1.0,
+        }
+    }
+
+    metrics = whole_grid._special_stage_metrics("M26", payload)
+
+    assert "M26" in whole_grid.STAGE_ORDER
+    assert whole_grid.STAGE_ORDER.index("M25") < whole_grid.STAGE_ORDER.index("M26")
+    assert whole_grid.STAGE_ORDER.index("M26") < whole_grid.STAGE_ORDER.index("Control Plane")
+    assert list(metrics)[:5] == [
+        "strict_accuracy",
+        "m26_promotion_candidate",
+        "m26_spinal_cord_gate_pass_rate",
+        "answer_loss_reaches_generator",
+        "answer_loss_reaches_symbol_heads",
+    ]
+    assert metrics["answer_loss_generator_grad_norm"] == 1.5
+    assert metrics["predicted_vs_zero_delta"] == 0.24
