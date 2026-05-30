@@ -672,6 +672,7 @@ def m25_promotion_gate_metrics(metrics: dict[str, float]) -> dict[str, float]:
         "m25_gate_token_reduction_positive": 1.0 if metrics.get("token_reduction_ratio", 0.0) > 0.0 else 0.0,
         "m25_gate_nonzero_stream_reconstruction": 1.0 if metrics.get("loose_stream_exact_accuracy", 0.0) > 0.0 else 0.0,
         "m25_gate_symbolic_trace_only": 1.0 if metrics.get("advisor_primary_trace_is_symbolic", 0.0) == 1.0 else 0.0,
+        "m25_gate_beats_matched_prompt": 1.0 if metrics.get("m25_strict_delta_vs_matched_prompt", -1.0) >= 0.0 else 0.0,
     }
     gates["m25_promotion_gate_pass_rate"] = sum(gates.values()) / max(1, len(gates))
     gates["m25_promotion_candidate"] = 1.0 if all(value == 1.0 for value in gates.values()) else 0.0

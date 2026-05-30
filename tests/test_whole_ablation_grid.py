@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
 
 
@@ -111,6 +112,20 @@ def test_m19_direct_contract_updates_stale_spine_policy() -> None:
     ]
     assert [target["target"] for target in updated["comparison_targets"]] == ["M19", "M18"]
     assert updated["historical_comparison_families"] == ["J", "L"]
+
+
+def test_latest_direct_eval_anchor_prefers_stable_artifacts_over_pytest_smoke(tmp_path: Path) -> None:
+    whole_grid = _load_whole_grid_module()
+    root = tmp_path / "direct_unified_eval"
+    smoke = root / "pytest_m24_direct_track_default" / "direct_unified_eval_manifest.json"
+    stable = root / "m24_2_full_direct_20260528" / "direct_unified_eval_manifest.json"
+    smoke.parent.mkdir(parents=True)
+    stable.parent.mkdir(parents=True)
+    smoke.write_text(json.dumps({"family_key": "M24"}), encoding="utf-8")
+    stable.write_text(json.dumps({"family_key": "M24"}), encoding="utf-8")
+    whole_grid.DEFAULT_DIRECT_UNIFIED_EVAL_ROOT = root
+
+    assert whole_grid._latest_direct_unified_eval_anchor("M24") == stable
 
 
 def test_m21_special_stage_metrics_include_dynamic_bridi_and_causal_deltas() -> None:

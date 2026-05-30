@@ -1566,11 +1566,20 @@ def _latest_direct_unified_eval_anchor(family_key: str) -> Path | None:
         key=lambda path: path.stat().st_mtime,
         reverse=True,
     )
+    fallback_ephemeral: Path | None = None
     for path in matches:
         payload = _read_json_optional(path)
         if isinstance(payload, dict) and str(payload.get("family_key") or "").upper() == family_key.upper():
+            if _is_ephemeral_direct_eval_anchor(path):
+                fallback_ephemeral = fallback_ephemeral or path
+                continue
             return path
-    return None
+    return fallback_ephemeral
+
+
+def _is_ephemeral_direct_eval_anchor(path: Path) -> bool:
+    parts = [part.lower() for part in path.parts]
+    return any(part.startswith("pytest") or "smoke" in part for part in parts)
 
 
 def _repo_path(value: str | Path) -> Path:
