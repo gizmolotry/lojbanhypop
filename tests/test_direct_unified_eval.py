@@ -32,6 +32,9 @@ def test_build_direct_unified_eval_manifest_m26_spinal_cord() -> None:
                 "mean_strict_accuracy": 0.42,
                 "mean_end_to_end_answer_accuracy": 0.42,
                 "mean_zero_trace_accuracy": 0.20,
+                "mean_prompt_only_accuracy": 0.43,
+                "mean_matched_prompt_accuracy": 0.40,
+                "mean_m26_strict_delta_vs_matched_prompt": 0.02,
                 "mean_predicted_vs_zero_delta": 0.22,
                 "mean_answer_loss_generator_grad_norm": 1.25,
                 "mean_answer_loss_symbol_head_grad_norm": 0.75,
@@ -43,6 +46,8 @@ def test_build_direct_unified_eval_manifest_m26_spinal_cord() -> None:
                 "mean_torch_no_grad_training_cut_detected": 0.0,
                 "mean_advisor_primary_trace_is_differentiable": 1.0,
                 "mean_m26_spinal_cord_gate_pass_rate": 1.0,
+                "mean_m26_spinal_cord_candidate": 1.0,
+                "mean_m26_prompt_comparable_candidate": 1.0,
                 "mean_m26_promotion_candidate": 1.0,
             },
         },
@@ -61,6 +66,88 @@ def test_build_direct_unified_eval_manifest_m26_spinal_cord() -> None:
     spinal = next(row for row in manifest["contract_results"] if row["test_id"] == "m26.end_to_end_spinal_cord")
     assert spinal["status"] == "available"
     assert spinal["metrics"]["answer_loss_generator_grad_norm"] == 1.25
+    assert spinal["metrics"]["matched_prompt_accuracy"] == 0.40
+
+
+def test_build_direct_unified_eval_manifest_m26_nonpromoted_is_explicit() -> None:
+    tmp_path = _scratch_dir()
+    report_path = _write_json(
+        tmp_path / "m26_end_to_end_loafman_report.json",
+        {
+            "track": "M26",
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.10,
+                "mean_end_to_end_answer_accuracy": 0.10,
+                "mean_zero_trace_accuracy": 0.10,
+                "mean_predicted_vs_zero_delta": 0.0,
+                "mean_answer_loss_reaches_generator": 1.0,
+                "mean_answer_loss_reaches_symbol_heads": 1.0,
+                "mean_single_optimizer_end_to_end_training": 1.0,
+                "mean_hard_argmax_training_cut_detected": 0.0,
+                "mean_m26_spinal_cord_gate_pass_rate": 0.8,
+                "mean_m26_spinal_cord_candidate": 0.0,
+                "mean_m26_prompt_comparable_candidate": 0.0,
+                "mean_m26_promotion_candidate": 0.0,
+            },
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M26",
+        track="M26",
+        m26_end_to_end_report_path=report_path,
+    )
+
+    spinal = next(row for row in manifest["contract_results"] if row["test_id"] == "m26.end_to_end_spinal_cord")
+    assert spinal["status"] == "available_non_promoted"
+    assert spinal["promotion_status"] == "m26_spinal_cord_only"
+
+
+def test_build_direct_unified_eval_manifest_m26_spinal_prompt_gap_is_explicit() -> None:
+    tmp_path = _scratch_dir()
+    report_path = _write_json(
+        tmp_path / "m26_end_to_end_loafman_report.json",
+        {
+            "track": "M26",
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.90,
+                "mean_end_to_end_answer_accuracy": 0.90,
+                "mean_zero_trace_accuracy": 0.05,
+                "mean_matched_prompt_accuracy": 0.92,
+                "mean_m26_strict_delta_vs_matched_prompt": -0.02,
+                "mean_predicted_vs_zero_delta": 0.85,
+                "mean_answer_loss_reaches_generator": 1.0,
+                "mean_answer_loss_reaches_symbol_heads": 1.0,
+                "mean_single_optimizer_end_to_end_training": 1.0,
+                "mean_hard_argmax_training_cut_detected": 0.0,
+                "mean_torch_no_grad_training_cut_detected": 0.0,
+                "mean_m26_spinal_cord_gate_pass_rate": 1.0,
+                "mean_m26_spinal_cord_candidate": 1.0,
+                "mean_m26_gate_beats_matched_prompt": 0.0,
+                "mean_m26_prompt_comparable_candidate": 0.0,
+                "mean_m26_promotion_candidate": 0.0,
+            },
+            "seed_reports": [
+                {"metrics": {"strict_accuracy": 0.90, "phrase_accuracy": 1.0}},
+                {"metrics": {"strict_accuracy": 0.90, "phrase_accuracy": 1.0}},
+            ],
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M26",
+        track="M26",
+        m26_end_to_end_report_path=report_path,
+    )
+
+    spinal = next(row for row in manifest["contract_results"] if row["test_id"] == "m26.end_to_end_spinal_cord")
+    assert manifest["headline_metrics"]["strict_accuracy"] == 0.90
+    assert manifest["headline_metrics"]["phrase_accuracy"] == 1.0
+    assert spinal["status"] == "available"
+    assert spinal["promotion_status"] == "m26_spinal_promoted_prompt_gap"
+    assert spinal["metrics"]["strict_accuracy"] == 0.90
+    assert spinal["metrics"]["phrase_accuracy"] == 1.0
+    assert spinal["metrics"]["m26_prompt_comparable_candidate"] == 0.0
 
 
 def test_build_direct_unified_eval_manifest_static_m19() -> None:

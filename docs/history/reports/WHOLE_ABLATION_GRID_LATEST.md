@@ -1,9 +1,9 @@
 # Whole Ablation Grid
 
-- run_id: `m26_e2e_large_64e_whole_grid_20260531_r2`
-- generated: `2026-05-31T10:36:07.136407+00:00`
+- run_id: `m26_matched_prompt_b8_32e_whole_grid_20260531_r3`
+- generated: `2026-05-31T11:42:38.702731+00:00`
 - history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
-- program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m26_spinal_cord_program_spine_20260530/ablation_program_spine_manifest.json`
+- program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m26_controls_program_spine_20260531_r3/ablation_program_spine_manifest.json`
 
 ## Coverage
 
@@ -24,37 +24,37 @@
 
 ## Stage Table
 
-| stage | surface | counts | anchor | headline |
-|---|---|---|---|---|
-| `A-G` | `fresh_legacy_lane` | `e=14 r=0 a=5 d=9` | `artifacts/runs/telemetry/raw/ablation/a_to_g/legacy_grid/legacy_grid_retrospective_20260413/20260414_002554/ablation_matrix.json` | executed_runs=4.0000, control_base_final_acc=0.3333, coconut_handoff_final_acc=0.0000, nope_handoff_lift=0.0000 |
-| `H` | `fresh_legacy_lane` | `e=5 r=0 a=1 d=4` | `artifacts/runs/telemetry/raw/ablation/hypercube/legacy_grid/legacy_grid_retrospective_20260413/20260414_003217/run_h_series.json` | executed_runs=12.0000, h1_handoff_lift=-0.3333, h5_ood_accuracy=0.4000, j1_schema_valid_rate=1.0000 |
-| `H5` | `fresh_legacy_lane` | `e=7 r=0 a=3 d=4` | `artifacts/runs/telemetry/raw/ablation/hypercube/legacy_grid/legacy_grid_retrospective_20260413/20260414_003217/run_h_series.json` | executed_runs=12.0000, h1_handoff_lift=-0.3333, h5_ood_accuracy=0.4000, j1_schema_valid_rate=1.0000 |
-| `J` | `fresh_legacy_lane` | `e=5 r=5 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/legacy_grid/legacy_grid_retrospective_20260413/20260414_003217/run_h_series.json` | executed_runs=12.0000, h1_handoff_lift=-0.3333, h5_ood_accuracy=0.4000, j1_schema_valid_rate=1.0000 |
-| `L` | `fresh_legacy_lane` | `e=21 r=3 a=17 d=1` | `runs/l_series/l6_ablation/legacy_grid/legacy_grid_retrospective_20260413/20260414_004443/l6_ablation_manifest.json` | executed_rows=3.0000, mean_scope_constraint=0.3432, best_scope_constraint=0.3810 |
-| `J/L Hypercube` | `history_only` | `e=0 r=0 a=0 d=0` | `` |  |
-| `Phase Eval` | `fresh_legacy_lane` | `e=14 r=14 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/legacy_grid/legacy_grid_retrospective_20260413/phase5_objective_ablation.json` | full_total_regularizer=2.9140, dead_term_count=0.0000, dominant_term=0.0000, dominant_term_value=56.2299 |
-| `M1` | `artifact_anchor` | `e=5 r=5 a=0 d=0` | `runs/j_series/test_run_true_coconut_d72f24907c594ce8bed4e1ff8345f686/20260523_120720/run_h_series.json` |  |
-| `M2` | `artifact_anchor` | `e=3 r=3 a=0 d=0` | `runs/l_series/l6_ablation/legacy_grid/legacy_grid_retrospective_20260413/20260414_004443/l6_ablation_manifest.json` |  |
-| `M3` | `artifact_anchor` | `e=48 r=12 a=36 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m_bridge_ablation_test_suite/full_program_probe_20260413/m_bridge_ablation_suite_manifest.json` | bridge_track_count=3.0000, harmful_track_count=1.0000 |
-| `M4` | `artifact_anchor` | `e=2 r=2 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m4_2_predicate_grounding/bridge_base_v1/m4_2_20260312_bridge_base_v1/m4_2_predicate_grounding_report.json` |  |
-| `M5` | `artifact_anchor` | `e=9 r=2 a=7 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260330_052704/m5_autoformalization_report.json` |  |
-| `M6` | `artifact_anchor` | `e=5 r=0 a=5 d=0` | `archive/results/m6/20260314/RESULTS_M6_SEVERED_BRIDGE_20260314/m6_eval_report.json` |  |
-| `M7` | `artifact_anchor` | `e=1 r=0 a=1 d=0` | `archive/results/m7/active/RESULTS_M7_INTERLEAVED_COPROCESSOR/m7_eval_report.json` |  |
-| `M8` | `artifact_anchor` | `e=1 r=0 a=1 d=0` | `archive/results/m8/active/RESULTS_M8_COUNCIL_OF_ORACLES/m8_eval_report.json` |  |
-| `M9` | `artifact_anchor` | `e=2 r=0 a=2 d=0` | `archive/results/m9/active/RESULTS_M9_AUDIT/m9_audit_report.json` |  |
-| `M10` | `artifact_anchor` | `e=4 r=0 a=4 d=0` | `archive/results/m10/active/RESULTS_M10_AUDIT/m10_audit_report.json` |  |
-| `M11` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `archive/results/m10/active/RESULTS_M10_FINAL_AUDIT/m11_discriminative_manifest.json` | headline_accuracy=0.8592, headline_macro_f1=0.6287, bridge_audit_accuracy=0.8333, floor_lock_accuracy=0.7800 |
-| `M14` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m14_5_decompressor/m14_5_report.json` | cell_count=4.0000, best_cell_accuracy=0.0000, all_cells_zero=1.0000 |
-| `M18` | `artifact_anchor` | `e=14 r=14 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m18_controller_family/m18_frontier_audits_20260409/m18_family_report.json` | sapir_english_accuracy=0.1000, sapir_chinese_accuracy=0.5000, harmonized_en_concise_accuracy=0.6000, harmonized_l_typed_accuracy=0.6000 |
-| `M19` | `artifact_anchor` | `e=14 r=14 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m19_31_e2_promoted_package_20260506/direct_unified_eval_manifest.json` | mainline_overall_accuracy=0.6000, mainline_avg_tokens=30.8400, mainline_lift_vs_random=0.5700, mainline_audit_qformer_accuracy=0.6000 |
-| `M20` | `artifact_anchor` | `e=7 r=7 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/direct_m20_whole_ledger_20260514/direct_unified_eval_manifest.json` | strict_accuracy=0.9998, synthetic_world_accuracy=0.9998, dictionary_coverage=0.9998, factorized_exact_accuracy=0.9998 |
-| `M21` | `artifact_anchor` | `e=21 r=21 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m21_role_curriculum_mno_direct_48e_20260521/direct_unified_eval_manifest.json` | strict_accuracy=0.8494, bridi_trace_exact_accuracy=0.9996, gismu_accuracy=0.9999, cmavo_accuracy=0.9996 |
-| `M22` | `artifact_anchor` | `e=1 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m22_blended_s_96e_confirm2_mixed_ood_direct_20260523/direct_unified_eval_manifest.json` | m22_promotion_candidate=0.0000, m22_promotion_gate_pass_rate=0.9444, strict_accuracy=0.8467, m22_candidate_cell_count=1.0000 |
-| `M23` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m23_trace_punish_direct_20260524/direct_unified_eval_manifest.json` | strict_accuracy=0.9517, decoy_relation_ood_accuracy=0.9817, worst_surface_accuracy=0.8605, bridi_trace_exact_accuracy=0.2839 |
-| `M24` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m24_2_b11_g32_a48_train12000_eval6000_tenseed_direct_20260528/direct_unified_eval_manifest.json` | strict_accuracy=0.7682, m24_2_promotion_candidate=1.0000, m24_2_promotion_gate_pass_rate=1.0000, m24_2_hard_bottleneck_compression_ratio=0.9446 |
-| `M25` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m25_large_48e_matched_direct_20260530/direct_unified_eval_manifest.json` | strict_accuracy=0.7104, m25_promotion_candidate=0.0000, m25_promotion_gate_pass_rate=0.8571, loose_stream_exact_accuracy=0.5105 |
-| `M26` | `artifact_anchor` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m26_e2e_large_64e_direct_20260531_r2/direct_unified_eval_manifest.json` | strict_accuracy=0.9985, m26_promotion_candidate=1.0000, m26_spinal_cord_gate_pass_rate=1.0000, answer_loss_reaches_generator=1.0000 |
-| `Control Plane` | `control_plane_manifest` | `e=0 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json` |  |
+| stage | surface | status | counts | anchor | headline |
+|---|---|---|---|---|---|
+| `A-G` | `fresh_legacy_lane` | `` | `e=14 r=0 a=5 d=9` | `artifacts/runs/telemetry/raw/ablation/a_to_g/legacy_grid/legacy_grid_retrospective_20260413/20260414_002554/ablation_matrix.json` | executed_runs=4.0000, control_base_final_acc=0.3333, coconut_handoff_final_acc=0.0000, nope_handoff_lift=0.0000 |
+| `H` | `fresh_legacy_lane` | `` | `e=5 r=0 a=1 d=4` | `artifacts/runs/telemetry/raw/ablation/hypercube/legacy_grid/legacy_grid_retrospective_20260413/20260414_003217/run_h_series.json` | executed_runs=12.0000, h1_handoff_lift=-0.3333, h5_ood_accuracy=0.4000, j1_schema_valid_rate=1.0000, j5_accepted_foil_pair_accuracy=1.0000 |
+| `H5` | `fresh_legacy_lane` | `` | `e=7 r=0 a=3 d=4` | `artifacts/runs/telemetry/raw/ablation/hypercube/legacy_grid/legacy_grid_retrospective_20260413/20260414_003217/run_h_series.json` | executed_runs=12.0000, h1_handoff_lift=-0.3333, h5_ood_accuracy=0.4000, j1_schema_valid_rate=1.0000, j5_accepted_foil_pair_accuracy=1.0000 |
+| `J` | `fresh_legacy_lane` | `` | `e=5 r=5 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/legacy_grid/legacy_grid_retrospective_20260413/20260414_003217/run_h_series.json` | executed_runs=12.0000, h1_handoff_lift=-0.3333, h5_ood_accuracy=0.4000, j1_schema_valid_rate=1.0000, j5_accepted_foil_pair_accuracy=1.0000 |
+| `L` | `fresh_legacy_lane` | `` | `e=21 r=3 a=17 d=1` | `runs/l_series/l6_ablation/legacy_grid/legacy_grid_retrospective_20260413/20260414_004443/l6_ablation_manifest.json` | executed_rows=3.0000, mean_scope_constraint=0.3432, best_scope_constraint=0.3810 |
+| `J/L Hypercube` | `history_only` | `` | `e=0 r=0 a=0 d=0` | `` |  |
+| `Phase Eval` | `fresh_legacy_lane` | `` | `e=14 r=14 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/legacy_grid/legacy_grid_retrospective_20260413/phase5_objective_ablation.json` | full_total_regularizer=2.9140, dead_term_count=0.0000, dominant_term=0.0000, dominant_term_value=56.2299, phase5_train_executed_variants=9.0000 |
+| `M1` | `artifact_anchor` | `` | `e=5 r=5 a=0 d=0` | `runs/j_series/test_run_true_coconut_d72f24907c594ce8bed4e1ff8345f686/20260523_120720/run_h_series.json` |  |
+| `M2` | `artifact_anchor` | `` | `e=3 r=3 a=0 d=0` | `runs/l_series/l6_ablation/legacy_grid/legacy_grid_retrospective_20260413/20260414_004443/l6_ablation_manifest.json` |  |
+| `M3` | `artifact_anchor` | `` | `e=48 r=12 a=36 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m_bridge_ablation_test_suite/full_program_probe_20260413/m_bridge_ablation_suite_manifest.json` | bridge_track_count=3.0000, harmful_track_count=1.0000 |
+| `M4` | `artifact_anchor` | `` | `e=2 r=2 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m4_2_predicate_grounding/bridge_base_v1/m4_2_20260312_bridge_base_v1/m4_2_predicate_grounding_report.json` |  |
+| `M5` | `artifact_anchor` | `` | `e=9 r=2 a=7 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m5_autoformalization/m5_20260330_052704/m5_autoformalization_report.json` |  |
+| `M6` | `artifact_anchor` | `` | `e=5 r=0 a=5 d=0` | `archive/results/m6/20260314/RESULTS_M6_SEVERED_BRIDGE_20260314/m6_eval_report.json` |  |
+| `M7` | `artifact_anchor` | `` | `e=1 r=0 a=1 d=0` | `archive/results/m7/active/RESULTS_M7_INTERLEAVED_COPROCESSOR/m7_eval_report.json` |  |
+| `M8` | `artifact_anchor` | `` | `e=1 r=0 a=1 d=0` | `archive/results/m8/active/RESULTS_M8_COUNCIL_OF_ORACLES/m8_eval_report.json` |  |
+| `M9` | `artifact_anchor` | `` | `e=2 r=0 a=2 d=0` | `archive/results/m9/active/RESULTS_M9_AUDIT/m9_audit_report.json` |  |
+| `M10` | `artifact_anchor` | `` | `e=4 r=0 a=4 d=0` | `archive/results/m10/active/RESULTS_M10_AUDIT/m10_audit_report.json` |  |
+| `M11` | `artifact_anchor` | `` | `e=0 r=0 a=0 d=0` | `archive/results/m10/active/RESULTS_M10_FINAL_AUDIT/m11_discriminative_manifest.json` | headline_accuracy=0.8592, headline_macro_f1=0.6287, bridge_audit_accuracy=0.8333, floor_lock_accuracy=0.7800, publication_mean_acc=0.7700 |
+| `M14` | `artifact_anchor` | `` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m14_5_decompressor/m14_5_report.json` | cell_count=4.0000, best_cell_accuracy=0.0000, all_cells_zero=1.0000 |
+| `M18` | `artifact_anchor` | `` | `e=14 r=14 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/m18_controller_family/m18_frontier_audits_20260409/m18_family_report.json` | sapir_english_accuracy=0.1000, sapir_chinese_accuracy=0.5000, harmonized_en_concise_accuracy=0.6000, harmonized_l_typed_accuracy=0.6000, hybrid_en_cot_accuracy=1.0000 |
+| `M19` | `artifact_anchor` | `` | `e=14 r=14 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m19_31_e2_promoted_package_20260506/direct_unified_eval_manifest.json` | mainline_overall_accuracy=0.6000, mainline_avg_tokens=30.8400, mainline_lift_vs_random=0.5700, mainline_audit_qformer_accuracy=0.6000, purged_accuracy=0.6559 |
+| `M20` | `artifact_anchor` | `` | `e=7 r=7 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/direct_m20_whole_ledger_20260514/direct_unified_eval_manifest.json` | strict_accuracy=0.9998, synthetic_world_accuracy=0.9998, dictionary_coverage=0.9998, factorized_exact_accuracy=0.9998, brivi_gate_accuracy=1.0000 |
+| `M21` | `artifact_anchor` | `` | `e=21 r=21 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m21_role_curriculum_mno_direct_48e_20260521/direct_unified_eval_manifest.json` | strict_accuracy=0.8494, bridi_trace_exact_accuracy=0.9996, gismu_accuracy=0.9999, cmavo_accuracy=0.9996, judri_binding_accuracy=0.9998 |
+| `M22` | `artifact_anchor` | `` | `e=1 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m22_blended_s_96e_confirm2_mixed_ood_direct_20260523/direct_unified_eval_manifest.json` | m22_promotion_candidate=0.0000, m22_promotion_gate_pass_rate=0.9444, strict_accuracy=0.8467, m22_candidate_cell_count=1.0000, m22_candidate_cells_present=1.0000 |
+| `M23` | `artifact_anchor` | `` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m23_trace_punish_direct_20260524/direct_unified_eval_manifest.json` | strict_accuracy=0.9517, decoy_relation_ood_accuracy=0.9817, worst_surface_accuracy=0.8605, bridi_trace_exact_accuracy=0.2839, relevance_top1_accuracy=0.5772 |
+| `M24` | `artifact_anchor` | `promoted` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m24_2_b11_g32_a48_train12000_eval6000_tenseed_direct_20260528/direct_unified_eval_manifest.json` | strict_accuracy=0.7682, m24_2_promotion_candidate=1.0000, m24_2_promotion_gate_pass_rate=1.0000, m24_2_hard_bottleneck_compression_ratio=0.9446, m24_2_hard_bottleneck_token_count=10.1296 |
+| `M25` | `artifact_anchor` | `m25_non_promoted` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m25_large_48e_matched_direct_20260530/direct_unified_eval_manifest.json` | strict_accuracy=0.7104, m25_promotion_candidate=0.0000, m25_promotion_gate_pass_rate=0.8571, loose_stream_exact_accuracy=0.5105, token_reduction_ratio=0.4062 |
+| `M26` | `artifact_anchor` | `m26_spinal_promoted_prompt_gap` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m26_matched_prompt_b8_32e_direct_20260531_r2/direct_unified_eval_manifest.json` | strict_accuracy=0.9961, m26_promotion_candidate=0.3333, m26_spinal_cord_gate_pass_rate=1.0000, m26_spinal_cord_candidate=1.0000, m26_prompt_comparable_candidate=0.3333 |
+| `Control Plane` | `control_plane_manifest` | `` | `e=0 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json` |  |
 
 ## Comparison Policy
 

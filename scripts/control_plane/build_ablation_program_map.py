@@ -132,6 +132,7 @@ M_FAMILY_ORDER = [
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build one concentrated ablation program map from the canonical history manifest.")
     parser.add_argument("--history-manifest", type=Path, default=None)
+    parser.add_argument("--taxonomy-config", type=Path, default=REPO_ROOT / "configs" / "experiment_taxonomy.json")
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
     parser.add_argument("--doc-output", type=Path, default=DEFAULT_DOC_OUTPUT)
     parser.add_argument("--run-id", default="")
@@ -141,6 +142,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     history_manifest = args.history_manifest or _latest_history_manifest()
+    taxonomy = json.loads(args.taxonomy_config.read_text(encoding="utf-8")) if args.taxonomy_config and args.taxonomy_config.exists() else {}
     run_id = args.run_id.strip() or datetime.now(timezone.utc).strftime("ablation_program_map_%Y%m%d_%H%M%S")
     output_dir = args.output_root / run_id
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -151,11 +153,14 @@ def main() -> None:
     transitions = history.get("transition_manifests", [])
 
     families = _build_family_map(entries, series_family_manifests)
+    _merge_taxonomy_families(families, taxonomy.get("major_families", {}))
     ordered_families = _ordered_family_rows(families)
+    transitions = _merge_transition_manifests(transitions, taxonomy.get("transition_manifests", []))
     manifest = {
         "schema_version": "1.0",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "source_history_manifest": _repo_relative(history_manifest),
+        "source_taxonomy_config": _repo_relative(args.taxonomy_config) if args.taxonomy_config else "",
         "family_count": len(ordered_families),
         "families": ordered_families,
         "transitions": transitions,
@@ -281,6 +286,8 @@ def _family_key(entry: dict[str, Any]) -> str | None:
         return "M24"
     if normalized.startswith("M25"):
         return "M25"
+    if normalized.startswith("M26"):
+        return "M26"
     return None
 
 
@@ -301,6 +308,8 @@ def _program_layer(family_key: str) -> str:
         return "substrate_compression"
     if family_key == "M25":
         return "emergent_bridi_grammar"
+    if family_key == "M26":
+        return "end_to_end_lojban_symbiote"
     return "manifold_and_return_path"
 
 
@@ -448,6 +457,49 @@ def _status_summary(row: dict[str, Any]) -> str:
     return "mixed_historical"
 
 
+def _merge_taxonomy_families(families: dict[str, dict[str, Any]], major_families: dict[str, Any]) -> None:
+    for family_key, taxonomy_row in major_families.items():
+        if family_key not in M_FAMILY_ORDER or not isinstance(taxonomy_row, dict):
+            continue
+        if family_key in families:
+            row = families[family_key]
+            row.setdefault("program_layer", _program_layer(family_key))
+            row.setdefault("title_summary", str(taxonomy_row.get("architectural_thesis") or ""))
+            continue
+        families[family_key] = {
+            "family_key": family_key,
+            "program_layer": _program_layer(family_key),
+            "normalized_ids": [family_key],
+            "legacy_aliases": [],
+            "canonical_ids": [family_key],
+            "title_summary": str(taxonomy_row.get("architectural_thesis") or ""),
+            "script_paths": [],
+            "dag_paths": sorted(set(FAMILY_DAG_MAP.get(family_key, []))),
+            "doc_paths": [],
+            "artifact_roots": [],
+            "family_groups": ["taxonomy_major_family"],
+            "reproducibility": [],
+            "evidence_classes": [],
+            "entry_count": 0,
+            "runnable_count": 0,
+            "artifact_only_count": 0,
+            "doc_only_count": 0,
+            "status_summary": "taxonomy_defined",
+        }
+
+
+def _merge_transition_manifests(history_transitions: list[dict[str, Any]], taxonomy_transitions: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    merged: dict[str, dict[str, Any]] = {}
+    for row in [*history_transitions, *taxonomy_transitions]:
+        if not isinstance(row, dict):
+            continue
+        transition_id = str(row.get("transition_id") or "").strip()
+        if not transition_id:
+            continue
+        merged[transition_id] = row
+    return list(merged.values())
+
+
 def _title_summary(titles: list[str]) -> str:
     unique_titles = [title for title in sorted(set(titles)) if title]
     if not unique_titles:
@@ -540,6 +592,7 @@ def _render_markdown(manifest: dict[str, Any]) -> str:
     lines.append("- `causal_relevance_substrate`: M23 causal relevance-router fork")
     lines.append("- `substrate_compression`: M24 substrate compression branch")
     lines.append("- `emergent_bridi_grammar`: M25 loose bridi grammar-action stream branch")
+    lines.append("- `end_to_end_lojban_symbiote`: M26 differentiable prompt-to-bridi-to-advisor organism branch")
     lines.append("- `control_plane`: the backfill, catalog, and aggregate-suite layer")
     lines.append("")
     lines.append("## Concentrated Families")

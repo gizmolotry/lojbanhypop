@@ -268,6 +268,8 @@ KEY_METRICS = [
     "m25_gate_symbolic_trace_only",
     "end_to_end_answer_accuracy",
     "zero_trace_accuracy",
+    "m26_strict_delta_vs_prompt_only",
+    "m26_strict_delta_vs_matched_prompt",
     "predicted_vs_zero_delta",
     "single_optimizer_end_to_end_training",
     "hard_argmax_training_cut_detected",
@@ -275,9 +277,22 @@ KEY_METRICS = [
     "advisor_primary_trace_is_differentiable",
     "answer_loss_generator_grad_norm",
     "answer_loss_symbol_head_grad_norm",
+    "answer_loss_advisor_grad_norm",
     "answer_loss_reaches_generator",
     "answer_loss_reaches_symbol_heads",
+    "trainable_parameter_count",
+    "generator_trainable_parameter_count",
+    "advisor_trainable_parameter_count",
+    "m26_accuracy_per_symbol_delta_vs_matched_prompt",
+    "m26_gate_beats_matched_prompt",
+    "m26_gate_answer_loss_reaches_generator",
+    "m26_gate_answer_loss_reaches_symbol_heads",
+    "m26_gate_single_optimizer",
+    "m26_gate_no_hard_training_cut",
+    "m26_gate_stream_beats_zero",
     "m26_spinal_cord_gate_pass_rate",
+    "m26_spinal_cord_candidate",
+    "m26_prompt_comparable_candidate",
     "m26_promotion_candidate",
     "phrase_accuracy",
     "phrase_exact_accuracy",
@@ -561,7 +576,10 @@ def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
             "M26 is the end-to-end Lojban symbiote spinal-cord fork over M25; "
             "promotion means answer loss reaches the bridi generator, not yet full chatbot success"
         )
-    return _row(
+    promotion_status = _direct_promotion_status(payload)
+    if promotion_status:
+        notes.append(f"direct promotion_status: {promotion_status}")
+    row = _row(
         stage_for_row,
         "artifact_anchor" if anchor else "runnable_no_anchor",
         _repo_relative(anchor) if anchor else None,
@@ -569,6 +587,9 @@ def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
         _limit_metrics(metrics, limit=18 if stage_key in {"M21", "M22", "M23", "M24", "M25", "M26"} else 8),
         notes,
     )
+    if promotion_status:
+        row["promotion_status"] = promotion_status
+    return row
 
 
 def _control_plane_row(
@@ -611,6 +632,21 @@ def _stage_with_direct_contract(stage: dict[str, Any], payload: dict[str, Any] |
     if isinstance(historical, list):
         updated["historical_comparison_families"] = [str(item) for item in historical]
     return updated
+
+
+def _direct_promotion_status(payload: dict[str, Any] | None) -> str | None:
+    if not isinstance(payload, dict):
+        return None
+    rows = payload.get("contract_results")
+    if not isinstance(rows, list):
+        return None
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        status = str(row.get("promotion_status") or "").strip()
+        if status:
+            return status
+    return None
 
 
 def _generic_row(stage: dict[str, Any]) -> dict[str, Any]:
@@ -1353,10 +1389,18 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                 source,
                 {
                     "strict_accuracy": ("strict_accuracy", "mean_strict_accuracy"),
+                    "phrase_accuracy": ("phrase_accuracy", "mean_phrase_accuracy", "overall_phrase_accuracy", "mean_overall_phrase_accuracy"),
                     "end_to_end_answer_accuracy": ("end_to_end_answer_accuracy", "mean_end_to_end_answer_accuracy"),
                     "shuffled_trace_accuracy": ("shuffled_trace_accuracy", "mean_shuffled_trace_accuracy"),
                     "random_trace_accuracy": ("random_trace_accuracy", "mean_random_trace_accuracy"),
                     "zero_trace_accuracy": ("zero_trace_accuracy", "mean_zero_trace_accuracy"),
+                    "prompt_only_accuracy": ("prompt_only_accuracy", "mean_prompt_only_accuracy"),
+                    "matched_prompt_accuracy": ("matched_prompt_accuracy", "mean_matched_prompt_accuracy"),
+                    "m26_strict_delta_vs_prompt_only": ("m26_strict_delta_vs_prompt_only", "mean_m26_strict_delta_vs_prompt_only"),
+                    "m26_strict_delta_vs_matched_prompt": (
+                        "m26_strict_delta_vs_matched_prompt",
+                        "mean_m26_strict_delta_vs_matched_prompt",
+                    ),
                     "predicted_vs_shuffled_delta": ("predicted_vs_shuffled_delta", "mean_predicted_vs_shuffled_delta"),
                     "predicted_vs_random_delta": ("predicted_vs_random_delta", "mean_predicted_vs_random_delta"),
                     "predicted_vs_zero_delta": ("predicted_vs_zero_delta", "mean_predicted_vs_zero_delta"),
@@ -1365,6 +1409,22 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                     "stream_value_accuracy": ("stream_value_accuracy", "mean_stream_value_accuracy"),
                     "stream_aux_accuracy": ("stream_aux_accuracy", "mean_stream_aux_accuracy"),
                     "accuracy_per_loose_symbol": ("accuracy_per_loose_symbol", "mean_accuracy_per_loose_symbol"),
+                    "mean_prompt_tokens": ("mean_prompt_tokens", "mean_mean_prompt_tokens"),
+                    "mean_matched_prompt_tokens": ("mean_matched_prompt_tokens", "mean_mean_matched_prompt_tokens"),
+                    "loose_symbol_to_prompt_ratio": ("loose_symbol_to_prompt_ratio", "mean_loose_symbol_to_prompt_ratio"),
+                    "loose_symbol_to_matched_prompt_ratio": (
+                        "loose_symbol_to_matched_prompt_ratio",
+                        "mean_loose_symbol_to_matched_prompt_ratio",
+                    ),
+                    "accuracy_per_prompt_token": ("accuracy_per_prompt_token", "mean_accuracy_per_prompt_token"),
+                    "matched_prompt_accuracy_per_token": (
+                        "matched_prompt_accuracy_per_token",
+                        "mean_matched_prompt_accuracy_per_token",
+                    ),
+                    "m26_accuracy_per_symbol_delta_vs_matched_prompt": (
+                        "m26_accuracy_per_symbol_delta_vs_matched_prompt",
+                        "mean_m26_accuracy_per_symbol_delta_vs_matched_prompt",
+                    ),
                     "single_optimizer_end_to_end_training": (
                         "single_optimizer_end_to_end_training",
                         "mean_single_optimizer_end_to_end_training",
@@ -1389,6 +1449,10 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                         "answer_loss_symbol_head_grad_norm",
                         "mean_answer_loss_symbol_head_grad_norm",
                     ),
+                    "answer_loss_advisor_grad_norm": (
+                        "answer_loss_advisor_grad_norm",
+                        "mean_answer_loss_advisor_grad_norm",
+                    ),
                     "answer_loss_reaches_generator": (
                         "answer_loss_reaches_generator",
                         "mean_answer_loss_reaches_generator",
@@ -1397,9 +1461,41 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                         "answer_loss_reaches_symbol_heads",
                         "mean_answer_loss_reaches_symbol_heads",
                     ),
+                    "trainable_parameter_count": ("trainable_parameter_count", "mean_trainable_parameter_count"),
+                    "generator_trainable_parameter_count": (
+                        "generator_trainable_parameter_count",
+                        "mean_generator_trainable_parameter_count",
+                    ),
+                    "advisor_trainable_parameter_count": (
+                        "advisor_trainable_parameter_count",
+                        "mean_advisor_trainable_parameter_count",
+                    ),
+                    "m26_gate_answer_loss_reaches_generator": (
+                        "m26_gate_answer_loss_reaches_generator",
+                        "mean_m26_gate_answer_loss_reaches_generator",
+                    ),
+                    "m26_gate_answer_loss_reaches_symbol_heads": (
+                        "m26_gate_answer_loss_reaches_symbol_heads",
+                        "mean_m26_gate_answer_loss_reaches_symbol_heads",
+                    ),
+                    "m26_gate_single_optimizer": ("m26_gate_single_optimizer", "mean_m26_gate_single_optimizer"),
+                    "m26_gate_no_hard_training_cut": (
+                        "m26_gate_no_hard_training_cut",
+                        "mean_m26_gate_no_hard_training_cut",
+                    ),
+                    "m26_gate_stream_beats_zero": ("m26_gate_stream_beats_zero", "mean_m26_gate_stream_beats_zero"),
+                    "m26_gate_beats_matched_prompt": (
+                        "m26_gate_beats_matched_prompt",
+                        "mean_m26_gate_beats_matched_prompt",
+                    ),
                     "m26_spinal_cord_gate_pass_rate": (
                         "m26_spinal_cord_gate_pass_rate",
                         "mean_m26_spinal_cord_gate_pass_rate",
+                    ),
+                    "m26_spinal_cord_candidate": ("m26_spinal_cord_candidate", "mean_m26_spinal_cord_candidate"),
+                    "m26_prompt_comparable_candidate": (
+                        "m26_prompt_comparable_candidate",
+                        "mean_m26_prompt_comparable_candidate",
                     ),
                     "m26_promotion_candidate": ("m26_promotion_candidate", "mean_m26_promotion_candidate"),
                 },
@@ -1408,10 +1504,13 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
             "strict_accuracy",
             "m26_promotion_candidate",
             "m26_spinal_cord_gate_pass_rate",
+            "m26_spinal_cord_candidate",
+            "m26_prompt_comparable_candidate",
             "answer_loss_reaches_generator",
             "answer_loss_reaches_symbol_heads",
             "single_optimizer_end_to_end_training",
             "hard_argmax_training_cut_detected",
+            "m26_strict_delta_vs_matched_prompt",
             "predicted_vs_zero_delta",
         )
         ordered_metrics: dict[str, float] = {}
@@ -1604,14 +1703,15 @@ def _render_markdown(manifest: dict[str, Any]) -> str:
     else:
         lines.append("- no legacy grid manifest available")
 
-    lines.extend(["", "## Stage Table", "", "| stage | surface | counts | anchor | headline |", "|---|---|---|---|---|"])
+    lines.extend(["", "## Stage Table", "", "| stage | surface | status | counts | anchor | headline |", "|---|---|---|---|---|---|"])
     for row in manifest.get("stage_rows", []):
         if not isinstance(row, dict):
             continue
         counts = f"e={row.get('entry_count', 0)} r={row.get('runnable_count', 0)} a={row.get('artifact_only_count', 0)} d={row.get('doc_only_count', 0)}"
         anchor = str(row.get("anchor_path") or "")
-        headline = ", ".join(f"{k}={_fmt_metric(v)}" for k, v in list((row.get("headline_metrics") or {}).items())[:4])
-        lines.append(f"| `{row.get('stage_key', '')}` | `{row.get('surface_kind', '')}` | `{counts}` | `{anchor}` | {headline} |")
+        status = str(row.get("promotion_status") or "")
+        headline = ", ".join(f"{k}={_fmt_metric(v)}" for k, v in list((row.get("headline_metrics") or {}).items())[:5])
+        lines.append(f"| `{row.get('stage_key', '')}` | `{row.get('surface_kind', '')}` | `{status}` | `{counts}` | `{anchor}` | {headline} |")
 
     lines.extend(["", "## Comparison Policy", ""])
     for row in manifest.get("stage_rows", []):

@@ -11,6 +11,7 @@ from lojban_evolution.m25.emergent_bridi import (
 from lojban_evolution.m26.end_to_end import (
     DifferentiableLooseStreamAdvisor,
     M26EndToEndLoafman,
+    m26_promotion_gate_metrics,
     probe_m26_answer_gradient_flow,
     train_m26_end_to_end_loafman,
 )
@@ -105,6 +106,9 @@ def test_m26_tiny_cpu_training_reports_spinal_cord_metrics() -> None:
         "shuffled_trace_accuracy",
         "random_trace_accuracy",
         "zero_trace_accuracy",
+        "prompt_only_accuracy",
+        "matched_prompt_accuracy",
+        "m26_strict_delta_vs_matched_prompt",
         "predicted_vs_zero_delta",
         "loose_stream_exact_accuracy",
         "accuracy_per_loose_symbol",
@@ -113,3 +117,22 @@ def test_m26_tiny_cpu_training_reports_spinal_cord_metrics() -> None:
     ):
         assert key in metrics
         assert isinstance(metrics[key], float)
+    assert metrics["mean_matched_prompt_tokens"] <= result["config"]["matched_prompt_budget"]
+
+
+def test_m26_prompt_comparability_gate_requires_matched_prompt_win() -> None:
+    metrics = {
+        "answer_loss_reaches_generator": 1.0,
+        "answer_loss_reaches_symbol_heads": 1.0,
+        "single_optimizer_end_to_end_training": 1.0,
+        "hard_argmax_training_cut_detected": 0.0,
+        "predicted_vs_zero_delta": 0.9,
+        "m26_strict_delta_vs_matched_prompt": -0.001,
+    }
+
+    gates = m26_promotion_gate_metrics(metrics)
+
+    assert gates["m26_spinal_cord_candidate"] == 1.0
+    assert gates["m26_gate_beats_matched_prompt"] == 0.0
+    assert gates["m26_prompt_comparable_candidate"] == 0.0
+    assert gates["m26_promotion_candidate"] == 0.0

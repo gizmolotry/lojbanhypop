@@ -51,10 +51,15 @@ def _collect(rows: list[dict[str, Any]], key: str) -> list[float]:
 def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
     keys = (
         "strict_accuracy",
+        "phrase_accuracy",
         "end_to_end_answer_accuracy",
         "shuffled_trace_accuracy",
         "random_trace_accuracy",
         "zero_trace_accuracy",
+        "prompt_only_accuracy",
+        "matched_prompt_accuracy",
+        "m26_strict_delta_vs_prompt_only",
+        "m26_strict_delta_vs_matched_prompt",
         "predicted_vs_shuffled_delta",
         "predicted_vs_random_delta",
         "predicted_vs_zero_delta",
@@ -63,7 +68,17 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
         "stream_value_accuracy",
         "stream_aux_accuracy",
         "mean_predicted_emitted_symbols_after_bottleneck",
+        "mean_prompt_tokens",
+        "mean_matched_prompt_tokens",
+        "loose_symbol_to_prompt_ratio",
+        "loose_symbol_to_matched_prompt_ratio",
+        "matched_prompt_token_reduction_ratio",
         "accuracy_per_loose_symbol",
+        "accuracy_per_prompt_token",
+        "matched_prompt_accuracy_per_token",
+        "m26_accuracy_per_symbol_delta_vs_matched_prompt",
+        "matched_prompt_token_budget",
+        "m26_gate_beats_matched_prompt",
         "single_optimizer_end_to_end_training",
         "hard_argmax_training_cut_detected",
         "torch_no_grad_training_cut_detected",
@@ -81,7 +96,10 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
         "m26_gate_single_optimizer",
         "m26_gate_no_hard_training_cut",
         "m26_gate_stream_beats_zero",
+        "m26_gate_beats_matched_prompt",
         "m26_spinal_cord_gate_pass_rate",
+        "m26_spinal_cord_candidate",
+        "m26_prompt_comparable_candidate",
         "m26_promotion_candidate",
     )
     out: dict[str, float] = {}
@@ -91,6 +109,32 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
         if key == "strict_accuracy":
             out["std_strict_accuracy"] = pstdev(values) if len(values) > 1 else 0.0
     return out
+
+
+def _summarize_surfaces(seed_reports: list[dict[str, Any]]) -> dict[str, dict[str, float]]:
+    buckets: dict[str, list[float]] = {}
+    counts: dict[str, float] = {}
+    for report in seed_reports:
+        surfaces = report.get("surface_metrics", {})
+        if not isinstance(surfaces, dict):
+            continue
+        for surface, metrics in surfaces.items():
+            if not isinstance(metrics, dict):
+                continue
+            if "strict_accuracy" not in metrics:
+                continue
+            buckets.setdefault(str(surface), []).append(float(metrics["strict_accuracy"]))
+            counts[str(surface)] = counts.get(str(surface), 0.0) + float(metrics.get("count", 0.0) or 0.0)
+    return {
+        surface: {
+            "mean_strict_accuracy": mean(values),
+            "min_strict_accuracy": min(values),
+            "max_strict_accuracy": max(values),
+            "total_count": counts.get(surface, 0.0),
+        }
+        for surface, values in sorted(buckets.items())
+        if values
+    }
 
 
 def run_suite(args: argparse.Namespace) -> dict[str, Any]:
@@ -104,6 +148,7 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
             train_size=int(args.train_size),
             eval_size=int(args.eval_size),
             epochs=int(args.epochs),
+            prompt_epochs=int(args.prompt_epochs),
             batch_size=int(args.batch_size),
             learning_rate=float(args.learning_rate),
             seed=int(seed),
@@ -113,6 +158,7 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
             max_frames=int(args.max_frames),
             max_symbols=int(args.max_symbols),
             symbol_budget=int(args.symbol_budget) if int(args.symbol_budget) > 0 else None,
+            matched_prompt_budget=int(args.matched_prompt_budget) if int(args.matched_prompt_budget) > 0 else None,
             trace_weight=float(args.trace_weight),
             answer_weight=float(args.answer_weight),
             mdl_weight=float(args.mdl_weight),
@@ -127,10 +173,13 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
                 "metrics": result["metrics"],
                 "surface_metrics": result["surface_metrics"],
                 "history": result["history"],
+                "prompt_history": result["prompt_history"],
+                "matched_prompt_history": result["matched_prompt_history"],
                 "sample_eval_rows": [row.to_json() for row in result["eval_examples"][:3]],
             }
         )
     aggregate = _summarize([row["metrics"] for row in seed_reports])
+    aggregate_surface_metrics = _summarize_surfaces(seed_reports)
     report_path = run_dir / registry["report_names"]["suite"]
     validate_series_outputs("M", [registry["output_roots"]["suite"], str(run_dir)], [report_path])
     payload = {
@@ -155,8 +204,16 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
             "train_size": int(args.train_size),
             "eval_size": int(args.eval_size),
             "epochs": int(args.epochs),
+            "prompt_epochs": int(args.prompt_epochs),
+            "batch_size": int(args.batch_size),
+            "learning_rate": float(args.learning_rate),
+            "embedding_dim": int(args.embedding_dim),
+            "hidden_dim": int(args.hidden_dim),
+            "advisor_hidden_dim": int(args.advisor_hidden_dim),
+            "max_frames": int(args.max_frames),
             "max_symbols": int(args.max_symbols),
             "symbol_budget": int(args.symbol_budget),
+            "matched_prompt_budget": int(args.matched_prompt_budget),
             "trace_weight": float(args.trace_weight),
             "answer_weight": float(args.answer_weight),
             "mdl_weight": float(args.mdl_weight),
@@ -170,6 +227,7 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
         ],
         "seed_reports": seed_reports,
         "aggregate_metrics": aggregate,
+        "aggregate_surface_metrics": aggregate_surface_metrics,
     }
     report_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     print(f"M26 end-to-end Lojban symbiote report written to {report_path}")
@@ -183,6 +241,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--train-size", type=int, default=6000)
     parser.add_argument("--eval-size", type=int, default=1500)
     parser.add_argument("--epochs", type=int, default=8)
+    parser.add_argument("--prompt-epochs", type=int, default=8)
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--learning-rate", type=float, default=2e-3)
     parser.add_argument("--embedding-dim", type=int, default=64)
@@ -191,6 +250,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--max-frames", type=int, default=6)
     parser.add_argument("--max-symbols", type=int, default=32)
     parser.add_argument("--symbol-budget", type=int, default=0)
+    parser.add_argument("--matched-prompt-budget", type=int, default=0)
     parser.add_argument("--trace-weight", type=float, default=DEFAULT_M26_TRACE_WEIGHT)
     parser.add_argument("--answer-weight", type=float, default=DEFAULT_M26_ANSWER_WEIGHT)
     parser.add_argument("--mdl-weight", type=float, default=DEFAULT_M25_MDL_WEIGHT)

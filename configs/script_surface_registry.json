@@ -1,6 +1,6 @@
 {
   "version": "2026-05-20",
-  "purpose": "Series-aware registry for runnable scripts, DAGs, and scaffolding surfaces. This divides the codebase by research branch terminology from A-G through M25.",
+  "purpose": "Series-aware registry for runnable scripts, DAGs, and scaffolding surfaces. This divides the codebase by research branch terminology from A-G through M26.",
   "series_order": [
     "A-G",
     "H",
@@ -30,6 +30,7 @@
     "M23",
     "M24",
     "M25",
+    "M26",
     "control_plane",
     "data",
     "training",
@@ -161,6 +162,10 @@
     "M25": {
       "era": "active-branch",
       "question": "Emergent loose bridi grammar-action stream over the M24 substrate compression branch."
+    },
+    "M26": {
+      "era": "active-branch",
+      "question": "End-to-end Lojban symbiote spinal-cord verification over the M25 loose bridi stream."
     }
   },
   "path_rules": [
@@ -512,6 +517,27 @@
       "kind": "script",
       "bucket": "m25",
       "owner": "M25"
+    },
+    {
+      "globs": [
+        "src/lojban_evolution/m26/**"
+      ],
+      "series": "M26",
+      "status": "active-library",
+      "kind": "library",
+      "bucket": "src/lojban_evolution/m26",
+      "owner": "M26"
+    },
+    {
+      "globs": [
+        "scripts/m26/*.py",
+        "airflow/dags/m26/*.py"
+      ],
+      "series": "M26",
+      "status": "active-family-runner",
+      "kind": "script",
+      "bucket": "m26",
+      "owner": "M26"
     },
     {
       "globs": [

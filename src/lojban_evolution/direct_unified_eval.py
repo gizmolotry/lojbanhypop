@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
@@ -402,6 +402,8 @@ KEY_METRICS = (
     "shuffled_trace_accuracy",
     "random_trace_accuracy",
     "zero_trace_accuracy",
+    "m26_strict_delta_vs_prompt_only",
+    "m26_strict_delta_vs_matched_prompt",
     "predicted_vs_zero_delta",
     "single_optimizer_end_to_end_training",
     "hard_argmax_training_cut_detected",
@@ -415,12 +417,16 @@ KEY_METRICS = (
     "trainable_parameter_count",
     "generator_trainable_parameter_count",
     "advisor_trainable_parameter_count",
+    "m26_accuracy_per_symbol_delta_vs_matched_prompt",
+    "m26_gate_beats_matched_prompt",
     "m26_gate_answer_loss_reaches_generator",
     "m26_gate_answer_loss_reaches_symbol_heads",
     "m26_gate_single_optimizer",
     "m26_gate_no_hard_training_cut",
     "m26_gate_stream_beats_zero",
     "m26_spinal_cord_gate_pass_rate",
+    "m26_spinal_cord_candidate",
+    "m26_prompt_comparable_candidate",
     "m26_promotion_candidate",
     "phrase_accuracy",
     "phrase_exact_accuracy",
@@ -1187,14 +1193,20 @@ def _evaluate_m26_contract(
         "This verifies differentiable final-answer gradient flow through the bridi generator.",
         "M26 is not a chatbot promotion unless m26_promotion_candidate=1.0 and later base-LLM coupling exists.",
     ]
-    candidate = float(metrics.get("m26_promotion_candidate", 0.0) or 0.0)
+    candidate = float(metrics.get("m26_spinal_cord_candidate", metrics.get("m26_promotion_candidate", 0.0)) or 0.0)
+    prompt_candidate = float(metrics.get("m26_prompt_comparable_candidate", metrics.get("m26_promotion_candidate", 0.0)) or 0.0)
+    promotion_status = "m26_spinal_cord_only"
+    if candidate >= 1.0 and prompt_candidate >= 1.0:
+        promotion_status = "m26_prompt_comparable"
+    elif candidate >= 1.0:
+        promotion_status = "m26_spinal_promoted_prompt_gap"
     return {
         "test_id": test_id,
         "surface": contract.get("surface"),
-        "status": "available",
+        "status": "available" if candidate >= 1.0 else "available_non_promoted",
         "provenance": "artifact",
         "metrics": metrics,
-        "promotion_status": "promoted" if candidate >= 1.0 else "m26_spinal_cord_only",
+        "promotion_status": promotion_status,
         "notes": notes,
     }
 
@@ -2166,7 +2178,7 @@ def _m24_compression_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
                 seed_rows.append(row["metrics"])
     for key in KEY_METRICS:
         values = [float(row[key]) for row in seed_rows if isinstance(row.get(key), (int, float))]
-        if values and key not in metrics:
+        if values and (key not in metrics or metrics.get(key) is None):
             metrics[key] = sum(values) / len(values)
     return {key: value for key, value in metrics.items() if value is not None}
 
@@ -2215,7 +2227,7 @@ def _m23_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
                     seed_rows.append(row["metrics"])
     for key in KEY_METRICS:
         values = [float(row[key]) for row in seed_rows if isinstance(row.get(key), (int, float))]
-        if values and key not in metrics:
+        if values and (key not in metrics or metrics.get(key) is None):
             metrics[key] = sum(values) / len(values)
     return {key: value for key, value in metrics.items() if value is not None}
 
@@ -2274,7 +2286,7 @@ def _m25_emergent_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
             seed_rows.append(row["metrics"])
     for key in KEY_METRICS:
         values = [float(row[key]) for row in seed_rows if isinstance(row.get(key), (int, float))]
-        if values and key not in metrics:
+        if values and (key not in metrics or metrics.get(key) is None):
             metrics[key] = sum(values) / len(values)
     return {key: value for key, value in metrics.items() if value is not None}
 
@@ -2295,6 +2307,10 @@ def _m26_end_to_end_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("shuffled_trace_accuracy", aggregate.get("mean_shuffled_trace_accuracy"))
         metrics.setdefault("random_trace_accuracy", aggregate.get("mean_random_trace_accuracy"))
         metrics.setdefault("zero_trace_accuracy", aggregate.get("mean_zero_trace_accuracy"))
+        metrics.setdefault("prompt_only_accuracy", aggregate.get("mean_prompt_only_accuracy"))
+        metrics.setdefault("matched_prompt_accuracy", aggregate.get("mean_matched_prompt_accuracy"))
+        metrics.setdefault("m26_strict_delta_vs_prompt_only", aggregate.get("mean_m26_strict_delta_vs_prompt_only"))
+        metrics.setdefault("m26_strict_delta_vs_matched_prompt", aggregate.get("mean_m26_strict_delta_vs_matched_prompt"))
         metrics.setdefault("predicted_vs_shuffled_delta", aggregate.get("mean_predicted_vs_shuffled_delta"))
         metrics.setdefault("predicted_vs_random_delta", aggregate.get("mean_predicted_vs_random_delta"))
         metrics.setdefault("predicted_vs_zero_delta", aggregate.get("mean_predicted_vs_zero_delta"))
@@ -2307,6 +2323,19 @@ def _m26_end_to_end_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
             aggregate.get("mean_mean_predicted_emitted_symbols_after_bottleneck"),
         )
         metrics.setdefault("accuracy_per_loose_symbol", aggregate.get("mean_accuracy_per_loose_symbol"))
+        metrics.setdefault("mean_prompt_tokens", aggregate.get("mean_mean_prompt_tokens"))
+        metrics.setdefault("mean_matched_prompt_tokens", aggregate.get("mean_mean_matched_prompt_tokens"))
+        metrics.setdefault("loose_symbol_to_prompt_ratio", aggregate.get("mean_loose_symbol_to_prompt_ratio"))
+        metrics.setdefault("loose_symbol_to_matched_prompt_ratio", aggregate.get("mean_loose_symbol_to_matched_prompt_ratio"))
+        metrics.setdefault("matched_prompt_token_reduction_ratio", aggregate.get("mean_matched_prompt_token_reduction_ratio"))
+        metrics.setdefault("accuracy_per_prompt_token", aggregate.get("mean_accuracy_per_prompt_token"))
+        metrics.setdefault("matched_prompt_accuracy_per_token", aggregate.get("mean_matched_prompt_accuracy_per_token"))
+        metrics.setdefault(
+            "m26_accuracy_per_symbol_delta_vs_matched_prompt",
+            aggregate.get("mean_m26_accuracy_per_symbol_delta_vs_matched_prompt"),
+        )
+        metrics.setdefault("matched_prompt_token_budget", aggregate.get("mean_matched_prompt_token_budget"))
+        metrics.setdefault("m26_gate_beats_matched_prompt", aggregate.get("mean_m26_gate_beats_matched_prompt"))
         metrics.setdefault("single_optimizer_end_to_end_training", aggregate.get("mean_single_optimizer_end_to_end_training"))
         metrics.setdefault("hard_argmax_training_cut_detected", aggregate.get("mean_hard_argmax_training_cut_detected"))
         metrics.setdefault("torch_no_grad_training_cut_detected", aggregate.get("mean_torch_no_grad_training_cut_detected"))
@@ -2324,7 +2353,10 @@ def _m26_end_to_end_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("m26_gate_single_optimizer", aggregate.get("mean_m26_gate_single_optimizer"))
         metrics.setdefault("m26_gate_no_hard_training_cut", aggregate.get("mean_m26_gate_no_hard_training_cut"))
         metrics.setdefault("m26_gate_stream_beats_zero", aggregate.get("mean_m26_gate_stream_beats_zero"))
+        metrics.setdefault("m26_gate_beats_matched_prompt", aggregate.get("mean_m26_gate_beats_matched_prompt"))
         metrics.setdefault("m26_spinal_cord_gate_pass_rate", aggregate.get("mean_m26_spinal_cord_gate_pass_rate"))
+        metrics.setdefault("m26_spinal_cord_candidate", aggregate.get("mean_m26_spinal_cord_candidate"))
+        metrics.setdefault("m26_prompt_comparable_candidate", aggregate.get("mean_m26_prompt_comparable_candidate"))
         metrics.setdefault("m26_promotion_candidate", aggregate.get("mean_m26_promotion_candidate"))
     seed_rows: list[dict[str, Any]] = []
     for row in payload.get("seed_reports", []) if isinstance(payload.get("seed_reports"), list) else []:
@@ -2332,7 +2364,7 @@ def _m26_end_to_end_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
             seed_rows.append(row["metrics"])
     for key in KEY_METRICS:
         values = [float(row[key]) for row in seed_rows if isinstance(row.get(key), (int, float))]
-        if values and key not in metrics:
+        if values and (key not in metrics or metrics.get(key) is None):
             metrics[key] = sum(values) / len(values)
     return {key: value for key, value in metrics.items() if value is not None}
 
@@ -2436,7 +2468,7 @@ def _m21_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
                 seed_rows.append(row["metrics"])
     for key in KEY_METRICS:
         values = [float(row[key]) for row in seed_rows if isinstance(row.get(key), (int, float))]
-        if values and key not in metrics:
+        if values and (key not in metrics or metrics.get(key) is None):
             metrics[key] = sum(values) / len(values)
     return metrics
 

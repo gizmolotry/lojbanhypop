@@ -340,6 +340,18 @@ M_STAGE_SPECS: list[dict[str, Any]] = [
         "title": "M24",
         "child_dags": ["lojban_m24_substrate_compression"],
     },
+    {
+        "task_id": "m25_emergent_bridi_grammar",
+        "stage_key": "M25",
+        "title": "M25",
+        "child_dags": ["lojban_m25_emergent_bridi"],
+    },
+    {
+        "task_id": "m26_end_to_end_lojban_symbiote",
+        "stage_key": "M26",
+        "title": "M26",
+        "child_dags": ["lojban_m26_end_to_end_loafman"],
+    },
 ]
 
 

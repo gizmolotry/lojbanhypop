@@ -389,16 +389,24 @@ def test_m26_special_stage_metrics_and_order() -> None:
     payload = {
         "aggregate_metrics": {
             "mean_strict_accuracy": 0.44,
+            "mean_phrase_accuracy": 0.99,
             "mean_end_to_end_answer_accuracy": 0.44,
             "mean_zero_trace_accuracy": 0.20,
+            "mean_matched_prompt_accuracy": 0.40,
+            "mean_m26_strict_delta_vs_matched_prompt": 0.04,
             "mean_predicted_vs_zero_delta": 0.24,
             "mean_answer_loss_generator_grad_norm": 1.5,
             "mean_answer_loss_symbol_head_grad_norm": 0.8,
+            "mean_answer_loss_advisor_grad_norm": 0.9,
             "mean_answer_loss_reaches_generator": 1.0,
             "mean_answer_loss_reaches_symbol_heads": 1.0,
             "mean_single_optimizer_end_to_end_training": 1.0,
             "mean_hard_argmax_training_cut_detected": 0.0,
+            "mean_trainable_parameter_count": 123.0,
+            "mean_m26_gate_beats_matched_prompt": 1.0,
             "mean_m26_spinal_cord_gate_pass_rate": 1.0,
+            "mean_m26_spinal_cord_candidate": 1.0,
+            "mean_m26_prompt_comparable_candidate": 1.0,
             "mean_m26_promotion_candidate": 1.0,
         }
     }
@@ -412,8 +420,23 @@ def test_m26_special_stage_metrics_and_order() -> None:
         "strict_accuracy",
         "m26_promotion_candidate",
         "m26_spinal_cord_gate_pass_rate",
-        "answer_loss_reaches_generator",
-        "answer_loss_reaches_symbol_heads",
+        "m26_spinal_cord_candidate",
+        "m26_prompt_comparable_candidate",
     ]
+    assert metrics["answer_loss_reaches_generator"] == 1.0
+    assert metrics["strict_accuracy"] == 0.44
+    assert metrics["phrase_accuracy"] == 0.99
+    assert metrics["matched_prompt_accuracy"] == 0.40
+    assert metrics["m26_strict_delta_vs_matched_prompt"] == 0.04
     assert metrics["answer_loss_generator_grad_norm"] == 1.5
+    assert metrics["answer_loss_advisor_grad_norm"] == 0.9
     assert metrics["predicted_vs_zero_delta"] == 0.24
+    assert metrics["trainable_parameter_count"] == 123.0
+    assert metrics["m26_gate_beats_matched_prompt"] == 1.0
+
+    assert (
+        whole_grid._direct_promotion_status(
+            {"contract_results": [{"test_id": "m26.end_to_end_spinal_cord", "promotion_status": "m26_spinal_promoted_prompt_gap"}]}
+        )
+        == "m26_spinal_promoted_prompt_gap"
+    )

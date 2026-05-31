@@ -1,6 +1,6 @@
 # Ablation Program Spine
 
-- Generated UTC: `2026-05-30T19:28:34.690625+00:00`
+- Generated UTC: `2026-05-31T11:42:32.110251+00:00`
 - Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
 - Source taxonomy config: `configs/experiment_taxonomy.json`
 - Stage count: `29`
@@ -553,11 +553,18 @@ This is the ordered research spine of the project: legacy letter-series families
 - Runnable rows: `0`
 - Question boundary: causal frame relevance over the M21/M22 dynamic bridi substrate
 - Thesis: hold the Lojbanic dictionary and dynamic bridi trace fixed, then test whether answer-causal frame selection requires an explicit relevance router under decoy relation OOD.
+- Selected upstream: `M21.1.T`
+- Inherits: `dynamic bridi Q-former, M22 semantic coverage and hard relation OOD audit surfaces, judri-gated bridge, strict accuracy canonical metric`
+- Reopens: `decoy relation OOD brittleness, answer-causal frame relevance, oracle/random/no-selector relevance ablations`
+- Rejects: `new dictionary family, additional broad gauntlet surfaces before relevance is isolated`
 - Allowed axes: `scale control with decoy-balanced training, lightweight frame relevance scoring head, single relevance rank margin loss, oracle/random/uniform/decoy-only eval read paths, six-seed decoy relation OOD stability, trace exact punishment diagnostic`
 - Frozen/forbidden drift: `new dictionary expansion, new broad gauntlet surfaces unrelated to relevance, phrase accuracy as canonical metric, promotion from clean accuracy without decoy OOD lift`
 - Promotion basis: `decoy_relation_ood_accuracy, worst_surface_accuracy, relevance_top1_accuracy, m23_router_decoy_lift_vs_scale`
 - Primary metrics: `decoy_relation_ood_accuracy, worst_surface_accuracy, strict_accuracy, relevance_top1_accuracy`
 - Guardrail metrics: `bridi_trace_exact_accuracy, oracle_relevance_accuracy, random_relevance_accuracy, no_relevance_accuracy, decoy_only_accuracy, accuracy_per_token, accuracy_per_trace_token, loss_trace_exact_surrogate, trace_exact_surrogate_weight`
+- Historical comparison families: `M22`
+- Required test contracts: `m23.causal_relevance_router`
+- Automatic comparison targets: `M22, M21.1.S, M21.1.T, M23.A, M23.B, M23.C`
 - Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
 - DAGs: `airflow/dags/m23/lojban_m23_relevance_router_dag.py`
 
@@ -570,44 +577,65 @@ This is the ordered research spine of the project: legacy letter-series families
 - Runnable rows: `0`
 - Question boundary: M24.1 matched trace corruption and M24.2 hard symbolic trace bottleneck follow-up over the M23 causal relevance substrate
 - Thesis: test whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only, while M24.1 adds matched shuffled-trace controls and MDL/compression pressure and M24.2 hardens that same M24 family into an explicit symbolic trace bottleneck; strict_accuracy remains canonical and phrase accuracy is diagnostic only.
+- Selected upstream: `M23.C`
+- Inherits: `causal relevance router evidence, dynamic bridi trace substrate, strict accuracy canonical metric, token efficiency accounting discipline`
+- Reopens: `substrate token budget, compression objective, rate-distortion accounting over strict accuracy`
+- Rejects: `phrase accuracy as canonical metric, compression claims without explicit token metrics`
 - Allowed axes: `substrate token budget, compression objective weight, relevance-trace distillation, matched trace corruption control, hard symbolic trace bottleneck, MDL compression pressure, token-ratio comparison against M23, strict-accuracy retention under compression`
 - Frozen/forbidden drift: `phrase accuracy as canonical metric, new broad semantic gauntlet unrelated to compression, decoder bridge changes as the primary result, compression claims without token accounting`
 - Promotion basis: `strict_accuracy retention against prompt/M23 controls, m24_promotion_gate_pass_rate, m24_promotion_candidate must equal 1.0 for any promotion, predicted_vs_random_delta, predicted_vs_shuffled_delta, packed_symbol_to_prompt_ratio below 1.0`
 - Primary metrics: `strict_accuracy, predicted_trace_accuracy, predicted_vs_random_delta, shuffled_trace_accuracy, predicted_vs_shuffled_delta, m24_promotion_gate_pass_rate, m24_promotion_candidate, m24_2_hard_bottleneck_score, m24_2_promotion_gate_pass_rate, m24_2_promotion_candidate, packed_symbol_to_prompt_ratio, token_reduction_ratio, mdl_weight, strict_accuracy_per_substrate_token`
 - Guardrail metrics: `prompt_only_accuracy, advisor_vs_prompt_delta, bridi_trace_exact_accuracy, oracle_trained_oracle_trace_accuracy, random_trace_accuracy, zero_trace_accuracy, reference_token_count, substrate_token_count, m24_gate_packed_trace_shorter_than_prompt, m24_2_hard_bottleneck_trace_exact_accuracy, m24_2_hard_bottleneck_symbol_error_rate, m24_2_gate_hard_bottleneck_configured, m24_2_gate_strict_accuracy_retained, m24_2_gate_trace_beats_shuffled_strong, m24_2_gate_trace_beats_random_strong, m24_2_gate_trace_exact_floor, m24_2_gate_symbol_budget_respected, m24_2_gate_hard_trace_beats_random, m24_2_gate_hard_trace_beats_prompt_only`
+- Historical comparison families: `M23`
+- Required test contracts: `m24.substrate_first_compression`
+- Automatic comparison targets: `M23, M23.B, M23.C, M24, M24.1, M24.2`
 - Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
 - DAGs: `airflow/dags/m24/lojban_m24_substrate_compression_dag.py`
 
 ## 27. M25
 
 - Kind: `major_series`
-- Layer: `manifold_and_return_path`
+- Layer: `emergent_bridi_grammar`
 - Objective: test whether a looser learned Lojbanic bridi stream can preserve causal symbolic compression without hardcoding fixed predicate rows; strict_accuracy remains canonical and phrase accuracy is diagnostic only.
 - Entry count: `0`
 - Runnable rows: `0`
 - Question boundary: M25 emergent bridi grammar-action stream over the M23/M24 symbolic substrate
 - Thesis: test whether a looser learned Lojbanic bridi stream can preserve causal symbolic compression without hardcoding fixed predicate rows; strict_accuracy remains canonical and phrase accuracy is diagnostic only.
+- Selected upstream: `M24.2`
+- Inherits: `M23 decoy-balanced relevance data, M24 frozen trace-only advisor discipline, strict accuracy canonical metric, token efficiency accounting discipline`
+- Reopens: `fixed frame row topology, looser emergent bridi grammar actions, stream-length rate-distortion accounting`
+- Rejects: `full hand-authored Lojban AST as primary architecture, phrase accuracy as canonical metric, continuous trace leakage into the advisor`
 - Allowed axes: `loose grammar-action stream length, symbol budget, trace reconstruction weight, MDL compression pressure, predicted/oracle/shuffled/random/zero stream controls, matched prompt-only token accounting`
 - Frozen/forbidden drift: `full hand-authored Lojban AST as the main result, phrase accuracy as canonical metric, continuous prompt-state leakage into the advisor, promotion without shuffled/random stream controls`
 - Promotion basis: `strict_accuracy, predicted_vs_random_delta, predicted_vs_shuffled_delta, loose_stream_exact_accuracy, token_reduction_ratio, matched_prompt_accuracy, m25_strict_delta_vs_matched_prompt, m25_promotion_candidate`
 - Primary metrics: `strict_accuracy, predicted_stream_accuracy, matched_prompt_accuracy, m25_strict_delta_vs_matched_prompt, loose_stream_exact_accuracy, predicted_vs_random_delta, predicted_vs_shuffled_delta`
 - Guardrail metrics: `prompt_only_accuracy, matched_prompt_accuracy, matched_prompt_token_budget, m25_gate_beats_matched_prompt, token_reduction_ratio, advisor_primary_trace_is_symbolic, continuous_trace_smuggling_detected, generator_parameters_unchanged_after_advisor`
+- Historical comparison families: `M24`
+- Required test contracts: `m25.emergent_bridi_stream`
+- Automatic comparison targets: `M23, M24, M24.1, M24.2, M25, M25.A`
 - DAGs: `airflow/dags/m25/lojban_m25_emergent_bridi_dag.py`
 
 ## 28. M26
 
 - Kind: `major_series`
-- Layer: `manifold_and_return_path`
+- Layer: `end_to_end_lojban_symbiote`
 - Objective: turn the M25 loose bridi stream from a staged assay into one trainable prompt-to-bridi-to-advisor organism, proving final answer loss reaches the symbolic generator through a differentiable trace handoff.
 - Entry count: `0`
 - Runnable rows: `0`
-- Question boundary: end-to-end Loafman spinal-cord verification
+- Question boundary: end-to-end Lojban symbiote spinal-cord verification
 - Thesis: turn the M25 loose bridi stream from a staged assay into one trainable prompt-to-bridi-to-advisor organism, proving final answer loss reaches the symbolic generator through a differentiable trace handoff.
+- Selected upstream: `M25.A`
+- Inherits: `M25 loose bridi grammar-action stream emitter, M23/M25 decoy-balanced semantic source data, strict accuracy canonical metric, token efficiency and corruption-control skepticism`
+- Reopens: `frozen generator/advisor boundary, hard integer trace packing during training, final-answer gradient flow through the symbiote path`
+- Rejects: `staged advisor-only success as evidence of one Lojban symbiote organism, chatbot promotion before base-LLM end-to-end coupling exists`
 - Allowed axes: `differentiable soft bridi trace handoff, single optimizer generator/advisor training, answer-loss gradient flow probes, symbol budget over soft trace positions, zero/shuffled/random trace controls`
 - Frozen/forbidden drift: `freezing the generator before advisor training, hard argmax or long integer packing on the training path, claiming chatbot-level English generation without base-LLM coupling, phrase accuracy as canonical accuracy`
-- Promotion basis: `answer_loss_reaches_generator, answer_loss_reaches_symbol_heads, single_optimizer_end_to_end_training, predicted_vs_zero_delta, m26_spinal_cord_gate_pass_rate`
+- Promotion basis: `answer_loss_reaches_generator, answer_loss_reaches_symbol_heads, single_optimizer_end_to_end_training, predicted_vs_zero_delta, m26_spinal_cord_gate_pass_rate, m26_gate_beats_matched_prompt, m26_spinal_cord_candidate, m26_prompt_comparable_candidate`
 - Primary metrics: `strict_accuracy, end_to_end_answer_accuracy, answer_loss_reaches_generator, answer_loss_reaches_symbol_heads`
-- Guardrail metrics: `hard_argmax_training_cut_detected, torch_no_grad_training_cut_detected, predicted_vs_shuffled_delta, predicted_vs_random_delta, loose_stream_exact_accuracy, accuracy_per_loose_symbol`
+- Guardrail metrics: `hard_argmax_training_cut_detected, torch_no_grad_training_cut_detected, predicted_vs_shuffled_delta, predicted_vs_random_delta, loose_stream_exact_accuracy, accuracy_per_loose_symbol, m26_strict_delta_vs_matched_prompt, matched_prompt_accuracy`
+- Historical comparison families: `M25`
+- Required test contracts: `m26.end_to_end_spinal_cord`
+- Automatic comparison targets: `M23, M24.2, M25, M25.A, M26, M26.A`
 - Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
 - DAGs: `airflow/dags/m26/lojban_m26_end_to_end_loafman_dag.py`
 

@@ -21,13 +21,16 @@ def test_m26_suite_cli_help() -> None:
         check=True,
     )
     assert "--epochs" in result.stdout
+    assert "--prompt-epochs" in result.stdout
     assert "--symbol-budget" in result.stdout
+    assert "--matched-prompt-budget" in result.stdout
     assert "--answer-weight" in result.stdout
 
 
 def test_m26_suite_cli_defaults_are_spinal_cord_defaults() -> None:
     args = runner.parse_args([])
     assert args.symbol_budget == 0
+    assert args.matched_prompt_budget == 0
     assert args.answer_weight == 1.0
 
 
@@ -63,6 +66,8 @@ def test_m26_suite_cli_tiny_smoke_writes_report() -> None:
             "16",
             "--symbol-budget",
             "8",
+            "--matched-prompt-budget",
+            "8",
             "--mdl-weight",
             "0.1",
             "--run-id",
@@ -78,7 +83,15 @@ def test_m26_suite_cli_tiny_smoke_writes_report() -> None:
     assert payload["track"] == "M26"
     assert payload["config"]["max_symbols"] == 16
     assert payload["config"]["symbol_budget"] == 8
+    assert payload["config"]["matched_prompt_budget"] == 8
+    assert payload["config"]["batch_size"] == 6
+    assert payload["config"]["embedding_dim"] == 8
     assert "single_optimizer_generator_and_advisor" in payload["architecture_locks"]
     assert payload["seed_reports"][0]["metrics"]["answer_loss_reaches_generator"] == 1.0
+    assert "prompt_history" in payload["seed_reports"][0]
+    assert "matched_prompt_history" in payload["seed_reports"][0]
     assert "mean_answer_loss_reaches_generator" in payload["aggregate_metrics"]
+    assert "mean_phrase_accuracy" in payload["aggregate_metrics"]
+    assert "mean_matched_prompt_accuracy" in payload["aggregate_metrics"]
     assert "mean_m26_spinal_cord_gate_pass_rate" in payload["aggregate_metrics"]
+    assert payload["aggregate_surface_metrics"]

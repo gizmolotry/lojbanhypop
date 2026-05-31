@@ -56,8 +56,11 @@ def main() -> None:
 
     entries = history.get("entries", [])
     series_families = {row["series_key"]: row for row in history.get("series_family_manifests", [])}
-    transitions = history.get("transition_manifests", [])
-    comparison_contracts = history.get("comparison_contracts", {})
+    transitions = _merge_transition_manifests(history.get("transition_manifests", []), taxonomy.get("transition_manifests", []))
+    comparison_contracts = {
+        **taxonomy.get("family_comparison_contracts", {}),
+        **history.get("comparison_contracts", {}),
+    }
     major_families = taxonomy.get("major_families", {})
 
     stages: list[dict[str, Any]] = []
@@ -156,6 +159,18 @@ def _build_major_stage(
     elif stage_key == "M2":
         legacy_origin = "L"
 
+    required_contracts = comparison_contract.get("required_test_contract_ids") or comparison_contract.get("required_test_contracts") or []
+    comparison_targets = comparison_contract.get("comparison_targets")
+    if not isinstance(comparison_targets, list):
+        comparison_targets = []
+    explicit_entries = comparison_contract.get("explicit_compare_entries")
+    if not comparison_targets and isinstance(explicit_entries, list):
+        comparison_targets = [
+            {"kind": "explicit_entry", "target": str(target), "reason": "family-specific explicit comparator"}
+            for target in explicit_entries
+            if str(target).strip()
+        ]
+
     return {
         "stage_key": stage_key,
         "stage_kind": "major_series",
@@ -179,9 +194,9 @@ def _build_major_stage(
         "promotion_basis": list(taxonomy_row.get("promotion_basis", [])),
         "metrics_primary": list(taxonomy_row.get("metrics_primary", [])),
         "metrics_guardrail": list(taxonomy_row.get("metrics_guardrail", [])),
-        "required_test_contracts": list(comparison_contract.get("required_test_contract_ids", [])),
+        "required_test_contracts": [str(item) for item in required_contracts],
         "historical_comparison_families": list(comparison_contract.get("historical_comparison_families", [])),
-        "comparison_targets": list(comparison_contract.get("comparison_targets", [])),
+        "comparison_targets": comparison_targets,
         "baseline_manifest": taxonomy_row.get("baseline_manifest"),
         "selected_upstream": transition.get("selected_upstream") if transition else None,
         "inherits_components": list(transition.get("inherits_components", [])) if transition else [],
@@ -239,6 +254,18 @@ def _build_control_plane_stage(history_manifest: Path) -> dict[str, Any]:
     }
 
 
+def _merge_transition_manifests(history_transitions: list[dict[str, Any]], taxonomy_transitions: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    merged: dict[str, dict[str, Any]] = {}
+    for row in [*history_transitions, *taxonomy_transitions]:
+        if not isinstance(row, dict):
+            continue
+        transition_id = str(row.get("transition_id") or "").strip()
+        if not transition_id:
+            continue
+        merged[transition_id] = row
+    return list(merged.values())
+
+
 def _major_program_layer(major_num: int) -> str:
     if major_num <= 2:
         return "legacy_orchestration"
@@ -254,6 +281,10 @@ def _major_program_layer(major_num: int) -> str:
         return "causal_relevance_substrate"
     if major_num == 24:
         return "substrate_compression"
+    if major_num == 25:
+        return "emergent_bridi_grammar"
+    if major_num == 26:
+        return "end_to_end_lojban_symbiote"
     return "manifold_and_return_path"
 
 

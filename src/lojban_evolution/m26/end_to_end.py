@@ -12,6 +12,7 @@ from torch.utils.data import DataLoader
 
 from lojban_evolution.m21.bridi import ANSWER_LABELS, build_vocab
 from lojban_evolution.m24.compression import _accuracy
+from lojban_evolution.m24.compression import PromptOnlyControl
 from lojban_evolution.m25.emergent_bridi import (
     DEFAULT_M25_MDL_WEIGHT,
     LOOSE_PAD,
@@ -22,6 +23,7 @@ from lojban_evolution.m25.emergent_bridi import (
     _aux_vocab_size,
     _component_accuracy,
     _value_vocab_size,
+    budget_prompt_tokens,
     generate_m25_emergent_bridi_examples,
     loose_stream_symbol_counts,
     m25_collate,
@@ -281,16 +283,25 @@ def evaluate_m26_end_to_end_loafman(
     batch_size: int = 128,
     device: str | torch.device = "cpu",
     seed: int = 0,
+    prompt_control: PromptOnlyControl | None = None,
+    matched_prompt_control: PromptOnlyControl | None = None,
+    matched_prompt_budget: int | None = None,
 ) -> dict[str, Any]:
     device_obj = torch.device(device)
     dataset = M25LooseBridiDataset(examples, vocab, max_symbols=model.max_symbols)
     loader = DataLoader(dataset, batch_size=int(batch_size), shuffle=False, collate_fn=m25_collate)
     model.eval()
+    if prompt_control is not None:
+        prompt_control.eval()
+    if matched_prompt_control is not None:
+        matched_prompt_control.eval()
     logits: dict[str, list[torch.Tensor]] = defaultdict(list)
     streams: dict[str, list[torch.Tensor]] = defaultdict(list)
     targets: list[torch.Tensor] = []
     surfaces: list[str] = []
     symbol_counts: list[torch.Tensor] = []
+    prompt_counts: list[torch.Tensor] = []
+    matched_prompt_counts: list[torch.Tensor] = []
     with torch.no_grad():
         for batch_idx, batch in enumerate(loader):
             input_ids = batch["input_ids"].to(device_obj)
@@ -307,6 +318,12 @@ def evaluate_m26_end_to_end_loafman(
             logits["zero"].append(
                 model.advisor_logits_from_generator_outputs(generator_outputs, active_override=zero_active).detach().cpu()
             )
+            if prompt_control is not None:
+                logits["prompt"].append(prompt_control(input_ids).detach().cpu())
+            if matched_prompt_control is not None:
+                matched_input_ids = budget_prompt_tokens(input_ids, matched_prompt_budget)
+                logits["matched_prompt"].append(matched_prompt_control(matched_input_ids).detach().cpu())
+                matched_prompt_counts.append(matched_input_ids.ne(0).sum(dim=-1).float().detach().cpu())
             predicted = pack_loose_stream_from_outputs(generator_outputs)
             oracle = batch["stream_targets"].to(device_obj)
             streams["predicted"].append(predicted.detach().cpu())
@@ -314,6 +331,7 @@ def evaluate_m26_end_to_end_loafman(
             targets.append(target.detach().cpu())
             surfaces.extend(batch["surface"])
             symbol_counts.append(loose_stream_symbol_counts(predicted).detach().cpu())
+            prompt_counts.append(input_ids.ne(0).sum(dim=-1).float().detach().cpu())
     target_all = torch.cat(targets, dim=0)
     all_logits = {key: torch.cat(value, dim=0) for key, value in logits.items()}
     all_streams = {key: torch.cat(value, dim=0) for key, value in streams.items()}
@@ -321,8 +339,14 @@ def evaluate_m26_end_to_end_loafman(
     shuffled_acc = _accuracy(all_logits["shuffled"], target_all)
     random_acc = _accuracy(all_logits["random"], target_all)
     zero_acc = _accuracy(all_logits["zero"], target_all)
+    prompt_acc = _accuracy(all_logits["prompt"], target_all) if "prompt" in all_logits else 0.0
+    matched_prompt_acc = _accuracy(all_logits["matched_prompt"], target_all) if "matched_prompt" in all_logits else 0.0
     pred_count = torch.cat(symbol_counts, dim=0)
+    prompt_count = torch.cat(prompt_counts, dim=0)
+    matched_prompt_count = torch.cat(matched_prompt_counts, dim=0) if matched_prompt_counts else torch.zeros_like(prompt_count)
     mean_pred = float(pred_count.mean().item()) if pred_count.numel() else 0.0
+    mean_prompt = float(prompt_count.mean().item()) if prompt_count.numel() else 0.0
+    mean_matched_prompt = float(matched_prompt_count.mean().item()) if matched_prompt_count.numel() else 0.0
     metrics = {
         "strict_accuracy": predicted_acc,
         "synthetic_world_accuracy": predicted_acc,
@@ -331,11 +355,27 @@ def evaluate_m26_end_to_end_loafman(
         "shuffled_trace_accuracy": shuffled_acc,
         "random_trace_accuracy": random_acc,
         "zero_trace_accuracy": zero_acc,
+        "prompt_only_accuracy": prompt_acc,
+        "matched_prompt_accuracy": matched_prompt_acc,
+        "m26_strict_delta_vs_prompt_only": float(predicted_acc - prompt_acc),
+        "m26_strict_delta_vs_matched_prompt": float(predicted_acc - matched_prompt_acc),
         "predicted_vs_shuffled_delta": float(predicted_acc - shuffled_acc),
         "predicted_vs_random_delta": float(predicted_acc - random_acc),
         "predicted_vs_zero_delta": float(predicted_acc - zero_acc),
         "mean_predicted_emitted_symbols_after_bottleneck": mean_pred,
+        "mean_prompt_tokens": mean_prompt,
+        "mean_matched_prompt_tokens": mean_matched_prompt,
+        "loose_symbol_to_prompt_ratio": float(mean_pred / max(1.0, mean_prompt)),
+        "loose_symbol_to_matched_prompt_ratio": float(mean_pred / max(1.0, mean_matched_prompt)),
+        "matched_prompt_token_reduction_ratio": float(1.0 - mean_matched_prompt / max(1.0, mean_prompt)),
         "accuracy_per_loose_symbol": float(predicted_acc / max(1.0, mean_pred)),
+        "accuracy_per_prompt_token": float(prompt_acc / max(1.0, mean_prompt)),
+        "matched_prompt_accuracy_per_token": float(matched_prompt_acc / max(1.0, mean_matched_prompt)),
+        "m26_accuracy_per_symbol_delta_vs_matched_prompt": float(
+            predicted_acc / max(1.0, mean_pred) - matched_prompt_acc / max(1.0, mean_matched_prompt)
+        ),
+        "matched_prompt_token_budget": float(matched_prompt_budget or 0),
+        "m26_gate_beats_matched_prompt": 1.0 if "matched_prompt" in all_logits and predicted_acc >= matched_prompt_acc else 0.0,
         "single_optimizer_end_to_end_training": 1.0,
         "hard_argmax_training_cut_detected": 0.0,
         "torch_no_grad_training_cut_detected": 0.0,
@@ -358,6 +398,7 @@ def train_m26_end_to_end_loafman(
     train_size: int = 6000,
     eval_size: int = 1500,
     epochs: int = 8,
+    prompt_epochs: int | None = None,
     batch_size: int = 128,
     learning_rate: float = 2e-3,
     seed: int = 26,
@@ -367,6 +408,7 @@ def train_m26_end_to_end_loafman(
     max_frames: int = 6,
     max_symbols: int = 32,
     symbol_budget: int | None = None,
+    matched_prompt_budget: int | None = None,
     trace_weight: float = DEFAULT_M26_TRACE_WEIGHT,
     answer_weight: float = DEFAULT_M26_ANSWER_WEIGHT,
     mdl_weight: float = DEFAULT_M25_MDL_WEIGHT,
@@ -426,6 +468,45 @@ def train_m26_end_to_end_loafman(
             batches += 1
         history.append({key: value / max(1, batches) for key, value in totals.items()})
 
+    prompt_control = PromptOnlyControl(
+        vocab_size=len(vocab),
+        embedding_dim=max(8, int(embedding_dim) // 2),
+        hidden_dim=int(advisor_hidden_dim),
+    ).to(device_obj)
+    resolved_matched_prompt_budget = int(matched_prompt_budget or 0)
+    if resolved_matched_prompt_budget <= 0:
+        resolved_matched_prompt_budget = int(symbol_budget or 0)
+    if resolved_matched_prompt_budget <= 0:
+        resolved_matched_prompt_budget = int(max_symbols)
+    matched_prompt_control = PromptOnlyControl(
+        vocab_size=len(vocab),
+        embedding_dim=max(8, int(embedding_dim) // 2),
+        hidden_dim=int(advisor_hidden_dim),
+    ).to(device_obj)
+    prompt_history = _train_prompt_control(
+        prompt_control,
+        train_examples,
+        vocab,
+        max_symbols=int(max_symbols),
+        prompt_token_budget=None,
+        epochs=int(prompt_epochs if prompt_epochs is not None else epochs),
+        batch_size=int(batch_size),
+        learning_rate=float(learning_rate),
+        device=device_obj,
+        seed=int(seed) + 300,
+    )
+    matched_prompt_history = _train_prompt_control(
+        matched_prompt_control,
+        train_examples,
+        vocab,
+        max_symbols=int(max_symbols),
+        prompt_token_budget=resolved_matched_prompt_budget,
+        epochs=int(prompt_epochs if prompt_epochs is not None else epochs),
+        batch_size=int(batch_size),
+        learning_rate=float(learning_rate),
+        device=device_obj,
+        seed=int(seed) + 400,
+    )
     eval_payload = evaluate_m26_end_to_end_loafman(
         model=model,
         examples=eval_examples,
@@ -433,6 +514,9 @@ def train_m26_end_to_end_loafman(
         batch_size=int(batch_size),
         device=device_obj,
         seed=int(seed),
+        prompt_control=prompt_control,
+        matched_prompt_control=matched_prompt_control,
+        matched_prompt_budget=resolved_matched_prompt_budget,
     )
     probe_batch = m25_collate([M25LooseBridiDataset(eval_examples, vocab, max_symbols=model.max_symbols)[i] for i in range(min(8, len(eval_examples)))])
     gradient_probe = probe_m26_answer_gradient_flow(model, probe_batch).as_dict()
@@ -454,6 +538,7 @@ def train_m26_end_to_end_loafman(
             "train_size": int(train_size),
             "eval_size": int(eval_size),
             "epochs": int(epochs),
+            "prompt_epochs": int(prompt_epochs if prompt_epochs is not None else epochs),
             "batch_size": int(batch_size),
             "learning_rate": float(learning_rate),
             "seed": int(seed),
@@ -463,6 +548,7 @@ def train_m26_end_to_end_loafman(
             "max_frames": int(max_frames),
             "max_symbols": int(max_symbols),
             "symbol_budget": int(symbol_budget or 0),
+            "matched_prompt_budget": int(resolved_matched_prompt_budget),
             "trace_weight": float(trace_weight),
             "answer_weight": float(answer_weight),
             "mdl_weight": float(mdl_weight),
@@ -471,6 +557,8 @@ def train_m26_end_to_end_loafman(
         "metrics": metrics,
         "surface_metrics": eval_payload["surface_metrics"],
         "history": history,
+        "prompt_history": prompt_history,
+        "matched_prompt_history": matched_prompt_history,
         "train_examples": train_examples,
         "eval_examples": eval_examples,
         "vocab_size": len(vocab),
@@ -478,16 +566,24 @@ def train_m26_end_to_end_loafman(
 
 
 def m26_promotion_gate_metrics(metrics: dict[str, float]) -> dict[str, float]:
-    gates = {
+    spinal_gates = {
         "m26_gate_answer_loss_reaches_generator": 1.0 if metrics.get("answer_loss_reaches_generator", 0.0) >= 1.0 else 0.0,
         "m26_gate_answer_loss_reaches_symbol_heads": 1.0 if metrics.get("answer_loss_reaches_symbol_heads", 0.0) >= 1.0 else 0.0,
         "m26_gate_single_optimizer": 1.0 if metrics.get("single_optimizer_end_to_end_training", 0.0) >= 1.0 else 0.0,
         "m26_gate_no_hard_training_cut": 1.0 if metrics.get("hard_argmax_training_cut_detected", 1.0) == 0.0 else 0.0,
         "m26_gate_stream_beats_zero": 1.0 if metrics.get("predicted_vs_zero_delta", 0.0) >= 0.02 else 0.0,
     }
-    gates["m26_spinal_cord_gate_pass_rate"] = sum(gates.values()) / max(1, len(gates))
-    gates["m26_promotion_candidate"] = 1.0 if all(value == 1.0 for value in gates.values()) else 0.0
-    return gates
+    matched_gate = 1.0 if metrics.get("m26_strict_delta_vs_matched_prompt", -1.0) >= 0.0 else 0.0
+    spinal_pass = sum(spinal_gates.values()) / max(1, len(spinal_gates))
+    spinal_candidate = 1.0 if all(value == 1.0 for value in spinal_gates.values()) else 0.0
+    return {
+        **spinal_gates,
+        "m26_spinal_cord_gate_pass_rate": spinal_pass,
+        "m26_spinal_cord_candidate": spinal_candidate,
+        "m26_gate_beats_matched_prompt": matched_gate,
+        "m26_prompt_comparable_candidate": 1.0 if spinal_candidate >= 1.0 and matched_gate >= 1.0 else 0.0,
+        "m26_promotion_candidate": 1.0 if spinal_candidate >= 1.0 and matched_gate >= 1.0 else 0.0,
+    }
 
 
 def _grad_norm(parameters: Any) -> float:
@@ -518,3 +614,47 @@ def _random_generator_outputs(outputs: dict[str, torch.Tensor], *, seed: int) ->
         key: torch.randn(value.shape, generator=generator, device=device, dtype=value.dtype)
         for key, value in outputs.items()
     }
+
+
+def _train_prompt_control(
+    control: PromptOnlyControl,
+    examples: Sequence[M25EmergentBridiExample],
+    vocab: dict[str, int],
+    *,
+    max_symbols: int,
+    prompt_token_budget: int | None,
+    epochs: int,
+    batch_size: int,
+    learning_rate: float,
+    device: torch.device,
+    seed: int,
+) -> list[dict[str, float]]:
+    dataset = M25LooseBridiDataset(examples, vocab, max_symbols=int(max_symbols))
+    loader = DataLoader(
+        dataset,
+        batch_size=int(batch_size),
+        shuffle=True,
+        generator=torch.Generator().manual_seed(int(seed)),
+        collate_fn=m25_collate,
+    )
+    optimizer = torch.optim.AdamW(control.parameters(), lr=float(learning_rate), weight_decay=1e-4)
+    history: list[dict[str, float]] = []
+    control.train()
+    for _ in range(int(epochs)):
+        total_loss = 0.0
+        total_acc = 0.0
+        batches = 0
+        for batch in loader:
+            target = batch["answer_id"].to(device)
+            input_ids = budget_prompt_tokens(batch["input_ids"].to(device), prompt_token_budget)
+            logits = control(input_ids)
+            loss = F.cross_entropy(logits, target)
+            optimizer.zero_grad(set_to_none=True)
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(control.parameters(), 5.0)
+            optimizer.step()
+            total_loss += float(loss.detach().cpu().item())
+            total_acc += _accuracy(logits.detach(), target.detach())
+            batches += 1
+        history.append({"loss": total_loss / max(1, batches), "accuracy": total_acc / max(1, batches)})
+    return history

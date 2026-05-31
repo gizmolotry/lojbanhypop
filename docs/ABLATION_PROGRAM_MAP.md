@@ -1,8 +1,8 @@
 # Ablation Program Map
 
-- Generated UTC: `2026-05-30T19:28:34.696246+00:00`
+- Generated UTC: `2026-05-31T11:42:26.800324+00:00`
 - Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
-- Concentrated family count: `38`
+- Concentrated family count: `48`
 
 ## Program Layers
 
@@ -15,6 +15,7 @@
 - `causal_relevance_substrate`: M23 causal relevance-router fork
 - `substrate_compression`: M24 substrate compression branch
 - `emergent_bridi_grammar`: M25 loose bridi grammar-action stream branch
+- `end_to_end_lojban_symbiote`: M26 differentiable prompt-to-bridi-to-advisor organism branch
 - `control_plane`: the backfill, catalog, and aggregate-suite layer
 
 ## Concentrated Families
@@ -124,6 +125,37 @@
 - Scripts: `scripts/legacy/run_phase5_objective_ablation.py, scripts/legacy/run_phase5_train_ablation.py`
 - DAGs: `airflow/dags/control_plane/lojban_phase_ablation_dag.py`
 - Artifact roots: `src/runs, src/runs/phase5_objective_ablation.json, src/runs/phase5_train_ablation/20260222_162211, src/runs/phase5_train_ablation/20260222_162211/ablation_manifest.json, src/runs/phase5_train_ablation/20260222_162502, src/runs/phase5_train_ablation/20260222_162502/ablation_manifest.json, src/runs/phase5_train_ablation/20260222_162541, src/runs/phase5_train_ablation/20260222_162541/ablation_manifest.json`
+
+### M1
+
+- Layer: `bridge_and_serialization`
+- Status: `taxonomy_defined`
+- Normalized IDs: `M1`
+- Entry count: `0`
+- Runnable rows: `0`
+- Brief: lock dataset invariance, paraphrase robustness, and foil acceptance before architectural coupling work.
+- Family groups: `taxonomy_major_family`
+
+### M2
+
+- Layer: `bridge_and_serialization`
+- Status: `taxonomy_defined`
+- Normalized IDs: `M2`
+- Entry count: `0`
+- Runnable rows: `0`
+- Brief: replace static objective blending with lexicographic augmented-Lagrangian control while preserving scoped identity and arity constraints.
+- Family groups: `taxonomy_major_family`
+
+### M3
+
+- Layer: `bridge_and_serialization`
+- Status: `taxonomy_defined`
+- Normalized IDs: `M3`
+- Entry count: `0`
+- Runnable rows: `0`
+- Brief: test how structured advisor state should couple back into generation without collapsing the decoder's English continuation manifold.
+- Family groups: `taxonomy_major_family`
+- DAGs: `airflow/dags/m3/lojban_m3_plus_dag.py`
 
 ### M3.9
 
@@ -325,6 +357,17 @@
 - DAGs: `airflow/dags/m3/lojban_m3_19_d_mainline_grid_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329, artifacts/runs/telemetry/raw/ablation/hypercube/m3_19_d_mainline_grid/m3_19_grid_smoke_v2_20260329/m3_19_grid_report.json`
 
+### M4
+
+- Layer: `bridge_and_serialization`
+- Status: `taxonomy_defined`
+- Normalized IDs: `M4`
+- Entry count: `0`
+- Runnable rows: `0`
+- Brief: improve predicate and operator grounding before later chain-style reasoning expansions.
+- Family groups: `taxonomy_major_family`
+- DAGs: `airflow/dags/m4/lojban_m4_series_dag.py`
+
 ### M4.0
 
 - Layer: `bridge_and_serialization`
@@ -478,6 +521,28 @@
 - Scripts: `scripts/m10/final_audit.py`
 - Artifact roots: `archive/results/m10/active/RESULTS_M10_AUDIT, archive/results/m10/active/RESULTS_M10_AUDIT/m10_audit_report.json, archive/results/m10/active/RESULTS_M10_FINAL_AUDIT, archive/results/m10/active/RESULTS_M10_FINAL_AUDIT/final_bridge_audit.json, archive/results/m10/active/RESULTS_M10_FINAL_AUDIT/final_floor_lock.json, archive/results/m10/active/RESULTS_M10_FINAL_AUDIT/final_publication_metrics.json`
 
+### M11
+
+- Layer: `manifold_and_return_path`
+- Status: `taxonomy_defined`
+- Normalized IDs: `M11`
+- Entry count: `0`
+- Runnable rows: `0`
+- Brief: prove that the manifold carries useful cognition through native discriminative heads even when generative re-entry remains unresolved.
+- Family groups: `taxonomy_major_family`
+- DAGs: `airflow/dags/m11/lojban_m11_discriminative_suite_dag.py`
+
+### M14
+
+- Layer: `manifold_and_return_path`
+- Status: `taxonomy_defined`
+- Normalized IDs: `M14`
+- Entry count: `0`
+- Runnable rows: `0`
+- Brief: use bounded scratchpad tokens as a compute horizon while injecting continuous advisor math only into scratchpad states before English resumption.
+- Family groups: `taxonomy_major_family`
+- DAGs: `airflow/dags/m14/lojban_m14_symbiote_scratchpad_dag.py`
+
 ### M18
 
 - Layer: `manifold_and_return_path`
@@ -547,6 +612,50 @@
 - DAGs: `airflow/dags/m22/lojban_m22_semantic_generalization_dag.py`
 - Artifact roots: `artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_s_96e_six_seed_mixed_ood_stability_20260523, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_s_96e_six_seed_mixed_ood_stability_20260523/m22_seed_stability_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_s_96e_six_seed_stability_20260523, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_s_96e_six_seed_stability_20260523/m22_seed_stability_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_s_96e_six_seed_stability_hardened_20260523, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_s_96e_six_seed_stability_hardened_20260523/m22_seed_stability_report.json, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_t025_96e_six_seed_mixed_ood_stability_20260523, artifacts/runs/telemetry/raw/ablation/hypercube/m22_seed_stability/m22_blended_t025_96e_six_seed_mixed_ood_stability_20260523/m22_seed_stability_report.json`
 
+### M23
+
+- Layer: `causal_relevance_substrate`
+- Status: `taxonomy_defined`
+- Normalized IDs: `M23`
+- Entry count: `0`
+- Runnable rows: `0`
+- Brief: hold the Lojbanic dictionary and dynamic bridi trace fixed, then test whether answer-causal frame selection requires an explicit relevance router under decoy relation OOD.
+- Family groups: `taxonomy_major_family`
+- DAGs: `airflow/dags/m23/lojban_m23_relevance_router_dag.py`
+
+### M24
+
+- Layer: `substrate_compression`
+- Status: `taxonomy_defined`
+- Normalized IDs: `M24`
+- Entry count: `0`
+- Runnable rows: `0`
+- Brief: test whether a frozen dynamic bridi substrate can support a downstream advisor through packed symbolic traces only, while M24.1 adds matched shuffled-trace controls and MDL/compression pressure and M24.2 hardens that same M24 family into an explicit symbolic trace bottleneck; strict_accuracy remains canonical and phrase accuracy is diagnostic only.
+- Family groups: `taxonomy_major_family`
+- DAGs: `airflow/dags/m24/lojban_m24_substrate_compression_dag.py`
+
+### M25
+
+- Layer: `emergent_bridi_grammar`
+- Status: `taxonomy_defined`
+- Normalized IDs: `M25`
+- Entry count: `0`
+- Runnable rows: `0`
+- Brief: test whether a looser learned Lojbanic bridi stream can preserve causal symbolic compression without hardcoding fixed predicate rows; strict_accuracy remains canonical and phrase accuracy is diagnostic only.
+- Family groups: `taxonomy_major_family`
+- DAGs: `airflow/dags/m25/lojban_m25_emergent_bridi_dag.py`
+
+### M26
+
+- Layer: `end_to_end_lojban_symbiote`
+- Status: `taxonomy_defined`
+- Normalized IDs: `M26`
+- Entry count: `0`
+- Runnable rows: `0`
+- Brief: turn the M25 loose bridi stream from a staged assay into one trainable prompt-to-bridi-to-advisor organism, proving final answer loss reaches the symbolic generator through a differentiable trace handoff.
+- Family groups: `taxonomy_major_family`
+- DAGs: `airflow/dags/m26/lojban_m26_end_to_end_loafman_dag.py`
+
 ### History
 
 - Layer: `control_plane`
@@ -576,3 +685,7 @@
 - `M18_to_M19`: `M18 -> M19` via `M18`
 - `M20_to_M21`: `M20 -> M21` via `M20.1.F`
 - `M21_to_M22`: `M21 -> M22` via `M21.1.O`
+- `M22_to_M23`: `M22 -> M23` via `M21.1.T`
+- `M23_to_M24`: `M23 -> M24` via `M23.C`
+- `M24_to_M25`: `M24 -> M25` via `M24.2`
+- `M25_to_M26`: `M25 -> M26` via `M25.A`
