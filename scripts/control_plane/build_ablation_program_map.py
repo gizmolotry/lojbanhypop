@@ -75,6 +75,8 @@ FAMILY_DAG_MAP: dict[str, list[str]] = {
     "M26": ["airflow/dags/m26/lojban_m26_end_to_end_loafman_dag.py"],
     "History": [
         "airflow/dags/control_plane/lojban_ablation_history_backfill_dag.py",
+        "airflow/dags/control_plane/lojban_ablation_test_matrix_dag.py",
+        "airflow/dags/control_plane/lojban_whole_ablation_grid_dag.py",
         "airflow/dags/m_bridge/lojban_m_bridge_ablation_test_suite_dag.py",
     ],
 }
@@ -542,6 +544,8 @@ def _ordered_family_rows(families: dict[str, dict[str, Any]]) -> list[dict[str, 
                 "scripts/m_bridge/run_m_bridge_ablation_test_suite.py",
                 "scripts/control_plane/build_ablation_program_map.py",
                 "scripts/control_plane/build_ablation_program_spine.py",
+                "scripts/control_plane/run_ablation_test_matrix.py",
+                "scripts/control_plane/run_whole_ablation_grid.py",
             ],
             "dag_paths": sorted([*FAMILY_DAG_MAP["History"], "airflow/dags/control_plane/lojban_ablation_program_spine_dag.py", "airflow/dags/control_plane/lojban_ablation_master_spine_dag.py"]),
             "doc_paths": [

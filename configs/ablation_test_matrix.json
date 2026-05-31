@@ -1,0 +1,220 @@
+{
+  "schema_version": "2026-05-31",
+  "purpose": "Series-aware pytest matrix for validating ablation families through the same ledger-style control plane used by the experiment runners.",
+  "default_lane": "smoke",
+  "coverage_policy": {
+    "all_pytest_files_listed": true,
+    "discover_glob": "tests/test_*.py"
+  },
+  "output_root": "artifacts/runs/telemetry/raw/ablation/hypercube/ablation_test_matrix",
+  "lanes": {
+    "smoke": {
+      "description": "Fast confidence tests for the active control plane and current family surfaces."
+    },
+    "ledger": {
+      "description": "Control-plane, registry, taxonomy, direct-eval, and whole-grid contract tests."
+    },
+    "architecture": {
+      "description": "Model/component unit tests for current and historical research families."
+    },
+    "full": {
+      "description": "Every tracked pytest file in the repository."
+    }
+  },
+  "test_groups": [
+    {
+      "group_id": "control_plane.ledger",
+      "series": "control_plane",
+      "family": "control_plane",
+      "lanes": ["smoke", "ledger", "full"],
+      "description": "Ledger, taxonomy, artifact, direct-eval, whole-grid, and path-registry contracts.",
+      "pytest_paths": [
+        "tests/test_artifact_contract.py",
+        "tests/test_ablation_test_matrix.py",
+        "tests/test_cli_smoke.py",
+        "tests/test_control_plane_path_registry.py",
+        "tests/test_control_plane_scaffolding.py",
+        "tests/test_direct_unified_eval.py",
+        "tests/test_project_cartography.py",
+        "tests/test_series_contract.py",
+        "tests/test_whole_ablation_grid.py"
+      ]
+    },
+    {
+      "group_id": "shared.infra_data",
+      "series": "shared",
+      "family": "shared",
+      "lanes": ["full"],
+      "description": "Shared data, storage, reproducibility, safety, and HF/LoRA utility tests.",
+      "pytest_paths": [
+        "tests/test_build_mixed_curriculum_dataset.py",
+        "tests/test_eval_hf_dual_mode_gate.py",
+        "tests/test_repro.py",
+        "tests/test_safety_assertions.py",
+        "tests/test_storage.py",
+        "tests/test_train_lora_weighting.py"
+      ]
+    },
+    {
+      "group_id": "legacy.a_to_g_coconut",
+      "series": "A-G",
+      "family": "legacy",
+      "lanes": ["architecture", "full"],
+      "description": "Early coconut/control handoff tests.",
+      "pytest_paths": [
+        "tests/test_coconut_handoff.py",
+        "tests/test_true_coconut.py"
+      ]
+    },
+    {
+      "group_id": "legacy.h_series",
+      "series": "H",
+      "family": "H",
+      "lanes": ["architecture", "full"],
+      "description": "Legacy H runnable bridge/coconut tests.",
+      "pytest_paths": [
+        "tests/test_run_true_coconut_h_series.py"
+      ]
+    },
+    {
+      "group_id": "legacy.h5_extension",
+      "series": "H5",
+      "family": "H5",
+      "lanes": ["architecture", "full"],
+      "description": "Legacy H5 extension contract tests.",
+      "pytest_paths": [
+        "tests/test_h5_ablation_extension_contract.py"
+      ]
+    },
+    {
+      "group_id": "legacy.j_series",
+      "series": "J",
+      "family": "J",
+      "lanes": ["architecture", "full"],
+      "description": "Legacy J / normalized M1 eval tests.",
+      "pytest_paths": [
+        "tests/test_j_series_eval.py"
+      ]
+    },
+    {
+      "group_id": "legacy.l_series",
+      "series": "L",
+      "family": "L",
+      "lanes": ["architecture", "full"],
+      "description": "Legacy L / normalized M2 constraint tests.",
+      "pytest_paths": [
+        "tests/test_l_series.py"
+      ]
+    },
+    {
+      "group_id": "m3.bridge_family",
+      "series": "M3",
+      "family": "M3",
+      "lanes": ["architecture", "full"],
+      "description": "M3 bridge-family integration tests.",
+      "pytest_paths": [
+        "tests/test_m3_plus_family_integration.py"
+      ]
+    },
+    {
+      "group_id": "m19.mainline",
+      "series": "M19",
+      "family": "M19",
+      "lanes": ["architecture", "full"],
+      "description": "M19 runway, bridge, arity, pointer, integrity, report, and kill-suite tests.",
+      "pytest_paths": [
+        "tests/test_m19_arity_causal.py",
+        "tests/test_m19_audit.py",
+        "tests/test_m19_benchmark_token_accounting.py",
+        "tests/test_m19_bridge_channel.py",
+        "tests/test_m19_engine.py",
+        "tests/test_m19_integrity.py",
+        "tests/test_m19_kill_tests.py",
+        "tests/test_m19_microgrid_summary.py",
+        "tests/test_m19_order_sensitivity.py",
+        "tests/test_m19_pointer_counterfactual.py",
+        "tests/test_m19_pointer_necessity.py",
+        "tests/test_m19_report_renderer.py",
+        "tests/test_m19_training.py"
+      ]
+    },
+    {
+      "group_id": "m20.dictionary_first",
+      "series": "M20",
+      "family": "M20",
+      "lanes": ["smoke", "architecture", "full"],
+      "description": "M20 dictionary-first CLI and model tests.",
+      "pytest_paths": [
+        "tests/test_m20_cli_smoke.py",
+        "tests/test_m20_dictionary_first.py"
+      ]
+    },
+    {
+      "group_id": "m21.dynamic_bridi",
+      "series": "M21",
+      "family": "M21",
+      "lanes": ["smoke", "architecture", "full"],
+      "description": "M21 dynamic bridi model, CLI, and adversarial audit tests.",
+      "pytest_paths": [
+        "tests/test_m21_adversarial_audit.py",
+        "tests/test_m21_cli_smoke.py",
+        "tests/test_m21_dynamic_bridi.py"
+      ]
+    },
+    {
+      "group_id": "m22.semantic_generalization",
+      "series": "M22",
+      "family": "M22",
+      "lanes": ["architecture", "full"],
+      "description": "M22 semantic generalization tests.",
+      "pytest_paths": [
+        "tests/test_m22_semantic_generalization.py"
+      ]
+    },
+    {
+      "group_id": "m23.relevance_router",
+      "series": "M23",
+      "family": "M23",
+      "lanes": ["smoke", "architecture", "full"],
+      "description": "M23 relevance-router CLI and model tests.",
+      "pytest_paths": [
+        "tests/test_m23_cli_smoke.py",
+        "tests/test_m23_relevance_router.py"
+      ]
+    },
+    {
+      "group_id": "m24.substrate_compression",
+      "series": "M24",
+      "family": "M24",
+      "lanes": ["smoke", "architecture", "full"],
+      "description": "M24 substrate compression CLI and model tests.",
+      "pytest_paths": [
+        "tests/test_m24_cli_smoke.py",
+        "tests/test_m24_substrate_compression.py"
+      ]
+    },
+    {
+      "group_id": "m25.emergent_bridi",
+      "series": "M25",
+      "family": "M25",
+      "lanes": ["smoke", "architecture", "full"],
+      "description": "M25 emergent loose-bridi CLI and model tests.",
+      "pytest_paths": [
+        "tests/test_m25_cli_smoke.py",
+        "tests/test_m25_emergent_bridi.py"
+      ]
+    },
+    {
+      "group_id": "m26.full_organism",
+      "series": "M26",
+      "family": "M26",
+      "lanes": ["smoke", "architecture", "full"],
+      "description": "M26 full-organism bridge, CLI, and control-plane wiring tests.",
+      "pytest_paths": [
+        "tests/test_m26_cli_smoke.py",
+        "tests/test_m26_control_plane_wiring.py",
+        "tests/test_m26_end_to_end_loafman.py"
+      ]
+    }
+  ]
+}

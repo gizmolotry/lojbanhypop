@@ -4,6 +4,8 @@ Airflow DAGs in this repository are thin wrappers around canonical scripts only:
 
 - `airflow/dags/control_plane/lojban_ablation_master_spine_dag.py` -> canonical overview DAG spanning letter-era foundations, normalized M-series progression, and control-plane refresh
 - `airflow/dags/control_plane/lojban_ablation_program_spine_dag.py` -> `scripts/control_plane/run_ablation_history_backfill.py`, `scripts/control_plane/build_ablation_program_map.py`, `scripts/control_plane/build_ablation_program_spine.py`, `scripts/control_plane/render_ablation_history_catalog.py`, `scripts/m_bridge/run_m_bridge_ablation_test_suite.py`
+- `airflow/dags/control_plane/lojban_ablation_test_matrix_dag.py` -> `scripts/control_plane/run_ablation_test_matrix.py`
+- `airflow/dags/control_plane/lojban_whole_ablation_grid_dag.py` -> `scripts/control_plane/run_whole_ablation_grid.py`
 - `airflow/dags/control_plane/lojban_experiment_dag.py` -> `scripts/control_plane/pipeline_train_grounded_reasoner.py`
 - `airflow/dags/control_plane/lojban_phase_ablation_dag.py` -> `scripts/control_plane/pipeline_eval_manifold.py`
 - `airflow/dags/control_plane/lojban_ablation_matrix_dag.py` -> `scripts/legacy/run_coconut_ablation_matrix.py`
@@ -33,17 +35,19 @@ The canonical top-level orchestration surfaces are now:
 
 1. letter-era foundation
 2. normalized M-series progression
-3. control-plane refresh
+3. control-plane refresh, including the ablation pytest matrix and whole-grid ledger render
 
 Historical-only families remain visible as archival checkpoints so the graph preserves the intellectual progression instead of hiding it behind missing executables.
 
-`lojban_ablation_program_spine` is the control-plane executor. It does not pretend every historical family is rerunnable. Instead it does the thing a senior engineer actually needs:
+`lojban_ablation_program_spine` is the lineage executor. It does not pretend every historical family is rerunnable. Instead it does the thing a senior engineer actually needs:
 
 1. backfill the full ablation history into one canonical manifest
 2. render the concentrated family map
 3. render the ordered program spine across letter-era and M-era families
 4. render the human-readable ablation catalog
 5. refresh the modern unified M-series suite
+
+`lojban_ablation_master_spine` adds the live control-plane guardrail on top: it triggers `lojban_ablation_test_matrix` before the whole-grid surface. `lojban_whole_ablation_grid` can optionally pin a specific `ablation_test_matrix_manifest` so rerenders do not silently float to a different matrix run.
 
 That gives one auditable control plane for:
 
@@ -52,6 +56,8 @@ That gives one auditable control plane for:
 - normalized M-major progression
 - current runnable-suite diagnosis
 - live frontier families (`M18` controller steering and `M19` neuro-symbolic runway)
+
+The pytest matrix DAG writes local pytest artifacts only. Use a local `output_dir` under `artifacts/runs` or `runs`; S3 output locations are rejected for that DAG.
 
 ## Contract-First Artifact Flow
 

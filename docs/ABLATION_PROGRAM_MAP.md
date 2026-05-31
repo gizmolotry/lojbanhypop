@@ -1,6 +1,6 @@
 # Ablation Program Map
 
-- Generated UTC: `2026-05-31T11:42:26.800324+00:00`
+- Generated UTC: `2026-05-31T18:49:27.946882+00:00`
 - Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
 - Concentrated family count: `48`
 
@@ -15,7 +15,7 @@
 - `causal_relevance_substrate`: M23 causal relevance-router fork
 - `substrate_compression`: M24 substrate compression branch
 - `emergent_bridi_grammar`: M25 loose bridi grammar-action stream branch
-- `end_to_end_lojban_symbiote`: M26 full hidden-state prompt-to-bridi-to-trace-bridge-to-answer organism branch
+- `end_to_end_lojban_symbiote`: M26 differentiable prompt-to-bridi-to-advisor organism branch
 - `control_plane`: the backfill, catalog, and aggregate-suite layer
 
 ## Concentrated Families
@@ -652,7 +652,7 @@
 - Normalized IDs: `M26`
 - Entry count: `0`
 - Runnable rows: `0`
-- Brief: turn the M25 loose bridi stream from a staged assay into one trainable hidden-state bridge organism: a tiny language backbone emits prompt hidden states, the bridi generator reads that stream, a trace-language bridge fuses prompt and trace state, and a choked answer head reads the fused state. The spinal-cord gate remains a narrower gradient-through-trace subclaim.
+- Brief: turn the M25 loose bridi stream from a staged assay into one trainable hidden-state bridge organism: a tiny language backbone emits prompt hidden states, the bridi generator reads that stream, a trace-language cross-attention bridge fuses prompt and trace state, and a choked answer head reads the fused state. The historical spinal-cord gate remains a narrower gradient-through-trace subclaim.
 - Family groups: `taxonomy_major_family`
 - DAGs: `airflow/dags/m26/lojban_m26_end_to_end_loafman_dag.py`
 
@@ -665,8 +665,8 @@
 - Brief: Backfill and aggregate suite control plane
 - Family groups: `control_plane`
 - Docs: `docs/ABLATION_HISTORY_FULL.md, docs/ABLATION_PROGRAM_MAP.md, docs/ABLATION_PROGRAM_SPINE.md`
-- Scripts: `scripts/control_plane/build_ablation_program_map.py, scripts/control_plane/build_ablation_program_spine.py, scripts/control_plane/render_ablation_history_catalog.py, scripts/control_plane/run_ablation_history_backfill.py, scripts/m_bridge/run_m_bridge_ablation_test_suite.py`
-- DAGs: `airflow/dags/control_plane/lojban_ablation_history_backfill_dag.py, airflow/dags/control_plane/lojban_ablation_master_spine_dag.py, airflow/dags/control_plane/lojban_ablation_program_spine_dag.py, airflow/dags/m_bridge/lojban_m_bridge_ablation_test_suite_dag.py`
+- Scripts: `scripts/control_plane/build_ablation_program_map.py, scripts/control_plane/build_ablation_program_spine.py, scripts/control_plane/render_ablation_history_catalog.py, scripts/control_plane/run_ablation_history_backfill.py, scripts/control_plane/run_ablation_test_matrix.py, scripts/control_plane/run_whole_ablation_grid.py, scripts/m_bridge/run_m_bridge_ablation_test_suite.py`
+- DAGs: `airflow/dags/control_plane/lojban_ablation_history_backfill_dag.py, airflow/dags/control_plane/lojban_ablation_master_spine_dag.py, airflow/dags/control_plane/lojban_ablation_program_spine_dag.py, airflow/dags/control_plane/lojban_ablation_test_matrix_dag.py, airflow/dags/control_plane/lojban_whole_ablation_grid_dag.py, airflow/dags/m_bridge/lojban_m_bridge_ablation_test_suite_dag.py`
 
 ## Transition Spine
 

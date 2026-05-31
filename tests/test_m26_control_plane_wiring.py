@@ -65,6 +65,25 @@ def test_program_spine_uses_taxonomy_contract_shape_for_m26() -> None:
     assert stage["selected_upstream"] == "M25.A"
 
 
+def test_control_plane_stage_tracks_test_matrix_and_whole_grid_consumers() -> None:
+    program_map = load_script_module("build_ablation_program_map_control_plane_test", "scripts/control_plane/build_ablation_program_map.py")
+    program_spine = load_script_module("build_ablation_program_spine_control_plane_test", "scripts/control_plane/build_ablation_program_spine.py")
+
+    history_row = next(row for row in program_map._ordered_family_rows({}) if row["family_key"] == "History")
+    control_stage = program_spine._build_control_plane_stage(
+        Path("artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/test/ablation_history_manifest.json")
+    )
+
+    assert "scripts/control_plane/run_ablation_test_matrix.py" in history_row["script_paths"]
+    assert "scripts/control_plane/run_whole_ablation_grid.py" in history_row["script_paths"]
+    assert "airflow/dags/control_plane/lojban_ablation_test_matrix_dag.py" in history_row["dag_paths"]
+    assert "airflow/dags/control_plane/lojban_whole_ablation_grid_dag.py" in history_row["dag_paths"]
+    assert "scripts/control_plane/run_ablation_test_matrix.py" in control_stage["scripts"]
+    assert "scripts/control_plane/run_whole_ablation_grid.py" in control_stage["scripts"]
+    assert "airflow/dags/control_plane/lojban_ablation_test_matrix_dag.py" in control_stage["dags"]
+    assert "airflow/dags/control_plane/lojban_whole_ablation_grid_dag.py" in control_stage["dags"]
+
+
 def test_master_spine_exposes_m25_and_m26_child_dags() -> None:
     text = (REPO_ROOT / "airflow/dags/control_plane/lojban_ablation_master_spine_dag.py").read_text(encoding="utf-8")
 
@@ -72,6 +91,15 @@ def test_master_spine_exposes_m25_and_m26_child_dags() -> None:
     assert '"lojban_m25_emergent_bridi"' in text
     assert '"stage_key": "M26"' in text
     assert '"lojban_m26_end_to_end_loafman"' in text
+    assert '"lojban_ablation_test_matrix"' in text
+
+
+def test_whole_grid_dag_can_pin_ablation_test_matrix_manifest() -> None:
+    text = (REPO_ROOT / "airflow/dags/control_plane/lojban_whole_ablation_grid_dag.py").read_text(encoding="utf-8")
+
+    assert '"ablation_test_matrix_manifest": ""' in text
+    assert "--ablation-test-matrix-manifest" in text
+    assert "ablation_test_matrix_manifest" in text
 
 
 def test_script_surface_registry_tracks_m26_paths() -> None:

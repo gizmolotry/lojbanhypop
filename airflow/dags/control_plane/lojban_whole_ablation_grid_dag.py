@@ -16,6 +16,7 @@ DEFAULTS = {
     "refresh_legacy_grid": False,
     "legacy_grid_run_id": "",
     "legacy_grid_execute": False,
+    "ablation_test_matrix_manifest": "",
     "local_files_only": False,
 }
 
@@ -41,6 +42,9 @@ def _run_whole_grid(**context: object) -> None:
         args.extend(["--legacy-grid-run-id", legacy_grid_run_id])
     if bool(cfg.get("legacy_grid_execute", False)):
         args.append("--legacy-grid-execute")
+    ablation_test_matrix_manifest = str(cfg.get("ablation_test_matrix_manifest", "")).strip()
+    if ablation_test_matrix_manifest:
+        args.extend(["--ablation-test-matrix-manifest", ablation_test_matrix_manifest])
     if bool(cfg.get("local_files_only", False)):
         args.append("--local-files-only")
     run_repo_script("scripts/control_plane/run_whole_ablation_grid.py", args)
@@ -61,6 +65,7 @@ with DAG(
         "refresh_legacy_grid": Param(False, type="boolean"),
         "legacy_grid_run_id": Param("", type="string"),
         "legacy_grid_execute": Param(False, type="boolean"),
+        "ablation_test_matrix_manifest": Param("", type="string"),
         "local_files_only": Param(False, type="boolean"),
     },
 ) as dag:
@@ -68,4 +73,3 @@ with DAG(
         task_id="render_whole_grid",
         python_callable=_run_whole_grid,
     )
-

@@ -225,13 +225,17 @@ def _build_control_plane_stage(history_manifest: Path) -> dict[str, Any]:
         ],
         "scripts": [
             "scripts/control_plane/run_ablation_history_backfill.py",
+            "scripts/control_plane/run_ablation_test_matrix.py",
+            "scripts/control_plane/run_whole_ablation_grid.py",
             "scripts/control_plane/build_ablation_program_map.py",
             "scripts/control_plane/build_ablation_program_spine.py",
             "scripts/m_bridge/run_m_bridge_ablation_test_suite.py",
         ],
         "dags": [
             "airflow/dags/control_plane/lojban_ablation_history_backfill_dag.py",
+            "airflow/dags/control_plane/lojban_ablation_test_matrix_dag.py",
             "airflow/dags/control_plane/lojban_ablation_program_spine_dag.py",
+            "airflow/dags/control_plane/lojban_whole_ablation_grid_dag.py",
             "airflow/dags/m_bridge/lojban_m_bridge_ablation_test_suite_dag.py",
         ],
         "artifact_roots": [_repo_relative(history_manifest.parent)],

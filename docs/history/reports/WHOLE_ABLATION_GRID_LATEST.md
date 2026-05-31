@@ -1,9 +1,9 @@
 # Whole Ablation Grid
 
-- run_id: `m26_matched_prompt_b8_32e_whole_grid_20260531_r3`
-- generated: `2026-05-31T11:42:38.702731+00:00`
+- run_id: `pytest_matrix_whole_grid_integration5`
+- generated: `2026-05-31T18:49:35.430698+00:00`
 - history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
-- program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m26_controls_program_spine_20260531_r3/ablation_program_spine_manifest.json`
+- program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/pytest_matrix_program_spine_refresh/ablation_program_spine_manifest.json`
 
 ## Coverage
 
@@ -53,8 +53,8 @@
 | `M23` | `artifact_anchor` | `` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m23_trace_punish_direct_20260524/direct_unified_eval_manifest.json` | strict_accuracy=0.9517, decoy_relation_ood_accuracy=0.9817, worst_surface_accuracy=0.8605, bridi_trace_exact_accuracy=0.2839, relevance_top1_accuracy=0.5772 |
 | `M24` | `artifact_anchor` | `promoted` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m24_2_b11_g32_a48_train12000_eval6000_tenseed_direct_20260528/direct_unified_eval_manifest.json` | strict_accuracy=0.7682, m24_2_promotion_candidate=1.0000, m24_2_promotion_gate_pass_rate=1.0000, m24_2_hard_bottleneck_compression_ratio=0.9446, m24_2_hard_bottleneck_token_count=10.1296 |
 | `M25` | `artifact_anchor` | `m25_non_promoted` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m25_large_48e_matched_direct_20260530/direct_unified_eval_manifest.json` | strict_accuracy=0.7104, m25_promotion_candidate=0.0000, m25_promotion_gate_pass_rate=0.8571, loose_stream_exact_accuracy=0.5105, token_reduction_ratio=0.4062 |
-| `M26` | `artifact_anchor` | `m26_spinal_fallback_full_organism_unreported_prompt_gap` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m26_matched_prompt_b8_32e_direct_20260531_r2/direct_unified_eval_manifest.json` | strict_accuracy=0.9961, m26_promotion_candidate=0.3333, m26_spinal_cord_gate_pass_rate=1.0000, m26_spinal_cord_candidate=1.0000, m26_prompt_comparable_candidate=0.3333, full_organism_metrics=unreported |
-| `Control Plane` | `control_plane_manifest` | `` | `e=0 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json` |  |
+| `M26` | `artifact_anchor` | `m26_spinal_promoted_prompt_gap` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m26_matched_prompt_b8_32e_direct_20260531_r2/direct_unified_eval_manifest.json` | strict_accuracy=0.9961, m26_promotion_candidate=0.3333, m26_spinal_cord_gate_pass_rate=1.0000, m26_spinal_cord_candidate=1.0000, m26_prompt_comparable_candidate=0.3333 |
+| `Control Plane` | `control_plane_manifest` | `` | `e=0 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json` | test_matrix_status_passed=1.0000, test_matrix_status_dry_run=0.0000, selected_group_count=7.0000, selected_test_count=23.0000, matrix_unique_test_count=50.0000 |
 
 ## Comparison Policy
 
@@ -182,8 +182,7 @@
 
 - automatic compare-against: `M26, M25, M24, M23, M22, M21, M20, M24.2, M25.A, M26.A`
 - historical families carried forward: `M25`
-- required test contracts: `m26.full_hidden_state_bridge_organism`
-- spinal-cord gate note: `m26_spinal_cord_*` remains a historical narrow gradient-through-trace subclaim, not the full M26 organism claim.
+- required test contracts: `m26.end_to_end_spinal_cord`
 
 
 ## Read

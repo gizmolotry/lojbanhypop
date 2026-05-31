@@ -23,6 +23,7 @@ DEFAULT_OUTPUT_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "
 DEFAULT_DOC_OUTPUT = REPO_ROOT / "docs" / "history" / "reports" / "WHOLE_ABLATION_GRID_LATEST.md"
 DEFAULT_HISTORY_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "ablation_history_backfill"
 DEFAULT_PROGRAM_SPINE_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "ablation_program_spine"
+DEFAULT_ABLATION_TEST_MATRIX_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "ablation_test_matrix"
 DEFAULT_LEGACY_GRID_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "legacy_grid"
 DEFAULT_M_BRIDGE_ROOT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m_bridge_ablation_test_suite"
 DEFAULT_M14_REPORT = REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m14_5_decompressor" / "m14_5_report.json"
@@ -293,6 +294,15 @@ KEY_METRICS = [
     "answer_loss_reaches_advisor_classifier",
     "answer_loss_reaches_language_backbone",
     "answer_loss_reaches_bridge",
+    "selected_group_count",
+    "selected_test_count",
+    "matrix_unique_test_count",
+    "matrix_discovered_test_count",
+    "matrix_unlisted_test_count",
+    "matrix_extra_listed_test_count",
+    "pytest_returncode",
+    "pytest_passed",
+    "pytest_executed",
     "trainable_parameter_count",
     "generator_trainable_parameter_count",
     "advisor_trainable_parameter_count",
@@ -332,6 +342,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build one canonical whole-grid ablation report.")
     parser.add_argument("--history-manifest", type=Path, default=None)
     parser.add_argument("--program-spine-manifest", type=Path, default=None)
+    parser.add_argument("--ablation-test-matrix-manifest", type=Path, default=None)
     parser.add_argument("--legacy-grid-manifest", type=Path, default=None)
     parser.add_argument("--m-bridge-manifest", type=Path, default=None)
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
@@ -355,6 +366,7 @@ def main() -> None:
     program_spine_manifest = args.program_spine_manifest or _latest_named_manifest(
         DEFAULT_PROGRAM_SPINE_ROOT, "ablation_program_spine_manifest.json"
     )
+    ablation_test_matrix_manifest = args.ablation_test_matrix_manifest or _latest_ablation_test_matrix_anchor()
     legacy_grid_manifest = args.legacy_grid_manifest or _latest_named_manifest(
         DEFAULT_LEGACY_GRID_ROOT, "legacy_ablation_grid_manifest.json"
     )
@@ -366,6 +378,7 @@ def main() -> None:
 
     history = _read_json_required(history_manifest)
     spine = _read_json_required(program_spine_manifest)
+    ablation_test_matrix = _read_json_optional(ablation_test_matrix_manifest)
     legacy_grid = _read_json_optional(legacy_grid_manifest)
     m_bridge = _read_json_optional(m_bridge_manifest)
 
@@ -384,7 +397,15 @@ def main() -> None:
         elif stage_key in {"M14", "M18", "M19", "M20", "M21", "M22", "M23", "M24", "M25", "M26"}:
             row = _special_stage_row(stage)
         elif stage_key == "Control Plane":
-            row = _control_plane_row(stage, history_manifest, program_spine_manifest, legacy_grid_manifest, m_bridge_manifest)
+            row = _control_plane_row(
+                stage,
+                history_manifest,
+                program_spine_manifest,
+                ablation_test_matrix_manifest,
+                legacy_grid_manifest,
+                m_bridge_manifest,
+                ablation_test_matrix,
+            )
         else:
             row = _generic_row(stage)
         rows.append(row)
@@ -396,6 +417,7 @@ def main() -> None:
         "source_manifests": {
             "history_manifest": _repo_relative(history_manifest),
             "program_spine_manifest": _repo_relative(program_spine_manifest),
+            "ablation_test_matrix_manifest": _repo_relative(ablation_test_matrix_manifest) if ablation_test_matrix_manifest else None,
             "legacy_grid_manifest": _repo_relative(legacy_grid_manifest) if legacy_grid_manifest else None,
             "m_bridge_manifest": _repo_relative(m_bridge_manifest) if m_bridge_manifest else None,
         },
@@ -613,22 +635,51 @@ def _control_plane_row(
     stage: dict[str, Any],
     history_manifest: Path,
     program_spine_manifest: Path,
+    ablation_test_matrix_manifest: Path | None,
     legacy_grid_manifest: Path | None,
     m_bridge_manifest: Path | None,
+    ablation_test_matrix: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     supplemental = [
         _repo_relative(program_spine_manifest),
+        _repo_relative(ablation_test_matrix_manifest) if ablation_test_matrix_manifest else None,
         _repo_relative(legacy_grid_manifest) if legacy_grid_manifest else None,
         _repo_relative(m_bridge_manifest) if m_bridge_manifest else None,
     ]
+    metrics = _control_plane_metrics(ablation_test_matrix)
     return _row(
         stage,
         "control_plane_manifest",
         _repo_relative(history_manifest),
         [path for path in supplemental if path],
-        {},
-        ["canonical history, spine, legacy grid, and bridge suite are linked from this row"],
+        metrics,
+        ["canonical history, spine, ablation test matrix, legacy grid, and bridge suite are linked from this row"],
     )
+
+
+def _control_plane_metrics(ablation_test_matrix: dict[str, Any] | None) -> dict[str, float]:
+    if not isinstance(ablation_test_matrix, dict):
+        return {}
+    metrics: dict[str, float] = {}
+    status = str(ablation_test_matrix.get("status", "")).strip().lower()
+    if status:
+        metrics["test_matrix_status_passed"] = 1.0 if status == "passed" else 0.0
+        metrics["test_matrix_status_dry_run"] = 1.0 if status == "dry_run" else 0.0
+    raw_metrics = ablation_test_matrix.get("metrics")
+    if isinstance(raw_metrics, dict):
+        metrics.update(_pick_metrics(raw_metrics))
+    for key in (
+        "selected_group_count",
+        "selected_test_count",
+        "returncode",
+        "duration_seconds",
+    ):
+        if key in ablation_test_matrix:
+            try:
+                metrics[f"test_matrix_{key}"] = float(ablation_test_matrix[key])
+            except (TypeError, ValueError):
+                pass
+    return metrics
 
 
 def _stage_with_direct_contract(stage: dict[str, Any], payload: dict[str, Any] | None) -> dict[str, Any]:
@@ -1895,6 +1946,27 @@ def _latest_named_manifest(root: Path, filename: str) -> Path | None:
     return _artifact_latest_named_manifest(root, filename, recursive=False, newest_first=True, path_filter=None)
 
 
+def _latest_ablation_test_matrix_anchor() -> Path | None:
+    if not DEFAULT_ABLATION_TEST_MATRIX_ROOT.exists():
+        return None
+    matches = sorted(
+        DEFAULT_ABLATION_TEST_MATRIX_ROOT.glob("*/ablation_test_matrix_manifest.json"),
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
+    )
+    fallback: Path | None = None
+    for path in matches:
+        payload = _read_json_optional(path)
+        if not isinstance(payload, dict):
+            continue
+        fallback = fallback or path
+        metrics = payload.get("metrics", {})
+        executed = bool(payload.get("execute")) or (isinstance(metrics, dict) and float(metrics.get("pytest_executed", 0.0) or 0.0) >= 1.0)
+        if executed:
+            return path
+    return fallback
+
+
 def _latest_direct_unified_eval_anchor(family_key: str) -> Path | None:
     if not DEFAULT_DIRECT_UNIFIED_EVAL_ROOT.exists():
         return None
@@ -1915,8 +1987,8 @@ def _latest_direct_unified_eval_anchor(family_key: str) -> Path | None:
 
 
 def _is_ephemeral_direct_eval_anchor(path: Path) -> bool:
-    parts = [part.lower() for part in path.parts]
-    return any(part.startswith("pytest") or "smoke" in part for part in parts)
+    run_id = path.parent.name.lower()
+    return run_id.startswith("pytest") or "smoke" in run_id
 
 
 def _repo_path(value: str | Path) -> Path:

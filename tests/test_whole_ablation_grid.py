@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 from pathlib import Path
 
 
@@ -123,9 +124,37 @@ def test_latest_direct_eval_anchor_prefers_stable_artifacts_over_pytest_smoke(tm
     stable.parent.mkdir(parents=True)
     smoke.write_text(json.dumps({"family_key": "M24"}), encoding="utf-8")
     stable.write_text(json.dumps({"family_key": "M24"}), encoding="utf-8")
+    os.utime(stable, (1000, 1000))
+    os.utime(smoke, (2000, 2000))
     whole_grid.DEFAULT_DIRECT_UNIFIED_EVAL_ROOT = root
 
     assert whole_grid._latest_direct_unified_eval_anchor("M24") == stable
+
+
+def test_latest_ablation_test_matrix_anchor_prefers_latest_executed_over_dry_runs(tmp_path: Path) -> None:
+    whole_grid = _load_whole_grid_module()
+    root = tmp_path / "ablation_test_matrix"
+    passed = root / "passed" / "ablation_test_matrix_manifest.json"
+    failed = root / "failed" / "ablation_test_matrix_manifest.json"
+    dry = root / "dry" / "ablation_test_matrix_manifest.json"
+    passed.parent.mkdir(parents=True)
+    failed.parent.mkdir(parents=True)
+    dry.parent.mkdir(parents=True)
+    passed.write_text(
+        json.dumps({"status": "passed", "execute": True, "metrics": {"pytest_executed": 1.0, "pytest_passed": 1.0}}),
+        encoding="utf-8",
+    )
+    failed.write_text(
+        json.dumps({"status": "failed", "execute": True, "metrics": {"pytest_executed": 1.0, "pytest_passed": 0.0}}),
+        encoding="utf-8",
+    )
+    dry.write_text(json.dumps({"status": "dry_run", "execute": False, "metrics": {"pytest_executed": 0.0}}), encoding="utf-8")
+    os.utime(passed, (1000, 1000))
+    os.utime(failed, (2000, 2000))
+    os.utime(dry, (3000, 3000))
+    whole_grid.DEFAULT_ABLATION_TEST_MATRIX_ROOT = root
+
+    assert whole_grid._latest_ablation_test_matrix_anchor() == failed
 
 
 def test_m21_special_stage_metrics_include_dynamic_bridi_and_causal_deltas() -> None:
@@ -493,3 +522,53 @@ def test_m26_special_stage_metrics_and_order() -> None:
         )
         == "m26_spinal_promoted_prompt_gap"
     )
+
+
+def test_control_plane_row_surfaces_ablation_test_matrix_metrics() -> None:
+    whole_grid = _load_whole_grid_module()
+    stage = {
+        "stage_key": "Control Plane",
+        "title": "Control Plane",
+        "executed_count": 0,
+        "report_count": 1,
+        "archival_count": 0,
+        "deferred_count": 0,
+    }
+    matrix_manifest = {
+        "status": "passed",
+        "selected_group_count": 7,
+        "selected_test_count": 23,
+        "duration_seconds": 12.5,
+        "metrics": {
+            "selected_test_count": 23.0,
+            "matrix_unique_test_count": 50.0,
+            "matrix_discovered_test_count": 50.0,
+            "matrix_unlisted_test_count": 0.0,
+            "matrix_extra_listed_test_count": 0.0,
+            "pytest_returncode": 0.0,
+            "pytest_passed": 1.0,
+            "pytest_executed": 1.0,
+        },
+    }
+
+    row = whole_grid._control_plane_row(
+        stage,
+        Path("artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/run/ablation_history_manifest.json"),
+        Path("artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/run/ablation_program_spine_manifest.json"),
+        Path("artifacts/runs/telemetry/raw/ablation/hypercube/ablation_test_matrix/run/ablation_test_matrix_manifest.json"),
+        None,
+        None,
+        matrix_manifest,
+    )
+
+    assert row["surface_kind"] == "control_plane_manifest"
+    assert "ablation_test_matrix" in " ".join(row["supplemental_paths"])
+    assert row["headline_metrics"]["pytest_passed"] == 1.0
+    assert row["headline_metrics"]["pytest_executed"] == 1.0
+    assert row["headline_metrics"]["selected_test_count"] == 23.0
+    assert row["headline_metrics"]["matrix_unique_test_count"] == 50.0
+    assert row["headline_metrics"]["matrix_discovered_test_count"] == 50.0
+    assert row["headline_metrics"]["matrix_unlisted_test_count"] == 0.0
+    assert row["headline_metrics"]["matrix_extra_listed_test_count"] == 0.0
+    assert row["headline_metrics"]["pytest_returncode"] == 0.0
+    assert row["headline_metrics"]["test_matrix_status_passed"] == 1.0

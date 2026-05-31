@@ -1,6 +1,6 @@
 # Ablation Program Spine
 
-- Generated UTC: `2026-05-31T11:42:32.110251+00:00`
+- Generated UTC: `2026-05-31T18:49:27.954547+00:00`
 - Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
 - Source taxonomy config: `configs/experiment_taxonomy.json`
 - Stage count: `29`
@@ -619,11 +619,11 @@ This is the ordered research spine of the project: legacy letter-series families
 
 - Kind: `major_series`
 - Layer: `end_to_end_lojban_symbiote`
-- Objective: turn the M25 loose bridi stream from a staged assay into one trainable hidden-state bridge organism: a tiny language backbone emits prompt hidden states, the bridi generator reads that stream, a trace-language cross-attention bridge fuses prompt and trace state, and a choked answer head reads fused state. The historical spinal-cord gate remains a narrower gradient-through-trace subclaim.
+- Objective: turn the M25 loose bridi stream from a staged assay into one trainable hidden-state bridge organism: a tiny language backbone emits prompt hidden states, the bridi generator reads that stream, a trace-language cross-attention bridge fuses prompt and trace state, and a choked answer head reads the fused state. The historical spinal-cord gate remains a narrower gradient-through-trace subclaim.
 - Entry count: `0`
 - Runnable rows: `0`
 - Question boundary: full hidden-state Lojban symbiote bridge organism
-- Thesis: turn the M25 loose bridi stream from a staged assay into one trainable hidden-state bridge organism: a tiny language backbone emits prompt hidden states, the bridi generator reads that stream, a trace-language cross-attention bridge fuses prompt and trace state, and a choked answer head reads fused state. The historical spinal-cord gate remains a narrower gradient-through-trace subclaim.
+- Thesis: turn the M25 loose bridi stream from a staged assay into one trainable hidden-state bridge organism: a tiny language backbone emits prompt hidden states, the bridi generator reads that stream, a trace-language cross-attention bridge fuses prompt and trace state, and a choked answer head reads the fused state. The historical spinal-cord gate remains a narrower gradient-through-trace subclaim.
 - Selected upstream: `M25.A`
 - Inherits: `M25 loose bridi grammar-action stream emitter, M23/M25 decoy-balanced semantic source data, strict accuracy canonical metric, token efficiency and corruption-control skepticism`
 - Reopens: `frozen generator/advisor boundary, hard integer trace packing during training, tiny language backbone hidden-state stream, trace-language cross-attention bridge, final-answer gradient flow through the language backbone, bridge, and bridi path`
@@ -654,5 +654,5 @@ This is the ordered research spine of the project: legacy letter-series families
 - Primary metrics: `entry_count, family_count`
 - Guardrail metrics: `historical_gap_count`
 - Docs: `docs/ABLATION_HISTORY_FULL.md, docs/ABLATION_PROGRAM_MAP.md`
-- Scripts: `scripts/control_plane/build_ablation_program_map.py, scripts/control_plane/build_ablation_program_spine.py, scripts/control_plane/run_ablation_history_backfill.py, scripts/m_bridge/run_m_bridge_ablation_test_suite.py`
-- DAGs: `airflow/dags/control_plane/lojban_ablation_history_backfill_dag.py, airflow/dags/control_plane/lojban_ablation_program_spine_dag.py, airflow/dags/m_bridge/lojban_m_bridge_ablation_test_suite_dag.py`
+- Scripts: `scripts/control_plane/build_ablation_program_map.py, scripts/control_plane/build_ablation_program_spine.py, scripts/control_plane/run_ablation_history_backfill.py, scripts/control_plane/run_ablation_test_matrix.py, scripts/control_plane/run_whole_ablation_grid.py, scripts/m_bridge/run_m_bridge_ablation_test_suite.py`
+- DAGs: `airflow/dags/control_plane/lojban_ablation_history_backfill_dag.py, airflow/dags/control_plane/lojban_ablation_program_spine_dag.py, airflow/dags/control_plane/lojban_ablation_test_matrix_dag.py, airflow/dags/control_plane/lojban_whole_ablation_grid_dag.py, airflow/dags/m_bridge/lojban_m_bridge_ablation_test_suite_dag.py`

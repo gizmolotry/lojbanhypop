@@ -546,6 +546,20 @@ with DAG(
             ),
         )
 
+        test_matrix_surface = EmptyOperator(
+            task_id="test_matrix_surface",
+            doc_md="\n".join(
+                [
+                    "### Ablation Test Matrix",
+                    "",
+                    "Series-aware pytest ownership matrix. This links repository tests back to the ablation ledger without forcing pytest markers into every historical file.",
+                    "",
+                    "- Child DAG: `lojban_ablation_test_matrix`",
+                    "- Output: `ablation_test_matrix_manifest.json` under the hypercube telemetry root",
+                ]
+            ),
+        )
+
         refresh_program_control_plane = TriggerDagRunOperator(
             task_id="refresh_program_control_plane",
             trigger_dag_id="lojban_ablation_program_spine",
@@ -560,7 +574,15 @@ with DAG(
             conf={"run_id": "{{ dag_run.run_id }}__whole_grid"},
         )
 
-        history_registry >> family_map_and_spine >> refresh_program_control_plane >> whole_grid_surface >> render_whole_grid
+        run_test_matrix = TriggerDagRunOperator(
+            task_id="run_test_matrix",
+            trigger_dag_id="lojban_ablation_test_matrix",
+            wait_for_completion=True,
+            conf={"run_id": "{{ dag_run.run_id }}__test_matrix", "lane": "smoke", "execute": False},
+        )
+
+        history_registry >> family_map_and_spine >> refresh_program_control_plane >> test_matrix_surface >> run_test_matrix
+        run_test_matrix >> whole_grid_surface >> render_whole_grid
 
     end = EmptyOperator(task_id="end")
 

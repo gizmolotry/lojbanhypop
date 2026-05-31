@@ -53,6 +53,14 @@ def test_run_direct_unified_eval_help() -> None:
     assert "--m26-end-to-end-report" in out
 
 
+def test_run_ablation_test_matrix_help() -> None:
+    out = _run_help("scripts/control_plane/run_ablation_test_matrix.py")
+    assert "usage:" in out.lower()
+    assert "--lane" in out
+    assert "--family" in out
+    assert "--execute" in out
+
+
 def test_run_direct_unified_eval_m24_defaults_track_to_family() -> None:
     report = (
         REPO_ROOT

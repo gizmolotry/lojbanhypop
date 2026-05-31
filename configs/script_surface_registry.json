@@ -171,6 +171,16 @@
   "path_rules": [
     {
       "globs": [
+        "configs/*.json"
+      ],
+      "series": "control_plane",
+      "status": "configuration",
+      "kind": "config",
+      "bucket": "configs",
+      "owner": "control-plane"
+    },
+    {
+      "globs": [
         "scripts/control_plane/*.py"
       ],
       "series": "control_plane",
