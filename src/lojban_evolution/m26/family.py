@@ -31,7 +31,7 @@ M26_END_TO_END_GRID: list[dict[str, Any]] = [
 
 M26_REGISTRY: dict[str, dict[str, Any]] = {
     "M26": {
-        "family": "end_to_end_loafman_spinal_cord",
+        "family": "end_to_end_lojban_symbiote_spinal_cord",
         "implementation_label": "single_optimizer_prompt_to_bridi_to_advisor_model",
         "runner_scripts": {
             "suite": "scripts/m26/run_m26_end_to_end_loafman_suite.py",
@@ -51,7 +51,7 @@ M26_REGISTRY: dict[str, dict[str, Any]] = {
             "eval_size": 1500,
         },
         "thesis": (
-            "test whether the Loafman substrate exists as one trainable organism by proving final "
+            "test whether the Lojban symbiote substrate exists as one trainable organism by proving final "
             "answer loss reaches the bridi stream generator through a differentiable advisor path."
         ),
         "architecture": {

@@ -73,7 +73,7 @@ def test_m26_suite_cli_tiny_smoke_writes_report() -> None:
         capture_output=True,
         check=True,
     )
-    assert "M26 end-to-end Loafman report written" in result.stdout
+    assert "M26 end-to-end Lojban symbiote report written" in result.stdout
     payload = json.loads(report.read_text(encoding="utf-8"))
     assert payload["track"] == "M26"
     assert payload["config"]["max_symbols"] == 16

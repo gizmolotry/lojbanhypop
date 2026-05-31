@@ -48,7 +48,7 @@ def _run_m26_end_to_end_loafman_suite(**context: object) -> None:
 
 with DAG(
     dag_id="lojban_m26_end_to_end_loafman",
-    description="M26 end-to-end Loafman spinal-cord suite.",
+    description="M26 end-to-end Lojban symbiote spinal-cord suite.",
     start_date=datetime(2026, 1, 1),
     schedule=None,
     catchup=False,

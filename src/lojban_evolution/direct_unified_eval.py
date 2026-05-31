@@ -960,7 +960,7 @@ def build_direct_unified_eval_manifest(
     if family_key == "M26":
         notes.append(
             "M26 direct surface tests whether final answer loss reaches the bridi generator through "
-            "one differentiable trace-only advisor path; it is a spinal-cord test, not a chatbot claim."
+            "one differentiable trace-only advisor path; it is a Lojban symbiote spinal-cord test, not a chatbot claim."
         )
 
     manifest = {
@@ -1183,7 +1183,7 @@ def _evaluate_m26_contract(
     if not metrics:
         return _missing_contract_row(test_id, contract, f"missing M26 direct surface for {test_id}")
     notes = [
-        "M26 contract is evaluated from the end-to-end Loafman spinal-cord report.",
+        "M26 contract is evaluated from the end-to-end Lojban symbiote spinal-cord report.",
         "This verifies differentiable final-answer gradient flow through the bridi generator.",
         "M26 is not a chatbot promotion unless m26_promotion_candidate=1.0 and later base-LLM coupling exists.",
     ]

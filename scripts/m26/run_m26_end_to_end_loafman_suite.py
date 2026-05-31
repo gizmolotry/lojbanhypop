@@ -134,7 +134,7 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
     report_path = run_dir / registry["report_names"]["suite"]
     validate_series_outputs("M", [registry["output_roots"]["suite"], str(run_dir)], [report_path])
     payload = {
-        "series": series_metadata("M", "M26.end_to_end_loafman", "scripts/m26/run_m26_end_to_end_loafman_suite.py"),
+        "series": series_metadata("M", "M26.end_to_end_lojban_symbiote", "scripts/m26/run_m26_end_to_end_loafman_suite.py"),
         "lineage": lineage_metadata(
             "train",
             checkpoint_in=None,
@@ -172,13 +172,13 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
         "aggregate_metrics": aggregate,
     }
     report_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    print(f"M26 end-to-end Loafman report written to {report_path}")
+    print(f"M26 end-to-end Lojban symbiote report written to {report_path}")
     print(json.dumps(aggregate, indent=2))
     return payload
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run M26 end-to-end Loafman spinal-cord suite.")
+    parser = argparse.ArgumentParser(description="Run M26 end-to-end Lojban symbiote spinal-cord suite.")
     parser.add_argument("--seed-list", default="23,29")
     parser.add_argument("--train-size", type=int, default=6000)
     parser.add_argument("--eval-size", type=int, default=1500)

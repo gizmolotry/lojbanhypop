@@ -558,7 +558,7 @@ def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
         )
     if stage_key == "M26":
         notes.append(
-            "M26 is the end-to-end Loafman spinal-cord fork over M25; "
+            "M26 is the end-to-end Lojban symbiote spinal-cord fork over M25; "
             "promotion means answer loss reaches the bridi generator, not yet full chatbot success"
         )
     return _row(
@@ -1638,7 +1638,7 @@ def _render_markdown(manifest: dict[str, Any]) -> str:
     lines.extend(["", "## Read", ""])
     lines.append("- The fresh part of the whole grid is now the recovered legacy runnable surface: A-G, H/H5/J, L6, and the phase-eval lanes under one manifest.")
     lines.append("- The modern M rows are represented through artifact-backed anchors and the control-plane lineage manifests, so the whole program is visible without pretending every stage was freshly retrained.")
-    lines.append("- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, M23 the causal relevance-router fork, M24 the substrate-first compression fork, M25 the emergent loose bridi grammar stream fork, and M26 the end-to-end Loafman spinal-cord fork.")
+    lines.append("- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, M23 the causal relevance-router fork, M24 the substrate-first compression fork, M25 the emergent loose bridi grammar stream fork, and M26 the end-to-end Lojban symbiote spinal-cord fork.")
     return "\n".join(lines) + "\n"
 
 
