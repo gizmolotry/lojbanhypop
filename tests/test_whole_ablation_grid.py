@@ -398,14 +398,40 @@ def test_m26_special_stage_metrics_and_order() -> None:
             "mean_answer_loss_generator_grad_norm": 1.5,
             "mean_answer_loss_symbol_head_grad_norm": 0.8,
             "mean_answer_loss_advisor_grad_norm": 0.9,
+            "mean_answer_loss_trace_slot_advisor_grad_norm": 0.9,
+            "mean_answer_loss_advisor_classifier_grad_norm": 0.0,
+            "mean_answer_loss_language_backbone_grad_norm": 2.5,
+            "mean_answer_loss_bridge_grad_norm": 0.7,
             "mean_answer_loss_reaches_generator": 1.0,
             "mean_answer_loss_reaches_symbol_heads": 1.0,
+            "mean_answer_loss_reaches_trace_slot_advisor": 1.0,
+            "mean_answer_loss_reaches_advisor_classifier": 0.0,
+            "mean_answer_loss_reaches_language_backbone": 1.0,
+            "mean_answer_loss_reaches_bridge": 1.0,
             "mean_single_optimizer_end_to_end_training": 1.0,
             "mean_hard_argmax_training_cut_detected": 0.0,
+            "mean_lm_hidden_state_stream_active": 1.0,
+            "mean_bridi_generator_reads_lm_hidden_states": 1.0,
+            "mean_trace_bridge_reads_prompt_hidden_states": 1.0,
+            "mean_answer_head_reads_fused_lm_trace_state": 1.0,
+            "mean_raw_prompt_bypass_blocked": 1.0,
+            "mean_bridge_gate_value": 0.42,
+            "mean_bridge_delta_norm": 0.13,
+            "mean_trace_attention_entropy": 0.2,
+            "mean_trace_active_mass": 8.0,
             "mean_trainable_parameter_count": 123.0,
+            "mean_language_backbone_trainable_parameter_count": 45.0,
             "mean_m26_gate_beats_matched_prompt": 1.0,
+            "mean_m26_gate_answer_loss_reaches_language_backbone": 1.0,
+            "mean_m26_gate_answer_loss_reaches_bridge": 1.0,
+            "mean_m26_gate_bridi_generator_reads_lm_hidden_states": 1.0,
+            "mean_m26_gate_trace_bridge_reads_prompt_hidden_states": 1.0,
+            "mean_m26_gate_answer_head_reads_fused_lm_trace_state": 1.0,
+            "mean_m26_gate_raw_prompt_bypass_blocked": 1.0,
             "mean_m26_spinal_cord_gate_pass_rate": 1.0,
             "mean_m26_spinal_cord_candidate": 1.0,
+            "mean_m26_full_organism_gate_pass_rate": 1.0,
+            "mean_m26_full_organism_candidate": 1.0,
             "mean_m26_prompt_comparable_candidate": 1.0,
             "mean_m26_promotion_candidate": 1.0,
         }
@@ -416,13 +442,24 @@ def test_m26_special_stage_metrics_and_order() -> None:
     assert "M26" in whole_grid.STAGE_ORDER
     assert whole_grid.STAGE_ORDER.index("M25") < whole_grid.STAGE_ORDER.index("M26")
     assert whole_grid.STAGE_ORDER.index("M26") < whole_grid.STAGE_ORDER.index("Control Plane")
-    assert list(metrics)[:5] == [
-        "strict_accuracy",
-        "m26_promotion_candidate",
-        "m26_spinal_cord_gate_pass_rate",
-        "m26_spinal_cord_candidate",
-        "m26_prompt_comparable_candidate",
-    ]
+    if "m26_full_organism_gate_pass_rate" in metrics:
+        assert list(metrics)[:7] == [
+            "strict_accuracy",
+            "m26_promotion_candidate",
+            "m26_full_organism_gate_pass_rate",
+            "m26_full_organism_candidate",
+            "m26_spinal_cord_gate_pass_rate",
+            "m26_spinal_cord_candidate",
+            "m26_prompt_comparable_candidate",
+        ]
+    else:
+        assert list(metrics)[:5] == [
+            "strict_accuracy",
+            "m26_promotion_candidate",
+            "m26_spinal_cord_gate_pass_rate",
+            "m26_spinal_cord_candidate",
+            "m26_prompt_comparable_candidate",
+        ]
     assert metrics["answer_loss_reaches_generator"] == 1.0
     assert metrics["strict_accuracy"] == 0.44
     assert metrics["phrase_accuracy"] == 0.99
@@ -430,9 +467,25 @@ def test_m26_special_stage_metrics_and_order() -> None:
     assert metrics["m26_strict_delta_vs_matched_prompt"] == 0.04
     assert metrics["answer_loss_generator_grad_norm"] == 1.5
     assert metrics["answer_loss_advisor_grad_norm"] == 0.9
+    assert metrics["answer_loss_trace_slot_advisor_grad_norm"] == 0.9
+    assert metrics["answer_loss_advisor_classifier_grad_norm"] == 0.0
+    assert metrics["answer_loss_reaches_trace_slot_advisor"] == 1.0
+    assert metrics["answer_loss_reaches_advisor_classifier"] == 0.0
     assert metrics["predicted_vs_zero_delta"] == 0.24
     assert metrics["trainable_parameter_count"] == 123.0
     assert metrics["m26_gate_beats_matched_prompt"] == 1.0
+    if "m26_full_organism_gate_pass_rate" in metrics:
+        assert metrics["m26_full_organism_gate_pass_rate"] == 1.0
+        assert metrics["m26_full_organism_candidate"] == 1.0
+        assert metrics["answer_loss_reaches_language_backbone"] == 1.0
+        assert metrics["answer_loss_reaches_bridge"] == 1.0
+        assert metrics["answer_loss_language_backbone_grad_norm"] == 2.5
+        assert metrics["answer_loss_bridge_grad_norm"] == 0.7
+        assert metrics["lm_hidden_state_stream_active"] == 1.0
+        assert metrics["bridi_generator_reads_lm_hidden_states"] == 1.0
+        assert metrics["trace_bridge_reads_prompt_hidden_states"] == 1.0
+        assert metrics["answer_head_reads_fused_lm_trace_state"] == 1.0
+        assert metrics["raw_prompt_bypass_blocked"] == 1.0
 
     assert (
         whole_grid._direct_promotion_status(

@@ -16,14 +16,17 @@ M26_END_TO_END_GRID: list[dict[str, Any]] = [
     {
         "cell_key": "A",
         "cell_id": m26_cell_id("A"),
-        "lock": "differentiable_loose_bridi_spinal_cord",
-        "label": "M25 loose stream emitter with differentiable trace-only advisor under one optimizer",
+        "lock": "differentiable_lm_hidden_bridi_bridge_organism",
+        "label": "tiny LM hidden stream plus M25 loose bridi generator plus differentiable trace-language bridge",
         "variant": {
             "trace_weight": 2.0,
             "answer_weight": 1.0,
             "mdl_weight": 0.01,
             "max_symbols": 32,
             "symbol_budget": 0,
+            "max_prompt_length": 128,
+            "language_layers": 1,
+            "language_heads": 2,
         },
     }
 ]
@@ -31,8 +34,8 @@ M26_END_TO_END_GRID: list[dict[str, Any]] = [
 
 M26_REGISTRY: dict[str, dict[str, Any]] = {
     "M26": {
-        "family": "end_to_end_lojban_symbiote_spinal_cord",
-        "implementation_label": "single_optimizer_prompt_to_bridi_to_advisor_model",
+        "family": "end_to_end_lojban_symbiote_full_organism",
+        "implementation_label": "single_optimizer_lm_hidden_to_bridi_to_trace_language_bridge_model",
         "runner_scripts": {
             "suite": "scripts/m26/run_m26_end_to_end_loafman_suite.py",
         },
@@ -52,13 +55,16 @@ M26_REGISTRY: dict[str, dict[str, Any]] = {
         },
         "thesis": (
             "test whether the Lojban symbiote substrate exists as one trainable organism by proving final "
-            "answer loss reaches the bridi stream generator through a differentiable advisor path."
+            "answer loss reaches an English hidden-state stream, the bridi stream generator, and a "
+            "trace-language bridge without a hard symbolic cut."
         ),
         "architecture": {
-            "stage_1": "reuse M25 loose bridi stream supervision and M23/M25 semantic data source",
-            "stage_2": "emit soft type/value/aux symbol distributions instead of hard packed integer symbols",
-            "stage_3": "read the soft bridi trace with a trace-only advisor under the same optimizer",
-            "stage_4": "probe answer-loss gradients into the generator and symbol heads",
+            "stage_1": "encode the English prompt with a trainable LM-shaped hidden-state stream",
+            "stage_2": "feed those hidden states into the M25 loose bridi stream generator",
+            "stage_3": "emit soft type/value/aux symbol distributions instead of hard packed integer symbols",
+            "stage_4": "cross-attend from the prompt stream into the soft bridi trace through a differentiable bridge",
+            "stage_5": "choke the final answer head so it reads the trace-conditioned bridge residual, not raw prompt state",
+            "stage_6": "probe answer-loss gradients into the language backbone, generator, symbol heads, advisor, and bridge",
         },
         "parameter_axes": [
             "trace_weight",
@@ -67,6 +73,9 @@ M26_REGISTRY: dict[str, dict[str, Any]] = {
             "max_symbols",
             "symbol_budget",
             "advisor_hidden_dim",
+            "max_prompt_length",
+            "language_layers",
+            "language_heads",
             "seed",
         ],
         "comparison_targets": ["M25", "M24.2", "M23"],

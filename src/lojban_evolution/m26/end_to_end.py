@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass
 import random
+from statistics import mean
 from typing import Any, Sequence
 
 import torch
@@ -40,16 +41,80 @@ class M26GradientProbe:
     answer_loss_generator_grad_norm: float
     answer_loss_symbol_head_grad_norm: float
     answer_loss_advisor_grad_norm: float
+    answer_loss_trace_slot_advisor_grad_norm: float
+    answer_loss_advisor_classifier_grad_norm: float
+    answer_loss_language_backbone_grad_norm: float
+    answer_loss_bridge_grad_norm: float
     answer_loss_reaches_generator: float
     answer_loss_reaches_symbol_heads: float
+    answer_loss_reaches_trace_slot_advisor: float
+    answer_loss_reaches_advisor_classifier: float
+    answer_loss_reaches_language_backbone: float
+    answer_loss_reaches_bridge: float
 
     def as_dict(self) -> dict[str, float]:
         return {
             "answer_loss_generator_grad_norm": self.answer_loss_generator_grad_norm,
             "answer_loss_symbol_head_grad_norm": self.answer_loss_symbol_head_grad_norm,
             "answer_loss_advisor_grad_norm": self.answer_loss_advisor_grad_norm,
+            "answer_loss_trace_slot_advisor_grad_norm": self.answer_loss_trace_slot_advisor_grad_norm,
+            "answer_loss_advisor_classifier_grad_norm": self.answer_loss_advisor_classifier_grad_norm,
+            "answer_loss_language_backbone_grad_norm": self.answer_loss_language_backbone_grad_norm,
+            "answer_loss_bridge_grad_norm": self.answer_loss_bridge_grad_norm,
             "answer_loss_reaches_generator": self.answer_loss_reaches_generator,
             "answer_loss_reaches_symbol_heads": self.answer_loss_reaches_symbol_heads,
+            "answer_loss_reaches_trace_slot_advisor": self.answer_loss_reaches_trace_slot_advisor,
+            "answer_loss_reaches_advisor_classifier": self.answer_loss_reaches_advisor_classifier,
+            "answer_loss_reaches_language_backbone": self.answer_loss_reaches_language_backbone,
+            "answer_loss_reaches_bridge": self.answer_loss_reaches_bridge,
+        }
+
+
+class M26TinyLanguageBackbone(nn.Module):
+    """LM-shaped English stream used by M26 before the bridi symbiote reads it."""
+
+    def __init__(
+        self,
+        *,
+        vocab_size: int,
+        hidden_dim: int,
+        max_prompt_length: int = 128,
+        num_layers: int = 1,
+        num_heads: int = 2,
+    ) -> None:
+        super().__init__()
+        self.hidden_dim = int(hidden_dim)
+        self.max_prompt_length = int(max_prompt_length)
+        self.embedding = nn.Embedding(int(vocab_size), self.hidden_dim, padding_idx=0)
+        self.position_embedding = nn.Embedding(self.max_prompt_length, self.hidden_dim)
+        resolved_heads = max(1, int(num_heads))
+        if self.hidden_dim % resolved_heads != 0:
+            resolved_heads = 1
+        layer = nn.TransformerEncoderLayer(
+            d_model=self.hidden_dim,
+            nhead=resolved_heads,
+            dim_feedforward=max(self.hidden_dim * 2, 16),
+            dropout=0.0,
+            activation="gelu",
+            batch_first=True,
+            norm_first=True,
+        )
+        self.encoder = nn.TransformerEncoder(layer, num_layers=max(1, int(num_layers)))
+
+    def forward(self, input_ids: torch.Tensor) -> dict[str, torch.Tensor]:
+        seq_len = int(input_ids.shape[1])
+        if seq_len > self.max_prompt_length:
+            raise ValueError(f"input sequence length {seq_len} exceeds max_prompt_length {self.max_prompt_length}")
+        positions = torch.arange(seq_len, device=input_ids.device).unsqueeze(0).expand_as(input_ids)
+        hidden = self.embedding(input_ids) + self.position_embedding(positions)
+        pad_mask = input_ids.eq(0)
+        token_hidden = self.encoder(hidden, src_key_padding_mask=pad_mask)
+        mask = input_ids.ne(0).float().unsqueeze(-1)
+        pooled = (token_hidden * mask).sum(dim=1) / mask.sum(dim=1).clamp_min(1.0)
+        return {
+            "token_hidden_states": token_hidden,
+            "prompt_state": pooled,
+            "prompt_mask": input_ids.ne(0),
         }
 
 
@@ -91,6 +156,25 @@ class DifferentiableLooseStreamAdvisor(nn.Module):
         aux_logits: torch.Tensor,
         active_override: torch.Tensor | None = None,
     ) -> torch.Tensor:
+        embedded, active = self.slot_embeddings_from_logits(
+            active_logits=active_logits,
+            type_logits=type_logits,
+            value_logits=value_logits,
+            aux_logits=aux_logits,
+            active_override=active_override,
+        )
+        active = active.unsqueeze(-1)
+        return embedded.sum(dim=1) / active.sum(dim=1).clamp_min(1.0)
+
+    def slot_embeddings_from_logits(
+        self,
+        *,
+        active_logits: torch.Tensor,
+        type_logits: torch.Tensor,
+        value_logits: torch.Tensor,
+        aux_logits: torch.Tensor,
+        active_override: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
         type_probs = torch.softmax(type_logits, dim=-1)
         value_probs = torch.softmax(value_logits, dim=-1)
         aux_probs = torch.softmax(aux_logits, dim=-1)
@@ -104,8 +188,7 @@ class DifferentiableLooseStreamAdvisor(nn.Module):
             + value_probs @ self.value_embedding.weight
             + aux_probs @ self.aux_embedding.weight
         )
-        active = active.unsqueeze(-1)
-        return (embedded * active).sum(dim=1) / active.sum(dim=1).clamp_min(1.0)
+        return embedded * active.unsqueeze(-1), active
 
     def forward_from_logits(
         self,
@@ -132,12 +215,80 @@ class DifferentiableLooseStreamAdvisor(nn.Module):
         return self.forward_from_logits(**kwargs)
 
 
-class M26EndToEndLoafman(nn.Module):
-    """One trainable prompt -> bridi stream -> advisor organism.
+class M26TraceLanguageBridge(nn.Module):
+    """Cross-attend the soft bridi trace back into the English hidden stream."""
 
-    This is intentionally smaller than the eventual chatbot path. Its job is to
-    establish the missing spinal cord: final answer loss must reach the symbolic
-    stream emitter without a hard argmax/no_grad cut.
+    def __init__(
+        self,
+        *,
+        prompt_hidden_dim: int,
+        trace_hidden_dim: int,
+        bottleneck_dim: int | None = None,
+    ) -> None:
+        super().__init__()
+        prompt_dim = int(prompt_hidden_dim)
+        trace_dim = int(trace_hidden_dim)
+        bottleneck = int(bottleneck_dim or max(8, min(prompt_dim, trace_dim)))
+        self.prompt_hidden_dim = prompt_dim
+        self.trace_hidden_dim = trace_dim
+        self.q_proj = nn.Linear(prompt_dim, trace_dim, bias=False)
+        self.k_proj = nn.Linear(trace_dim, trace_dim, bias=False)
+        self.v_proj = nn.Linear(trace_dim, trace_dim, bias=False)
+        self.down = nn.Linear(trace_dim, bottleneck, bias=False)
+        self.up = nn.Linear(bottleneck, prompt_dim, bias=False)
+        self.gate = nn.Parameter(torch.tensor(-2.0))
+        self.answer_head = nn.Sequential(
+            nn.Linear(prompt_dim, prompt_dim),
+            nn.Tanh(),
+            nn.Linear(prompt_dim, len(ANSWER_LABELS)),
+        )
+
+    def forward(
+        self,
+        *,
+        token_hidden_states: torch.Tensor,
+        prompt_mask: torch.Tensor,
+        trace_slots: torch.Tensor,
+        trace_active: torch.Tensor,
+    ) -> dict[str, torch.Tensor]:
+        mask = prompt_mask.float().unsqueeze(-1)
+        prompt_state = (token_hidden_states * mask).sum(dim=1) / mask.sum(dim=1).clamp_min(1.0)
+        q = self.q_proj(prompt_state).unsqueeze(1)
+        k = self.k_proj(trace_slots)
+        v = self.v_proj(trace_slots)
+        scores = torch.matmul(q, k.transpose(-1, -2)) / (float(self.trace_hidden_dim) ** 0.5)
+        active = trace_active.clamp(min=0.0, max=1.0).unsqueeze(1)
+        attn = torch.softmax(scores.masked_fill(active <= 1e-8, -1e4), dim=-1) * active
+        attn = attn / attn.sum(dim=-1, keepdim=True).clamp_min(1e-6)
+        context = torch.matmul(attn, v).squeeze(1)
+        delta = self.up(F.gelu(self.down(context)))
+        gate = torch.sigmoid(self.gate)
+        delta = torch.tanh(delta) * gate
+        # Choked read path: the answer head cannot solve from raw prompt_state
+        # alone. The prompt stream is used to query/ground the bridi trace, but
+        # the final classifier only sees the trace-conditioned residual.
+        fused_state = delta
+        entropy = -(attn * torch.log(attn.clamp_min(1e-8))).sum(dim=-1).mean()
+        return {
+            "answer_logits": self.answer_head(fused_state),
+            "prompt_state": prompt_state,
+            "fused_state": fused_state,
+            "bridge_delta": delta,
+            "trace_attention": attn.squeeze(1),
+            "bridge_gate_value": gate,
+            "trace_attention_entropy": entropy,
+            "trace_active_mass": trace_active.sum(dim=-1).mean(),
+            "bridge_delta_norm": torch.norm(delta, dim=-1).mean(),
+            "raw_prompt_bypass_blocked": delta.new_tensor(1.0),
+        }
+
+
+class M26EndToEndLoafman(nn.Module):
+    """One trainable prompt -> LM hidden stream -> bridi stream -> bridge organism.
+
+    M26 now assembles the organs that earlier branches kept separate: an English
+    hidden-state stream, a bridi scratchpad generator, and a differentiable
+    re-entry bridge whose final answer loss reaches back through all of them.
     """
 
     def __init__(
@@ -151,8 +302,18 @@ class M26EndToEndLoafman(nn.Module):
         hidden_dim: int = 128,
         advisor_hidden_dim: int = 64,
         symbol_budget: int | None = None,
+        max_prompt_length: int = 128,
+        language_layers: int = 1,
+        language_heads: int = 2,
     ) -> None:
         super().__init__()
+        self.language_backbone = M26TinyLanguageBackbone(
+            vocab_size=int(vocab_size),
+            hidden_dim=int(embedding_dim),
+            max_prompt_length=int(max_prompt_length),
+            num_layers=int(language_layers),
+            num_heads=int(language_heads),
+        )
         self.generator = M25EmergentBridiQFormer(
             vocab_size=int(vocab_size),
             max_symbols=int(max_symbols),
@@ -168,6 +329,12 @@ class M26EndToEndLoafman(nn.Module):
             hidden_dim=int(advisor_hidden_dim),
             symbol_budget=symbol_budget,
         )
+        self.bridge = M26TraceLanguageBridge(
+            prompt_hidden_dim=int(embedding_dim),
+            trace_hidden_dim=int(advisor_hidden_dim),
+        )
+        self.generator_primary_input = "language_hidden_states"
+        self.answer_head_primary_input = "fused_language_trace_state"
 
     @property
     def max_symbols(self) -> int:
@@ -187,19 +354,67 @@ class M26EndToEndLoafman(nn.Module):
             active_override=active_override,
         )
 
+    def bridge_logits_from_generator_outputs(
+        self,
+        *,
+        input_ids: torch.Tensor,
+        generator_outputs: dict[str, torch.Tensor],
+        active_override: torch.Tensor | None = None,
+        language_outputs: dict[str, torch.Tensor] | None = None,
+    ) -> torch.Tensor:
+        language = self.language_backbone(input_ids) if language_outputs is None else language_outputs
+        trace_slots, trace_active = self.advisor.slot_embeddings_from_logits(
+            active_logits=generator_outputs["active_logits"],
+            type_logits=generator_outputs["type_logits"],
+            value_logits=generator_outputs["value_logits"],
+            aux_logits=generator_outputs["aux_logits"],
+            active_override=active_override,
+        )
+        return self.bridge(
+            token_hidden_states=language["token_hidden_states"],
+            prompt_mask=language["prompt_mask"],
+            trace_slots=trace_slots,
+            trace_active=trace_active,
+        )["answer_logits"]
+
     def forward(self, input_ids: torch.Tensor) -> dict[str, torch.Tensor]:
-        generator_outputs = self.generator(input_ids)
-        answer_logits = self.advisor_logits_from_generator_outputs(generator_outputs)
+        language = self.language_backbone(input_ids)
+        generator_outputs = self.generator(input_ids, prompt_hidden_states=language["token_hidden_states"])
+        trace_slots, trace_active = self.advisor.slot_embeddings_from_logits(
+            active_logits=generator_outputs["active_logits"],
+            type_logits=generator_outputs["type_logits"],
+            value_logits=generator_outputs["value_logits"],
+            aux_logits=generator_outputs["aux_logits"],
+        )
+        bridge_outputs = self.bridge(
+            token_hidden_states=language["token_hidden_states"],
+            prompt_mask=language["prompt_mask"],
+            trace_slots=trace_slots,
+            trace_active=trace_active,
+        )
         return {
             **generator_outputs,
             "generator_answer_logits": generator_outputs["answer_logits"],
-            "answer_logits": answer_logits,
+            "trace_only_answer_logits": self.advisor_logits_from_generator_outputs(generator_outputs),
+            "answer_logits": bridge_outputs["answer_logits"],
             "trace_state": self.advisor.encode_from_logits(
                 active_logits=generator_outputs["active_logits"],
                 type_logits=generator_outputs["type_logits"],
                 value_logits=generator_outputs["value_logits"],
                 aux_logits=generator_outputs["aux_logits"],
             ),
+            "language_hidden_states": language["token_hidden_states"],
+            "prompt_state": bridge_outputs["prompt_state"],
+            "fused_state": bridge_outputs["fused_state"],
+            "trace_slots": trace_slots,
+            "trace_active": trace_active,
+            "bridge_delta": bridge_outputs["bridge_delta"],
+            "trace_attention": bridge_outputs["trace_attention"],
+            "bridge_gate_value": bridge_outputs["bridge_gate_value"],
+            "trace_attention_entropy": bridge_outputs["trace_attention_entropy"],
+            "trace_active_mass": bridge_outputs["trace_active_mass"],
+            "bridge_delta_norm": bridge_outputs["bridge_delta_norm"],
+            "raw_prompt_bypass_blocked": bridge_outputs["raw_prompt_bypass_blocked"],
         }
 
 
@@ -242,6 +457,11 @@ def compute_m26_loss(
         "answer_loss": float(answer_loss.detach().cpu().item()),
         "generator_answer_loss_diagnostic": float(generator_answer_loss.detach().cpu().item()),
         "mdl_loss": float(mdl_loss.detach().cpu().item()),
+        "bridge_gate_value": float(outputs["bridge_gate_value"].detach().cpu().item()),
+        "bridge_delta_norm": float(outputs["bridge_delta_norm"].detach().cpu().item()),
+        "trace_attention_entropy": float(outputs["trace_attention_entropy"].detach().cpu().item()),
+        "trace_active_mass": float(outputs["trace_active_mass"].detach().cpu().item()),
+        "raw_prompt_bypass_blocked": float(outputs["raw_prompt_bypass_blocked"].detach().cpu().item()),
     }
 
 
@@ -258,7 +478,16 @@ def probe_m26_answer_gradient_flow(
     loss.backward()
 
     generator_norm = _grad_norm(model.generator.parameters())
-    advisor_norm = _grad_norm(model.advisor.parameters())
+    trace_slot_advisor_params = []
+    for module in (model.advisor.type_embedding, model.advisor.value_embedding, model.advisor.aux_embedding):
+        trace_slot_advisor_params.extend(module.parameters())
+    trace_slot_advisor_norm = _grad_norm(trace_slot_advisor_params)
+    advisor_classifier_norm = _grad_norm(model.advisor.classifier.parameters())
+    # Backward-compatible alias: in the full-organism bridge, "advisor"
+    # means the soft trace-slot embedding path, not the trace-only classifier.
+    advisor_norm = trace_slot_advisor_norm
+    language_norm = _grad_norm(model.language_backbone.parameters())
+    bridge_norm = _grad_norm(model.bridge.parameters())
     symbol_params = []
     for module in (model.generator.active_head, model.generator.type_head, model.generator.value_head, model.generator.aux_head):
         symbol_params.extend(module.parameters())
@@ -270,8 +499,16 @@ def probe_m26_answer_gradient_flow(
         answer_loss_generator_grad_norm=generator_norm,
         answer_loss_symbol_head_grad_norm=symbol_norm,
         answer_loss_advisor_grad_norm=advisor_norm,
+        answer_loss_trace_slot_advisor_grad_norm=trace_slot_advisor_norm,
+        answer_loss_advisor_classifier_grad_norm=advisor_classifier_norm,
+        answer_loss_language_backbone_grad_norm=language_norm,
+        answer_loss_bridge_grad_norm=bridge_norm,
         answer_loss_reaches_generator=1.0 if generator_norm > 0.0 else 0.0,
         answer_loss_reaches_symbol_heads=1.0 if symbol_norm > 0.0 else 0.0,
+        answer_loss_reaches_trace_slot_advisor=1.0 if trace_slot_advisor_norm > 0.0 else 0.0,
+        answer_loss_reaches_advisor_classifier=1.0 if advisor_classifier_norm > 0.0 else 0.0,
+        answer_loss_reaches_language_backbone=1.0 if language_norm > 0.0 else 0.0,
+        answer_loss_reaches_bridge=1.0 if bridge_norm > 0.0 else 0.0,
     )
 
 
@@ -302,6 +539,7 @@ def evaluate_m26_end_to_end_loafman(
     symbol_counts: list[torch.Tensor] = []
     prompt_counts: list[torch.Tensor] = []
     matched_prompt_counts: list[torch.Tensor] = []
+    bridge_telemetry: dict[str, list[float]] = defaultdict(list)
     with torch.no_grad():
         for batch_idx, batch in enumerate(loader):
             input_ids = batch["input_ids"].to(device_obj)
@@ -311,12 +549,37 @@ def evaluate_m26_end_to_end_loafman(
             shuffled_outputs = _shuffle_generator_outputs(generator_outputs, seed=int(seed) + batch_idx)
             random_outputs = _random_generator_outputs(generator_outputs, seed=int(seed) + 1000 + batch_idx)
             zero_active = torch.zeros_like(generator_outputs["active_logits"])
+            language_outputs = {
+                "token_hidden_states": outputs["language_hidden_states"],
+                "prompt_mask": input_ids.ne(0),
+            }
 
             logits["predicted"].append(outputs["answer_logits"].detach().cpu())
-            logits["shuffled"].append(model.advisor_logits_from_generator_outputs(shuffled_outputs).detach().cpu())
-            logits["random"].append(model.advisor_logits_from_generator_outputs(random_outputs).detach().cpu())
+            for key in ("bridge_gate_value", "bridge_delta_norm", "trace_attention_entropy", "trace_active_mass", "raw_prompt_bypass_blocked"):
+                value = outputs.get(key)
+                if isinstance(value, torch.Tensor):
+                    bridge_telemetry[key].append(float(value.detach().float().mean().cpu().item()))
+            logits["shuffled"].append(
+                model.bridge_logits_from_generator_outputs(
+                    input_ids=input_ids,
+                    generator_outputs=shuffled_outputs,
+                    language_outputs=language_outputs,
+                ).detach().cpu()
+            )
+            logits["random"].append(
+                model.bridge_logits_from_generator_outputs(
+                    input_ids=input_ids,
+                    generator_outputs=random_outputs,
+                    language_outputs=language_outputs,
+                ).detach().cpu()
+            )
             logits["zero"].append(
-                model.advisor_logits_from_generator_outputs(generator_outputs, active_override=zero_active).detach().cpu()
+                model.bridge_logits_from_generator_outputs(
+                    input_ids=input_ids,
+                    generator_outputs=generator_outputs,
+                    active_override=zero_active,
+                    language_outputs=language_outputs,
+                ).detach().cpu()
             )
             if prompt_control is not None:
                 logits["prompt"].append(prompt_control(input_ids).detach().cpu())
@@ -380,6 +643,13 @@ def evaluate_m26_end_to_end_loafman(
         "hard_argmax_training_cut_detected": 0.0,
         "torch_no_grad_training_cut_detected": 0.0,
         "advisor_primary_trace_is_differentiable": 1.0,
+        "bridge_gate_value": mean(bridge_telemetry["bridge_gate_value"]) if bridge_telemetry["bridge_gate_value"] else 0.0,
+        "bridge_delta_norm": mean(bridge_telemetry["bridge_delta_norm"]) if bridge_telemetry["bridge_delta_norm"] else 0.0,
+        "trace_attention_entropy": mean(bridge_telemetry["trace_attention_entropy"]) if bridge_telemetry["trace_attention_entropy"] else 0.0,
+        "trace_active_mass": mean(bridge_telemetry["trace_active_mass"]) if bridge_telemetry["trace_active_mass"] else 0.0,
+        "raw_prompt_bypass_blocked": mean(bridge_telemetry["raw_prompt_bypass_blocked"])
+        if bridge_telemetry["raw_prompt_bypass_blocked"]
+        else 0.0,
     }
     metrics.update(_component_accuracy(all_streams["predicted"], all_streams["oracle"]))
     pred_labels = torch.argmax(all_logits["predicted"], dim=-1)
@@ -407,6 +677,9 @@ def train_m26_end_to_end_loafman(
     advisor_hidden_dim: int = 64,
     max_frames: int = 6,
     max_symbols: int = 32,
+    max_prompt_length: int = 128,
+    language_layers: int = 1,
+    language_heads: int = 2,
     symbol_budget: int | None = None,
     matched_prompt_budget: int | None = None,
     trace_weight: float = DEFAULT_M26_TRACE_WEIGHT,
@@ -435,6 +708,9 @@ def train_m26_end_to_end_loafman(
         hidden_dim=int(hidden_dim),
         advisor_hidden_dim=int(advisor_hidden_dim),
         symbol_budget=symbol_budget,
+        max_prompt_length=int(max_prompt_length),
+        language_layers=int(language_layers),
+        language_heads=int(language_heads),
     ).to(device_obj)
     dataset = M25LooseBridiDataset(train_examples, vocab, max_symbols=model.max_symbols)
     loader = DataLoader(
@@ -525,8 +801,17 @@ def train_m26_end_to_end_loafman(
     metrics.update(
         {
             "trainable_parameter_count": float(sum(p.numel() for p in model.parameters() if p.requires_grad)),
+            "language_backbone_trainable_parameter_count": float(
+                sum(p.numel() for p in model.language_backbone.parameters() if p.requires_grad)
+            ),
             "generator_trainable_parameter_count": float(sum(p.numel() for p in model.generator.parameters() if p.requires_grad)),
             "advisor_trainable_parameter_count": float(sum(p.numel() for p in model.advisor.parameters() if p.requires_grad)),
+            "bridge_trainable_parameter_count": float(sum(p.numel() for p in model.bridge.parameters() if p.requires_grad)),
+            "lm_hidden_state_stream_active": 1.0,
+            "bridi_generator_reads_lm_hidden_states": 1.0,
+            "trace_bridge_reads_prompt_hidden_states": 1.0,
+            "answer_head_reads_fused_lm_trace_state": 1.0,
+            "raw_prompt_bypass_blocked": 1.0,
             "trace_weight": float(trace_weight),
             "answer_weight": float(answer_weight),
             "mdl_weight": float(mdl_weight),
@@ -547,12 +832,16 @@ def train_m26_end_to_end_loafman(
             "advisor_hidden_dim": int(advisor_hidden_dim),
             "max_frames": int(max_frames),
             "max_symbols": int(max_symbols),
+            "max_prompt_length": int(max_prompt_length),
+            "language_layers": int(language_layers),
+            "language_heads": int(language_heads),
             "symbol_budget": int(symbol_budget or 0),
             "matched_prompt_budget": int(resolved_matched_prompt_budget),
             "trace_weight": float(trace_weight),
             "answer_weight": float(answer_weight),
             "mdl_weight": float(mdl_weight),
             "device": str(device_obj),
+            "organism_mode": "lm_hidden_bridi_bridge",
         },
         "metrics": metrics,
         "surface_metrics": eval_payload["surface_metrics"],
@@ -573,16 +862,37 @@ def m26_promotion_gate_metrics(metrics: dict[str, float]) -> dict[str, float]:
         "m26_gate_no_hard_training_cut": 1.0 if metrics.get("hard_argmax_training_cut_detected", 1.0) == 0.0 else 0.0,
         "m26_gate_stream_beats_zero": 1.0 if metrics.get("predicted_vs_zero_delta", 0.0) >= 0.02 else 0.0,
     }
+    full_organism_gates = {
+        "m26_gate_answer_loss_reaches_language_backbone": 1.0
+        if metrics.get("answer_loss_reaches_language_backbone", 0.0) >= 1.0
+        else 0.0,
+        "m26_gate_answer_loss_reaches_bridge": 1.0 if metrics.get("answer_loss_reaches_bridge", 0.0) >= 1.0 else 0.0,
+        "m26_gate_bridi_generator_reads_lm_hidden_states": 1.0
+        if metrics.get("bridi_generator_reads_lm_hidden_states", 0.0) >= 1.0
+        else 0.0,
+        "m26_gate_trace_bridge_reads_prompt_hidden_states": 1.0
+        if metrics.get("trace_bridge_reads_prompt_hidden_states", 0.0) >= 1.0
+        else 0.0,
+        "m26_gate_answer_head_reads_fused_lm_trace_state": 1.0
+        if metrics.get("answer_head_reads_fused_lm_trace_state", 0.0) >= 1.0
+        else 0.0,
+        "m26_gate_raw_prompt_bypass_blocked": 1.0 if metrics.get("raw_prompt_bypass_blocked", 0.0) >= 1.0 else 0.0,
+    }
     matched_gate = 1.0 if metrics.get("m26_strict_delta_vs_matched_prompt", -1.0) >= 0.0 else 0.0
     spinal_pass = sum(spinal_gates.values()) / max(1, len(spinal_gates))
     spinal_candidate = 1.0 if all(value == 1.0 for value in spinal_gates.values()) else 0.0
+    full_pass = sum(full_organism_gates.values()) / max(1, len(full_organism_gates))
+    full_candidate = 1.0 if spinal_candidate >= 1.0 and all(value == 1.0 for value in full_organism_gates.values()) else 0.0
     return {
         **spinal_gates,
+        **full_organism_gates,
         "m26_spinal_cord_gate_pass_rate": spinal_pass,
         "m26_spinal_cord_candidate": spinal_candidate,
+        "m26_full_organism_gate_pass_rate": full_pass,
+        "m26_full_organism_candidate": full_candidate,
         "m26_gate_beats_matched_prompt": matched_gate,
-        "m26_prompt_comparable_candidate": 1.0 if spinal_candidate >= 1.0 and matched_gate >= 1.0 else 0.0,
-        "m26_promotion_candidate": 1.0 if spinal_candidate >= 1.0 and matched_gate >= 1.0 else 0.0,
+        "m26_prompt_comparable_candidate": 1.0 if full_candidate >= 1.0 and matched_gate >= 1.0 else 0.0,
+        "m26_promotion_candidate": 1.0 if full_candidate >= 1.0 and matched_gate >= 1.0 else 0.0,
     }
 
 

@@ -15,7 +15,7 @@
 - `causal_relevance_substrate`: M23 causal relevance-router fork
 - `substrate_compression`: M24 substrate compression branch
 - `emergent_bridi_grammar`: M25 loose bridi grammar-action stream branch
-- `end_to_end_lojban_symbiote`: M26 differentiable prompt-to-bridi-to-advisor organism branch
+- `end_to_end_lojban_symbiote`: M26 full hidden-state prompt-to-bridi-to-trace-bridge-to-answer organism branch
 - `control_plane`: the backfill, catalog, and aggregate-suite layer
 
 ## Concentrated Families
@@ -652,7 +652,7 @@
 - Normalized IDs: `M26`
 - Entry count: `0`
 - Runnable rows: `0`
-- Brief: turn the M25 loose bridi stream from a staged assay into one trainable prompt-to-bridi-to-advisor organism, proving final answer loss reaches the symbolic generator through a differentiable trace handoff.
+- Brief: turn the M25 loose bridi stream from a staged assay into one trainable hidden-state bridge organism: a tiny language backbone emits prompt hidden states, the bridi generator reads that stream, a trace-language bridge fuses prompt and trace state, and a choked answer head reads the fused state. The spinal-cord gate remains a narrower gradient-through-trace subclaim.
 - Family groups: `taxonomy_major_family`
 - DAGs: `airflow/dags/m26/lojban_m26_end_to_end_loafman_dag.py`
 

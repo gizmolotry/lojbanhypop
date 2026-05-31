@@ -275,11 +275,24 @@ KEY_METRICS = [
     "hard_argmax_training_cut_detected",
     "torch_no_grad_training_cut_detected",
     "advisor_primary_trace_is_differentiable",
+    "lm_hidden_state_stream_active",
+    "bridi_generator_reads_lm_hidden_states",
+    "trace_bridge_reads_prompt_hidden_states",
+    "answer_head_reads_fused_lm_trace_state",
+    "raw_prompt_bypass_blocked",
     "answer_loss_generator_grad_norm",
     "answer_loss_symbol_head_grad_norm",
     "answer_loss_advisor_grad_norm",
+    "answer_loss_trace_slot_advisor_grad_norm",
+    "answer_loss_advisor_classifier_grad_norm",
+    "answer_loss_language_backbone_grad_norm",
+    "answer_loss_bridge_grad_norm",
     "answer_loss_reaches_generator",
     "answer_loss_reaches_symbol_heads",
+    "answer_loss_reaches_trace_slot_advisor",
+    "answer_loss_reaches_advisor_classifier",
+    "answer_loss_reaches_language_backbone",
+    "answer_loss_reaches_bridge",
     "trainable_parameter_count",
     "generator_trainable_parameter_count",
     "advisor_trainable_parameter_count",
@@ -290,6 +303,9 @@ KEY_METRICS = [
     "m26_gate_single_optimizer",
     "m26_gate_no_hard_training_cut",
     "m26_gate_stream_beats_zero",
+    "m26_gate_raw_prompt_bypass_blocked",
+    "m26_full_organism_gate_pass_rate",
+    "m26_full_organism_candidate",
     "m26_spinal_cord_gate_pass_rate",
     "m26_spinal_cord_candidate",
     "m26_prompt_comparable_candidate",
@@ -573,8 +589,9 @@ def _special_stage_row(stage: dict[str, Any]) -> dict[str, Any]:
         )
     if stage_key == "M26":
         notes.append(
-            "M26 is the end-to-end Lojban symbiote spinal-cord fork over M25; "
-            "promotion means answer loss reaches the bridi generator, not yet full chatbot success"
+            "M26 is the full hidden-state Lojban symbiote bridge organism over M25: "
+            "the tiny language backbone feeds the bridi generator, the trace bridge fuses prompt and trace state, "
+            "and the choked answer head reads fused state; the spinal-cord gate remains a narrower gradient-flow subclaim"
         )
     promotion_status = _direct_promotion_status(payload)
     if promotion_status:
@@ -1441,6 +1458,26 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                         "advisor_primary_trace_is_differentiable",
                         "mean_advisor_primary_trace_is_differentiable",
                     ),
+                    "lm_hidden_state_stream_active": (
+                        "lm_hidden_state_stream_active",
+                        "mean_lm_hidden_state_stream_active",
+                    ),
+                    "bridi_generator_reads_lm_hidden_states": (
+                        "bridi_generator_reads_lm_hidden_states",
+                        "mean_bridi_generator_reads_lm_hidden_states",
+                    ),
+                    "trace_bridge_reads_prompt_hidden_states": (
+                        "trace_bridge_reads_prompt_hidden_states",
+                        "mean_trace_bridge_reads_prompt_hidden_states",
+                    ),
+                    "answer_head_reads_fused_lm_trace_state": (
+                        "answer_head_reads_fused_lm_trace_state",
+                        "mean_answer_head_reads_fused_lm_trace_state",
+                    ),
+                    "raw_prompt_bypass_blocked": (
+                        "raw_prompt_bypass_blocked",
+                        "mean_raw_prompt_bypass_blocked",
+                    ),
                     "answer_loss_generator_grad_norm": (
                         "answer_loss_generator_grad_norm",
                         "mean_answer_loss_generator_grad_norm",
@@ -1453,6 +1490,22 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                         "answer_loss_advisor_grad_norm",
                         "mean_answer_loss_advisor_grad_norm",
                     ),
+                    "answer_loss_trace_slot_advisor_grad_norm": (
+                        "answer_loss_trace_slot_advisor_grad_norm",
+                        "mean_answer_loss_trace_slot_advisor_grad_norm",
+                    ),
+                    "answer_loss_advisor_classifier_grad_norm": (
+                        "answer_loss_advisor_classifier_grad_norm",
+                        "mean_answer_loss_advisor_classifier_grad_norm",
+                    ),
+                    "answer_loss_language_backbone_grad_norm": (
+                        "answer_loss_language_backbone_grad_norm",
+                        "mean_answer_loss_language_backbone_grad_norm",
+                    ),
+                    "answer_loss_bridge_grad_norm": (
+                        "answer_loss_bridge_grad_norm",
+                        "mean_answer_loss_bridge_grad_norm",
+                    ),
                     "answer_loss_reaches_generator": (
                         "answer_loss_reaches_generator",
                         "mean_answer_loss_reaches_generator",
@@ -1460,6 +1513,22 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                     "answer_loss_reaches_symbol_heads": (
                         "answer_loss_reaches_symbol_heads",
                         "mean_answer_loss_reaches_symbol_heads",
+                    ),
+                    "answer_loss_reaches_trace_slot_advisor": (
+                        "answer_loss_reaches_trace_slot_advisor",
+                        "mean_answer_loss_reaches_trace_slot_advisor",
+                    ),
+                    "answer_loss_reaches_advisor_classifier": (
+                        "answer_loss_reaches_advisor_classifier",
+                        "mean_answer_loss_reaches_advisor_classifier",
+                    ),
+                    "answer_loss_reaches_language_backbone": (
+                        "answer_loss_reaches_language_backbone",
+                        "mean_answer_loss_reaches_language_backbone",
+                    ),
+                    "answer_loss_reaches_bridge": (
+                        "answer_loss_reaches_bridge",
+                        "mean_answer_loss_reaches_bridge",
                     ),
                     "trainable_parameter_count": ("trainable_parameter_count", "mean_trainable_parameter_count"),
                     "generator_trainable_parameter_count": (
@@ -1470,6 +1539,18 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                         "advisor_trainable_parameter_count",
                         "mean_advisor_trainable_parameter_count",
                     ),
+                    "language_backbone_trainable_parameter_count": (
+                        "language_backbone_trainable_parameter_count",
+                        "mean_language_backbone_trainable_parameter_count",
+                    ),
+                    "bridge_trainable_parameter_count": (
+                        "bridge_trainable_parameter_count",
+                        "mean_bridge_trainable_parameter_count",
+                    ),
+                    "bridge_gate_value": ("bridge_gate_value", "mean_bridge_gate_value"),
+                    "bridge_delta_norm": ("bridge_delta_norm", "mean_bridge_delta_norm"),
+                    "trace_attention_entropy": ("trace_attention_entropy", "mean_trace_attention_entropy"),
+                    "trace_active_mass": ("trace_active_mass", "mean_trace_active_mass"),
                     "m26_gate_answer_loss_reaches_generator": (
                         "m26_gate_answer_loss_reaches_generator",
                         "mean_m26_gate_answer_loss_reaches_generator",
@@ -1477,6 +1558,26 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                     "m26_gate_answer_loss_reaches_symbol_heads": (
                         "m26_gate_answer_loss_reaches_symbol_heads",
                         "mean_m26_gate_answer_loss_reaches_symbol_heads",
+                    ),
+                    "m26_gate_answer_loss_reaches_language_backbone": (
+                        "m26_gate_answer_loss_reaches_language_backbone",
+                        "mean_m26_gate_answer_loss_reaches_language_backbone",
+                    ),
+                    "m26_gate_answer_loss_reaches_bridge": (
+                        "m26_gate_answer_loss_reaches_bridge",
+                        "mean_m26_gate_answer_loss_reaches_bridge",
+                    ),
+                    "m26_gate_bridi_generator_reads_lm_hidden_states": (
+                        "m26_gate_bridi_generator_reads_lm_hidden_states",
+                        "mean_m26_gate_bridi_generator_reads_lm_hidden_states",
+                    ),
+                    "m26_gate_trace_bridge_reads_prompt_hidden_states": (
+                        "m26_gate_trace_bridge_reads_prompt_hidden_states",
+                        "mean_m26_gate_trace_bridge_reads_prompt_hidden_states",
+                    ),
+                    "m26_gate_answer_head_reads_fused_lm_trace_state": (
+                        "m26_gate_answer_head_reads_fused_lm_trace_state",
+                        "mean_m26_gate_answer_head_reads_fused_lm_trace_state",
                     ),
                     "m26_gate_single_optimizer": ("m26_gate_single_optimizer", "mean_m26_gate_single_optimizer"),
                     "m26_gate_no_hard_training_cut": (
@@ -1487,6 +1588,18 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
                     "m26_gate_beats_matched_prompt": (
                         "m26_gate_beats_matched_prompt",
                         "mean_m26_gate_beats_matched_prompt",
+                    ),
+                    "m26_gate_raw_prompt_bypass_blocked": (
+                        "m26_gate_raw_prompt_bypass_blocked",
+                        "mean_m26_gate_raw_prompt_bypass_blocked",
+                    ),
+                    "m26_full_organism_gate_pass_rate": (
+                        "m26_full_organism_gate_pass_rate",
+                        "mean_m26_full_organism_gate_pass_rate",
+                    ),
+                    "m26_full_organism_candidate": (
+                        "m26_full_organism_candidate",
+                        "mean_m26_full_organism_candidate",
                     ),
                     "m26_spinal_cord_gate_pass_rate": (
                         "m26_spinal_cord_gate_pass_rate",
@@ -1503,9 +1616,25 @@ def _special_stage_metrics(stage_key: str, payload: dict[str, Any] | None) -> di
         priority = (
             "strict_accuracy",
             "m26_promotion_candidate",
+            "m26_full_organism_gate_pass_rate",
+            "m26_full_organism_candidate",
             "m26_spinal_cord_gate_pass_rate",
             "m26_spinal_cord_candidate",
             "m26_prompt_comparable_candidate",
+            "m26_gate_raw_prompt_bypass_blocked",
+            "lm_hidden_state_stream_active",
+            "bridi_generator_reads_lm_hidden_states",
+            "trace_bridge_reads_prompt_hidden_states",
+            "answer_head_reads_fused_lm_trace_state",
+            "raw_prompt_bypass_blocked",
+            "answer_loss_reaches_language_backbone",
+            "answer_loss_reaches_bridge",
+            "answer_loss_reaches_trace_slot_advisor",
+            "answer_loss_reaches_advisor_classifier",
+            "answer_loss_language_backbone_grad_norm",
+            "answer_loss_bridge_grad_norm",
+            "answer_loss_trace_slot_advisor_grad_norm",
+            "answer_loss_advisor_classifier_grad_norm",
             "answer_loss_reaches_generator",
             "answer_loss_reaches_symbol_heads",
             "single_optimizer_end_to_end_training",
@@ -1738,7 +1867,7 @@ def _render_markdown(manifest: dict[str, Any]) -> str:
     lines.extend(["", "## Read", ""])
     lines.append("- The fresh part of the whole grid is now the recovered legacy runnable surface: A-G, H/H5/J, L6, and the phase-eval lanes under one manifest.")
     lines.append("- The modern M rows are represented through artifact-backed anchors and the control-plane lineage manifests, so the whole program is visible without pretending every stage was freshly retrained.")
-    lines.append("- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, M23 the causal relevance-router fork, M24 the substrate-first compression fork, M25 the emergent loose bridi grammar stream fork, and M26 the end-to-end Lojban symbiote spinal-cord fork.")
+    lines.append("- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, M23 the causal relevance-router fork, M24 the substrate-first compression fork, M25 the emergent loose bridi grammar stream fork, and M26 the full hidden-state bridge organism fork.")
     return "\n".join(lines) + "\n"
 
 

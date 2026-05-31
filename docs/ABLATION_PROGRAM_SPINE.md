@@ -619,22 +619,22 @@ This is the ordered research spine of the project: legacy letter-series families
 
 - Kind: `major_series`
 - Layer: `end_to_end_lojban_symbiote`
-- Objective: turn the M25 loose bridi stream from a staged assay into one trainable prompt-to-bridi-to-advisor organism, proving final answer loss reaches the symbolic generator through a differentiable trace handoff.
+- Objective: turn the M25 loose bridi stream from a staged assay into one trainable hidden-state bridge organism: a tiny language backbone emits prompt hidden states, the bridi generator reads that stream, a trace-language cross-attention bridge fuses prompt and trace state, and a choked answer head reads fused state. The historical spinal-cord gate remains a narrower gradient-through-trace subclaim.
 - Entry count: `0`
 - Runnable rows: `0`
-- Question boundary: end-to-end Lojban symbiote spinal-cord verification
-- Thesis: turn the M25 loose bridi stream from a staged assay into one trainable prompt-to-bridi-to-advisor organism, proving final answer loss reaches the symbolic generator through a differentiable trace handoff.
+- Question boundary: full hidden-state Lojban symbiote bridge organism
+- Thesis: turn the M25 loose bridi stream from a staged assay into one trainable hidden-state bridge organism: a tiny language backbone emits prompt hidden states, the bridi generator reads that stream, a trace-language cross-attention bridge fuses prompt and trace state, and a choked answer head reads fused state. The historical spinal-cord gate remains a narrower gradient-through-trace subclaim.
 - Selected upstream: `M25.A`
 - Inherits: `M25 loose bridi grammar-action stream emitter, M23/M25 decoy-balanced semantic source data, strict accuracy canonical metric, token efficiency and corruption-control skepticism`
-- Reopens: `frozen generator/advisor boundary, hard integer trace packing during training, final-answer gradient flow through the symbiote path`
-- Rejects: `staged advisor-only success as evidence of one Lojban symbiote organism, chatbot promotion before base-LLM end-to-end coupling exists`
-- Allowed axes: `differentiable soft bridi trace handoff, single optimizer generator/advisor training, answer-loss gradient flow probes, symbol budget over soft trace positions, zero/shuffled/random trace controls`
-- Frozen/forbidden drift: `freezing the generator before advisor training, hard argmax or long integer packing on the training path, claiming chatbot-level English generation without base-LLM coupling, phrase accuracy as canonical accuracy`
-- Promotion basis: `answer_loss_reaches_generator, answer_loss_reaches_symbol_heads, single_optimizer_end_to_end_training, predicted_vs_zero_delta, m26_spinal_cord_gate_pass_rate, m26_gate_beats_matched_prompt, m26_spinal_cord_candidate, m26_prompt_comparable_candidate`
-- Primary metrics: `strict_accuracy, end_to_end_answer_accuracy, answer_loss_reaches_generator, answer_loss_reaches_symbol_heads`
-- Guardrail metrics: `hard_argmax_training_cut_detected, torch_no_grad_training_cut_detected, predicted_vs_shuffled_delta, predicted_vs_random_delta, loose_stream_exact_accuracy, accuracy_per_loose_symbol, m26_strict_delta_vs_matched_prompt, matched_prompt_accuracy`
+- Reopens: `frozen generator/advisor boundary, hard integer trace packing during training, tiny language backbone hidden-state stream, trace-language cross-attention bridge, final-answer gradient flow through the language backbone, bridge, and bridi path`
+- Rejects: `staged advisor-only success as evidence of one Lojban symbiote organism, spinal-cord-only gradient topology as evidence of the full hidden-state bridge organism, chatbot promotion before base-LLM end-to-end coupling exists`
+- Allowed axes: `differentiable soft bridi trace handoff, tiny language backbone hidden-state stream, bridi generator conditioned on language hidden states, trace-language cross-attention bridge, choked fused LM/trace answer head, single optimizer full-organism training, answer-loss gradient flow probes across language backbone, bridge, generator, and symbol heads, symbol budget over soft trace positions, zero/shuffled/random trace controls`
+- Frozen/forbidden drift: `freezing the language backbone, generator, or bridge before answer training, hard argmax or long integer packing on the training path, raw prompt bypass around the fused language/trace answer state, promoting the historical spinal-cord gate as full-organism evidence, claiming chatbot-level English generation without base-LLM coupling, phrase accuracy as canonical accuracy`
+- Promotion basis: `strict_accuracy, m26_full_organism_gate_pass_rate, m26_full_organism_candidate, lm_hidden_state_stream_active, bridi_generator_reads_lm_hidden_states, trace_bridge_reads_prompt_hidden_states, answer_head_reads_fused_lm_trace_state, m26_gate_raw_prompt_bypass_blocked, answer_loss_reaches_language_backbone, answer_loss_reaches_bridge, answer_loss_reaches_generator, answer_loss_reaches_symbol_heads, single_optimizer_end_to_end_training, predicted_vs_zero_delta, m26_spinal_cord_gate_pass_rate, m26_spinal_cord_candidate, m26_prompt_comparable_candidate`
+- Primary metrics: `strict_accuracy, end_to_end_answer_accuracy, m26_full_organism_candidate, m26_full_organism_gate_pass_rate, lm_hidden_state_stream_active, bridi_generator_reads_lm_hidden_states, trace_bridge_reads_prompt_hidden_states, answer_head_reads_fused_lm_trace_state, raw_prompt_bypass_blocked, answer_loss_reaches_language_backbone, answer_loss_reaches_bridge, answer_loss_reaches_generator, answer_loss_reaches_symbol_heads`
+- Guardrail metrics: `answer_loss_language_backbone_grad_norm, answer_loss_bridge_grad_norm, m26_gate_raw_prompt_bypass_blocked, hard_argmax_training_cut_detected, torch_no_grad_training_cut_detected, m26_spinal_cord_gate_pass_rate, m26_spinal_cord_candidate, predicted_vs_shuffled_delta, predicted_vs_random_delta, loose_stream_exact_accuracy, accuracy_per_loose_symbol, m26_strict_delta_vs_matched_prompt, matched_prompt_accuracy`
 - Historical comparison families: `M25`
-- Required test contracts: `m26.end_to_end_spinal_cord`
+- Required test contracts: `m26.full_hidden_state_bridge_organism`
 - Automatic comparison targets: `M23, M24.2, M25, M25.A, M26, M26.A`
 - Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
 - DAGs: `airflow/dags/m26/lojban_m26_end_to_end_loafman_dag.py`

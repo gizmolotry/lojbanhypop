@@ -40,9 +40,17 @@ def test_m26_answer_loss_backprops_into_bridi_generator() -> None:
 
     assert probe.answer_loss_reaches_generator == 1.0
     assert probe.answer_loss_reaches_symbol_heads == 1.0
+    assert probe.answer_loss_reaches_trace_slot_advisor == 1.0
+    assert probe.answer_loss_reaches_advisor_classifier == 0.0
+    assert probe.answer_loss_reaches_language_backbone == 1.0
+    assert probe.answer_loss_reaches_bridge == 1.0
     assert probe.answer_loss_generator_grad_norm > 0.0
     assert probe.answer_loss_symbol_head_grad_norm > 0.0
     assert probe.answer_loss_advisor_grad_norm > 0.0
+    assert probe.answer_loss_trace_slot_advisor_grad_norm > 0.0
+    assert probe.answer_loss_advisor_classifier_grad_norm == 0.0
+    assert probe.answer_loss_language_backbone_grad_norm > 0.0
+    assert probe.answer_loss_bridge_grad_norm > 0.0
 
 
 def test_m26_soft_trace_handoff_remains_differentiable() -> None:
@@ -57,9 +65,16 @@ def test_m26_soft_trace_handoff_remains_differentiable() -> None:
 
     outputs = model(batch["input_ids"])
 
+    assert model.generator_primary_input == "language_hidden_states"
+    assert model.answer_head_primary_input == "fused_language_trace_state"
+    assert outputs["language_hidden_states"].requires_grad
+    assert outputs["fused_state"].requires_grad
+    assert outputs["bridge_delta"].requires_grad
+    assert outputs["raw_prompt_bypass_blocked"].item() == 1.0
     assert outputs["trace_state"].dtype.is_floating_point
     assert outputs["trace_state"].requires_grad
     assert outputs["answer_logits"].requires_grad
+    assert outputs["trace_only_answer_logits"].requires_grad
     assert model.advisor.primary_trace_input == "soft_differentiable_loose_bridi_stream"
     assert "raw_prompt_tokens" in model.advisor.disallowed_primary_inputs
 
@@ -76,7 +91,7 @@ def test_m26_advisor_rejects_positional_hard_stream_args() -> None:
         raise AssertionError("advisor accepted a hard positional stream argument")
 
 
-def test_m26_tiny_cpu_training_reports_spinal_cord_metrics() -> None:
+def test_m26_tiny_cpu_training_reports_full_organism_metrics() -> None:
     result = train_m26_end_to_end_loafman(
         train_size=24,
         eval_size=12,
@@ -100,6 +115,15 @@ def test_m26_tiny_cpu_training_reports_spinal_cord_metrics() -> None:
     assert metrics["advisor_primary_trace_is_differentiable"] == 1.0
     assert metrics["answer_loss_reaches_generator"] == 1.0
     assert metrics["answer_loss_reaches_symbol_heads"] == 1.0
+    assert metrics["answer_loss_reaches_trace_slot_advisor"] == 1.0
+    assert metrics["answer_loss_reaches_advisor_classifier"] == 0.0
+    assert metrics["answer_loss_reaches_language_backbone"] == 1.0
+    assert metrics["answer_loss_reaches_bridge"] == 1.0
+    assert metrics["lm_hidden_state_stream_active"] == 1.0
+    assert metrics["bridi_generator_reads_lm_hidden_states"] == 1.0
+    assert metrics["trace_bridge_reads_prompt_hidden_states"] == 1.0
+    assert metrics["answer_head_reads_fused_lm_trace_state"] == 1.0
+    assert metrics["raw_prompt_bypass_blocked"] == 1.0
     for key in (
         "strict_accuracy",
         "end_to_end_answer_accuracy",
@@ -110,9 +134,13 @@ def test_m26_tiny_cpu_training_reports_spinal_cord_metrics() -> None:
         "matched_prompt_accuracy",
         "m26_strict_delta_vs_matched_prompt",
         "predicted_vs_zero_delta",
+        "answer_loss_trace_slot_advisor_grad_norm",
+        "answer_loss_advisor_classifier_grad_norm",
         "loose_stream_exact_accuracy",
         "accuracy_per_loose_symbol",
         "m26_spinal_cord_gate_pass_rate",
+        "m26_full_organism_gate_pass_rate",
+        "m26_full_organism_candidate",
         "m26_promotion_candidate",
     ):
         assert key in metrics
@@ -128,11 +156,36 @@ def test_m26_prompt_comparability_gate_requires_matched_prompt_win() -> None:
         "hard_argmax_training_cut_detected": 0.0,
         "predicted_vs_zero_delta": 0.9,
         "m26_strict_delta_vs_matched_prompt": -0.001,
+        "answer_loss_reaches_language_backbone": 1.0,
+        "answer_loss_reaches_bridge": 1.0,
+        "bridi_generator_reads_lm_hidden_states": 1.0,
+        "trace_bridge_reads_prompt_hidden_states": 1.0,
+        "answer_head_reads_fused_lm_trace_state": 1.0,
+        "raw_prompt_bypass_blocked": 1.0,
     }
 
     gates = m26_promotion_gate_metrics(metrics)
 
     assert gates["m26_spinal_cord_candidate"] == 1.0
+    assert gates["m26_full_organism_candidate"] == 1.0
     assert gates["m26_gate_beats_matched_prompt"] == 0.0
+    assert gates["m26_prompt_comparable_candidate"] == 0.0
+    assert gates["m26_promotion_candidate"] == 0.0
+
+
+def test_m26_full_organism_gate_rejects_toy_spinal_only_path() -> None:
+    metrics = {
+        "answer_loss_reaches_generator": 1.0,
+        "answer_loss_reaches_symbol_heads": 1.0,
+        "single_optimizer_end_to_end_training": 1.0,
+        "hard_argmax_training_cut_detected": 0.0,
+        "predicted_vs_zero_delta": 0.9,
+        "m26_strict_delta_vs_matched_prompt": 0.01,
+    }
+
+    gates = m26_promotion_gate_metrics(metrics)
+
+    assert gates["m26_spinal_cord_candidate"] == 1.0
+    assert gates["m26_full_organism_candidate"] == 0.0
     assert gates["m26_prompt_comparable_candidate"] == 0.0
     assert gates["m26_promotion_candidate"] == 0.0

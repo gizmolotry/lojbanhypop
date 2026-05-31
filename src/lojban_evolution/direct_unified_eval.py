@@ -409,27 +409,84 @@ KEY_METRICS = (
     "hard_argmax_training_cut_detected",
     "torch_no_grad_training_cut_detected",
     "advisor_primary_trace_is_differentiable",
+    "lm_hidden_state_stream_active",
+    "bridi_generator_reads_lm_hidden_states",
+    "trace_bridge_reads_prompt_hidden_states",
+    "answer_head_reads_fused_lm_trace_state",
+    "raw_prompt_bypass_blocked",
     "answer_loss_generator_grad_norm",
     "answer_loss_symbol_head_grad_norm",
     "answer_loss_advisor_grad_norm",
+    "answer_loss_trace_slot_advisor_grad_norm",
+    "answer_loss_advisor_classifier_grad_norm",
+    "answer_loss_language_backbone_grad_norm",
+    "answer_loss_bridge_grad_norm",
     "answer_loss_reaches_generator",
     "answer_loss_reaches_symbol_heads",
+    "answer_loss_reaches_trace_slot_advisor",
+    "answer_loss_reaches_advisor_classifier",
+    "answer_loss_reaches_language_backbone",
+    "answer_loss_reaches_bridge",
     "trainable_parameter_count",
+    "language_backbone_trainable_parameter_count",
     "generator_trainable_parameter_count",
     "advisor_trainable_parameter_count",
+    "bridge_trainable_parameter_count",
+    "bridge_gate_value",
+    "bridge_delta_norm",
+    "trace_attention_entropy",
+    "trace_active_mass",
     "m26_accuracy_per_symbol_delta_vs_matched_prompt",
     "m26_gate_beats_matched_prompt",
     "m26_gate_answer_loss_reaches_generator",
     "m26_gate_answer_loss_reaches_symbol_heads",
+    "m26_gate_answer_loss_reaches_language_backbone",
+    "m26_gate_answer_loss_reaches_bridge",
+    "m26_gate_bridi_generator_reads_lm_hidden_states",
+    "m26_gate_trace_bridge_reads_prompt_hidden_states",
+    "m26_gate_answer_head_reads_fused_lm_trace_state",
+    "m26_gate_raw_prompt_bypass_blocked",
     "m26_gate_single_optimizer",
     "m26_gate_no_hard_training_cut",
     "m26_gate_stream_beats_zero",
     "m26_spinal_cord_gate_pass_rate",
     "m26_spinal_cord_candidate",
+    "m26_full_organism_gate_pass_rate",
+    "m26_full_organism_candidate",
     "m26_prompt_comparable_candidate",
     "m26_promotion_candidate",
     "phrase_accuracy",
     "phrase_exact_accuracy",
+)
+
+M26_FULL_ORGANISM_METRICS = (
+    "lm_hidden_state_stream_active",
+    "bridi_generator_reads_lm_hidden_states",
+    "trace_bridge_reads_prompt_hidden_states",
+    "answer_head_reads_fused_lm_trace_state",
+    "raw_prompt_bypass_blocked",
+    "answer_loss_language_backbone_grad_norm",
+    "answer_loss_bridge_grad_norm",
+    "answer_loss_trace_slot_advisor_grad_norm",
+    "answer_loss_advisor_classifier_grad_norm",
+    "answer_loss_reaches_language_backbone",
+    "answer_loss_reaches_bridge",
+    "answer_loss_reaches_trace_slot_advisor",
+    "answer_loss_reaches_advisor_classifier",
+    "language_backbone_trainable_parameter_count",
+    "bridge_trainable_parameter_count",
+    "bridge_gate_value",
+    "bridge_delta_norm",
+    "trace_attention_entropy",
+    "trace_active_mass",
+    "m26_gate_answer_loss_reaches_language_backbone",
+    "m26_gate_answer_loss_reaches_bridge",
+    "m26_gate_bridi_generator_reads_lm_hidden_states",
+    "m26_gate_trace_bridge_reads_prompt_hidden_states",
+    "m26_gate_answer_head_reads_fused_lm_trace_state",
+    "m26_gate_raw_prompt_bypass_blocked",
+    "m26_full_organism_gate_pass_rate",
+    "m26_full_organism_candidate",
 )
 
 _REFERENCE_ROOTS: dict[str, list[Path]] = {
@@ -965,8 +1022,8 @@ def build_direct_unified_eval_manifest(
         )
     if family_key == "M26":
         notes.append(
-            "M26 direct surface tests whether final answer loss reaches the bridi generator through "
-            "one differentiable trace-only advisor path; it is a Lojban symbiote spinal-cord test, not a chatbot claim."
+            "M26 direct surface prefers full-organism evidence when present: language hidden-state stream, "
+            "bridi generator, trace-language bridge, and fused answer head must remain coupled without raw prompt bypass."
         )
 
     manifest = {
@@ -1185,21 +1242,40 @@ def _evaluate_m26_contract(
     contract: dict[str, Any],
     end_to_end_payload: dict[str, Any] | None,
 ) -> dict[str, Any]:
-    metrics = _filtered_metrics(_m26_end_to_end_metrics(end_to_end_payload), tuple(contract.get("metrics", [])))
+    metric_keys = list(contract.get("metrics", []))
+    for key in M26_FULL_ORGANISM_METRICS:
+        if key not in metric_keys:
+            metric_keys.append(key)
+    metrics = _filtered_metrics(_m26_end_to_end_metrics(end_to_end_payload), tuple(metric_keys))
     if not metrics:
         return _missing_contract_row(test_id, contract, f"missing M26 direct surface for {test_id}")
     notes = [
-        "M26 contract is evaluated from the end-to-end Lojban symbiote spinal-cord report.",
-        "This verifies differentiable final-answer gradient flow through the bridi generator.",
-        "M26 is not a chatbot promotion unless m26_promotion_candidate=1.0 and later base-LLM coupling exists.",
+        "M26 contract is evaluated from the end-to-end Lojban symbiote report.",
+        "Full-organism M26 requires the tiny language backbone, bridi generator, trace-language bridge, and answer head to be coupled.",
+        "M26 is not a chatbot promotion unless m26_promotion_candidate=1.0 with full-organism coupling metrics present.",
     ]
-    candidate = float(metrics.get("m26_spinal_cord_candidate", metrics.get("m26_promotion_candidate", 0.0)) or 0.0)
+    full_candidate_present = "m26_full_organism_candidate" in metrics
+    full_candidate = float(metrics.get("m26_full_organism_candidate", 0.0) or 0.0)
+    spinal_candidate = float(metrics.get("m26_spinal_cord_candidate", metrics.get("m26_promotion_candidate", 0.0)) or 0.0)
     prompt_candidate = float(metrics.get("m26_prompt_comparable_candidate", metrics.get("m26_promotion_candidate", 0.0)) or 0.0)
-    promotion_status = "m26_spinal_cord_only"
-    if candidate >= 1.0 and prompt_candidate >= 1.0:
-        promotion_status = "m26_prompt_comparable"
-    elif candidate >= 1.0:
-        promotion_status = "m26_spinal_promoted_prompt_gap"
+    candidate = full_candidate if full_candidate_present else spinal_candidate
+    if full_candidate_present:
+        notes.append("m26_full_organism_candidate is present and is the preferred direct-eval candidate signal.")
+        promotion_status = "m26_non_promoted"
+        if full_candidate >= 1.0 and prompt_candidate >= 1.0:
+            promotion_status = "m26_full_organism_prompt_comparable"
+        elif full_candidate >= 1.0:
+            promotion_status = "m26_full_organism_prompt_gap"
+        elif spinal_candidate >= 1.0:
+            promotion_status = "m26_spinal_only_full_organism_gap"
+            notes.append("Spinal-cord gates pass, but full-organism gates do not; this is a full-organism gap fallback.")
+    else:
+        notes.append("Full-organism M26 metrics are absent; falling back to the legacy spinal-cord-only candidate signal.")
+        promotion_status = "m26_spinal_fallback_non_promoted"
+        if spinal_candidate >= 1.0 and prompt_candidate >= 1.0:
+            promotion_status = "m26_spinal_fallback_full_organism_unreported"
+        elif spinal_candidate >= 1.0:
+            promotion_status = "m26_spinal_fallback_full_organism_unreported_prompt_gap"
     return {
         "test_id": test_id,
         "surface": contract.get("surface"),
@@ -2358,6 +2434,8 @@ def _m26_end_to_end_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
         metrics.setdefault("m26_spinal_cord_candidate", aggregate.get("mean_m26_spinal_cord_candidate"))
         metrics.setdefault("m26_prompt_comparable_candidate", aggregate.get("mean_m26_prompt_comparable_candidate"))
         metrics.setdefault("m26_promotion_candidate", aggregate.get("mean_m26_promotion_candidate"))
+        for key in M26_FULL_ORGANISM_METRICS:
+            metrics.setdefault(key, aggregate.get(f"mean_{key}"))
     seed_rows: list[dict[str, Any]] = []
     for row in payload.get("seed_reports", []) if isinstance(payload.get("seed_reports"), list) else []:
         if isinstance(row, dict) and isinstance(row.get("metrics"), dict):

@@ -245,9 +245,15 @@ class M25EmergentBridiQFormer(nn.Module):
             nn.Linear(int(hidden_dim), len(ANSWER_LABELS)),
         )
 
-    def forward(self, input_ids: torch.Tensor) -> dict[str, torch.Tensor]:
+    def forward(self, input_ids: torch.Tensor, *, prompt_hidden_states: torch.Tensor | None = None) -> dict[str, torch.Tensor]:
         mask = input_ids.ne(0).float().unsqueeze(-1)
-        pooled = (self.embedding(input_ids) * mask).sum(dim=1) / mask.sum(dim=1).clamp_min(1.0)
+        embedded = self.embedding(input_ids) if prompt_hidden_states is None else prompt_hidden_states
+        if embedded.shape[-1] != self.embedding.embedding_dim:
+            raise ValueError(
+                "prompt_hidden_states last dimension must match the M25 generator embedding dimension "
+                f"({embedded.shape[-1]} != {self.embedding.embedding_dim})"
+            )
+        pooled = (embedded * mask).sum(dim=1) / mask.sum(dim=1).clamp_min(1.0)
         prompt_state = self.prompt_encoder(pooled)
         state = self.symbol_mlp(prompt_state.unsqueeze(1) + self.symbol_queries.unsqueeze(0))
         active_logits = self.active_head(state).squeeze(-1)

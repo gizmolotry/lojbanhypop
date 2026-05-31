@@ -22,7 +22,11 @@ def _scratch_dir() -> Path:
     return root
 
 
-def test_build_direct_unified_eval_manifest_m26_spinal_cord() -> None:
+def _m26_contract_row(manifest: dict) -> dict:
+    return next(row for row in manifest["contract_results"] if row.get("surface") == "m26_end_to_end_loafman")
+
+
+def test_build_direct_unified_eval_manifest_m26_full_organism() -> None:
     tmp_path = _scratch_dir()
     report_path = _write_json(
         tmp_path / "m26_end_to_end_loafman_report.json",
@@ -39,14 +43,41 @@ def test_build_direct_unified_eval_manifest_m26_spinal_cord() -> None:
                 "mean_answer_loss_generator_grad_norm": 1.25,
                 "mean_answer_loss_symbol_head_grad_norm": 0.75,
                 "mean_answer_loss_advisor_grad_norm": 1.50,
+                "mean_answer_loss_trace_slot_advisor_grad_norm": 1.50,
+                "mean_answer_loss_advisor_classifier_grad_norm": 0.0,
                 "mean_answer_loss_reaches_generator": 1.0,
                 "mean_answer_loss_reaches_symbol_heads": 1.0,
+                "mean_answer_loss_reaches_trace_slot_advisor": 1.0,
+                "mean_answer_loss_reaches_advisor_classifier": 0.0,
                 "mean_single_optimizer_end_to_end_training": 1.0,
                 "mean_hard_argmax_training_cut_detected": 0.0,
                 "mean_torch_no_grad_training_cut_detected": 0.0,
                 "mean_advisor_primary_trace_is_differentiable": 1.0,
+                "mean_lm_hidden_state_stream_active": 1.0,
+                "mean_bridi_generator_reads_lm_hidden_states": 1.0,
+                "mean_trace_bridge_reads_prompt_hidden_states": 1.0,
+                "mean_answer_head_reads_fused_lm_trace_state": 1.0,
+                "mean_raw_prompt_bypass_blocked": 1.0,
                 "mean_m26_spinal_cord_gate_pass_rate": 1.0,
                 "mean_m26_spinal_cord_candidate": 1.0,
+                "mean_answer_loss_language_backbone_grad_norm": 0.50,
+                "mean_answer_loss_bridge_grad_norm": 0.33,
+                "mean_answer_loss_reaches_language_backbone": 1.0,
+                "mean_answer_loss_reaches_bridge": 1.0,
+                "mean_language_backbone_trainable_parameter_count": 64.0,
+                "mean_bridge_trainable_parameter_count": 32.0,
+                "mean_bridge_gate_value": 0.61,
+                "mean_bridge_delta_norm": 0.07,
+                "mean_trace_attention_entropy": 0.25,
+                "mean_trace_active_mass": 0.80,
+                "mean_m26_gate_answer_loss_reaches_language_backbone": 1.0,
+                "mean_m26_gate_answer_loss_reaches_bridge": 1.0,
+                "mean_m26_gate_bridi_generator_reads_lm_hidden_states": 1.0,
+                "mean_m26_gate_trace_bridge_reads_prompt_hidden_states": 1.0,
+                "mean_m26_gate_answer_head_reads_fused_lm_trace_state": 1.0,
+                "mean_m26_gate_raw_prompt_bypass_blocked": 1.0,
+                "mean_m26_full_organism_gate_pass_rate": 1.0,
+                "mean_m26_full_organism_candidate": 1.0,
                 "mean_m26_prompt_comparable_candidate": 1.0,
                 "mean_m26_promotion_candidate": 1.0,
             },
@@ -62,10 +93,23 @@ def test_build_direct_unified_eval_manifest_m26_spinal_cord() -> None:
     assert manifest["family_key"] == "M26"
     assert manifest["track"] == "M26"
     assert manifest["headline_metrics"]["answer_loss_reaches_generator"] == 1.0
+    assert manifest["headline_metrics"]["answer_loss_reaches_language_backbone"] == 1.0
+    assert manifest["headline_metrics"]["lm_hidden_state_stream_active"] == 1.0
+    assert manifest["headline_metrics"]["m26_full_organism_gate_pass_rate"] == 1.0
     assert manifest["headline_metrics"]["m26_spinal_cord_gate_pass_rate"] == 1.0
-    spinal = next(row for row in manifest["contract_results"] if row["test_id"] == "m26.end_to_end_spinal_cord")
+    spinal = _m26_contract_row(manifest)
     assert spinal["status"] == "available"
+    assert spinal["promotion_status"] == "m26_full_organism_prompt_comparable"
     assert spinal["metrics"]["answer_loss_generator_grad_norm"] == 1.25
+    assert spinal["metrics"]["answer_loss_trace_slot_advisor_grad_norm"] == 1.50
+    assert spinal["metrics"]["answer_loss_advisor_classifier_grad_norm"] == 0.0
+    assert spinal["metrics"]["answer_loss_reaches_trace_slot_advisor"] == 1.0
+    assert spinal["metrics"]["answer_loss_reaches_advisor_classifier"] == 0.0
+    assert spinal["metrics"]["answer_loss_language_backbone_grad_norm"] == 0.50
+    assert spinal["metrics"]["answer_loss_bridge_grad_norm"] == 0.33
+    assert spinal["metrics"]["raw_prompt_bypass_blocked"] == 1.0
+    assert spinal["metrics"]["m26_gate_raw_prompt_bypass_blocked"] == 1.0
+    assert spinal["metrics"]["m26_full_organism_candidate"] == 1.0
     assert spinal["metrics"]["matched_prompt_accuracy"] == 0.40
 
 
@@ -98,9 +142,10 @@ def test_build_direct_unified_eval_manifest_m26_nonpromoted_is_explicit() -> Non
         m26_end_to_end_report_path=report_path,
     )
 
-    spinal = next(row for row in manifest["contract_results"] if row["test_id"] == "m26.end_to_end_spinal_cord")
+    spinal = _m26_contract_row(manifest)
     assert spinal["status"] == "available_non_promoted"
-    assert spinal["promotion_status"] == "m26_spinal_cord_only"
+    assert spinal["promotion_status"] == "m26_spinal_fallback_non_promoted"
+    assert any("legacy spinal-cord-only" in note for note in spinal["notes"])
 
 
 def test_build_direct_unified_eval_manifest_m26_spinal_prompt_gap_is_explicit() -> None:
@@ -140,14 +185,62 @@ def test_build_direct_unified_eval_manifest_m26_spinal_prompt_gap_is_explicit() 
         m26_end_to_end_report_path=report_path,
     )
 
-    spinal = next(row for row in manifest["contract_results"] if row["test_id"] == "m26.end_to_end_spinal_cord")
+    spinal = _m26_contract_row(manifest)
     assert manifest["headline_metrics"]["strict_accuracy"] == 0.90
     assert manifest["headline_metrics"]["phrase_accuracy"] == 1.0
     assert spinal["status"] == "available"
-    assert spinal["promotion_status"] == "m26_spinal_promoted_prompt_gap"
+    assert spinal["promotion_status"] == "m26_spinal_fallback_full_organism_unreported_prompt_gap"
     assert spinal["metrics"]["strict_accuracy"] == 0.90
     assert spinal["metrics"]["phrase_accuracy"] == 1.0
     assert spinal["metrics"]["m26_prompt_comparable_candidate"] == 0.0
+    assert any("Full-organism M26 metrics are absent" in note for note in spinal["notes"])
+
+
+def test_build_direct_unified_eval_manifest_m26_prefers_full_organism_gap_over_spinal_candidate() -> None:
+    tmp_path = _scratch_dir()
+    report_path = _write_json(
+        tmp_path / "m26_end_to_end_loafman_report.json",
+        {
+            "track": "M26",
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.90,
+                "mean_end_to_end_answer_accuracy": 0.90,
+                "mean_zero_trace_accuracy": 0.05,
+                "mean_predicted_vs_zero_delta": 0.85,
+                "mean_answer_loss_reaches_generator": 1.0,
+                "mean_answer_loss_reaches_symbol_heads": 1.0,
+                "mean_answer_loss_reaches_language_backbone": 0.0,
+                "mean_answer_loss_reaches_bridge": 1.0,
+                "mean_single_optimizer_end_to_end_training": 1.0,
+                "mean_hard_argmax_training_cut_detected": 0.0,
+                "mean_lm_hidden_state_stream_active": 1.0,
+                "mean_bridi_generator_reads_lm_hidden_states": 1.0,
+                "mean_trace_bridge_reads_prompt_hidden_states": 1.0,
+                "mean_answer_head_reads_fused_lm_trace_state": 1.0,
+                "mean_raw_prompt_bypass_blocked": 1.0,
+                "mean_m26_spinal_cord_gate_pass_rate": 1.0,
+                "mean_m26_spinal_cord_candidate": 1.0,
+                "mean_m26_full_organism_gate_pass_rate": 0.8333333333,
+                "mean_m26_full_organism_candidate": 0.0,
+                "mean_m26_prompt_comparable_candidate": 0.0,
+                "mean_m26_promotion_candidate": 0.0,
+            },
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M26",
+        track="M26",
+        m26_end_to_end_report_path=report_path,
+    )
+
+    spinal = _m26_contract_row(manifest)
+    assert manifest["headline_metrics"]["m26_full_organism_candidate"] == 0.0
+    assert spinal["status"] == "available_non_promoted"
+    assert spinal["promotion_status"] == "m26_spinal_only_full_organism_gap"
+    assert spinal["metrics"]["m26_spinal_cord_candidate"] == 1.0
+    assert spinal["metrics"]["m26_full_organism_candidate"] == 0.0
+    assert any("full-organism gap" in note for note in spinal["notes"])
 
 
 def test_build_direct_unified_eval_manifest_static_m19() -> None:

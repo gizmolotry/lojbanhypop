@@ -83,22 +83,49 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, float]:
         "hard_argmax_training_cut_detected",
         "torch_no_grad_training_cut_detected",
         "advisor_primary_trace_is_differentiable",
+        "lm_hidden_state_stream_active",
+        "bridi_generator_reads_lm_hidden_states",
+        "trace_bridge_reads_prompt_hidden_states",
+        "answer_head_reads_fused_lm_trace_state",
+        "raw_prompt_bypass_blocked",
         "answer_loss_generator_grad_norm",
         "answer_loss_symbol_head_grad_norm",
         "answer_loss_advisor_grad_norm",
+        "answer_loss_trace_slot_advisor_grad_norm",
+        "answer_loss_advisor_classifier_grad_norm",
+        "answer_loss_language_backbone_grad_norm",
+        "answer_loss_bridge_grad_norm",
         "answer_loss_reaches_generator",
         "answer_loss_reaches_symbol_heads",
+        "answer_loss_reaches_trace_slot_advisor",
+        "answer_loss_reaches_advisor_classifier",
+        "answer_loss_reaches_language_backbone",
+        "answer_loss_reaches_bridge",
+        "bridge_gate_value",
+        "bridge_delta_norm",
+        "trace_attention_entropy",
+        "trace_active_mass",
         "trainable_parameter_count",
+        "language_backbone_trainable_parameter_count",
         "generator_trainable_parameter_count",
         "advisor_trainable_parameter_count",
+        "bridge_trainable_parameter_count",
         "m26_gate_answer_loss_reaches_generator",
         "m26_gate_answer_loss_reaches_symbol_heads",
+        "m26_gate_answer_loss_reaches_language_backbone",
+        "m26_gate_answer_loss_reaches_bridge",
+        "m26_gate_bridi_generator_reads_lm_hidden_states",
+        "m26_gate_trace_bridge_reads_prompt_hidden_states",
+        "m26_gate_answer_head_reads_fused_lm_trace_state",
+        "m26_gate_raw_prompt_bypass_blocked",
         "m26_gate_single_optimizer",
         "m26_gate_no_hard_training_cut",
         "m26_gate_stream_beats_zero",
         "m26_gate_beats_matched_prompt",
         "m26_spinal_cord_gate_pass_rate",
         "m26_spinal_cord_candidate",
+        "m26_full_organism_gate_pass_rate",
+        "m26_full_organism_candidate",
         "m26_prompt_comparable_candidate",
         "m26_promotion_candidate",
     )
@@ -157,6 +184,9 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
             advisor_hidden_dim=int(args.advisor_hidden_dim),
             max_frames=int(args.max_frames),
             max_symbols=int(args.max_symbols),
+            max_prompt_length=int(args.max_prompt_length),
+            language_layers=int(args.language_layers),
+            language_heads=int(args.language_heads),
             symbol_budget=int(args.symbol_budget) if int(args.symbol_budget) > 0 else None,
             matched_prompt_budget=int(args.matched_prompt_budget) if int(args.matched_prompt_budget) > 0 else None,
             trace_weight=float(args.trace_weight),
@@ -189,7 +219,7 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
             checkpoint_in=None,
             checkpoint_out=None,
             dataset_profile=registry["dataset_defaults"]["profile"],
-            difficulty_tier="m25_loose_bridi_end_to_end_spinal_cord",
+            difficulty_tier="m25_loose_bridi_lm_hidden_bridge_full_organism",
         ),
         "track": "M26",
         "family_version": M26_FAMILY_VERSION,
@@ -212,6 +242,9 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
             "advisor_hidden_dim": int(args.advisor_hidden_dim),
             "max_frames": int(args.max_frames),
             "max_symbols": int(args.max_symbols),
+            "max_prompt_length": int(args.max_prompt_length),
+            "language_layers": int(args.language_layers),
+            "language_heads": int(args.language_heads),
             "symbol_budget": int(args.symbol_budget),
             "matched_prompt_budget": int(args.matched_prompt_budget),
             "trace_weight": float(args.trace_weight),
@@ -221,6 +254,11 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
         },
         "architecture_locks": [
             "single_optimizer_generator_and_advisor",
+            "language_hidden_state_stream_before_bridi_generation",
+            "bridi_generator_reads_language_hidden_states",
+            "trace_language_cross_attention_bridge",
+            "answer_head_reads_fused_language_trace_state",
+            "raw_prompt_bypass_blocked",
             "differentiable_soft_bridi_trace_handoff",
             "answer_loss_gradient_probe_into_generator",
             "no_training_path_argmax_or_no_grad_cut",
@@ -236,7 +274,7 @@ def run_suite(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run M26 end-to-end Lojban symbiote spinal-cord suite.")
+    parser = argparse.ArgumentParser(description="Run M26 end-to-end Lojban symbiote full-organism suite.")
     parser.add_argument("--seed-list", default="23,29")
     parser.add_argument("--train-size", type=int, default=6000)
     parser.add_argument("--eval-size", type=int, default=1500)
@@ -249,6 +287,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--advisor-hidden-dim", type=int, default=64)
     parser.add_argument("--max-frames", type=int, default=6)
     parser.add_argument("--max-symbols", type=int, default=32)
+    parser.add_argument("--max-prompt-length", type=int, default=128)
+    parser.add_argument("--language-layers", type=int, default=1)
+    parser.add_argument("--language-heads", type=int, default=2)
     parser.add_argument("--symbol-budget", type=int, default=0)
     parser.add_argument("--matched-prompt-budget", type=int, default=0)
     parser.add_argument("--trace-weight", type=float, default=DEFAULT_M26_TRACE_WEIGHT)
