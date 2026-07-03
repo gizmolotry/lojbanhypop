@@ -32,6 +32,9 @@ DEFAULTS = {
     "m24_substrate_compression_report": "",
     "m25_emergent_report": "",
     "m26_end_to_end_report": "",
+    "m27_coconut_runtime_report": "",
+    "m28_model_report": "",
+    "m28_suite_report": "",
     "execute_m19_direct": False,
     "base_model": "C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct",
     "bridge_path": "artifacts/models/m19/grid/m19_isolation_grid_20260409_v3/M19.3_8Q_128D_8S.pt",
@@ -102,6 +105,12 @@ def _run_direct_unified_eval(**context: object) -> None:
         args.extend(["--m25-emergent-report", str(cfg.get("m25_emergent_report"))])
     if str(cfg.get("m26_end_to_end_report", "")).strip():
         args.extend(["--m26-end-to-end-report", str(cfg.get("m26_end_to_end_report"))])
+    if str(cfg.get("m27_coconut_runtime_report", "")).strip():
+        args.extend(["--m27-coconut-runtime-report", str(cfg.get("m27_coconut_runtime_report"))])
+    if str(cfg.get("m28_model_report", "")).strip():
+        args.extend(["--m28-model-report", str(cfg.get("m28_model_report"))])
+    if str(cfg.get("m28_suite_report", "")).strip():
+        args.extend(["--m28-suite-report", str(cfg.get("m28_suite_report"))])
     if bool(cfg.get("execute_m19_direct", False)):
         args.extend(
             [
@@ -146,7 +155,7 @@ with DAG(
     schedule=None,
     catchup=False,
     max_active_runs=1,
-    tags=["lojban", "control-plane", "direct-eval", "m19", "m20", "m21", "m22", "m23", "m24", "m25", "m26", "lineage"],
+    tags=["lojban", "control-plane", "direct-eval", "m19", "m20", "m21", "m22", "m23", "m24", "m25", "m26", "m27", "m28", "lineage"],
     params={
         "family": Param("M19", type="string", minLength=1),
         "track": Param("", type="string"),
@@ -170,6 +179,9 @@ with DAG(
         "m24_substrate_compression_report": Param("", type="string"),
         "m25_emergent_report": Param("", type="string"),
         "m26_end_to_end_report": Param("", type="string"),
+        "m27_coconut_runtime_report": Param("", type="string"),
+        "m28_model_report": Param("", type="string"),
+        "m28_suite_report": Param("", type="string"),
         "execute_m19_direct": Param(False, type="boolean"),
         "base_model": Param("C:/Users/Andrew/hf_models/Qwen2.5-0.5B-Instruct", type="string", minLength=1),
         "bridge_path": Param("artifacts/models/m19/grid/m19_isolation_grid_20260409_v3/M19.3_8Q_128D_8S.pt", type="string", minLength=1),

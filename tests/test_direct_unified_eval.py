@@ -26,6 +26,234 @@ def _m26_contract_row(manifest: dict) -> dict:
     return next(row for row in manifest["contract_results"] if row.get("surface") == "m26_end_to_end_loafman")
 
 
+def _m27_contract_row(manifest: dict) -> dict:
+    return next(row for row in manifest["contract_results"] if row.get("surface") == "m27_coconut_bridi_runtime")
+
+
+def _m28_contract_row(manifest: dict) -> dict:
+    return next(row for row in manifest["contract_results"] if row.get("surface") == "m28_logebonic_symbiote_model")
+
+
+def test_build_direct_unified_eval_manifest_m28_actual_model() -> None:
+    tmp_path = _scratch_dir()
+    report_path = _write_json(
+        tmp_path / "m28_logebonic_model_report.json",
+        {
+            "track": "M28",
+            "metrics": {
+                "strict_accuracy": 0.50,
+                "m28_actual_model_artifact": 1.0,
+                "checkpoint_roundtrip_pass": 1.0,
+                "checkpoint_roundtrip_required": 1.0,
+                "model_inference_api_pass": 1.0,
+                "model_inference_api_present": 1.0,
+                "trace_schema_saved": 1.0,
+                "m28_baseline_comparison_bundle_present": 1.0,
+                "m28_baseline_count": 7.0,
+                "m28_learned_logebonic_accuracy": 0.50,
+                "m28_best_non_logebonic_baseline_accuracy": 0.45,
+                "m28_learned_vs_best_baseline_delta": 0.05,
+                "m28_learned_vs_no_cot_delta": 0.10,
+                "m28_trace_causality_delta": 0.12,
+                "answer_loss_reaches_generator": 1.0,
+                "answer_loss_reaches_coconut_cell": 1.0,
+                "answer_loss_reaches_recurrent_bridi_feedback": 1.0,
+                "answer_loss_reaches_language_backbone": 1.0,
+                "answer_loss_reaches_bridge": 1.0,
+                "m27_full_organism_gate_pass_rate": 1.0,
+            },
+            "baseline_comparison": {
+                "summary": {
+                    "m28_baseline_comparison_bundle_present": 1.0,
+                    "m28_baseline_count": 7.0,
+                }
+            },
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M28",
+        track="M28",
+        m28_model_report_path=report_path,
+    )
+
+    assert manifest["family_key"] == "M28"
+    assert manifest["headline_metrics"]["m28_actual_model_artifact"] == 1.0
+    assert manifest["headline_metrics"]["m28_baseline_comparison_bundle_present"] == 1.0
+    row = _m28_contract_row(manifest)
+    assert row["status"] == "available"
+    assert row["promotion_status"] == "m28_actual_model_candidate"
+    assert row["metrics"]["m28_actual_model_candidate"] == 1.0
+    assert row["metrics"]["m28_gate_baseline_bundle"] == 1.0
+
+
+def test_build_direct_unified_eval_manifest_m28_actual_model_suite() -> None:
+    tmp_path = _scratch_dir()
+    model_report_path = _write_json(
+        tmp_path / "m28_logebonic_model_report.json",
+        {
+            "track": "M28",
+            "metrics": {
+                "strict_accuracy": 0.45,
+                "m28_actual_model_artifact": 1.0,
+                "checkpoint_roundtrip_pass": 1.0,
+                "model_inference_api_pass": 1.0,
+                "trace_schema_saved": 1.0,
+                "m28_baseline_comparison_bundle_present": 1.0,
+                "m28_baseline_count": 7.0,
+            },
+        },
+    )
+    suite_report_path = _write_json(
+        tmp_path / "m28_logebonic_model_suite_report.json",
+        {
+            "track": "M28",
+            "suite": "m28_logebonic_symbiote_model_suite",
+            "metrics": {
+                "m28_suite_run_count": 2.0,
+                "m28_suite_stable_seed_rate": 0.5,
+                "m28_suite_artifact_gate_pass_rate": 1.0,
+                "m28_suite_direct_eval_embedded": 1.0,
+                "m28_suite_best_report_available": 1.0,
+                "m28_suite_best_checkpoint_available": 1.0,
+                "mean_strict_accuracy": 0.46,
+                "mean_m28_learned_vs_best_baseline_delta": 0.03,
+                "mean_m28_trace_causality_delta": 0.08,
+                "best_strict_accuracy": 0.50,
+                "best_m28_learned_vs_best_baseline_delta": 0.05,
+                "best_m28_trace_causality_delta": 0.10,
+            },
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M28",
+        track="M28",
+        m28_model_report_path=model_report_path,
+        m28_suite_report_path=suite_report_path,
+    )
+
+    row = next(item for item in manifest["contract_results"] if item["test_id"] == "m28.actual_model_suite")
+    assert row["surface"] == "m28_logebonic_symbiote_model_suite"
+    assert row["status"] == "available"
+    assert row["promotion_status"] == "m28_actual_model_suite_candidate"
+    assert row["metrics"]["m28_actual_model_suite_candidate"] == 1.0
+    assert row["metrics"]["m28_suite_gate_direct_eval"] == 1.0
+    assert manifest["headline_metrics"]["m28_suite_run_count"] == 2.0
+    assert manifest["headline_metrics"]["mean_m28_trace_causality_delta"] == 0.08
+
+
+def test_build_direct_unified_eval_manifest_m27_coconut_runtime() -> None:
+    tmp_path = _scratch_dir()
+    report_path = _write_json(
+        tmp_path / "m27_coconut_bridi_runtime_report.json",
+        {
+            "track": "M27",
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.44,
+                "mean_m27_end_to_end_answer_accuracy": 0.44,
+                "mean_hard_free_run_strict_accuracy": 0.41,
+                "mean_soft_hard_accuracy_gap": 0.03,
+                "mean_no_recurrence_accuracy": 0.30,
+                "mean_multi_step_delta_vs_no_recurrence": 0.14,
+                "mean_m27_step_dependency_delta": 0.05,
+                "mean_answer_loss_reaches_generator": 1.0,
+                "mean_answer_loss_reaches_coconut_cell": 1.0,
+                "mean_answer_loss_reaches_recurrent_bridi_feedback": 1.0,
+                "mean_answer_loss_reaches_symbol_heads": 1.0,
+                "mean_answer_loss_reaches_language_backbone": 1.0,
+                "mean_answer_loss_reaches_bridge": 1.0,
+                "mean_answer_loss_coconut_cell_grad_norm": 0.7,
+                "mean_answer_loss_recurrent_feedback_grad_norm": 0.2,
+                "mean_m27_gate_answer_loss_reaches_generator": 1.0,
+                "mean_m27_gate_answer_loss_reaches_coconut_cell": 1.0,
+                "mean_m27_gate_answer_loss_reaches_recurrent_bridi_feedback": 1.0,
+                "mean_m27_gate_answer_loss_reaches_symbol_heads": 1.0,
+                "mean_m27_gate_answer_loss_reaches_language_backbone": 1.0,
+                "mean_m27_gate_answer_loss_reaches_bridge": 1.0,
+                "mean_m27_gate_autoregressive_step_dependency": 1.0,
+                "mean_m27_gate_soft_hard_runtime_available": 1.0,
+                "mean_m27_gate_raw_prompt_bypass_blocked": 1.0,
+                "mean_m27_full_organism_gate_pass_rate": 1.0,
+                "mean_m27_full_organism_candidate": 1.0,
+                "mean_m27_prompt_comparable_candidate": 1.0,
+                "mean_m27_promotion_candidate": 1.0,
+                "mean_m27_relevance_runtime_enabled": 1.0,
+                "mean_m27_relevance_top1_accuracy": 0.75,
+                "mean_m27_relevance_margin": 0.25,
+                "mean_m27_relevance_full_accuracy": 0.45,
+                "mean_m27_relevance_random_accuracy": 0.25,
+                "mean_m27_relevance_oracle_accuracy": 0.55,
+                "mean_m27_relevance_decoy_only_accuracy": 0.10,
+                "mean_m27_relevance_full_vs_random_delta": 0.20,
+                "mean_m27_relevance_oracle_lift": 0.15,
+                "mean_m27_inherited_contract_bundle_present": 1.0,
+            },
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M27",
+        track="M27",
+        m27_coconut_runtime_report_path=report_path,
+    )
+
+    assert manifest["family_key"] == "M27"
+    assert manifest["track"] == "M27"
+    assert manifest["headline_metrics"]["answer_loss_reaches_coconut_cell"] == 1.0
+    assert manifest["headline_metrics"]["answer_loss_reaches_recurrent_bridi_feedback"] == 1.0
+    assert manifest["headline_metrics"]["m27_full_organism_gate_pass_rate"] == 1.0
+    row = _m27_contract_row(manifest)
+    assert row["status"] == "available"
+    assert row["promotion_status"] == "m27_coconut_runtime_promoted"
+    assert row["metrics"]["hard_free_run_strict_accuracy"] == 0.41
+    assert row["metrics"]["answer_loss_coconut_cell_grad_norm"] == 0.7
+    assert row["metrics"]["answer_loss_recurrent_feedback_grad_norm"] == 0.2
+    assert row["metrics"]["m27_relevance_runtime_enabled"] == 1.0
+    assert row["metrics"]["m27_relevance_top1_accuracy"] == 0.75
+    relevance_row = next(item for item in manifest["contract_results"] if item["test_id"] == "m27.relevance_runtime")
+    assert relevance_row["metrics"]["m27_relevance_full_vs_random_delta"] == 0.20
+    inherited_row = next(item for item in manifest["contract_results"] if item["test_id"] == "m27.inherited_contract_bundle")
+    assert inherited_row["metrics"]["m27_inherited_contract_bundle_present"] == 1.0
+
+
+def test_m27_prompt_comparable_without_trace_causality_is_not_promoted() -> None:
+    tmp_path = _scratch_dir()
+    report_path = _write_json(
+        tmp_path / "m27_coconut_bridi_runtime_report.json",
+        {
+            "track": "M27",
+            "aggregate_metrics": {
+                "mean_strict_accuracy": 0.44,
+                "mean_m27_end_to_end_answer_accuracy": 0.44,
+                "mean_hard_free_run_strict_accuracy": 0.41,
+                "mean_m27_full_organism_gate_pass_rate": 1.0,
+                "mean_m27_full_organism_candidate": 1.0,
+                "mean_m27_prompt_comparable_candidate": 1.0,
+                "mean_m27_promotion_candidate": 0.0,
+                "mean_phrase_accuracy": 1.0,
+                "mean_answer_loss_reaches_generator": 1.0,
+                "mean_answer_loss_reaches_coconut_cell": 1.0,
+                "mean_answer_loss_reaches_recurrent_bridi_feedback": 1.0,
+                "mean_answer_loss_reaches_symbol_heads": 1.0,
+                "mean_answer_loss_reaches_language_backbone": 1.0,
+                "mean_answer_loss_reaches_bridge": 1.0,
+            },
+        },
+    )
+
+    manifest = build_direct_unified_eval_manifest(
+        family_key="M27",
+        track="M27",
+        m27_coconut_runtime_report_path=report_path,
+    )
+
+    row = _m27_contract_row(manifest)
+    assert row["status"] == "available_non_promoted"
+    assert row["promotion_status"] == "m27_non_promoted"
+    assert row["metrics"]["m27_promotion_candidate"] == 0.0
+
+
 def test_build_direct_unified_eval_manifest_m26_full_organism() -> None:
     tmp_path = _scratch_dir()
     report_path = _write_json(

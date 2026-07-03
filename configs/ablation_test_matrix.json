@@ -26,7 +26,11 @@
       "group_id": "control_plane.ledger",
       "series": "control_plane",
       "family": "control_plane",
-      "lanes": ["smoke", "ledger", "full"],
+      "lanes": [
+        "smoke",
+        "ledger",
+        "full"
+      ],
       "description": "Ledger, taxonomy, artifact, direct-eval, whole-grid, and path-registry contracts.",
       "pytest_paths": [
         "tests/test_artifact_contract.py",
@@ -44,7 +48,9 @@
       "group_id": "shared.infra_data",
       "series": "shared",
       "family": "shared",
-      "lanes": ["full"],
+      "lanes": [
+        "full"
+      ],
       "description": "Shared data, storage, reproducibility, safety, and HF/LoRA utility tests.",
       "pytest_paths": [
         "tests/test_build_mixed_curriculum_dataset.py",
@@ -59,7 +65,10 @@
       "group_id": "legacy.a_to_g_coconut",
       "series": "A-G",
       "family": "legacy",
-      "lanes": ["architecture", "full"],
+      "lanes": [
+        "architecture",
+        "full"
+      ],
       "description": "Early coconut/control handoff tests.",
       "pytest_paths": [
         "tests/test_coconut_handoff.py",
@@ -70,7 +79,10 @@
       "group_id": "legacy.h_series",
       "series": "H",
       "family": "H",
-      "lanes": ["architecture", "full"],
+      "lanes": [
+        "architecture",
+        "full"
+      ],
       "description": "Legacy H runnable bridge/coconut tests.",
       "pytest_paths": [
         "tests/test_run_true_coconut_h_series.py"
@@ -80,7 +92,10 @@
       "group_id": "legacy.h5_extension",
       "series": "H5",
       "family": "H5",
-      "lanes": ["architecture", "full"],
+      "lanes": [
+        "architecture",
+        "full"
+      ],
       "description": "Legacy H5 extension contract tests.",
       "pytest_paths": [
         "tests/test_h5_ablation_extension_contract.py"
@@ -90,7 +105,10 @@
       "group_id": "legacy.j_series",
       "series": "J",
       "family": "J",
-      "lanes": ["architecture", "full"],
+      "lanes": [
+        "architecture",
+        "full"
+      ],
       "description": "Legacy J / normalized M1 eval tests.",
       "pytest_paths": [
         "tests/test_j_series_eval.py"
@@ -100,7 +118,10 @@
       "group_id": "legacy.l_series",
       "series": "L",
       "family": "L",
-      "lanes": ["architecture", "full"],
+      "lanes": [
+        "architecture",
+        "full"
+      ],
       "description": "Legacy L / normalized M2 constraint tests.",
       "pytest_paths": [
         "tests/test_l_series.py"
@@ -110,7 +131,10 @@
       "group_id": "m3.bridge_family",
       "series": "M3",
       "family": "M3",
-      "lanes": ["architecture", "full"],
+      "lanes": [
+        "architecture",
+        "full"
+      ],
       "description": "M3 bridge-family integration tests.",
       "pytest_paths": [
         "tests/test_m3_plus_family_integration.py"
@@ -120,7 +144,10 @@
       "group_id": "m19.mainline",
       "series": "M19",
       "family": "M19",
-      "lanes": ["architecture", "full"],
+      "lanes": [
+        "architecture",
+        "full"
+      ],
       "description": "M19 runway, bridge, arity, pointer, integrity, report, and kill-suite tests.",
       "pytest_paths": [
         "tests/test_m19_arity_causal.py",
@@ -142,7 +169,11 @@
       "group_id": "m20.dictionary_first",
       "series": "M20",
       "family": "M20",
-      "lanes": ["smoke", "architecture", "full"],
+      "lanes": [
+        "smoke",
+        "architecture",
+        "full"
+      ],
       "description": "M20 dictionary-first CLI and model tests.",
       "pytest_paths": [
         "tests/test_m20_cli_smoke.py",
@@ -153,7 +184,11 @@
       "group_id": "m21.dynamic_bridi",
       "series": "M21",
       "family": "M21",
-      "lanes": ["smoke", "architecture", "full"],
+      "lanes": [
+        "smoke",
+        "architecture",
+        "full"
+      ],
       "description": "M21 dynamic bridi model, CLI, and adversarial audit tests.",
       "pytest_paths": [
         "tests/test_m21_adversarial_audit.py",
@@ -165,7 +200,10 @@
       "group_id": "m22.semantic_generalization",
       "series": "M22",
       "family": "M22",
-      "lanes": ["architecture", "full"],
+      "lanes": [
+        "architecture",
+        "full"
+      ],
       "description": "M22 semantic generalization tests.",
       "pytest_paths": [
         "tests/test_m22_semantic_generalization.py"
@@ -175,7 +213,11 @@
       "group_id": "m23.relevance_router",
       "series": "M23",
       "family": "M23",
-      "lanes": ["smoke", "architecture", "full"],
+      "lanes": [
+        "smoke",
+        "architecture",
+        "full"
+      ],
       "description": "M23 relevance-router CLI and model tests.",
       "pytest_paths": [
         "tests/test_m23_cli_smoke.py",
@@ -186,7 +228,11 @@
       "group_id": "m24.substrate_compression",
       "series": "M24",
       "family": "M24",
-      "lanes": ["smoke", "architecture", "full"],
+      "lanes": [
+        "smoke",
+        "architecture",
+        "full"
+      ],
       "description": "M24 substrate compression CLI and model tests.",
       "pytest_paths": [
         "tests/test_m24_cli_smoke.py",
@@ -197,7 +243,11 @@
       "group_id": "m25.emergent_bridi",
       "series": "M25",
       "family": "M25",
-      "lanes": ["smoke", "architecture", "full"],
+      "lanes": [
+        "smoke",
+        "architecture",
+        "full"
+      ],
       "description": "M25 emergent loose-bridi CLI and model tests.",
       "pytest_paths": [
         "tests/test_m25_cli_smoke.py",
@@ -208,12 +258,46 @@
       "group_id": "m26.full_organism",
       "series": "M26",
       "family": "M26",
-      "lanes": ["smoke", "architecture", "full"],
+      "lanes": [
+        "smoke",
+        "architecture",
+        "full"
+      ],
       "description": "M26 full-organism bridge, CLI, and control-plane wiring tests.",
       "pytest_paths": [
         "tests/test_m26_cli_smoke.py",
         "tests/test_m26_control_plane_wiring.py",
         "tests/test_m26_end_to_end_loafman.py"
+      ]
+    },
+    {
+      "group_id": "m27.coconut_bridi_runtime",
+      "series": "M27",
+      "family": "M27",
+      "lanes": [
+        "smoke",
+        "architecture",
+        "full"
+      ],
+      "description": "M27 recurrent Coconut-Bridi runtime CLI, model, and control-plane tests.",
+      "pytest_paths": [
+        "tests/test_m27_cli_smoke.py",
+        "tests/test_m27_coconut_bridi_runtime.py",
+        "tests/test_m27_control_plane_wiring.py"
+      ]
+    },
+    {
+      "group_id": "m28.actual_logebonic_model",
+      "series": "M28",
+      "family": "M28",
+      "lanes": [
+        "smoke",
+        "architecture",
+        "full"
+      ],
+      "description": "M28 actual checkpointable Logebonic Symbiote model tests: inference API, checkpoint roundtrip, baseline bundle, and resumable training.",
+      "pytest_paths": [
+        "tests/test_m28_logebonic_symbiote_model.py"
       ]
     }
   ]

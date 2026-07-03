@@ -524,6 +524,144 @@ def test_m26_special_stage_metrics_and_order() -> None:
     )
 
 
+def test_m27_special_stage_row_is_full_row_with_runtime_metrics(tmp_path: Path) -> None:
+    whole_grid = _load_whole_grid_module()
+    report = tmp_path / "m27_coconut_bridi_runtime_report.json"
+    report.write_text(
+        json.dumps(
+            {
+                "aggregate_metrics": {
+                    "mean_strict_accuracy": 0.52,
+                    "mean_soft_free_run_strict_accuracy": 0.52,
+                    "mean_hard_free_run_strict_accuracy": 0.50,
+                    "mean_m27_promotion_candidate": 0.0,
+                    "mean_m27_full_organism_gate_pass_rate": 1.0,
+                    "mean_m27_wiring_candidate": 1.0,
+                    "mean_m27_full_organism_candidate": 1.0,
+                    "mean_m27_prompt_comparable_candidate": 1.0,
+                    "mean_m27_step_dependency_delta": 0.03,
+                    "mean_m27_relevance_runtime_enabled": 1.0,
+                    "mean_m27_relevance_runtime_active": 1.0,
+                    "mean_m27_relevance_top1_accuracy": 0.75,
+                    "mean_m27_relevance_margin": 0.20,
+                    "mean_m27_relevance_full_vs_random_delta": 0.12,
+                    "mean_m27_inherited_contract_bundle_present": 1.0,
+                    "mean_answer_loss_reaches_generator": 1.0,
+                    "mean_answer_loss_reaches_coconut_cell": 1.0,
+                    "mean_answer_loss_reaches_recurrent_bridi_feedback": 1.0,
+                    "mean_answer_loss_reaches_symbol_heads": 1.0,
+                    "mean_answer_loss_reaches_language_backbone": 1.0,
+                    "mean_answer_loss_reaches_bridge": 1.0,
+                    "mean_m27_gate_answer_loss_trains_soft_free_run": 1.0,
+                    "mean_predicted_vs_zero_delta": 0.0,
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    stage = {
+        "stage_key": "M27",
+        "title": "M27",
+        "executed_count": 0,
+        "report_count": 1,
+        "archival_count": 0,
+        "deferred_count": 0,
+        "artifact_roots": [str(report)],
+    }
+
+    whole_grid.DEFAULT_DIRECT_UNIFIED_EVAL_ROOT = tmp_path / "missing_direct"
+    whole_grid.DEFAULT_M27_COCONUT_ROOT = tmp_path / "missing_m27"
+    metrics = whole_grid._special_stage_metrics("M27", json.loads(report.read_text(encoding="utf-8")))
+    row = whole_grid._special_stage_row(stage)
+    markdown = whole_grid._render_markdown({"stage_rows": [row], "coverage_summary": {}, "source_manifests": {}})
+
+    assert "M27" in whole_grid.STAGE_ORDER
+    assert whole_grid.STAGE_ORDER.index("M26") < whole_grid.STAGE_ORDER.index("M27")
+    assert row["stage_key"] == "M27"
+    assert row["surface_kind"] == "artifact_anchor"
+    assert "headline_metrics" in row
+    assert row["headline_metrics"]["m27_promotion_candidate"] == 0.0
+    assert row["headline_metrics"]["m27_full_organism_gate_pass_rate"] == 1.0
+    assert row["headline_metrics"]["m27_wiring_candidate"] == 1.0
+    assert row["headline_metrics"]["m27_relevance_runtime_enabled"] == 1.0
+    assert row["headline_metrics"]["m27_relevance_full_vs_random_delta"] == 0.12
+    assert row["headline_metrics"]["m27_inherited_contract_bundle_present"] == 1.0
+    assert row["headline_metrics"]["answer_loss_reaches_generator"] == 1.0
+    assert row["headline_metrics"]["answer_loss_reaches_language_backbone"] == 1.0
+    assert metrics["m27_gate_answer_loss_trains_soft_free_run"] == 1.0
+    assert "| `M27` | `artifact_anchor` |" in markdown
+    assert "m27_promotion_candidate=0" in markdown
+    assert "m27_inherited_contract_bundle_present=1" in markdown
+
+
+def test_m28_special_stage_row_surfaces_actual_model_metrics(tmp_path: Path) -> None:
+    whole_grid = _load_whole_grid_module()
+    report = tmp_path / "m28_logebonic_model_report.json"
+    report.write_text(
+        json.dumps(
+            {
+                "metrics": {
+                    "strict_accuracy": 0.42,
+                    "m28_actual_model_artifact": 1.0,
+                    "checkpoint_roundtrip_pass": 1.0,
+                    "model_inference_api_pass": 1.0,
+                    "trace_schema_saved": 1.0,
+                    "m28_baseline_comparison_bundle_present": 1.0,
+                    "m28_baseline_count": 7.0,
+                    "m28_learned_logebonic_accuracy": 0.42,
+                    "m28_best_non_logebonic_baseline_accuracy": 0.38,
+                    "m28_learned_vs_best_baseline_delta": 0.04,
+                    "m28_trace_causality_delta": 0.11,
+                    "m27_full_organism_gate_pass_rate": 1.0,
+                    "answer_loss_reaches_generator": 1.0,
+                    "answer_loss_reaches_coconut_cell": 1.0,
+                    "answer_loss_reaches_recurrent_bridi_feedback": 1.0,
+                    "answer_loss_reaches_language_backbone": 1.0,
+                    "answer_loss_reaches_bridge": 1.0,
+                },
+                "baseline_comparison": {
+                    "summary": {
+                        "m28_baseline_comparison_bundle_present": 1.0,
+                        "m28_baseline_count": 7.0,
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    stage = {
+        "stage_key": "M28",
+        "title": "M28",
+        "executed_count": 0,
+        "report_count": 1,
+        "archival_count": 0,
+        "deferred_count": 0,
+        "artifact_roots": [str(report)],
+    }
+
+    whole_grid.DEFAULT_DIRECT_UNIFIED_EVAL_ROOT = tmp_path / "missing_direct"
+    whole_grid.DEFAULT_M28_LOGEBONIC_SUITE_ROOT = tmp_path / "missing_m28_suite"
+    whole_grid.DEFAULT_M28_LOGEBONIC_ROOT = tmp_path / "missing_m28"
+    metrics = whole_grid._special_stage_metrics("M28", json.loads(report.read_text(encoding="utf-8")))
+    row = whole_grid._special_stage_row(stage)
+    markdown = whole_grid._render_markdown({"stage_rows": [row], "coverage_summary": {}, "source_manifests": {}})
+
+    assert "M28" in whole_grid.STAGE_ORDER
+    assert whole_grid.STAGE_ORDER.index("M27") < whole_grid.STAGE_ORDER.index("M28")
+    assert row["stage_key"] == "M28"
+    assert row["surface_kind"] == "artifact_anchor"
+    assert row["headline_metrics"]["m28_actual_model_artifact"] == 1.0
+    assert row["headline_metrics"]["checkpoint_roundtrip_pass"] == 1.0
+    assert row["headline_metrics"]["model_inference_api_pass"] == 1.0
+    assert row["headline_metrics"]["trace_schema_saved"] == 1.0
+    assert row["headline_metrics"]["m28_baseline_comparison_bundle_present"] == 1.0
+    assert row["headline_metrics"]["m28_learned_vs_best_baseline_delta"] == 0.04
+    assert metrics["m28_trace_causality_delta"] == 0.11
+    assert "| `M28` | `artifact_anchor` |" in markdown
+    assert "m28_actual_model_artifact=1" in markdown
+    assert "m28_learned_vs_best_baseline_delta=0.04" in markdown
+
+
 def test_control_plane_row_surfaces_ablation_test_matrix_metrics() -> None:
     whole_grid = _load_whole_grid_module()
     stage = {

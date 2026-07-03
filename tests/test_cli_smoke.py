@@ -51,6 +51,17 @@ def test_run_direct_unified_eval_help() -> None:
     assert "--execute-m19-direct" in out
     assert "--m24-compression-report" in out
     assert "--m26-end-to-end-report" in out
+    assert "--m27-coconut-runtime-report" in out
+    assert "--m28-model-report" in out
+    assert "--m28-suite-report" in out
+
+
+def test_run_m28_logebonic_model_suite_help() -> None:
+    out = _run_help("scripts/m28/run_m28_logebonic_model_suite.py")
+    assert "usage:" in out.lower()
+    assert "--seed-list" in out
+    assert "--stable-accuracy-threshold" in out
+    assert "--no-baselines" in out
 
 
 def test_run_ablation_test_matrix_help() -> None:
@@ -119,6 +130,69 @@ def test_run_direct_unified_eval_m24_defaults_track_to_family() -> None:
     assert payload["family_key"] == "M24"
     assert payload["track"] == "M24"
     assert payload["config"]["track"] == "M24"
+
+
+def test_run_direct_unified_eval_m28_defaults_track_to_family() -> None:
+    report = (
+        REPO_ROOT
+        / "artifacts/tmp/pytest_m28_direct_track_fake/m28_logebonic_model_report.json"
+    )
+    report.parent.mkdir(parents=True, exist_ok=True)
+    report.write_text(
+        json.dumps(
+            {
+                "track": "M28",
+                "metrics": {
+                    "strict_accuracy": 0.25,
+                    "m28_actual_model_artifact": 1.0,
+                    "checkpoint_roundtrip_pass": 1.0,
+                    "model_inference_api_pass": 1.0,
+                    "trace_schema_saved": 1.0,
+                    "m28_baseline_comparison_bundle_present": 1.0,
+                    "m28_baseline_count": 7.0,
+                    "m28_learned_logebonic_accuracy": 0.25,
+                    "m28_best_non_logebonic_baseline_accuracy": 0.20,
+                    "m28_learned_vs_best_baseline_delta": 0.05,
+                    "m28_trace_causality_delta": 0.05,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    run_id = "pytest_m28_direct_track_default"
+    env = dict(os.environ)
+    env["PYTHONPATH"] = str(REPO_ROOT / "src")
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(REPO_ROOT / "scripts/control_plane/run_direct_unified_eval.py"),
+            "--family",
+            "M28",
+            "--m28-model-report",
+            str(report),
+            "--output-root",
+            "artifacts/runs/telemetry/raw/ablation/hypercube/test_direct_unified_eval",
+            "--run-id",
+            run_id,
+        ],
+        cwd=str(REPO_ROOT),
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stderr
+    manifest = (
+        REPO_ROOT
+        / "artifacts/runs/telemetry/raw/ablation/hypercube/test_direct_unified_eval"
+        / run_id
+        / "direct_unified_eval_manifest.json"
+    )
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    assert payload["family_key"] == "M28"
+    assert payload["track"] == "M28"
+    assert payload["config"]["track"] == "M28"
+    assert payload["config"]["m28_model_report"].endswith("m28_logebonic_model_report.json")
 
 
 def test_run_m19_integrity_suite_help() -> None:

@@ -36,6 +36,16 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - M26 core registry may land in a parallel branch.
     M26_REGISTRY: dict[str, dict[str, Any]] = {}
 
+try:
+    from .m27.family import M27_REGISTRY
+except ModuleNotFoundError:  # pragma: no cover - M27 core registry may land in a parallel branch.
+    M27_REGISTRY: dict[str, dict[str, Any]] = {}
+
+try:
+    from .m28.family import M28_REGISTRY
+except ModuleNotFoundError:  # pragma: no cover - M28 core registry may land in a parallel branch.
+    M28_REGISTRY: dict[str, dict[str, Any]] = {}
+
 
 DIRECT_UNIFIED_EVAL_VERSION = "1.0"
 DIRECT_UNIFIED_EVAL_OUTPUT_ROOT = (
@@ -455,6 +465,74 @@ KEY_METRICS = (
     "m26_full_organism_candidate",
     "m26_prompt_comparable_candidate",
     "m26_promotion_candidate",
+    "m27_end_to_end_answer_accuracy",
+    "soft_free_run_strict_accuracy",
+    "hard_free_run_strict_accuracy",
+    "soft_hard_accuracy_gap",
+    "no_recurrence_accuracy",
+    "multi_step_delta_vs_no_recurrence",
+    "m27_step_dependency_delta",
+    "answer_loss_coconut_cell_grad_norm",
+    "answer_loss_recurrent_feedback_grad_norm",
+    "answer_loss_reaches_coconut_cell",
+    "answer_loss_reaches_recurrent_bridi_feedback",
+    "coconut_cell_trainable_parameter_count",
+    "m27_gate_answer_loss_reaches_generator",
+    "m27_gate_answer_loss_reaches_coconut_cell",
+    "m27_gate_answer_loss_reaches_recurrent_bridi_feedback",
+    "m27_gate_answer_loss_reaches_symbol_heads",
+    "m27_gate_answer_loss_reaches_language_backbone",
+    "m27_gate_answer_loss_reaches_bridge",
+    "m27_gate_autoregressive_step_dependency",
+    "m27_gate_soft_hard_runtime_available",
+    "m27_gate_raw_prompt_bypass_blocked",
+    "m27_gate_answer_loss_trains_soft_free_run",
+    "m27_full_organism_gate_pass_rate",
+    "m27_wiring_candidate",
+    "m27_full_organism_candidate",
+    "m27_prompt_comparable_candidate",
+    "m27_promotion_candidate",
+    "m27_relevance_runtime_enabled",
+    "m27_relevance_runtime_active",
+    "m27_relevance_top1_accuracy",
+    "m27_relevance_margin",
+    "m27_relevance_eval_valid_fraction",
+    "m27_relevance_full_accuracy",
+    "m27_relevance_answer_accuracy",
+    "m27_relevance_random_accuracy",
+    "m27_relevance_oracle_accuracy",
+    "m27_relevance_decoy_only_accuracy",
+    "m27_relevance_no_selector_accuracy",
+    "m27_relevance_full_vs_random_delta",
+    "m27_relevance_oracle_lift",
+    "m27_relevance_decoy_drop",
+    "m27_inherited_contract_bundle_present",
+    "m28_actual_model_artifact",
+    "checkpoint_roundtrip_pass",
+    "model_inference_api_pass",
+    "trace_schema_saved",
+    "m28_baseline_comparison_bundle_present",
+    "m28_baseline_count",
+    "m28_learned_logebonic_accuracy",
+    "m28_best_non_logebonic_baseline_accuracy",
+    "m28_learned_vs_best_baseline_delta",
+    "m28_learned_vs_no_cot_delta",
+    "m28_learned_accuracy_per_trace_token",
+    "m28_learned_trace_token_count",
+    "m28_trace_causality_delta",
+    "m28_suite_run_count",
+    "m28_suite_stable_seed_rate",
+    "m28_suite_artifact_gate_pass_rate",
+    "m28_suite_direct_eval_embedded",
+    "m28_suite_best_report_available",
+    "m28_suite_best_checkpoint_available",
+    "m28_suite_best_score",
+    "mean_strict_accuracy",
+    "mean_m28_learned_vs_best_baseline_delta",
+    "mean_m28_trace_causality_delta",
+    "best_strict_accuracy",
+    "best_m28_learned_vs_best_baseline_delta",
+    "best_m28_trace_causality_delta",
     "phrase_accuracy",
     "phrase_exact_accuracy",
 )
@@ -487,6 +565,102 @@ M26_FULL_ORGANISM_METRICS = (
     "m26_gate_raw_prompt_bypass_blocked",
     "m26_full_organism_gate_pass_rate",
     "m26_full_organism_candidate",
+)
+
+M27_FULL_ORGANISM_METRICS = (
+    "autoregressive_coconut_runtime_active",
+    "soft_train_and_hard_free_run_both_available",
+    "soft_free_run_strict_accuracy",
+    "soft_teacher_forced_strict_accuracy_is_legacy_soft_free_run_alias",
+    "m27_step_dependency_delta",
+    "answer_loss_coconut_cell_grad_norm",
+    "answer_loss_recurrent_feedback_grad_norm",
+    "answer_loss_reaches_coconut_cell",
+    "answer_loss_reaches_recurrent_bridi_feedback",
+    "coconut_cell_trainable_parameter_count",
+    "hard_free_run_strict_accuracy",
+    "soft_hard_accuracy_gap",
+    "no_recurrence_accuracy",
+    "multi_step_delta_vs_no_recurrence",
+    "m27_gate_answer_loss_reaches_generator",
+    "m27_gate_answer_loss_reaches_coconut_cell",
+    "m27_gate_answer_loss_reaches_recurrent_bridi_feedback",
+    "m27_gate_answer_loss_reaches_symbol_heads",
+    "m27_gate_answer_loss_reaches_language_backbone",
+    "m27_gate_answer_loss_reaches_bridge",
+    "m27_gate_autoregressive_step_dependency",
+    "m27_gate_soft_hard_runtime_available",
+    "m27_gate_raw_prompt_bypass_blocked",
+    "m27_gate_answer_loss_trains_soft_free_run",
+    "m27_full_organism_gate_pass_rate",
+    "m27_wiring_candidate",
+    "m27_full_organism_candidate",
+)
+
+M27_RELEVANCE_RUNTIME_METRICS = (
+    "m27_relevance_runtime_enabled",
+    "m27_relevance_runtime_active",
+    "m27_relevance_top1_accuracy",
+    "m27_relevance_margin",
+    "m27_relevance_eval_valid_fraction",
+    "m27_relevance_full_accuracy",
+    "m27_relevance_answer_accuracy",
+    "m27_relevance_random_accuracy",
+    "m27_relevance_oracle_accuracy",
+    "m27_relevance_decoy_only_accuracy",
+    "m27_relevance_no_selector_accuracy",
+    "m27_relevance_full_vs_random_delta",
+    "m27_relevance_oracle_lift",
+    "m27_relevance_decoy_drop",
+    "m27_inherited_contract_bundle_present",
+)
+
+M28_ACTUAL_MODEL_METRICS = (
+    "m28_actual_model_artifact",
+    "checkpoint_roundtrip_pass",
+    "checkpoint_roundtrip_required",
+    "model_inference_api_pass",
+    "model_inference_api_present",
+    "trace_schema_saved",
+    "m28_baseline_comparison_bundle_present",
+    "m28_baseline_count",
+    "m28_learned_logebonic_accuracy",
+    "m28_best_non_logebonic_baseline_accuracy",
+    "m28_learned_vs_best_baseline_delta",
+    "m28_learned_vs_no_cot_delta",
+    "m28_learned_accuracy_per_trace_token",
+    "m28_learned_trace_token_count",
+    "m28_trace_causality_delta",
+    "strict_accuracy",
+    "hard_free_run_strict_accuracy",
+    "zero_trace_accuracy",
+    "predicted_vs_zero_delta",
+    "answer_loss_reaches_generator",
+    "answer_loss_reaches_coconut_cell",
+    "answer_loss_reaches_recurrent_bridi_feedback",
+    "answer_loss_reaches_language_backbone",
+    "answer_loss_reaches_bridge",
+    "m27_full_organism_gate_pass_rate",
+    "m27_promotion_candidate",
+)
+
+
+M28_ACTUAL_SUITE_METRICS = (
+    "m28_suite_run_count",
+    "m28_suite_stable_seed_rate",
+    "m28_suite_artifact_gate_pass_rate",
+    "m28_suite_direct_eval_embedded",
+    "m28_suite_best_report_available",
+    "m28_suite_best_checkpoint_available",
+    "m28_suite_best_score",
+    "mean_strict_accuracy",
+    "min_strict_accuracy",
+    "std_strict_accuracy",
+    "mean_m28_learned_vs_best_baseline_delta",
+    "mean_m28_trace_causality_delta",
+    "best_strict_accuracy",
+    "best_m28_learned_vs_best_baseline_delta",
+    "best_m28_trace_causality_delta",
 )
 
 _REFERENCE_ROOTS: dict[str, list[Path]] = {
@@ -544,6 +718,14 @@ _REFERENCE_ROOTS: dict[str, list[Path]] = {
     ],
     "M26": [
         REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m26_end_to_end_loafman",
+        REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "direct_unified_eval",
+    ],
+    "M27": [
+        REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m27_coconut_bridi_runtime",
+        REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "direct_unified_eval",
+    ],
+    "M28": [
+        REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "m28_logebonic_symbiote_model",
         REPO_ROOT / "artifacts" / "runs" / "telemetry" / "raw" / "ablation" / "hypercube" / "direct_unified_eval",
     ],
     "M10": [
@@ -815,6 +997,53 @@ def discover_m26_surfaces(
     }
 
 
+def discover_m27_surfaces(
+    *,
+    coconut_runtime_report_path: Path | None = None,
+) -> dict[str, dict[str, Any]]:
+    registry = M27_REGISTRY.get("M27", {})
+    output_roots = registry.get("output_roots", {}) if isinstance(registry, dict) else {}
+    report_names = registry.get("report_names", {}) if isinstance(registry, dict) else {}
+    root = output_roots.get("coconut_bridi_runtime") or output_roots.get("suite")
+    report_name = report_names.get("coconut_bridi_runtime") or report_names.get("suite") or "m27_coconut_bridi_runtime_report.json"
+    report_path = coconut_runtime_report_path
+    if report_path is None:
+        report_path = _latest_named_manifest(
+            REPO_ROOT / str(root or "artifacts/runs/telemetry/raw/ablation/hypercube/m27_coconut_bridi_runtime"),
+            str(report_name),
+        )
+    return {
+        "coconut_bridi_runtime": _surface_record("coconut_bridi_runtime", report_path),
+    }
+
+
+def discover_m28_surfaces(
+    *,
+    model_report_path: Path | None = None,
+    suite_report_path: Path | None = None,
+) -> dict[str, dict[str, Any]]:
+    registry = M28_REGISTRY.get("M28", {})
+    output_roots = registry.get("output_roots", {}) if isinstance(registry, dict) else {}
+    report_names = registry.get("report_names", {}) if isinstance(registry, dict) else {}
+    model_root = output_roots.get("model") or "artifacts/runs/telemetry/raw/ablation/hypercube/m28_logebonic_symbiote_model"
+    model_report_name = report_names.get("model") or "m28_logebonic_model_report.json"
+    suite_root = output_roots.get("suite") or "artifacts/runs/telemetry/raw/ablation/hypercube/m28_logebonic_symbiote_model_suite"
+    suite_report_name = report_names.get("suite") or "m28_logebonic_model_suite_report.json"
+    report_path = model_report_path
+    if report_path is None:
+        report_path = _latest_named_manifest(
+            REPO_ROOT / str(model_root),
+            str(model_report_name),
+        )
+    suite_path = suite_report_path
+    if suite_path is None:
+        suite_path = _latest_named_manifest(REPO_ROOT / str(suite_root), str(suite_report_name))
+    return {
+        "logebonic_model": _surface_record("logebonic_model", report_path),
+        "logebonic_suite": _surface_record("logebonic_suite", suite_path),
+    }
+
+
 def build_direct_unified_eval_manifest(
     *,
     family_key: str,
@@ -841,6 +1070,9 @@ def build_direct_unified_eval_manifest(
     m24_compression_report_path: Path | None = None,
     m25_emergent_report_path: Path | None = None,
     m26_end_to_end_report_path: Path | None = None,
+    m27_coconut_runtime_report_path: Path | None = None,
+    m28_model_report_path: Path | None = None,
+    m28_suite_report_path: Path | None = None,
     history_manifest_path: Path | None = None,
     taxonomy: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -904,6 +1136,17 @@ def build_direct_unified_eval_manifest(
         direct_surfaces = discover_m26_surfaces(
             end_to_end_report_path=m26_end_to_end_report_path,
         )
+    elif family_key == "M27":
+        resolved_track = str(track or "M27")
+        direct_surfaces = discover_m27_surfaces(
+            coconut_runtime_report_path=m27_coconut_runtime_report_path,
+        )
+    elif family_key == "M28":
+        resolved_track = str(track or "M28")
+        direct_surfaces = discover_m28_surfaces(
+            model_report_path=m28_model_report_path,
+            suite_report_path=m28_suite_report_path,
+        )
     else:
         raise NotImplementedError(f"Direct unified eval is currently implemented for family '{family_key}' only.")
 
@@ -929,6 +1172,9 @@ def build_direct_unified_eval_manifest(
     m24_compression_payload = direct_surfaces.get("substrate_compression", {}).get("payload") if family_key == "M24" else None
     m25_emergent_payload = direct_surfaces.get("emergent_bridi", {}).get("payload") if family_key == "M25" else None
     m26_end_to_end_payload = direct_surfaces.get("end_to_end_loafman", {}).get("payload") if family_key == "M26" else None
+    m27_coconut_payload = direct_surfaces.get("coconut_bridi_runtime", {}).get("payload") if family_key == "M27" else None
+    m28_model_payload = direct_surfaces.get("logebonic_model", {}).get("payload") if family_key == "M28" else None
+    m28_suite_payload = direct_surfaces.get("logebonic_suite", {}).get("payload") if family_key == "M28" else None
     historical_references = _resolve_historical_family_references(contract, history_manifest_path)
     comparison_targets = _resolve_comparison_targets(contract, history_manifest_path)
     reference_surface_index = _build_reference_surface_index(historical_references, comparison_targets)
@@ -957,6 +1203,9 @@ def build_direct_unified_eval_manifest(
         m24_compression_payload=m24_compression_payload,
         m25_emergent_payload=m25_emergent_payload,
         m26_end_to_end_payload=m26_end_to_end_payload,
+        m27_coconut_payload=m27_coconut_payload,
+        m28_model_payload=m28_model_payload,
+        m28_suite_payload=m28_suite_payload,
         reference_surface_index=reference_surface_index,
     )
 
@@ -983,6 +1232,9 @@ def build_direct_unified_eval_manifest(
         m24_compression_payload=m24_compression_payload,
         m25_emergent_payload=m25_emergent_payload,
         m26_end_to_end_payload=m26_end_to_end_payload,
+        m27_coconut_payload=m27_coconut_payload,
+        m28_model_payload=m28_model_payload,
+        m28_suite_payload=m28_suite_payload,
     )
     direct_report_paths = {
         name: surface["path"]
@@ -1024,6 +1276,16 @@ def build_direct_unified_eval_manifest(
         notes.append(
             "M26 direct surface prefers full-organism evidence when present: language hidden-state stream, "
             "bridi generator, trace-language bridge, and fused answer head must remain coupled without raw prompt bypass."
+        )
+    if family_key == "M27":
+        notes.append(
+            "M27 direct surface tests the full organism with a recurrent Coconut trace runtime; "
+            "answer loss must reach the Coconut cell and differentiable recurrent symbol feedback."
+        )
+    if family_key == "M28":
+        notes.append(
+            "M28 direct surface tests the actual checkpointable Logebonic Symbiote model artifact: "
+            "checkpoint roundtrip, inference API, trace schema, and baseline comparison bundle are first-class gates."
         )
 
     manifest = {
@@ -1141,6 +1403,9 @@ def _evaluate_contracts(
     m24_compression_payload: dict[str, Any] | None = None,
     m25_emergent_payload: dict[str, Any] | None = None,
     m26_end_to_end_payload: dict[str, Any] | None = None,
+    m27_coconut_payload: dict[str, Any] | None = None,
+    m28_model_payload: dict[str, Any] | None = None,
+    m28_suite_payload: dict[str, Any] | None = None,
     reference_surface_index: dict[str, dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     reference_surface_index = reference_surface_index or {}
@@ -1197,6 +1462,14 @@ def _evaluate_contracts(
             continue
         if family_key == "M26":
             row = _evaluate_m26_contract(test_id, contract, m26_end_to_end_payload)
+            rows.append(_attach_reference_surface(row, contract, reference_surface_index))
+            continue
+        if family_key == "M27":
+            row = _evaluate_m27_contract(test_id, contract, m27_coconut_payload)
+            rows.append(_attach_reference_surface(row, contract, reference_surface_index))
+            continue
+        if family_key == "M28":
+            row = _evaluate_m28_contract(test_id, contract, m28_model_payload, m28_suite_payload)
             rows.append(_attach_reference_surface(row, contract, reference_surface_index))
             continue
         rows.append(
@@ -1284,6 +1557,128 @@ def _evaluate_m26_contract(
         "metrics": metrics,
         "promotion_status": promotion_status,
         "notes": notes,
+    }
+
+
+def _evaluate_m27_contract(
+    test_id: str,
+    contract: dict[str, Any],
+    coconut_payload: dict[str, Any] | None,
+) -> dict[str, Any]:
+    metric_keys = list(contract.get("metrics", []))
+    for key in M27_FULL_ORGANISM_METRICS:
+        if key not in metric_keys:
+            metric_keys.append(key)
+    for key in M27_RELEVANCE_RUNTIME_METRICS:
+        if key not in metric_keys:
+            metric_keys.append(key)
+    metrics = _filtered_metrics(_m27_coconut_runtime_metrics(coconut_payload), tuple(metric_keys))
+    if not metrics:
+        return _missing_contract_row(test_id, contract, f"missing M27 direct surface for {test_id}")
+    notes = [
+        "M27 contract is evaluated from the Coconut-Bridi recurrent runtime report.",
+        "M27 is stricter than M26: answer loss must reach the Coconut recurrent cell and recurrent symbol-feedback embeddings.",
+        "M27 is not promoted unless m27_promotion_candidate=1.0; phrase accuracy remains diagnostic only.",
+    ]
+    promotion_candidate = float(metrics.get("m27_promotion_candidate", 0.0) or 0.0)
+    promotion_status = "m27_coconut_runtime_promoted" if promotion_candidate >= 1.0 else "m27_non_promoted"
+    return {
+        "test_id": test_id,
+        "surface": contract.get("surface"),
+        "status": "available" if promotion_candidate >= 1.0 else "available_non_promoted",
+        "provenance": "artifact",
+        "metrics": metrics,
+        "promotion_status": promotion_status,
+        "notes": notes,
+    }
+
+
+def _evaluate_m28_contract(
+    test_id: str,
+    contract: dict[str, Any],
+    model_payload: dict[str, Any] | None,
+    suite_payload: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    if test_id == "m28.actual_model_suite" or str(contract.get("surface", "")) == "m28_logebonic_symbiote_model_suite":
+        return _evaluate_m28_suite_contract(test_id, contract, suite_payload)
+    metric_keys = list(contract.get("metrics", []))
+    for key in M28_ACTUAL_MODEL_METRICS:
+        if key not in metric_keys:
+            metric_keys.append(key)
+    metrics = _filtered_metrics(_m28_model_metrics(model_payload), tuple(metric_keys))
+    if not metrics:
+        return _missing_contract_row(test_id, contract, f"missing M28 direct surface for {test_id}")
+    gates = {
+        "artifact": float(metrics.get("m28_actual_model_artifact", 0.0) or 0.0) >= 1.0,
+        "checkpoint": float(metrics.get("checkpoint_roundtrip_pass", 0.0) or 0.0) >= 1.0,
+        "inference": float(metrics.get("model_inference_api_pass", 0.0) or 0.0) >= 1.0,
+        "schema": float(metrics.get("trace_schema_saved", 0.0) or 0.0) >= 1.0,
+        "baselines": float(metrics.get("m28_baseline_comparison_bundle_present", 0.0) or 0.0) >= 1.0,
+    }
+    candidate = 1.0 if all(gates.values()) else 0.0
+    notes = [
+        "M28 contract is evaluated from the checkpointable Logebonic Symbiote model report.",
+        "M28 actual-model status requires checkpoint roundtrip, inference API, saved trace schema, and baseline comparison bundle.",
+        "Strict accuracy remains canonical; phrase accuracy is diagnostic only.",
+    ]
+    return {
+        "test_id": test_id,
+        "surface": contract.get("surface"),
+        "status": "available" if candidate >= 1.0 else "available_non_promoted",
+        "provenance": "artifact",
+        "metrics": {
+            **metrics,
+            "m28_actual_model_candidate": candidate,
+            "m28_gate_checkpoint_roundtrip": 1.0 if gates["checkpoint"] else 0.0,
+            "m28_gate_inference_api": 1.0 if gates["inference"] else 0.0,
+            "m28_gate_trace_schema": 1.0 if gates["schema"] else 0.0,
+            "m28_gate_baseline_bundle": 1.0 if gates["baselines"] else 0.0,
+        },
+        "promotion_status": "m28_actual_model_candidate" if candidate >= 1.0 else "m28_non_promoted",
+        "notes": notes,
+    }
+
+
+def _evaluate_m28_suite_contract(
+    test_id: str,
+    contract: dict[str, Any],
+    suite_payload: dict[str, Any] | None,
+) -> dict[str, Any]:
+    metric_keys = list(contract.get("metrics", []))
+    for key in M28_ACTUAL_SUITE_METRICS:
+        if key not in metric_keys:
+            metric_keys.append(key)
+    metrics = _filtered_metrics(_m28_suite_metrics(suite_payload), tuple(metric_keys))
+    if not metrics:
+        return _missing_contract_row(test_id, contract, f"missing M28 suite surface for {test_id}")
+    gates = {
+        "run_count": float(metrics.get("m28_suite_run_count", 0.0) or 0.0) >= 1.0,
+        "artifact_gates": float(metrics.get("m28_suite_artifact_gate_pass_rate", 0.0) or 0.0) >= 1.0,
+        "direct_eval": float(metrics.get("m28_suite_direct_eval_embedded", 0.0) or 0.0) >= 1.0,
+        "best_report": float(metrics.get("m28_suite_best_report_available", 0.0) or 0.0) >= 1.0,
+        "best_checkpoint": float(metrics.get("m28_suite_best_checkpoint_available", 0.0) or 0.0) >= 1.0,
+    }
+    candidate = 1.0 if all(gates.values()) else 0.0
+    return {
+        "test_id": test_id,
+        "surface": contract.get("surface"),
+        "status": "available" if candidate >= 1.0 else "available_non_promoted",
+        "provenance": "artifact",
+        "metrics": {
+            **metrics,
+            "m28_actual_model_suite_candidate": candidate,
+            "m28_suite_gate_run_count": 1.0 if gates["run_count"] else 0.0,
+            "m28_suite_gate_artifact_gates": 1.0 if gates["artifact_gates"] else 0.0,
+            "m28_suite_gate_direct_eval": 1.0 if gates["direct_eval"] else 0.0,
+            "m28_suite_gate_best_report": 1.0 if gates["best_report"] else 0.0,
+            "m28_suite_gate_best_checkpoint": 1.0 if gates["best_checkpoint"] else 0.0,
+        },
+        "promotion_status": "m28_actual_model_suite_candidate" if candidate >= 1.0 else "m28_suite_non_promoted",
+        "notes": [
+            "M28 suite contract is evaluated from the multi-seed actual-model suite report, not the single-run model report.",
+            "Suite status requires run count, artifact gates, embedded direct eval, and available best report/checkpoint.",
+            "Strict accuracy remains canonical; suite stability and baseline deltas are validation metrics, not promotion loopholes.",
+        ],
     }
 
 
@@ -1958,6 +2353,9 @@ def _build_headline_metrics(
     m24_compression_payload: dict[str, Any] | None = None,
     m25_emergent_payload: dict[str, Any] | None = None,
     m26_end_to_end_payload: dict[str, Any] | None = None,
+    m27_coconut_payload: dict[str, Any] | None = None,
+    m28_model_payload: dict[str, Any] | None = None,
+    m28_suite_payload: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     headline: dict[str, Any] = {}
     if isinstance(benchmark_payload, dict):
@@ -2082,6 +2480,15 @@ def _build_headline_metrics(
     if isinstance(m26_end_to_end_payload, dict):
         for key, value in _filtered_metrics(_m26_end_to_end_metrics(m26_end_to_end_payload), KEY_METRICS).items():
             headline[key] = value
+    if isinstance(m27_coconut_payload, dict):
+        for key, value in _filtered_metrics(_m27_coconut_runtime_metrics(m27_coconut_payload), KEY_METRICS).items():
+            headline[key] = value
+    if isinstance(m28_model_payload, dict):
+        for key, value in _filtered_metrics(_m28_model_metrics(m28_model_payload), KEY_METRICS).items():
+            headline[key] = value
+    if isinstance(m28_suite_payload, dict):
+        for key, value in _filtered_metrics(_m28_suite_metrics(m28_suite_payload), KEY_METRICS).items():
+            headline.setdefault(key, value)
     return {k: v for k, v in headline.items() if v is not None}
 
 
@@ -2447,6 +2854,124 @@ def _m26_end_to_end_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
     return {key: value for key, value in metrics.items() if value is not None}
 
 
+def _m27_coconut_runtime_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
+    if not isinstance(payload, dict):
+        return {}
+    metrics: dict[str, Any] = {}
+    for source_name in ("headline_metrics", "metrics", "aggregate_metrics"):
+        source = payload.get(source_name, {})
+        if isinstance(source, dict):
+            metrics.update(source)
+    aggregate = payload.get("aggregate_metrics", {})
+    if isinstance(aggregate, dict):
+        canonical = (
+            "strict_accuracy",
+            "phrase_accuracy",
+            "end_to_end_answer_accuracy",
+            "m27_end_to_end_answer_accuracy",
+            "soft_free_run_strict_accuracy",
+            "soft_teacher_forced_strict_accuracy",
+            "soft_teacher_forced_strict_accuracy_is_legacy_soft_free_run_alias",
+            "hard_free_run_accuracy",
+            "hard_free_run_strict_accuracy",
+            "soft_hard_accuracy_gap",
+            "no_recurrence_accuracy",
+            "multi_step_delta_vs_no_recurrence",
+            "shuffled_trace_accuracy",
+            "random_trace_accuracy",
+            "zero_trace_accuracy",
+            "prompt_only_accuracy",
+            "matched_prompt_accuracy",
+            "m27_strict_delta_vs_prompt_only",
+            "m27_strict_delta_vs_matched_prompt",
+            "predicted_vs_shuffled_delta",
+            "predicted_vs_random_delta",
+            "predicted_vs_zero_delta",
+            "loose_stream_exact_accuracy",
+            "stream_type_accuracy",
+            "stream_value_accuracy",
+            "stream_aux_accuracy",
+            "m27_autoregressive_trace_exact_accuracy",
+            "m27_step_dependency_delta",
+            "answer_loss_generator_grad_norm",
+            "answer_loss_coconut_cell_grad_norm",
+            "answer_loss_symbol_head_grad_norm",
+            "answer_loss_recurrent_feedback_grad_norm",
+            "answer_loss_language_backbone_grad_norm",
+            "answer_loss_bridge_grad_norm",
+            "answer_loss_reaches_generator",
+            "answer_loss_reaches_coconut_cell",
+            "answer_loss_reaches_recurrent_bridi_feedback",
+            "answer_loss_reaches_symbol_heads",
+            "answer_loss_reaches_language_backbone",
+            "answer_loss_reaches_bridge",
+            "coconut_cell_trainable_parameter_count",
+            "answer_loss_uses_soft_free_run_trace",
+            "trace_loss_uses_teacher_forcing",
+            "m27_training_answer_loss_uses_soft_free_run_trace",
+            "m27_training_trace_loss_uses_teacher_forcing",
+            "m27_accuracy_per_symbol_delta_vs_matched_prompt",
+            "m27_gate_beats_matched_prompt",
+            "m27_gate_stream_beats_zero",
+            "m27_gate_answer_loss_trains_soft_free_run",
+            "m27_wiring_candidate",
+            "m27_prompt_comparable_candidate",
+            "m27_promotion_candidate",
+            *M27_FULL_ORGANISM_METRICS,
+            *M27_RELEVANCE_RUNTIME_METRICS,
+        )
+        for key in canonical:
+            metrics.setdefault(key, aggregate.get(f"mean_{key}"))
+        metrics.setdefault("mean_predicted_emitted_symbols_after_bottleneck", aggregate.get("mean_mean_predicted_emitted_symbols_after_bottleneck"))
+        metrics.setdefault("mean_prompt_tokens", aggregate.get("mean_mean_prompt_tokens"))
+        metrics.setdefault("mean_matched_prompt_tokens", aggregate.get("mean_mean_matched_prompt_tokens"))
+    seed_rows = [
+        row["metrics"]
+        for row in payload.get("seed_reports", [])
+        if isinstance(row, dict) and isinstance(row.get("metrics"), dict)
+    ] if isinstance(payload.get("seed_reports"), list) else []
+    for key in KEY_METRICS:
+        values = [float(row[key]) for row in seed_rows if isinstance(row.get(key), (int, float))]
+        if values and (key not in metrics or metrics.get(key) is None):
+            metrics[key] = sum(values) / len(values)
+    return {key: value for key, value in metrics.items() if value is not None}
+
+
+def _m28_model_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
+    if not isinstance(payload, dict):
+        return {}
+    metrics: dict[str, Any] = {}
+    for source_name in ("headline_metrics", "metrics", "aggregate_metrics"):
+        source = payload.get(source_name, {})
+        if isinstance(source, dict):
+            metrics.update(source)
+    baseline = payload.get("baseline_comparison", {})
+    if isinstance(baseline, dict) and isinstance(baseline.get("summary"), dict):
+        metrics.update(baseline["summary"])
+    for key in M28_ACTUAL_MODEL_METRICS:
+        if key not in metrics and isinstance(payload.get(key), (int, float)):
+            metrics[key] = payload.get(key)
+    return {key: value for key, value in metrics.items() if value is not None}
+
+
+def _m28_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
+    if not isinstance(payload, dict):
+        return {}
+    metrics: dict[str, Any] = {}
+    for source_name in ("headline_metrics", "metrics", "aggregate_metrics"):
+        source = payload.get(source_name, {})
+        if isinstance(source, dict):
+            metrics.update(source)
+    metrics.setdefault("strict_accuracy", metrics.get("mean_strict_accuracy"))
+    metrics.setdefault("m28_learned_vs_best_baseline_delta", metrics.get("mean_m28_learned_vs_best_baseline_delta"))
+    metrics.setdefault("m28_trace_causality_delta", metrics.get("mean_m28_trace_causality_delta"))
+    best = payload.get("best_run", {})
+    if isinstance(best, dict) and isinstance(best.get("metrics"), dict):
+        for key, value in best["metrics"].items():
+            metrics.setdefault(f"best_{key}", value)
+    return {key: value for key, value in metrics.items() if value is not None}
+
+
 def _m21_suite_metrics(payload: dict[str, Any] | None) -> dict[str, Any]:
     if not isinstance(payload, dict):
         return {}
@@ -2691,6 +3216,10 @@ def _preferred_names_for_target(target: str) -> list[str]:
         return ["m25_emergent_bridi_report.json", "direct_unified_eval_manifest.json"]
     if upper.startswith("M26"):
         return ["m26_end_to_end_loafman_report.json", "direct_unified_eval_manifest.json"]
+    if upper.startswith("M27"):
+        return ["m27_coconut_bridi_runtime_report.json", "direct_unified_eval_manifest.json"]
+    if upper.startswith("M28"):
+        return ["m28_logebonic_model_report.json", "direct_unified_eval_manifest.json"]
     return []
 
 

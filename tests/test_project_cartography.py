@@ -48,6 +48,12 @@ def test_series_registry_classifies_branch_series_surfaces() -> None:
         "src/lojban_evolution/m26/end_to_end.py": "M26",
         "scripts/m26/run_m26_end_to_end_loafman_suite.py": "M26",
         "airflow/dags/m26/lojban_m26_end_to_end_loafman_dag.py": "M26",
+        "src/lojban_evolution/m27/runtime.py": "M27",
+        "scripts/m27/run_m27_coconut_bridi_runtime_suite.py": "M27",
+        "airflow/dags/m27/lojban_m27_coconut_bridi_runtime_dag.py": "M27",
+        "src/lojban_evolution/m28/model.py": "M28",
+        "scripts/m28/run_m28_logebonic_model_smoke.py": "M28",
+        "airflow/dags/m28/lojban_m28_logebonic_symbiote_model_dag.py": "M28",
     }
 
     for path, expected_series in cases.items():
@@ -68,7 +74,11 @@ def test_series_registry_preserves_a_to_m24_ordering() -> None:
     assert order.index("M24") < order.index("M25")
     assert "M26" in order
     assert order.index("M25") < order.index("M26")
-    assert {"A-G", "H", "H5", "J", "L", "M19", "M20", "M21", "M22", "M23", "M24", "M25", "M26"}.issubset(known_series())
+    assert "M27" in order
+    assert order.index("M26") < order.index("M27")
+    assert "M28" in order
+    assert order.index("M27") < order.index("M28")
+    assert {"A-G", "H", "H5", "J", "L", "M19", "M20", "M21", "M22", "M23", "M24", "M25", "M26", "M27", "M28"}.issubset(known_series())
 
 
 def test_cartography_infers_m24_and_m25_standard_family_paths() -> None:
@@ -84,6 +94,12 @@ def test_cartography_infers_m24_and_m25_standard_family_paths() -> None:
         "src/lojban_evolution/m26/end_to_end.py": "M26",
         "scripts/m26/run_m26_end_to_end_loafman_suite.py": "M26",
         "airflow/dags/m26/lojban_m26_end_to_end_loafman_dag.py": "M26",
+        "src/lojban_evolution/m27/runtime.py": "M27",
+        "scripts/m27/run_m27_coconut_bridi_runtime_suite.py": "M27",
+        "airflow/dags/m27/lojban_m27_coconut_bridi_runtime_dag.py": "M27",
+        "src/lojban_evolution/m28/model.py": "M28",
+        "scripts/m28/run_m28_logebonic_model_smoke.py": "M28",
+        "airflow/dags/m28/lojban_m28_logebonic_symbiote_model_dag.py": "M28",
     }
 
     for path, expected_series in cases.items():

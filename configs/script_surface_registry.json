@@ -1,6 +1,6 @@
 {
   "version": "2026-05-20",
-  "purpose": "Series-aware registry for runnable scripts, DAGs, and scaffolding surfaces. This divides the codebase by research branch terminology from A-G through M26.",
+  "purpose": "Series-aware registry for runnable scripts, DAGs, and scaffolding surfaces. This divides the codebase by research branch terminology from A-G through M28.",
   "series_order": [
     "A-G",
     "H",
@@ -31,6 +31,8 @@
     "M24",
     "M25",
     "M26",
+    "M27",
+    "M28",
     "control_plane",
     "data",
     "training",
@@ -166,6 +168,16 @@
     "M26": {
       "era": "active-branch",
       "question": "End-to-end Lojban symbiote full-organism bridge over the M25 loose bridi stream; the spinal-cord gate is retained as a narrower gradient-flow subclaim."
+    },
+    "M27": {
+      "era": "M-series active branch",
+      "status": "active-branch",
+      "question": "Autoregressive Coconut-Bridi runtime: M26 full organism plus one-symbol-per-step recurrent loose-bridi trace generation."
+    },
+    "M28": {
+      "era": "M-series active branch",
+      "status": "active-branch",
+      "question": "Actual checkpointable Logebonic Symbiote model: M27 assay substrate packaged as a reusable trainable model with inference/checkpoint APIs and baseline comparisons."
     }
   },
   "path_rules": [
@@ -695,6 +707,48 @@
       "bucket": "scripts/legacy",
       "owner": "legacy",
       "replacement": "No direct replacement recorded yet."
+    },
+    {
+      "globs": [
+        "src/lojban_evolution/m27/**"
+      ],
+      "series": "M27",
+      "status": "active-branch",
+      "kind": "source",
+      "bucket": "src/lojban_evolution/m27",
+      "owner": "M27"
+    },
+    {
+      "globs": [
+        "scripts/m27/*.py",
+        "airflow/dags/m27/*.py"
+      ],
+      "series": "M27",
+      "status": "active-branch",
+      "kind": "runner_or_dag",
+      "bucket": "m27",
+      "owner": "M27"
+    },
+    {
+      "globs": [
+        "src/lojban_evolution/m28/**"
+      ],
+      "series": "M28",
+      "status": "active-branch",
+      "kind": "source",
+      "bucket": "src/lojban_evolution/m28",
+      "owner": "M28"
+    },
+    {
+      "globs": [
+        "scripts/m28/*.py",
+        "airflow/dags/m28/*.py"
+      ],
+      "series": "M28",
+      "status": "active-branch",
+      "kind": "runner_or_dag",
+      "bucket": "m28",
+      "owner": "M28"
     }
   ]
 }

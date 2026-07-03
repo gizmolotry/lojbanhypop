@@ -118,6 +118,30 @@ def loose_symbols_from_frames(
     return tuple(symbols[: int(max_symbols)])
 
 
+def loose_relevance_masks(
+    symbols: Sequence[LooseBridiSymbol],
+    *,
+    relevant_frame_indices: Sequence[int],
+    decoy_frame_indices: Sequence[int],
+    max_symbols: int = DEFAULT_MAX_SYMBOLS,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    relevant_emitted = {int(idx) + 1 for idx in relevant_frame_indices}
+    decoy_emitted = {int(idx) + 1 for idx in decoy_frame_indices}
+    relevant = torch.zeros(int(max_symbols), dtype=torch.float32)
+    decoy = torch.zeros(int(max_symbols), dtype=torch.float32)
+    for pos, symbol in enumerate(symbols[: int(max_symbols)]):
+        if int(symbol.type_id) == LOOSE_STOP:
+            break
+        frame_id = int(symbol.aux_id)
+        if int(symbol.type_id) in {LOOSE_OPEN, LOOSE_CLOSE}:
+            frame_id = int(symbol.value_id)
+        if frame_id in relevant_emitted:
+            relevant[pos] = 1.0
+        if frame_id in decoy_emitted:
+            decoy[pos] = 1.0
+    return relevant, decoy
+
+
 def generate_m25_emergent_bridi_examples(
     size: int,
     *,
@@ -174,6 +198,12 @@ class M25LooseBridiDataset(Dataset[dict[str, Any]]):
         stream = torch.zeros(self.max_symbols, 3, dtype=torch.long)
         for pos, symbol in enumerate(row.loose_symbols[: self.max_symbols]):
             stream[pos] = torch.tensor(symbol.as_tuple(), dtype=torch.long)
+        relevance_targets, decoy_targets = loose_relevance_masks(
+            row.loose_symbols,
+            relevant_frame_indices=row.relevant_frame_indices,
+            decoy_frame_indices=row.decoy_frame_indices,
+            max_symbols=self.max_symbols,
+        )
         return {
             "input_ids": torch.tensor(ids, dtype=torch.long),
             "stream_targets": stream,
@@ -181,6 +211,8 @@ class M25LooseBridiDataset(Dataset[dict[str, Any]]):
             "type_targets": stream[:, 0],
             "value_targets": stream[:, 1],
             "aux_targets": stream[:, 2],
+            "relevance_targets": relevance_targets,
+            "decoy_targets": decoy_targets,
             "answer_id": torch.tensor(int(row.answer_id), dtype=torch.long),
             "prompt": row.prompt,
             "surface": row.surface,
@@ -198,6 +230,8 @@ def m25_collate(batch: Sequence[dict[str, Any]]) -> dict[str, Any]:
         "type_targets",
         "value_targets",
         "aux_targets",
+        "relevance_targets",
+        "decoy_targets",
         "answer_id",
     )
     out: dict[str, Any] = {key: torch.stack([item[key] for item in batch]) for key in tensor_keys}

@@ -1,9 +1,9 @@
 # Ablation Program Spine
 
-- Generated UTC: `2026-05-31T18:49:27.954547+00:00`
+- Generated UTC: `2026-06-14T18:45:32.025535+00:00`
 - Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
 - Source taxonomy config: `configs/experiment_taxonomy.json`
-- Stage count: `29`
+- Stage count: `31`
 
 This is the ordered research spine of the project: legacy letter-series families, normalized M-major families, and the control plane that keeps the program auditable.
 
@@ -639,7 +639,51 @@ This is the ordered research spine of the project: legacy letter-series families
 - Baseline manifest: `docs/baselines/m_series_bridge_baseline_manifest.json`
 - DAGs: `airflow/dags/m26/lojban_m26_end_to_end_loafman_dag.py`
 
-## 29. Control Plane
+## 29. M27
+
+- Kind: `major_series`
+- Layer: `coconut_bridi_runtime`
+- Objective: M27 tests whether the Lojban symbiote can run as a real autoregressive hidden-state organism: a tiny language backbone seeds a Coconut recurrent scratchpad, the scratchpad emits one loose-bridi symbol at a time, and the answer loss reaches the recurrent feedback path through the differentiable bridge.
+- Entry count: `0`
+- Runnable rows: `0`
+- Question boundary: M27 recurrent Coconut-Bridi runtime over the M26 full-organism bridge
+- Thesis: M27 tests whether the Lojban symbiote can run as a real autoregressive hidden-state organism: a tiny language backbone seeds a Coconut recurrent scratchpad, the scratchpad emits one loose-bridi symbol at a time, and the answer loss reaches the recurrent feedback path through the differentiable bridge.
+- Selected upstream: `M26.A`
+- Inherits: `M26 tiny language backbone, M26 differentiable trace-language bridge, M25 loose-bridi grammar-action stream, strict accuracy canonical metric, matched prompt and trace corruption controls`
+- Reopens: `parallel one-shot generator, absence of a temporal Coconut scratchpad, lack of hard autoregressive free-run runtime`
+- Rejects: `claiming end-to-end organism from spinal gradient flow alone, hard integer trace packing during training, raw prompt answer bypass`
+- Allowed axes: `max_symbols, symbol_budget, trace_weight, answer_weight, mdl_weight, language_layers, language_heads, enable_relevance_runtime, relevance_rank_weight, use_relevance_answer, relevance_temperature, seed, no_recurrence_control, hard_free_run_control`
+- Frozen/forbidden drift: `hard argmax in training path, raw prompt answer bypass, parallel one-shot trace masquerading as autoregression, phrase accuracy as canonical metric`
+- Promotion basis: `m27_full_organism_gate_pass_rate, m27_full_organism_candidate, answer_loss_reaches_coconut_cell, answer_loss_reaches_recurrent_bridi_feedback, m27_gate_autoregressive_step_dependency, hard_free_run_strict_accuracy, m27_gate_raw_prompt_bypass_blocked, m27_promotion_candidate`
+- Primary metrics: `strict_accuracy, m27_end_to_end_answer_accuracy, hard_free_run_strict_accuracy, m27_full_organism_gate_pass_rate, m27_full_organism_candidate, m27_step_dependency_delta, m27_relevance_runtime_enabled, m27_relevance_top1_accuracy, m27_relevance_full_vs_random_delta, m27_inherited_contract_bundle_present`
+- Guardrail metrics: `matched_prompt_accuracy, zero_trace_accuracy, shuffled_trace_accuracy, random_trace_accuracy, soft_hard_accuracy_gap, no_recurrence_accuracy, hard_argmax_training_cut_detected, raw_prompt_bypass_blocked, m27_relevance_random_accuracy, m27_relevance_oracle_accuracy, m27_relevance_decoy_only_accuracy, m27_relevance_margin`
+- Historical comparison families: `M26, M25, M24, M23`
+- Required test contracts: `m27.coconut_bridi_runtime, m27.relevance_runtime, m27.inherited_contract_bundle`
+- Automatic comparison targets: `M26, M27.A`
+- Baseline manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/m27_coconut_bridi_runtime`
+- DAGs: `airflow/dags/m27/lojban_m27_coconut_bridi_runtime_dag.py`
+
+## 30. M28
+
+- Kind: `major_series`
+- Layer: `manifold_and_return_path`
+- Objective: M28 converts the M27 assay substrate into an actual reusable model artifact: checkpointable prompt encoder, recurrent logebonic trace runtime, bridge/decoder path, inference API, trace schema, and baseline comparison bundle.
+- Entry count: `0`
+- Runnable rows: `0`
+- Question boundary: M28 actual checkpointable Logebonic Symbiote model artifact
+- Thesis: M28 converts the M27 assay substrate into an actual reusable model artifact: checkpointable prompt encoder, recurrent logebonic trace runtime, bridge/decoder path, inference API, trace schema, and baseline comparison bundle.
+- Allowed axes: `train_size, eval_size, epochs, baseline_epochs, max_symbols, symbol_budget, embedding_dim, hidden_dim, advisor_hidden_dim, enable_relevance_runtime, relevance_rank_weight, resume_checkpoint, checkpoint_every_epochs, use_amp, seed, seed_list, stable_accuracy_threshold`
+- Frozen/forbidden drift: `report-only model without checkpoint, checkpoint that cannot reload, inference path requiring teacher trace, baseline comparison omitted from promotion, phrase accuracy as canonical metric`
+- Promotion basis: `m28_actual_model_artifact, checkpoint_roundtrip_pass, model_inference_api_pass, trace_schema_saved, m28_baseline_comparison_bundle_present, m28_trace_causality_delta`
+- Primary metrics: `strict_accuracy, m28_actual_model_artifact, checkpoint_roundtrip_pass, model_inference_api_pass, trace_schema_saved, m28_baseline_comparison_bundle_present, m28_learned_logebonic_accuracy, m28_learned_vs_best_baseline_delta, m28_suite_run_count, m28_suite_stable_seed_rate, m28_suite_artifact_gate_pass_rate, mean_strict_accuracy, mean_m28_learned_vs_best_baseline_delta`
+- Guardrail metrics: `zero_trace_accuracy, predicted_vs_zero_delta, m28_trace_causality_delta, m28_best_non_logebonic_baseline_accuracy, m28_learned_vs_no_cot_delta, m28_learned_accuracy_per_trace_token, mean_m28_trace_causality_delta, m28_suite_worst_seed_accuracy, best_m28_trace_causality_delta`
+- Historical comparison families: `M27, M26, M25, M24, M23`
+- Required test contracts: `m28.actual_logebonic_model, m28.actual_model_suite`
+- Automatic comparison targets: `M27, M28.A`
+- Baseline manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/m28_logebonic_symbiote_model`
+- DAGs: `airflow/dags/m28/lojban_m28_logebonic_symbiote_model_dag.py`
+
+## 31. Control Plane
 
 - Kind: `control_plane`
 - Layer: `control_plane`

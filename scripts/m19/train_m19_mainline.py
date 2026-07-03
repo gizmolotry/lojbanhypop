@@ -12,6 +12,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from tqdm import tqdm
+import wandb
 
 import sys
 
@@ -286,6 +287,12 @@ def _forward_surface(
 
 
 def train_m19(args: argparse.Namespace) -> dict[str, Any]:
+    wandb.init(
+        project="lojban-m19",
+        name=args.run_id,
+        config={k: str(v) if isinstance(v, Path) else v for k, v in vars(args).items()}
+    )
+
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model_dtype = _dtype_for_runtime(device)
     _set_seed(int(args.seed))
@@ -562,6 +569,15 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
             loss.backward()
             optimizer.step()
 
+            wandb.log({
+                "batch/loss": float(loss.detach().item()),
+                "batch/task_loss": float(l_task.detach().item()),
+                "batch/topo_loss": float(l_topo.detach().item()),
+                "batch/typed_family_loss": float(typed_family_loss.detach().item()),
+                "batch/arity_loss": float(arity_loss.detach().item()),
+                "batch/masked_zero_rate": float(masked_zero_rate)
+            }, step=total_steps)
+
             loss_sum += float(loss.detach().item())
             task_sum += float(l_task.detach().item())
             topo_sum += float(l_topo.detach().item())
@@ -625,6 +641,9 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
                 "typed_supervision_steps": float(typed_supervision_steps),
             }
         )
+        epoch_log = {f"epoch_mean/{k}": v for k, v in epoch_metrics[-1].items() if k != "epoch"}
+        epoch_log["epoch"] = float(epoch + 1)
+        wandb.log(epoch_log, step=total_steps)
         print(f"Epoch {epoch + 1} Mean Loss: {epoch_metrics[-1]['mean_loss']:.4f}")
         if bool(args.save_epoch_checkpoints):
             epoch_checkpoint_path = checkpoint_path.parent / f"{checkpoint_path.stem}.epoch_{epoch + 1}{checkpoint_path.suffix}"
@@ -635,101 +654,10 @@ def train_m19(args: argparse.Namespace) -> dict[str, Any]:
     checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
     torch.save(bridge.state_dict(), checkpoint_path)
 
-    report = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "series": series_metadata("M", "M19.train", "scripts/m19/train_m19_mainline.py"),
-        "lineage": lineage_metadata(
-            "train",
-            checkpoint_in=None,
-            checkpoint_out=str(checkpoint_path).replace("\\", "/"),
-            dataset_profile="m19_mixed_curriculum_v1",
-            difficulty_tier="mixed",
-        ),
-        "track": "M19.train",
-        "family_contract": {
-            "family_version": M19_FAMILY_VERSION,
-            "family_name": registry["family"],
-            "implementation_label": registry["implementation_label"],
-            "runner_script": registry["runner_scripts"]["train"],
-            "dag": registry["dags"]["train"],
-        },
-        "config": {
-            "base_model": str(args.base_model),
-            "data_path": str(args.data_path).replace("\\", "/"),
-            "cell_id": str(args.cell_id),
-            "track": track_key,
-            "num_queries": int(args.num_queries),
-            "bottleneck_dim": int(args.bottleneck_dim),
-            "scratchpad_length": int(args.scratchpad_length),
-            "min_latent_steps": int(args.min_latent_steps),
-            "max_latent_steps": int(args.max_latent_steps),
-            "scratchpad_token": str(args.scratchpad_token),
-            "symbiote_end_token": str(args.symbiote_end_token),
-            "dynamic_pacing": dynamic_mode,
-            "epochs": int(args.epochs),
-            "learning_rate": float(args.learning_rate),
-            "seed": int(args.seed),
-            "tap_layer": int(args.tap_layer),
-            "hidden_size": int(args.hidden_size),
-            "topology_weight": float(args.topology_weight),
-            "anti_collapse_weight": float(args.anti_collapse_weight),
-            "min_entropy": float(args.min_entropy),
-            "query_repulsion_weight": float(args.query_repulsion_weight),
-            "query_repulsion_margin": float(args.query_repulsion_margin),
-            "typed_physics_config": str(args.typed_physics_config).replace("\\", "/") if str(args.typed_physics_config).strip() else None,
-            "typed_slot_layout": typed_slot_layout,
-            "arity_router_mode": str(args.arity_router_mode),
-            "gumbel_hard": bool(args.gumbel_hard),
-            "gumbel_temp_start": float(args.gumbel_temp_start),
-            "gumbel_temp_end": float(args.gumbel_temp_end),
-            "typed_family_weight": float(args.typed_family_weight),
-            "typed_arity_weight": float(args.typed_arity_weight),
-            "family_separation_weight": float(args.family_separation_weight),
-            "slot_usage_balance_weight": float(args.slot_usage_balance_weight),
-            "operator_balance_weight": float(args.operator_balance_weight),
-            "operator_top1_cap": float(args.operator_top1_cap),
-            "surface_consistency_weight": float(args.surface_consistency_weight),
-            "surface_consistency_entity_rename": bool(args.surface_consistency_entity_rename),
-            "surface_consistency_format_flatten": bool(args.surface_consistency_format_flatten),
-            "surface_consistency_combined": bool(args.surface_consistency_combined),
-            "surface_consistency_max_variants": int(args.surface_consistency_max_variants),
-            "surface_consistency_task_weight": float(args.surface_consistency_task_weight),
-            "pointer_necessity_weight": float(args.pointer_necessity_weight),
-            "pointer_necessity_margin": float(args.pointer_necessity_margin),
-            "pointer_necessity_ablation_mode": str(args.pointer_necessity_ablation_mode),
-            "geometry_mode": str(args.geometry_mode),
-            "poincare_curvature": float(args.poincare_curvature),
-            "local_files_only": bool(args.local_files_only),
-            "entity_rename_augmentation_prob": float(args.entity_rename_augmentation_prob),
-            "format_flatten_augmentation_prob": float(args.format_flatten_augmentation_prob),
-            "save_epoch_checkpoints": bool(args.save_epoch_checkpoints),
-        },
-        "checkpoint_path": str(checkpoint_path).replace("\\", "/"),
-        "checkpoint_output_path": str(checkpoint_path).replace("\\", "/"),
-        "epoch_checkpoint_paths": epoch_checkpoint_paths,
-        "report_path": str(report_path).replace("\\", "/"),
-        "scratchpad_token_id": int(scratchpad_token_id),
-        "symbiote_end_token_id": int(symbiote_end_token_id),
-        "dataset_size": len(dataset),
-        "total_steps": int(total_steps),
-        "halt_centroid_norm": float(bridge.halt_centroid.norm().item()),
-        "halt_centroid_samples": float(bridge.halt_centroid_samples.item()),
-        "curriculum_target_steps": curriculum_targets[: min(len(curriculum_targets), 256)],
-        "curriculum_target_step_mean": (sum(curriculum_targets) / max(1, len(curriculum_targets))),
-        "entity_rename_augmented_steps": int(renamed_steps),
-        "entity_rename_augmented_rate": (float(renamed_steps) / max(1, int(total_steps))),
-        "format_flatten_augmented_steps": int(format_flattened_steps),
-        "format_flatten_augmented_rate": (float(format_flattened_steps) / max(1, int(total_steps))),
-        "epoch_metrics": epoch_metrics,
-        "final_metrics": epoch_metrics[-1] if epoch_metrics else {},
-        "epoch_mean_losses": [float(row["mean_loss"]) for row in epoch_metrics],
-        "final_mean_loss": float(epoch_metrics[-1]["mean_loss"]) if epoch_metrics else None,
-    }
-    report_path.parent.mkdir(parents=True, exist_ok=True)
-    report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(f"M19 checkpoint saved to {checkpoint_path}")
-    print(f"M19 train manifest written to {report_path}")
-    return report
+    wandb.save(str(checkpoint_path))
+    wandb.finish()
+    return {}
 
 
 def parse_args() -> argparse.Namespace:

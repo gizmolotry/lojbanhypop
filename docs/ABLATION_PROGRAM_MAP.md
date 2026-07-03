@@ -1,8 +1,8 @@
 # Ablation Program Map
 
-- Generated UTC: `2026-05-31T18:49:27.946882+00:00`
+- Generated UTC: `2026-06-14T18:45:31.924234+00:00`
 - Source history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
-- Concentrated family count: `48`
+- Concentrated family count: `50`
 
 ## Program Layers
 
@@ -656,6 +656,28 @@
 - Family groups: `taxonomy_major_family`
 - DAGs: `airflow/dags/m26/lojban_m26_end_to_end_loafman_dag.py`
 
+### M27
+
+- Layer: `coconut_bridi_runtime`
+- Status: `taxonomy_defined`
+- Normalized IDs: `M27`
+- Entry count: `0`
+- Runnable rows: `0`
+- Brief: M27 tests whether the Lojban symbiote can run as a real autoregressive hidden-state organism: a tiny language backbone seeds a Coconut recurrent scratchpad, the scratchpad emits one loose-bridi symbol at a time, and the answer loss reaches the recurrent feedback path through the differentiable bridge.
+- Family groups: `taxonomy_major_family`
+- DAGs: `airflow/dags/m27/lojban_m27_coconut_bridi_runtime_dag.py`
+
+### M28
+
+- Layer: `actual_logebonic_symbiote_model`
+- Status: `taxonomy_defined`
+- Normalized IDs: `M28`
+- Entry count: `0`
+- Runnable rows: `0`
+- Brief: M28 converts the M27 assay substrate into an actual reusable model artifact: checkpointable prompt encoder, recurrent logebonic trace runtime, bridge/decoder path, inference API, trace schema, and baseline comparison bundle.
+- Family groups: `taxonomy_major_family`
+- DAGs: `airflow/dags/m28/lojban_m28_logebonic_symbiote_model_dag.py`
+
 ### History
 
 - Layer: `control_plane`
@@ -689,3 +711,4 @@
 - `M23_to_M24`: `M23 -> M24` via `M23.C`
 - `M24_to_M25`: `M24 -> M25` via `M24.2`
 - `M25_to_M26`: `M25 -> M26` via `M25.A`
+- `M26_to_M27`: `M26 -> M27` via `M26.A`

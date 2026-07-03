@@ -352,6 +352,18 @@ M_STAGE_SPECS: list[dict[str, Any]] = [
         "title": "M26",
         "child_dags": ["lojban_m26_end_to_end_loafman"],
     },
+    {
+        "task_id": "m27_coconut_bridi_runtime",
+        "stage_key": "M27",
+        "title": "M27",
+        "child_dags": ["lojban_m27_coconut_bridi_runtime"],
+    },
+    {
+        "task_id": "m28_logebonic_symbiote_model",
+        "stage_key": "M28",
+        "title": "M28",
+        "child_dags": ["lojban_m28_logebonic_symbiote_model"],
+    },
 ]
 
 

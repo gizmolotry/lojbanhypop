@@ -1,15 +1,15 @@
 # Whole Ablation Grid
 
-- run_id: `pytest_matrix_whole_grid_integration5`
-- generated: `2026-05-31T18:49:35.430698+00:00`
+- run_id: `m28_suite_final_scaffold`
+- generated: `2026-06-14T18:45:44.053379+00:00`
 - history manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json`
-- program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/pytest_matrix_program_spine_refresh/ablation_program_spine_manifest.json`
+- program spine manifest: `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_program_spine/m28_suite_final_scaffold/ablation_program_spine_manifest.json`
 
 ## Coverage
 
-- stages: `29`
+- stages: `31`
 - fresh legacy surfaces: `6`
-- artifact anchors: `21`
+- artifact anchors: `23`
 - history-only stages: `1`
 
 ## Legacy Grid Status
@@ -54,7 +54,9 @@
 | `M24` | `artifact_anchor` | `promoted` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m24_2_b11_g32_a48_train12000_eval6000_tenseed_direct_20260528/direct_unified_eval_manifest.json` | strict_accuracy=0.7682, m24_2_promotion_candidate=1.0000, m24_2_promotion_gate_pass_rate=1.0000, m24_2_hard_bottleneck_compression_ratio=0.9446, m24_2_hard_bottleneck_token_count=10.1296 |
 | `M25` | `artifact_anchor` | `m25_non_promoted` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m25_large_48e_matched_direct_20260530/direct_unified_eval_manifest.json` | strict_accuracy=0.7104, m25_promotion_candidate=0.0000, m25_promotion_gate_pass_rate=0.8571, loose_stream_exact_accuracy=0.5105, token_reduction_ratio=0.4062 |
 | `M26` | `artifact_anchor` | `m26_spinal_promoted_prompt_gap` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m26_matched_prompt_b8_32e_direct_20260531_r2/direct_unified_eval_manifest.json` | strict_accuracy=0.9961, m26_promotion_candidate=0.3333, m26_spinal_cord_gate_pass_rate=1.0000, m26_spinal_cord_candidate=1.0000, m26_prompt_comparable_candidate=0.3333 |
-| `Control Plane` | `control_plane_manifest` | `` | `e=0 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json` | test_matrix_status_passed=1.0000, test_matrix_status_dry_run=0.0000, selected_group_count=7.0000, selected_test_count=23.0000, matrix_unique_test_count=50.0000 |
+| `M27` | `artifact_anchor` | `m27_non_promoted` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m27_relevance_runtime_direct_smoke/direct_unified_eval_manifest.json` | strict_accuracy=0.0833, m27_promotion_candidate=0.0000, m27_inherited_contract_bundle_present=1.0000, m27_relevance_runtime_enabled=1.0000, m27_relevance_full_vs_random_delta=0.0000 |
+| `M28` | `artifact_anchor` | `m28_actual_model_candidate` | `e=0 r=0 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/direct_unified_eval/m28_suite_direct_cli_smoke/direct_unified_eval_manifest.json` | strict_accuracy=0.1667, m28_suite_run_count=2.0000, m28_suite_stable_seed_rate=0.0000, m28_suite_artifact_gate_pass_rate=1.0000, m28_learned_vs_best_baseline_delta=-0.1667 |
+| `Control Plane` | `control_plane_manifest` | `` | `e=0 r=1 a=0 d=0` | `artifacts/runs/telemetry/raw/ablation/hypercube/ablation_history_backfill/m22_mixed_ood_history_20260523/ablation_history_manifest.json` | test_matrix_status_passed=1.0000, test_matrix_status_dry_run=0.0000, selected_group_count=1.0000, selected_test_count=1.0000, matrix_unique_test_count=54.0000 |
 
 ## Comparison Policy
 
@@ -184,9 +186,21 @@
 - historical families carried forward: `M25`
 - required test contracts: `m26.end_to_end_spinal_cord`
 
+### M27
+
+- automatic compare-against: `M27, M26, M25, M24, M23, M22, M21, M20, M26.A, M27.A`
+- historical families carried forward: `M26, M25, M24, M23`
+- required test contracts: `m27.coconut_bridi_runtime, m27.relevance_runtime, m27.inherited_contract_bundle`
+
+### M28
+
+- automatic compare-against: `M28, M27, M26, M25, M24, M23, M27.A, M28.A`
+- historical families carried forward: `M27, M26, M25, M24, M23`
+- required test contracts: `m28.actual_logebonic_model, m28.actual_model_suite`
+
 
 ## Read
 
 - The fresh part of the whole grid is now the recovered legacy runnable surface: A-G, H/H5/J, L6, and the phase-eval lanes under one manifest.
 - The modern M rows are represented through artifact-backed anchors and the control-plane lineage manifests, so the whole program is visible without pretending every stage was freshly retrained.
-- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, M23 the causal relevance-router fork, M24 the substrate-first compression fork, M25 the emergent loose bridi grammar stream fork, and M26 the full hidden-state bridge organism fork.
+- M3 remains the generative bridge archaeology block, M11 the discriminative oracle, M18 the controller-era comparison family, M19 the bounded runway mainline, M20 the dictionary-first substrate branch, M21 the dynamic bridi substrate branch, M22 the semantic-coverage generalization gate, M23 the causal relevance-router fork, M24 the substrate-first compression fork, M25 the emergent loose bridi grammar stream fork, M26 the full hidden-state bridge organism fork, M27 the recurrent Coconut-Bridi runtime fork, and M28 the checkpointable actual Logebonic Symbiote model fork.

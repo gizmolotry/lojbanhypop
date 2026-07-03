@@ -24,7 +24,7 @@ dev = [
   "pytest>=8.0",
 ]
 orchestration = [
-  "apache-airflow>=2.10,<3.0",
+  "wandb>=0.16",
 ]
 
 [tool.setuptools]
