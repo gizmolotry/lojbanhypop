@@ -1,0 +1,23 @@
+experiment:
+  name: "m29_gfn_final_proof"
+  seed: 42
+data:
+  dataset_size: 10000
+  train_fraction: 0.8
+  max_symbols: 32
+  batch_size: 128
+model:
+  architecture: "gflownet_symbiote"
+  hidden_dim: 64
+  num_queries: 12
+  target_vocab_size: 7
+training:
+  epochs: 10
+  learning_rate: 0.001
+  samples_per_prompt: 20
+baselines:
+  embedding_dim: 32
+  hidden_dim: 64
+  latent_bottleneck_dim: 8
+output:
+  path: "outputs/m29/final_proof_results.json"

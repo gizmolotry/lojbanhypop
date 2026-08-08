@@ -1,0 +1,8 @@
+{
+  "strict_accuracy": 0.05000000074505806,
+  "trace_swapped_accuracy": 0.05000000074505806,
+  "topology_corrupted_accuracy": 0.05000000074505806,
+  "trace_causality_delta": 0.0,
+  "trace_token_count": 5.0,
+  "mean_prompt_tokens": 10.0
+}

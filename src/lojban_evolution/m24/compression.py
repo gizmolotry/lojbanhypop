@@ -1,4 +1,5 @@
-﻿from __future__ import annotations
+from __future__ import annotations
+from lojban_evolution.evaluation.metrics import _accuracy
 
 import random
 from collections import defaultdict
